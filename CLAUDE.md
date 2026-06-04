@@ -38,13 +38,27 @@ Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude
 | `/pricing` | Pricing strategy |
 | `/content-strategy` | Content planning |
 
+### frontend (Frontend Engineering)
+| Skill | Purpose |
+|-------|---------|
+| `/build-component` | Build UI components (HTML/CSS/JS) |
+| `/responsive` | Audit and fix responsive layout |
+| `/frontend-review` | HTML/CSS/JS code quality review |
+| `/lighthouse` | Performance, accessibility & SEO audit |
+| `/animation` | CSS animations and scroll reveals |
+| `/forms` | Build accessible, conversion-optimised forms |
+
 ## Skill Routing
 When user request matches a skill, invoke it via the Skill tool.
 
 - Product/strategy → `/office-hours` → `/autoplan`
 - Code review → `/review`
+- Frontend review → `/frontend-review`
 - QA/testing → `/qa`
 - Design → `/design-review` or `/design-html`
+- Build UI component → `/build-component`
+- Responsive fix → `/responsive`
+- Performance → `/lighthouse`
 - Marketing copy → `/copywriting`
 - Conversion → `/cro`
 - Security → `/cso`
