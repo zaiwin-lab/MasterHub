@@ -41,28 +41,41 @@ Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude
 ### frontend (Frontend Engineering)
 | Skill | Purpose |
 |-------|---------|
+| `/ui-promax` | **Pro Max** — B2B landing page that converts HR/corporate buyers |
+| `/ui-system` | Design token system — colours, typography, spacing, shadows |
 | `/build-component` | Build UI components (HTML/CSS/JS) |
+| `/animation` | Premium motion design — counters, staggered reveals, micro-interactions |
 | `/responsive` | Audit and fix responsive layout |
 | `/frontend-review` | HTML/CSS/JS code quality review |
 | `/lighthouse` | Performance, accessibility & SEO audit |
-| `/animation` | CSS animations and scroll reveals |
 | `/forms` | Build accessible, conversion-optimised forms |
 
 ## Skill Routing
 When user request matches a skill, invoke it via the Skill tool.
 
+- **Build a B2B landing page** → `/ui-promax` ← START HERE for client sites
+- **Design system / tokens** → `/ui-system`
 - Product/strategy → `/office-hours` → `/autoplan`
 - Code review → `/review`
 - Frontend review → `/frontend-review`
 - QA/testing → `/qa`
-- Design → `/design-review` or `/design-html`
+- Design mockup → `/design-html`
+- Design review → `/design-review`
 - Build UI component → `/build-component`
 - Responsive fix → `/responsive`
 - Performance → `/lighthouse`
 - Marketing copy → `/copywriting`
-- Conversion → `/cro`
+- Conversion audit → `/cro`
 - Security → `/cso`
 - Deploy/ship → `/ship`
+
+## Frontend Quality Standard
+All client websites must pass:
+1. **5-second test** — visitor knows what, why, what next without scrolling
+2. **Mobile CTA test** — WhatsApp/action button visible above fold on 375px
+3. **Trust density** — 2–3 credibility signals per screen
+4. **Specificity check** — zero vague words; every claim has a number or proof
+5. **Motion standard** — scroll reveals + counter animations as minimum
 
 ## Session Rules
 1. Always load master-hub + one project repo
