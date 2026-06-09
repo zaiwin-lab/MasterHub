@@ -149,6 +149,11 @@ const translations = {
   about_v1: { bm: "<strong>Penghantaran pantas.</strong> Kebanyakan laman siap dalam 3–7 hari.", zh: "<strong>快速交付。</strong>大多数网站在3至7天内即可上线。", iban: "<strong>Pengiring pantas.</strong> Mayuh website siap dalam 3–7 hari." },
   about_v2: { bm: "<strong>Dibina untuk hasil.</strong> Setiap halaman direka untuk menukar pelawat menjadi pertanyaan.", zh: "<strong>以效果为导向。</strong>每个页面都旨在将访客转化为询盘。", iban: "<strong>Dipansik ke pengasil.</strong> Tiap halaman direka ngambika ngubah pengiring nyadi tanya." },
   about_v3: { bm: "<strong>Berakar di Sarawak.</strong> Kami memahami pasaran tempatan, bahasa tempatan, dan pelanggan tempatan.", zh: "<strong>扎根砂拉越。</strong>我们了解本地市场、本地语言以及本地顾客。", iban: "<strong>Bepangkal ba Sarawak.</strong> Kami nemu pasar menua, jaku menua, sereta pelanggan menua." },
+  about_v4: {
+    bm: "<strong>Aliran kerja dipercepat AI.</strong> Kami menggunakan alat reka bentuk dan pembangunan dibantu AI moden untuk memberikan kualiti premium pada harga perniagaan kecil — tanpa menjejaskan mutu.",
+    zh: "<strong>AI加速工作流程。</strong>我们运用现代AI辅助设计与开发工具，以中小企业能负担的价格提供顶级品质——绝不偷工减料。",
+    iban: "<strong>Pengawa dipantaska AI.</strong> Kami ngena alat design sereta pembangunan dibantu AI moden ngambika meri kualiti premium ngena ajar pengawa mit — enda ngurangka mutu."
+  },
 
   pkg_label: { bm: "Apa Yang Kami Tawarkan", zh: "我们提供的服务", iban: "Utai Ti Kami Bri" },
   pkg_title: {
