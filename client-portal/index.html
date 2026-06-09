@@ -28,7 +28,7 @@
       </div>
     </section>
 
-    <!-- PROGRESS BAR -->
+    <!-- PROGRESS BAR (visible during steps 1–10) -->
     <div class="progress-shell" id="progress-shell">
       <div class="progress-bar-track">
         <div class="progress-bar" id="progress-bar" style="width:0%"></div>
@@ -246,27 +246,42 @@
           <h2 class="report-title" id="report-title">Digital Business Report</h2>
           <p class="report-date" id="report-date"></p>
         </div>
+
         <div class="score-row">
-          <div class="score-card" id="score-growth"><div class="score-num" id="score-growth-num">—</div><div class="score-label">Growth Score</div></div>
-          <div class="score-card" id="score-digital"><div class="score-num" id="score-digital-num">—</div><div class="score-label">Digital Presence</div></div>
-          <div class="score-card" id="score-ops"><div class="score-num" id="score-ops-num">—</div><div class="score-label">Sales Readiness</div></div>
+          <div class="score-card" id="score-growth">
+            <div class="score-num" id="score-growth-num">—</div>
+            <div class="score-label">Growth Score</div>
+          </div>
+          <div class="score-card" id="score-digital">
+            <div class="score-num" id="score-digital-num">—</div>
+            <div class="score-label">Digital Presence</div>
+          </div>
+          <div class="score-card" id="score-ops">
+            <div class="score-num" id="score-ops-num">—</div>
+            <div class="score-label">Sales Readiness</div>
+          </div>
         </div>
+
         <div class="report-section">
           <h3 class="section-title">📍 Where You Are</h3>
           <p class="section-body" id="report-where"></p>
         </div>
+
         <div class="report-section">
           <h3 class="section-title">🔥 Top 3 Priorities</h3>
           <ul class="priority-list" id="report-priorities"></ul>
         </div>
+
         <div class="report-section">
           <h3 class="section-title">⚡ Quick Wins (This Week)</h3>
           <ul class="wins-list" id="report-wins"></ul>
         </div>
+
         <div class="report-section">
           <h3 class="section-title">🗺 90-Day Roadmap</h3>
           <div class="roadmap-cols" id="report-roadmap"></div>
         </div>
+
         <div class="report-cta">
           <h3>Ready to act on this?</h3>
           <p>Book a free 30-min call to walk through the report together and build your implementation plan.</p>
@@ -277,6 +292,7 @@
     </section>
 
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>
