@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Diagnostic — Digital Strategy Session</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="portal-wrap">
+
+    <!-- STEP 0: Landing -->
+    <section class="step active" id="step-0">
+      <div class="hero">
+        <div class="hero-badge">Free Business Audit</div>
+        <h1 class="hero-title">Let's diagnose your digital business — <em>honestly</em>.</h1>
+        <p class="hero-sub">10 focused questions. 5 minutes. You'll walk away with a clear picture of where you're leaking revenue and what to fix first.</p>
+        <div class="hero-meta">
+          <span>✦ No fluff</span>
+          <span>✦ No sales pitch</span>
+          <span>✦ Actionable output</span>
+        </div>
+        <button class="btn-primary" onclick="goStep(1)">Start Diagnostic <span class="btn-arrow">→</span></button>
+        <p class="hero-footnote">Used by founders growing to $1M+ ARR</p>
+      </div>
+    </section>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-shell" id="progress-shell">
+      <div class="progress-bar-track">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+      <span class="progress-label" id="progress-label">1 of 10</span>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="step" id="step-1">
+      <div class="q-wrap">
+        <div class="q-num">01</div>
+        <h2 class="q-title">What's your business?</h2>
+        <p class="q-hint">Give us a one-line description. Be specific.</p>
+        <textarea class="input-text" id="q1" placeholder="e.g. I run a B2B SaaS for HR teams that automates onboarding..." rows="3"></textarea>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(0)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(1, 'q1')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" id="step-2">
+      <div class="q-wrap">
+        <div class="q-num">02</div>
+        <h2 class="q-title">What's your current monthly revenue?</h2>
+        <p class="q-hint">Approximate is fine — this calibrates the advice.</p>
+        <div class="option-grid" id="q2">
+          <div class="option" onclick="selectOption(this, 'q2', 'Pre-revenue')">Pre-revenue</div>
+          <div class="option" onclick="selectOption(this, 'q2', '$1–$5K/mo')">$1–$5K/mo</div>
+          <div class="option" onclick="selectOption(this, 'q2', '$5–$20K/mo')">$5–$20K/mo</div>
+          <div class="option" onclick="selectOption(this, 'q2', '$20–$50K/mo')">$20–$50K/mo</div>
+          <div class="option" onclick="selectOption(this, 'q2', '$50K–$100K/mo')">$50K–$100K/mo</div>
+          <div class="option" onclick="selectOption(this, 'q2', '$100K+/mo')">$100K+/mo</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(1)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(2, 'q2')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" id="step-3">
+      <div class="q-wrap">
+        <div class="q-num">03</div>
+        <h2 class="q-title">What's your biggest growth blocker right now?</h2>
+        <p class="q-hint">Pick the one that keeps you up at night.</p>
+        <div class="option-grid" id="q3">
+          <div class="option" onclick="selectOption(this, 'q3', 'Not enough leads')">Not enough leads</div>
+          <div class="option" onclick="selectOption(this, 'q3', 'Leads don\'t convert')">Leads don't convert</div>
+          <div class="option" onclick="selectOption(this, 'q3', 'Clients churn too fast')">Clients churn too fast</div>
+          <div class="option" onclick="selectOption(this, 'q3', 'Pricing feels wrong')">Pricing feels wrong</div>
+          <div class="option" onclick="selectOption(this, 'q3', 'Team/ops can\'t scale')">Team/ops can't scale</div>
+          <div class="option" onclick="selectOption(this, 'q3', 'No clear positioning')">No clear positioning</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(2)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(3, 'q3')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step" id="step-4">
+      <div class="q-wrap">
+        <div class="q-num">04</div>
+        <h2 class="q-title">How do most of your new clients find you?</h2>
+        <p class="q-hint">Your primary channel — be honest if it's mostly referrals.</p>
+        <div class="option-grid" id="q4">
+          <div class="option" onclick="selectOption(this, 'q4', 'Word of mouth / referrals')">Word of mouth / referrals</div>
+          <div class="option" onclick="selectOption(this, 'q4', 'Outbound (email, LinkedIn)')">Outbound (email, LinkedIn)</div>
+          <div class="option" onclick="selectOption(this, 'q4', 'Content / SEO / Inbound')">Content / SEO / Inbound</div>
+          <div class="option" onclick="selectOption(this, 'q4', 'Paid ads')">Paid ads</div>
+          <div class="option" onclick="selectOption(this, 'q4', 'Partnerships / integrations')">Partnerships / integrations</div>
+          <div class="option" onclick="selectOption(this, 'q4', 'I\'m still figuring this out')">I'm still figuring this out</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(4, 'q4')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step" id="step-5">
+      <div class="q-wrap">
+        <div class="q-num">05</div>
+        <h2 class="q-title">What's your average deal size or LTV?</h2>
+        <p class="q-hint">Per client or per sale — whichever applies to your model.</p>
+        <div class="option-grid" id="q5">
+          <div class="option" onclick="selectOption(this, 'q5', 'Under $500')">Under $500</div>
+          <div class="option" onclick="selectOption(this, 'q5', '$500–$2K')">$500–$2K</div>
+          <div class="option" onclick="selectOption(this, 'q5', '$2K–$10K')">$2K–$10K</div>
+          <div class="option" onclick="selectOption(this, 'q5', '$10K–$50K')">$10K–$50K</div>
+          <div class="option" onclick="selectOption(this, 'q5', '$50K+')">$50K+</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(4)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(5, 'q5')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 6 -->
+    <section class="step" id="step-6">
+      <div class="q-wrap">
+        <div class="q-num">06</div>
+        <h2 class="q-title">Rate your current digital presence.</h2>
+        <p class="q-hint">Website, social, content — how well does it reflect your value?</p>
+        <div class="rating-row" id="q6">
+          <button class="rating-btn" onclick="selectRating(this, 'q6', '1')">1<span>Embarrassing</span></button>
+          <button class="rating-btn" onclick="selectRating(this, 'q6', '2')">2<span>Weak</span></button>
+          <button class="rating-btn" onclick="selectRating(this, 'q6', '3')">3<span>Decent</span></button>
+          <button class="rating-btn" onclick="selectRating(this, 'q6', '4')">4<span>Strong</span></button>
+          <button class="rating-btn" onclick="selectRating(this, 'q6', '5')">5<span>World-class</span></button>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(5)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(6, 'q6')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 7 -->
+    <section class="step" id="step-7">
+      <div class="q-wrap">
+        <div class="q-num">07</div>
+        <h2 class="q-title">Do you have a documented sales process?</h2>
+        <p class="q-hint">From first contact to signed contract — is it written down and repeatable?</p>
+        <div class="option-grid cols-2" id="q7">
+          <div class="option" onclick="selectOption(this, 'q7', 'Yes, fully documented')">Yes, fully documented</div>
+          <div class="option" onclick="selectOption(this, 'q7', 'Mostly in my head')">Mostly in my head</div>
+          <div class="option" onclick="selectOption(this, 'q7', 'Loosely written down')">Loosely written down</div>
+          <div class="option" onclick="selectOption(this, 'q7', 'No process yet')">No process yet</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(6)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(7, 'q7')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 8 -->
+    <section class="step" id="step-8">
+      <div class="q-wrap">
+        <div class="q-num">08</div>
+        <h2 class="q-title">Where do you think your biggest untapped opportunity is?</h2>
+        <p class="q-hint">Your honest gut feeling — no right answer here.</p>
+        <textarea class="input-text" id="q8" placeholder="e.g. I think we're leaving money on the table with upsells — nobody on the team owns it..." rows="3"></textarea>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(7)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(8, 'q8')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 9 -->
+    <section class="step" id="step-9">
+      <div class="q-wrap">
+        <div class="q-num">09</div>
+        <h2 class="q-title">What outcome are you hoping for from this diagnostic?</h2>
+        <p class="q-hint">This shapes the report we build for you.</p>
+        <div class="option-grid" id="q9">
+          <div class="option" onclick="selectOption(this, 'q9', 'A clear 90-day action plan')">A clear 90-day action plan</div>
+          <div class="option" onclick="selectOption(this, 'q9', 'Identify revenue leaks')">Identify revenue leaks</div>
+          <div class="option" onclick="selectOption(this, 'q9', 'Validate my strategy')">Validate my strategy</div>
+          <div class="option" onclick="selectOption(this, 'q9', 'Prioritise what to build next')">Prioritise what to build next</div>
+          <div class="option" onclick="selectOption(this, 'q9', 'Get outside perspective')">Get outside perspective</div>
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(8)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(9, 'q9')">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 10 -->
+    <section class="step" id="step-10">
+      <div class="q-wrap">
+        <div class="q-num">10</div>
+        <h2 class="q-title">Last one — where should we send your report?</h2>
+        <p class="q-hint">Your name and email. That's it.</p>
+        <div class="field-group">
+          <input class="input-field" type="text" id="q10-name" placeholder="Your name" />
+          <input class="input-field" type="email" id="q10-email" placeholder="Email address" />
+        </div>
+        <div class="q-nav">
+          <button class="btn-ghost" onclick="goStep(9)">← Back</button>
+          <button class="btn-primary" id="submit-btn" onclick="submitForm()">Generate My Report →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="step" id="step-loading">
+      <div class="loading-wrap">
+        <div class="loader-ring"></div>
+        <p class="loading-title">Analysing your business…</p>
+        <div class="loading-steps" id="loading-steps">
+          <div class="load-item active" id="li-1">Mapping revenue structure</div>
+          <div class="load-item" id="li-2">Identifying growth blockers</div>
+          <div class="load-item" id="li-3">Benchmarking against your stage</div>
+          <div class="load-item" id="li-4">Generating quick wins</div>
+          <div class="load-item" id="li-5">Building your 90-day roadmap</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORT -->
+    <section class="step" id="step-report">
+      <div class="report-wrap">
+        <div class="report-header">
+          <div class="report-badge">Your Business Diagnostic</div>
+          <h2 class="report-title" id="report-title">Digital Business Report</h2>
+          <p class="report-date" id="report-date"></p>
+        </div>
+        <div class="score-row">
+          <div class="score-card" id="score-growth"><div class="score-num" id="score-growth-num">—</div><div class="score-label">Growth Score</div></div>
+          <div class="score-card" id="score-digital"><div class="score-num" id="score-digital-num">—</div><div class="score-label">Digital Presence</div></div>
+          <div class="score-card" id="score-ops"><div class="score-num" id="score-ops-num">—</div><div class="score-label">Sales Readiness</div></div>
+        </div>
+        <div class="report-section">
+          <h3 class="section-title">📍 Where You Are</h3>
+          <p class="section-body" id="report-where"></p>
+        </div>
+        <div class="report-section">
+          <h3 class="section-title">🔥 Top 3 Priorities</h3>
+          <ul class="priority-list" id="report-priorities"></ul>
+        </div>
+        <div class="report-section">
+          <h3 class="section-title">⚡ Quick Wins (This Week)</h3>
+          <ul class="wins-list" id="report-wins"></ul>
+        </div>
+        <div class="report-section">
+          <h3 class="section-title">🗺 90-Day Roadmap</h3>
+          <div class="roadmap-cols" id="report-roadmap"></div>
+        </div>
+        <div class="report-cta">
+          <h3>Ready to act on this?</h3>
+          <p>Book a free 30-min call to walk through the report together and build your implementation plan.</p>
+          <button class="btn-primary" onclick="alert('Booking link goes here — replace with Calendly or Cal.com link.')">Book Strategy Call →</button>
+          <button class="btn-ghost" onclick="window.print()">Download PDF</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
