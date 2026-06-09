@@ -1,10 +1,10 @@
 name: Deploy Client Portal to Netlify
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ['client-portal/**']
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -19,32 +19,31 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Create Netlify site (first run) or get existing
+      - name: Create Netlify site or get existing
         id: site
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_AUTH_TOKEN: nfp_Yvzgo3nSLWaERiaRpqrFW1ptM3CWGip99239
         run: |
-          # Try to create site
           RESPONSE=$(curl -s -X POST "https://api.netlify.com/api/v1/sites" \
             -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"name":"masterhub-client-portal","account_slug":"zaiwin"}')
 
+          echo "Create response: $RESPONSE"
           SITE_ID=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('id',''))" 2>/dev/null || true)
 
           if [ -z "$SITE_ID" ]; then
-            # Site may already exist — fetch by name
-            SITE_ID=$(curl -s "https://api.netlify.com/api/v1/sites?name=masterhub-client-portal" \
+            SITE_ID=$(curl -s "https://api.netlify.com/api/v1/sites?filter=all" \
               -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" | \
-              python3 -c "import sys,json; sites=json.load(sys.stdin); print(sites[0]['id'] if sites else '')" 2>/dev/null || true)
+              python3 -c "import sys,json; sites=json.load(sys.stdin); match=[s for s in sites if s.get('name')=='masterhub-client-portal']; print(match[0]['id'] if match else '')" 2>/dev/null || true)
           fi
 
           echo "site_id=$SITE_ID" >> "$GITHUB_OUTPUT"
-          echo "Site ID: $SITE_ID"
+          echo "Using site ID: $SITE_ID"
 
       - name: Deploy to Netlify
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_AUTH_TOKEN: nfp_Yvzgo3nSLWaERiaRpqrFW1ptM3CWGip99239
           NETLIFY_SITE_ID: ${{ steps.site.outputs.site_id }}
         run: |
           netlify deploy \
@@ -52,9 +51,7 @@ jobs:
             --prod \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --site "$NETLIFY_SITE_ID" \
-            --message "Deployed from GitHub Actions"
+            --message "Client Portal — deployed via GitHub Actions"
 
       - name: Print live URL
-        run: |
-          echo ""
-          echo "✅ Live at: https://masterhub-client-portal.netlify.app"
+        run: echo "Live at https://masterhub-client-portal.netlify.app"
