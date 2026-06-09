@@ -1,4 +1,16 @@
 {
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /home/user/MasterHub/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  },
   "mcpServers": {
     "agentmemory": {
       "command": "node",

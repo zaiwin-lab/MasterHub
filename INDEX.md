@@ -17,17 +17,25 @@ master-hub only               ← for research
 
 ## Skills Installed
 
+All skill files are committed inside `.claude/skills/` and auto-installed to `~/.claude/skills/` on every SessionStart via hook.
+
 ### gstack — AI Engineering Toolkit
-- **Location:** `~/.claude/skills/gstack/`
+- **Location:** `.claude/skills/gstack/`
 - **Source:** https://github.com/garrytan/gstack
-- **Key skills:** `/qa` `/review` `/ship` `/browse` `/cso` `/autoplan` `/office-hours`
-- **Status:** ✅ Active
+- **Key skills:** `/qa` `/review` `/ship` `/browse` `/cso` `/autoplan` `/office-hours` `/plan-ceo-review` `/plan-eng-review` `/design-html` `/design-review` `/investigate` `/document-generate` `/learn` `/setup-gbrain`
+- **Status:** ✅ Committed & auto-installed
+
+### impeccable — Premium UI/UX Quality
+- **Location:** `.claude/skills/impeccable/`
+- **Source:** https://github.com/pbakaus/impeccable
+- **Key skills:** `/impeccable audit` `/impeccable polish` `/impeccable critique` `/impeccable animate`
+- **Status:** ✅ Committed & auto-installed
 
 ### marketing — Marketing Skills
-- **Location:** `~/.claude/skills/` (via Claude BOX)
+- **Location:** `.claude/skills/marketing/`
 - **Source:** https://github.com/coreyhaines31/marketingskills
-- **Key skills:** `/copywriting` `/cro` `/marketing-psychology` `/seo-audit` `/emails`
-- **Status:** ✅ Active
+- **Key skills:** `/copywriting` `/cro` `/marketing-psychology` `/seo-audit` `/emails` `/ad-creative` `/pricing` `/content-strategy`
+- **Status:** ✅ Committed & auto-installed
 
 ### research — Research Skills
 - **Status:** ❌ Not yet installed
@@ -39,17 +47,21 @@ master-hub only               ← for research
 
 ---
 
+## Auto-Install Hook
+On every session start, `.claude/hooks/session-start.sh` runs and copies all skills from `.claude/skills/` into `~/.claude/skills/` automatically. No manual reinstall needed.
+
+---
+
 ## Brain (GBrain)
 - **Tool:** GBrain persistent knowledge base
 - **Setup:** Run `/setup-gbrain` in any session
 - **Status:** ⚠️ Not configured — run setup to activate
-- **Docs:** `~/.claude/skills/gstack/USING_GBRAIN_WITH_GSTACK.md`
 
 ---
 
 ## Global Config
-- **CLAUDE.md:** `~/.claude/CLAUDE.md` — gstack skill routing rules
-- **settings.json:** `~/.claude/settings.json` — MCP servers (agentmemory)
+- **CLAUDE.md:** Root `CLAUDE.md` — skill routing rules
+- **settings.json:** `.claude/settings.json` — hooks + MCP servers
 
 ---
 
