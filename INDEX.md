@@ -17,25 +17,27 @@ master-hub only               ← for research
 
 ## Skills Installed
 
+Skills are auto-installed into `~/.claude/skills/` at the start of every
+session by `.claude/hooks/session-start.sh` (registered as a `SessionStart`
+hook in `.claude/settings.json`). This guarantees every cloud session has
+the full skill set, even though the container starts fresh each time.
+
+### impeccable — Frontend design skill
+- **Source:** committed directly in this repo at `.claude/skills/impeccable/`
+- **Status:** ✅ Active
+
 ### gstack — AI Engineering Toolkit
-- **Location:** `~/.claude/skills/gstack/`
-- **Source:** https://github.com/garrytan/gstack
+- **Source:** https://github.com/garrytan/gstack (cloned fresh by the hook)
 - **Key skills:** `/qa` `/review` `/ship` `/browse` `/cso` `/autoplan` `/office-hours`
 - **Status:** ✅ Active
 
-### marketing — Marketing Skills
-- **Location:** `~/.claude/skills/` (via Claude BOX)
-- **Source:** https://github.com/coreyhaines31/marketingskills
+### marketing — Marketing Skills (43 skills)
+- **Source:** https://github.com/coreyhaines31/marketingskills (cloned fresh by the hook)
 - **Key skills:** `/copywriting` `/cro` `/marketing-psychology` `/seo-audit` `/emails`
 - **Status:** ✅ Active
 
-### research — Research Skills
-- **Status:** ❌ Not yet installed
-- **TODO:** Find & install research skills repo
-
-### efficiency — Prompt Efficiency Skills
-- **Status:** ❌ Not yet installed
-- **TODO:** Find & install efficiency/token-saving skills repo
+### research / efficiency
+- **Status:** ❌ Not yet installed — no source repo identified yet
 
 ---
 
