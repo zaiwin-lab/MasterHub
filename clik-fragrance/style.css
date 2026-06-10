@@ -109,6 +109,39 @@ body {
   .nav-links { display: none; }
 }
 
+.nav-lang {
+  display: flex; gap: 2px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.nav-lang button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(250,247,245,.55);
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .25s var(--ease);
+}
+
+.nav-lang button:hover { color: var(--paper); }
+
+.nav-lang button.active {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+@media (max-width: 1080px) {
+  .nav-lang { display: none; }
+}
+
 .nav-cta {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -165,6 +198,94 @@ body {
     linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 80%);
+}
+
+/* ─── Sparkles ─────────────────────────────────────── */
+.sparkle {
+  position: absolute;
+  width: 7px; height: 7px;
+  background: var(--gold-lt);
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  opacity: 0;
+  animation: twinkle 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px var(--gold));
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(.4) rotate(0deg); }
+  50%      { opacity: .9; transform: scale(1) rotate(45deg); }
+}
+
+/* ─── Perfume bottle (CSS illustration) ─────────────── */
+.bottle {
+  position: relative;
+  width: 64px; height: 120px;
+  margin: 0 auto 22px;
+}
+
+.bottle-cap {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 18px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+  border-radius: 4px 4px 2px 2px;
+  box-shadow: 0 2px 10px rgba(212,175,106,.4);
+}
+
+.bottle-neck {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  width: 14px; height: 12px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid var(--glass-border);
+}
+
+.bottle-body {
+  position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+  width: 64px; height: 94px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(255,255,255,.18), var(--bottle-color, var(--gold)) 75%);
+  border: 1px solid rgba(255,255,255,.25);
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.bottle-body::after {
+  content: '';
+  position: absolute; top: 0; left: 10%;
+  width: 22%; height: 100%;
+  background: linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,0));
+  transform: skewX(-12deg);
+}
+
+.bottle-liquid {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 55%;
+  background: var(--bottle-color, var(--gold));
+  opacity: .55;
+}
+
+.bottle-confidence { --bottle-color: #d4af6a; }
+.bottle-calm       { --bottle-color: #6b4e71; }
+.bottle-attraction { --bottle-color: #e8b4b8; }
+.bottle-focus      { --bottle-color: #7fa8c9; }
+.bottle-joy        { --bottle-color: #f0c869; }
+
+.hero-bottle-wrap {
+  position: absolute;
+  right: 6%; top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  opacity: .9;
+}
+
+.hero-bottle-wrap .bottle { width: 150px; height: 280px; margin: 0; }
+.hero-bottle-wrap .bottle-cap { width: 64px; height: 40px; border-radius: 8px 8px 4px 4px; }
+.hero-bottle-wrap .bottle-neck { width: 32px; height: 28px; top: 36px; }
+.hero-bottle-wrap .bottle-body { width: 150px; height: 220px; top: 60px; border-radius: 28px; }
+
+@media (max-width: 1100px) {
+  .hero-bottle-wrap { display: none; }
 }
 
 .hero-inner {
@@ -619,6 +740,18 @@ body {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: rgba(250,247,245,.4);
+}
+
+.footer-credit a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212,175,106,.3);
+  transition: border-color .25s var(--ease), color .25s var(--ease);
+}
+
+.footer-credit a:hover {
+  color: var(--gold-lt);
+  border-color: var(--gold-lt);
 }
 
 /* ─── Reveal animation ─────────────────────────────── */

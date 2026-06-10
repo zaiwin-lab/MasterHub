@@ -20,12 +20,18 @@
         <span>CLIK <em>FRAGRANCE</em></span>
       </div>
       <div class="nav-links">
-        <a href="#collections">Collections</a>
-        <a href="#story">Our Story</a>
-        <a href="#bundles">Bundles</a>
-        <a href="#contact">Contact</a>
+        <a href="#collections" data-i18n="nav.collections">Collections</a>
+        <a href="#story" data-i18n="nav.story">Our Story</a>
+        <a href="#bundles" data-i18n="nav.bundles">Bundles</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </div>
-      <a class="nav-cta" href="#collections">Shop Now</a>
+      <div class="nav-lang" role="group" aria-label="Language">
+        <button type="button" data-lang="bm">BM</button>
+        <button type="button" data-lang="en" class="active">EN</button>
+        <button type="button" data-lang="zh">中</button>
+        <button type="button" data-lang="ib">IB</button>
+      </div>
+      <a class="nav-cta" href="#collections" data-i18n="nav.shop">Shop Now</a>
     </div>
   </nav>
 
@@ -35,38 +41,53 @@
       <div class="hero-orb hero-orb-1"></div>
       <div class="hero-orb hero-orb-2"></div>
       <div class="hero-grid"></div>
+
+      <div class="hero-bottle-wrap">
+        <div class="bottle bottle-confidence">
+          <span class="bottle-cap"></span>
+          <span class="bottle-neck"></span>
+          <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        </div>
+      </div>
+
+      <span class="sparkle" style="top:14%; left:60%; animation-delay:0s;"></span>
+      <span class="sparkle" style="top:30%; left:80%; animation-delay:1.1s;"></span>
+      <span class="sparkle" style="top:52%; left:68%; animation-delay:2.3s;"></span>
+      <span class="sparkle" style="top:68%; left:88%; animation-delay:.6s;"></span>
+      <span class="sparkle" style="top:10%; left:90%; animation-delay:1.7s;"></span>
+      <span class="sparkle" style="top:80%; left:62%; animation-delay:2.9s;"></span>
     </div>
     <div class="hero-inner">
       <div class="hero-eyebrow reveal">
         <span class="eyebrow-dot"></span>
-        Kuching, Sarawak — Lifestyle Fragrance Brand
+        <span data-i18n="hero.eyebrow">Kuching, Sarawak — Lifestyle Fragrance Brand</span>
       </div>
       <h1 class="hero-title reveal">
-        A Scent for<br />
-        Every <em>Mood</em>,<br />
-        Every <em>You</em>.
+        <span data-i18n="hero.title.line1">A Scent for</span><br />
+        <span data-i18n="hero.title.every1">Every </span><em data-i18n="hero.title.mood">Mood</em>,<br />
+        <span data-i18n="hero.title.every2">Every </span><em data-i18n="hero.title.you">You</em>.
       </h1>
-      <p class="hero-sub reveal">
+      <p class="hero-sub reveal" data-i18n="hero.sub">
         Clik Fragrance turns perfume into self-expression — pick your scent
         based on how you want to feel today. Confident. Calm. Magnetic.
         Affordable, travel-friendly, made for daily life.
       </p>
       <div class="hero-actions reveal">
-        <a href="#collections" class="btn-primary"><span>Explore Scents</span> <span>↓</span></a>
-        <a href="#contact" class="btn-ghost"><span>Get in Touch</span> →</a>
+        <a href="#collections" class="btn-primary"><span data-i18n="hero.cta1">Explore Scents</span> <span>↓</span></a>
+        <a href="#contact" class="btn-ghost"><span data-i18n="hero.cta2">Get in Touch</span> →</a>
       </div>
       <div class="hero-stats reveal">
         <div class="stat">
           <span class="stat-num">10ml</span>
-          <span class="stat-label">Travel-size, everyday carry</span>
+          <span class="stat-label" data-i18n="hero.stat1">Travel-size, everyday carry</span>
         </div>
         <div class="stat">
           <span class="stat-num">5+</span>
-          <span class="stat-label">Mood-based scent profiles</span>
+          <span class="stat-label" data-i18n="hero.stat2">Mood-based scent profiles</span>
         </div>
         <div class="stat">
-          <span class="stat-num">Daily</span>
-          <span class="stat-label">Essential, not luxury-only</span>
+          <span class="stat-num" data-i18n="hero.stat3num">Daily</span>
+          <span class="stat-label" data-i18n="hero.stat3">Essential, not luxury-only</span>
         </div>
       </div>
     </div>
@@ -75,11 +96,11 @@
   <!-- BRAND CONCEPT -->
   <section class="concept" id="concept">
     <div class="section-inner">
-      <div class="section-eyebrow reveal">The Concept</div>
+      <div class="section-eyebrow reveal" data-i18n="concept.eyebrow">The Concept</div>
       <h2 class="section-title reveal">
-        Fragrance isn't just a scent — it's a <em>feeling</em> you choose.
+        <span data-i18n="concept.title.pre">Fragrance isn't just a scent — it's a </span><em data-i18n="concept.title.em">feeling</em><span data-i18n="concept.title.post"> you choose.</span>
       </h2>
-      <p class="section-sub reveal">
+      <p class="section-sub reveal" data-i18n="concept.sub">
         Instead of focusing only on notes and ingredients, every Clik
         Fragrance is built around an emotion: confidence, calmness,
         attraction, focus, and joy. Pick the mood you want to wear,
@@ -88,18 +109,18 @@
       <div class="concept-grid">
         <div class="concept-card reveal">
           <div class="concept-icon">●</div>
-          <h3>Choose by Mood</h3>
-          <p>Each fragrance is tagged to an emotion — so shopping feels personal, not overwhelming.</p>
+          <h3 data-i18n="concept.card1.title">Choose by Mood</h3>
+          <p data-i18n="concept.card1.desc">Each fragrance is tagged to an emotion — so shopping feels personal, not overwhelming.</p>
         </div>
         <div class="concept-card reveal">
           <div class="concept-icon">●</div>
-          <h3>Made for Daily Life</h3>
-          <p>10ml travel-size bottles slip into any bag — reapply on the go, between classes, meetings or dates.</p>
+          <h3 data-i18n="concept.card2.title">Made for Daily Life</h3>
+          <p data-i18n="concept.card2.desc">10ml travel-size bottles slip into any bag — reapply on the go, between classes, meetings or dates.</p>
         </div>
         <div class="concept-card reveal">
           <div class="concept-icon">●</div>
-          <h3>Content-First Brand</h3>
-          <p>Born on TikTok &amp; Instagram — GRWM routines, "Scent of the Day" pairing, and outfit-matching stories.</p>
+          <h3 data-i18n="concept.card3.title">Content-First Brand</h3>
+          <p data-i18n="concept.card3.desc">Born on TikTok &amp; Instagram — GRWM routines, "Scent of the Day" pairing, and outfit-matching stories.</p>
         </div>
       </div>
     </div>
@@ -108,49 +129,69 @@
   <!-- COLLECTIONS -->
   <section class="collections" id="collections">
     <div class="section-inner">
-      <div class="section-eyebrow reveal">Mood Collections</div>
-      <h2 class="section-title reveal">Find the scent that matches your energy.</h2>
+      <div class="section-eyebrow reveal" data-i18n="collections.eyebrow">Mood Collections</div>
+      <h2 class="section-title reveal" data-i18n="collections.title">Find the scent that matches your energy.</h2>
 
       <div class="collection-grid">
         <div class="collection-card reveal">
           <div class="collection-glow glow-confidence"></div>
-          <div class="collection-tag">Confidence</div>
+          <div class="bottle bottle-confidence">
+            <span class="bottle-cap"></span><span class="bottle-neck"></span>
+            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+          </div>
+          <div class="collection-tag" data-i18n="collection.bold.tag">Confidence</div>
           <h3>BOLD</h3>
-          <p>A warm, magnetic blend for the days you walk in and own the room.</p>
+          <p data-i18n="collection.bold.desc">A warm, magnetic blend for the days you walk in and own the room.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
         <div class="collection-card reveal">
           <div class="collection-glow glow-calm"></div>
-          <div class="collection-tag">Calm</div>
+          <div class="bottle bottle-calm">
+            <span class="bottle-cap"></span><span class="bottle-neck"></span>
+            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+          </div>
+          <div class="collection-tag" data-i18n="collection.serene.tag">Calm</div>
           <h3>SERENE</h3>
-          <p>Soft, powdery and grounding — for slow mornings and quiet focus.</p>
+          <p data-i18n="collection.serene.desc">Soft, powdery and grounding — for slow mornings and quiet focus.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
         <div class="collection-card reveal">
           <div class="collection-glow glow-attraction"></div>
-          <div class="collection-tag">Attraction</div>
+          <div class="bottle bottle-attraction">
+            <span class="bottle-cap"></span><span class="bottle-neck"></span>
+            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+          </div>
+          <div class="collection-tag" data-i18n="collection.muse.tag">Attraction</div>
           <h3>MUSE</h3>
-          <p>Sweet and alluring — designed for date nights and golden-hour energy.</p>
+          <p data-i18n="collection.muse.desc">Sweet and alluring — designed for date nights and golden-hour energy.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
         <div class="collection-card reveal">
           <div class="collection-glow glow-focus"></div>
-          <div class="collection-tag">Focus</div>
+          <div class="bottle bottle-focus">
+            <span class="bottle-cap"></span><span class="bottle-neck"></span>
+            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+          </div>
+          <div class="collection-tag" data-i18n="collection.clarity.tag">Focus</div>
           <h3>CLARITY</h3>
-          <p>Crisp and clean — a fresh reset for study sessions and deep work.</p>
+          <p data-i18n="collection.clarity.desc">Crisp and clean — a fresh reset for study sessions and deep work.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
         <div class="collection-card reveal">
           <div class="collection-glow glow-joy"></div>
-          <div class="collection-tag">Joy</div>
+          <div class="bottle bottle-joy">
+            <span class="bottle-cap"></span><span class="bottle-neck"></span>
+            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+          </div>
+          <div class="collection-tag" data-i18n="collection.sunny.tag">Joy</div>
           <h3>SUNNY</h3>
-          <p>Bright, fruity and playful — for good days and even better ones.</p>
+          <p data-i18n="collection.sunny.desc">Bright, fruity and playful — for good days and even better ones.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
         <div class="collection-card collection-card-cta reveal">
-          <h3>Not sure where<br />to start?</h3>
-          <p>DM us your vibe and we'll match you to your first Clik scent.</p>
-          <a href="#contact" class="btn-ghost">Find My Scent →</a>
+          <h3 data-i18n="collection.cta.title">Not sure where<br />to start?</h3>
+          <p data-i18n="collection.cta.desc">DM us your vibe and we'll match you to your first Clik scent.</p>
+          <a href="#contact" class="btn-ghost"><span data-i18n="collection.cta.link">Find My Scent</span> →</a>
         </div>
       </div>
     </div>
@@ -159,24 +200,24 @@
   <!-- BUNDLES -->
   <section class="bundles" id="bundles">
     <div class="section-inner">
-      <div class="section-eyebrow reveal">Bundle Sets</div>
-      <h2 class="section-title reveal">Try more, save more — built for everyday rotation.</h2>
+      <div class="section-eyebrow reveal" data-i18n="bundles.eyebrow">Bundle Sets</div>
+      <h2 class="section-title reveal" data-i18n="bundles.title">Try more, save more — built for everyday rotation.</h2>
       <div class="bundle-grid">
         <div class="bundle-card reveal">
-          <div class="bundle-badge">Most Popular</div>
-          <h3>Discovery Trio</h3>
-          <p>Pick any 3 mood scents (10ml each) — the easiest way to find your signature.</p>
-          <div class="bundle-price">RM 65 <span class="bundle-save">save RM 10</span></div>
+          <div class="bundle-badge" data-i18n="bundles.badge">Most Popular</div>
+          <h3 data-i18n="bundle.trio.title">Discovery Trio</h3>
+          <p data-i18n="bundle.trio.desc">Pick any 3 mood scents (10ml each) — the easiest way to find your signature.</p>
+          <div class="bundle-price">RM 65 <span class="bundle-save" data-i18n="bundle.trio.save">save RM 10</span></div>
         </div>
         <div class="bundle-card reveal">
-          <h3>Full Mood Set</h3>
-          <p>All 5 mood collections — one for every day of the work week.</p>
-          <div class="bundle-price">RM 100 <span class="bundle-save">save RM 25</span></div>
+          <h3 data-i18n="bundle.full.title">Full Mood Set</h3>
+          <p data-i18n="bundle.full.desc">All 5 mood collections — one for every day of the work week.</p>
+          <div class="bundle-price">RM 100 <span class="bundle-save" data-i18n="bundle.full.save">save RM 25</span></div>
         </div>
         <div class="bundle-card reveal">
-          <h3>Gift Box</h3>
-          <p>2 scents + premium packaging — perfect for birthdays &amp; appreciation gifts.</p>
-          <div class="bundle-price">RM 55 <span class="bundle-save">gift-ready</span></div>
+          <h3 data-i18n="bundle.gift.title">Gift Box</h3>
+          <p data-i18n="bundle.gift.desc">2 scents + premium packaging — perfect for birthdays &amp; appreciation gifts.</p>
+          <div class="bundle-price">RM 55 <span class="bundle-save" data-i18n="bundle.gift.save">gift-ready</span></div>
         </div>
       </div>
     </div>
@@ -186,29 +227,29 @@
   <section class="story" id="story">
     <div class="section-inner story-inner">
       <div class="story-content reveal">
-        <div class="section-eyebrow">Our Story</div>
-        <h2 class="section-title">
+        <div class="section-eyebrow" data-i18n="story.eyebrow">Our Story</div>
+        <h2 class="section-title" data-i18n="story.title">
           Built in Kuching, made for everyone who wants to feel like themselves.
         </h2>
-        <p class="section-sub">
+        <p class="section-sub" data-i18n="story.p1">
           Clik Fragrance started with a simple idea: perfume shouldn't be
           intimidating or expensive to be meaningful. We design every scent
           around a feeling, not just a season — so picking your fragrance
           becomes part of how you show up for your day.
         </p>
-        <p class="section-sub">
+        <p class="section-sub" data-i18n="story.p2">
           From "Get Ready With Me" videos to "Scent of the Day" pairings with
           your outfit, Clik Fragrance lives where our community already is —
           on TikTok and Instagram, growing one mood at a time.
         </p>
-        <a href="https://www.tiktok.com/@clikfragrance" class="btn-ghost" target="_blank" rel="noopener">Follow @clikfragrance →</a>
+        <a href="https://www.tiktok.com/@clikfragrance" class="btn-ghost" target="_blank" rel="noopener"><span data-i18n="story.follow">Follow @clikfragrance</span> →</a>
       </div>
       <div class="story-visual reveal">
         <div class="story-card">
-          <div class="story-card-row"><span>Founded</span><strong>2026 · Kuching, Sarawak</strong></div>
-          <div class="story-card-row"><span>Format</span><strong>10ml travel-size bottles</strong></div>
-          <div class="story-card-row"><span>Positioning</span><strong>Daily essential, not luxury-only</strong></div>
-          <div class="story-card-row"><span>Channels</span><strong>TikTok &amp; Instagram first</strong></div>
+          <div class="story-card-row"><span data-i18n="story.founded.label">Founded</span><strong>2026 · Kuching, Sarawak</strong></div>
+          <div class="story-card-row"><span data-i18n="story.format.label">Format</span><strong data-i18n="story.format.value">10ml travel-size bottles</strong></div>
+          <div class="story-card-row"><span data-i18n="story.position.label">Positioning</span><strong data-i18n="story.position.value">Daily essential, not luxury-only</strong></div>
+          <div class="story-card-row"><span data-i18n="story.channels.label">Channels</span><strong data-i18n="story.channels.value">TikTok &amp; Instagram first</strong></div>
         </div>
       </div>
     </div>
@@ -217,9 +258,9 @@
   <!-- CONTACT -->
   <section class="contact" id="contact">
     <div class="section-inner contact-inner">
-      <div class="section-eyebrow reveal">Get In Touch</div>
-      <h2 class="section-title reveal">Ready to find your scent?</h2>
-      <p class="section-sub reveal">
+      <div class="section-eyebrow reveal" data-i18n="contact.eyebrow">Get In Touch</div>
+      <h2 class="section-title reveal" data-i18n="contact.title">Ready to find your scent?</h2>
+      <p class="section-sub reveal" data-i18n="contact.sub">
         Message us on WhatsApp or Instagram — tell us your mood, and
         we'll help you pick (or build a bundle just for you).
       </p>
@@ -231,14 +272,15 @@
           <span>@clikfragrance</span> →
         </a>
       </div>
-      <div class="contact-meta reveal">Kuching, Sarawak, Malaysia</div>
+      <div class="contact-meta reveal" data-i18n="contact.meta">Kuching, Sarawak, Malaysia</div>
     </div>
   </section>
 
   <footer class="footer">
     <div class="section-inner footer-inner">
-      <span>© 2026 Clik Fragrance. All rights reserved.</span>
-      <span>Designed with ✦ for everyday self-expression.</span>
+      <span data-i18n="footer.rights">© 2026 Clik Fragrance. All rights reserved.</span>
+      <span data-i18n="footer.tagline">Designed with ✦ for everyday self-expression.</span>
+      <span class="footer-credit"><span data-i18n="footer.credit">Web experience by</span> <a href="https://kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a></span>
     </div>
   </footer>
 
