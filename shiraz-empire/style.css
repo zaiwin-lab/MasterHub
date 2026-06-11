@@ -116,6 +116,27 @@ ul { list-style: none; }
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+.ticker-bar-2 {
+  position: static;
+  height: 30px;
+  margin-top: 48px;
+  background: var(--paper-2);
+  border-top: 1px solid rgba(11,27,43,.06);
+  border-bottom: 1px solid rgba(11,27,43,.06);
+}
+.ticker-bar-2 .ticker-item {
+  color: var(--ink-2);
+  opacity: .35;
+  font-weight: 500;
+}
+.contact-map {
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  line-height: 0;
+}
+.contact-map iframe { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .ticker-track,
   .hero-radiance,
@@ -825,7 +846,7 @@ section { padding: 80px 0; }
 
 /* ============ KOBIS bar ============ */
 .kobis-bar {
-  height: 1.5in;
+  height: .75in;
   background: #060a12;
   display: flex;
   align-items: center;
@@ -834,8 +855,9 @@ section { padding: 80px 0; }
 }
 .kobis-bar p {
   font-family: var(--font-mono);
-  font-size: .82rem;
-  color: rgba(255,255,255,.5);
+  font-size: .72rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.85);
   letter-spacing: .04em;
 }
 .kobis-bar a {
