@@ -843,7 +843,12 @@ section { padding: 80px 0; }
   font-weight: 600;
   transition: color .2s var(--ease);
 }
-.kobis-bar a:hover { color: var(--white); }
+.kobis-bar a:hover {
+  background: linear-gradient(120deg, var(--ice), var(--royal-lt), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 /* ============ Reveal on scroll ============ */
 .reveal {
