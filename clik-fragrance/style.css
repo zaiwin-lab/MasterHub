@@ -292,25 +292,131 @@ body {
 
 .hero-bottle-wrap {
   position: absolute;
-  right: 8%; top: 50%;
+  right: 6%; top: 50%;
   transform: translateY(-50%);
   z-index: 1;
-  opacity: .95;
-  animation: float 6s var(--ease) infinite;
+  width: 380px; height: 480px;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(-50%) rotate(-2deg); }
-  50%      { transform: translateY(calc(-50% - 18px)) rotate(2deg); }
+/* Rotating conic radiance ring behind the hero bottle */
+.hero-radiance {
+  position: absolute; inset: -60px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    oklch(0.72 0.20 28 / .5),
+    oklch(0.86 0.18 130 / .35),
+    oklch(0.62 0.21 305 / .5),
+    oklch(0.74 0.19 8 / .35),
+    oklch(0.72 0.20 28 / .5)
+  );
+  filter: blur(70px);
+  animation: radiance-spin 14s linear infinite;
 }
 
-.hero-bottle-wrap .bottle { width: 130px; height: 300px; margin: 0; }
-.hero-bottle-wrap .bottle-cap { width: 46px; height: 36px; border-radius: 6px; }
-.hero-bottle-wrap .bottle-neck { width: 26px; height: 32px; top: 36px; }
-.hero-bottle-wrap .bottle-body { width: 130px; height: 232px; top: 68px; border-radius: 16px; }
+@keyframes radiance-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-photo {
+  position: absolute; inset: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 80px oklch(0.72 0.20 28 / .25);
+  animation: hero-float 7s var(--ease) infinite;
+}
+
+.hero-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Periodic shine sweep across the hero photo */
+.hero-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
+  transform: translateX(-120%);
+  animation: shine-sweep 5.5s var(--ease) infinite;
+}
+
+@keyframes shine-sweep {
+  0%, 60%  { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-16px) rotate(1deg); }
+}
+
+.hero-photo-mini {
+  position: absolute; bottom: -36px; left: -64px;
+  width: 170px; height: 200px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 24px 56px rgba(0,0,0,.5);
+  transform: rotate(-7deg);
+  animation: mini-float 6s var(--ease) infinite;
+}
+
+.hero-photo-mini img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@keyframes mini-float {
+  0%, 100% { transform: rotate(-7deg) translateY(0); }
+  50%      { transform: rotate(-5deg) translateY(-10px); }
+}
+
+@media (max-width: 1100px) {
+  .hero-bottle-wrap { width: 300px; height: 390px; right: 4%; }
+}
 
 @media (max-width: 900px) {
   .hero-bottle-wrap { display: none; }
+}
+
+/* ─── Mood marquee ─────────────────────────────────── */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--ink-2);
+  padding: 22px 0;
+  position: relative;
+}
+
+.marquee-track {
+  display: flex; align-items: center; gap: 48px;
+  width: max-content;
+  animation: marquee-scroll 26s linear infinite;
+}
+
+.marquee-track span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.marquee-track span:nth-child(4n+1) { color: var(--coral-lt); }
+.marquee-track span:nth-child(4n+3) { color: var(--lime); }
+
+.marquee-track .mq-star {
+  font-size: 1rem;
+  color: rgba(247,245,250,.4);
+}
+
+@keyframes marquee-scroll {
+  to { transform: translateX(-50%); }
 }
 
 .hero-inner {
@@ -479,6 +585,55 @@ body {
 /* ─── Concept ──────────────────────────────────────── */
 .concept { background: var(--ink-2); position: relative; }
 
+.concept-collage {
+  display: flex; justify-content: center; gap: 28px;
+  margin: 56px 0 8px;
+  flex-wrap: wrap;
+}
+
+.polaroid {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  width: 220px;
+  box-shadow: 0 20px 44px rgba(0,0,0,.4);
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+}
+
+.polaroid img {
+  width: 100%; height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+.polaroid figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(247,245,250,.75);
+  padding-top: 10px;
+  text-align: center;
+}
+
+.polaroid-1 { transform: rotate(-5deg) translateY(10px); }
+.polaroid-2 { transform: rotate(2deg); z-index: 1; }
+.polaroid-3 { transform: rotate(6deg) translateY(14px); }
+
+.polaroid:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.04);
+  box-shadow: 0 30px 60px rgba(0,0,0,.5);
+  z-index: 2;
+}
+
+@media (max-width: 720px) {
+  .concept-collage { gap: 16px; }
+  .polaroid { width: 150px; padding: 8px 8px 10px; }
+  .polaroid img { height: 150px; }
+  .polaroid figcaption { font-size: 0.7rem; }
+}
+
 .concept-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -557,11 +712,60 @@ body {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--r-lg);
-  padding: 40px 28px;
-  min-height: 280px;
+  padding: 0 28px 32px;
   display: flex; flex-direction: column; justify-content: flex-end;
   transition: transform .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
+  transform-style: preserve-3d;
+  will-change: transform;
 }
+
+.collection-photo {
+  position: relative;
+  margin: 0 -28px 24px;
+  height: 230px;
+  overflow: hidden;
+}
+
+.collection-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.85);
+  transition: transform .6s var(--ease), filter .6s var(--ease);
+}
+
+.collection-card:hover .collection-photo img {
+  transform: scale(1.07);
+  filter: saturate(1.15);
+}
+
+/* Mood duotone wash over each photo */
+.collection-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--photo-tint, transparent) 0%, transparent 45%, var(--ink) 100%);
+  opacity: .85;
+  pointer-events: none;
+}
+
+.photo-confidence { --photo-tint: oklch(0.72 0.20 28 / .35); }
+.photo-calm       { --photo-tint: oklch(0.78 0.13 230 / .35); }
+.photo-attraction { --photo-tint: oklch(0.74 0.19 8 / .35); }
+.photo-focus      { --photo-tint: oklch(0.62 0.21 305 / .4); }
+.photo-joy        { --photo-tint: oklch(0.86 0.18 130 / .3); }
+
+/* Mini bottle badge floating over the photo */
+.collection-photo .bottle {
+  position: absolute; right: 16px; bottom: 4px;
+  width: 34px; height: 78px;
+  margin: 0;
+  z-index: 2;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+}
+
+.collection-photo .bottle-cap  { width: 14px; height: 10px; }
+.collection-photo .bottle-neck { width: 8px; height: 9px; top: 10px; }
+.collection-photo .bottle-body { width: 34px; height: 58px; top: 19px; border-radius: 6px; }
 
 .collection-card:hover {
   transform: translateY(-10px) scale(1.015);
@@ -647,6 +851,8 @@ body {
   justify-content: center;
   align-items: flex-start;
   text-align: left;
+  padding: 40px 28px;
+  min-height: 280px;
 }
 
 .collection-card-cta h3 {
@@ -744,6 +950,38 @@ body {
 
 .story-content .btn-ghost { margin-top: 8px; }
 
+.story-visual { position: relative; }
+
+.story-photo {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 30px 70px rgba(0,0,0,.45);
+  margin-bottom: -60px;
+  transform: rotate(-2deg);
+  position: relative;
+  z-index: 0;
+}
+
+.story-photo img {
+  width: 100%; height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.story-visual .story-card {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(20px);
+  background: rgba(26, 22, 36, .8);
+  margin-left: 32px;
+}
+
+@media (max-width: 880px) {
+  .story-photo { margin-bottom: -40px; }
+  .story-visual .story-card { margin-left: 16px; }
+}
+
 .story-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -833,8 +1071,20 @@ body {
   transform: translateY(0);
 }
 
+/* Staggered reveal inside grids */
+.concept-grid .reveal:nth-child(2),
+.collection-grid .reveal:nth-child(2),
+.bundle-grid .reveal:nth-child(2) { transition-delay: .1s; }
+.concept-grid .reveal:nth-child(3),
+.collection-grid .reveal:nth-child(3),
+.bundle-grid .reveal:nth-child(3) { transition-delay: .2s; }
+.collection-grid .reveal:nth-child(4) { transition-delay: .3s; }
+.collection-grid .reveal:nth-child(5) { transition-delay: .4s; }
+.collection-grid .reveal:nth-child(6) { transition-delay: .5s; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .hero-bottle-wrap { animation: none; }
+  .hero-photo, .hero-photo-mini, .hero-radiance, .marquee-track,
   .eyebrow-dot { animation: none; }
+  .hero-photo::after { animation: none; }
 }

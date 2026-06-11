@@ -28,6 +28,40 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
+// ─── Motion: 3D tilt + hero parallax ─────────────────────
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch = window.matchMedia('(hover: none)').matches;
+
+if (!prefersReducedMotion && !isTouch) {
+  // Subtle 3D tilt on collection cards
+  document.querySelectorAll('[data-tilt]').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(900px) rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-8px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // Hero parallax: orbs + photo drift with the cursor
+  const hero = document.getElementById('hero');
+  const orb1 = document.querySelector('.hero-orb-1');
+  const orb2 = document.querySelector('.hero-orb-2');
+  const heroWrap = document.querySelector('.hero-bottle-wrap');
+  if (hero) {
+    hero.addEventListener('mousemove', (e) => {
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+      if (orb1) orb1.style.translate = `${x * 30}px ${y * 30}px`;
+      if (orb2) orb2.style.translate = `${x * -24}px ${y * -24}px`;
+      if (heroWrap) heroWrap.style.translate = `${x * -14}px ${y * -10}px`;
+    });
+  }
+}
+
 // ─── Language toggle (BM / EN / 中 / IB) ─────────────────
 const translations = {
   en: {
