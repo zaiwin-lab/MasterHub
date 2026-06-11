@@ -12,26 +12,52 @@
 </head>
 <body>
 
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+  </div>
+</div>
+
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a href="#top" class="logo">
       <span class="logo-mark">KAM</span><span class="logo-rest">MOTOR<br>WORLD</span>
     </a>
     <nav class="nav-links">
-      <a href="#about">About</a>
-      <a href="#capabilities">Capabilities</a>
-      <a href="#why">Why KAM</a>
-      <a href="#contact">Visit Us</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+      <a href="#why" data-i18n="nav.why">Why KAM</a>
+      <a href="#contact" data-i18n="nav.contact">Visit Us</a>
     </nav>
-    <a href="#contact" class="btn btn-nav">Get In Touch</a>
+    <div class="nav-lang">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="bm">BM</button>
+      <button class="lang-btn" data-lang="zh">中</button>
+      <button class="lang-btn" data-lang="ib">IB</button>
+    </div>
+    <a href="#contact" class="btn btn-nav" data-i18n="nav.cta">Get In Touch</a>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about">About</a>
-    <a href="#capabilities">Capabilities</a>
-    <a href="#why">Why KAM</a>
-    <a href="#contact">Visit Us</a>
-    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+    <a href="#about" data-i18n="nav.about">About</a>
+    <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+    <a href="#why" data-i18n="nav.why">Why KAM</a>
+    <a href="#contact" data-i18n="nav.contact">Visit Us</a>
+    <div class="nav-lang nav-lang-mobile">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="bm">BM</button>
+      <button class="lang-btn" data-lang="zh">中</button>
+      <button class="lang-btn" data-lang="ib">IB</button>
+    </div>
+    <a href="#contact" class="btn btn-primary" data-i18n="nav.cta">Get In Touch</a>
   </div>
 </header>
 
@@ -42,31 +68,31 @@
     <div class="hero-glow"></div>
   </div>
   <div class="hero-inner">
-    <p class="eyebrow reveal">KOTA SAMARAHAN · SARAWAK</p>
+    <p class="eyebrow reveal" data-i18n="hero.eyebrow">KOTA SAMARAHAN · SARAWAK</p>
     <h1 class="hero-title reveal">
-      <span class="line">PREMIUM PARTS.</span>
-      <span class="line">EXPERT SERVICE.</span>
-      <span class="line accent">BUILT TO RIDE.</span>
+      <span class="line" data-i18n="hero.line1">PREMIUM PARTS.</span>
+      <span class="line" data-i18n="hero.line2">EXPERT SERVICE.</span>
+      <span class="line accent" data-i18n="hero.line3">BUILT TO RIDE.</span>
     </h1>
-    <p class="hero-sub reveal">From genuine spare parts to full custom builds — KAM Motorworld is Kota Samarahan's trusted destination for riders who expect more from their machine.</p>
+    <p class="hero-sub reveal" data-i18n="hero.sub">From genuine spare parts to full custom builds — KAM Motorworld is Kota Samarahan's trusted destination for riders who expect more from their machine.</p>
     <div class="hero-cta reveal">
-      <a href="#contact" class="btn btn-primary">Visit the Workshop <span>→</span></a>
-      <a href="#capabilities" class="btn btn-ghost">Our Capabilities</a>
+      <a href="#contact" class="btn btn-primary" data-i18n="hero.cta1">Visit the Workshop <span>→</span></a>
+      <a href="#capabilities" class="btn btn-ghost" data-i18n="hero.cta2">Our Capabilities</a>
     </div>
     <div class="hero-stats reveal">
       <div class="stat">
         <span class="stat-num">2016</span>
-        <span class="stat-label">Founded</span>
+        <span class="stat-label" data-i18n="hero.stat1">Founded</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
         <span class="stat-num">2023</span>
-        <span class="stat-label">Rebrand &amp; Reborn</span>
+        <span class="stat-label" data-i18n="hero.stat2">Rebrand &amp; Reborn</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-num">Genuine</span>
-        <span class="stat-label">Parts Only</span>
+        <span class="stat-num" data-i18n="hero.stat3num">Genuine</span>
+        <span class="stat-label" data-i18n="hero.stat3">Parts Only</span>
       </div>
     </div>
   </div>
@@ -84,57 +110,71 @@
 <section class="evolution" id="about">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker">OUR JOURNEY</p>
-      <h2>From a small workshop<br>to a <span class="accent-text">trusted name.</span></h2>
+      <p class="kicker" data-i18n="about.kicker">OUR JOURNEY</p>
+      <h2 data-i18n="about.title">From a small workshop<br>to a <span class="accent-text">trusted name.</span></h2>
     </div>
     <div class="timeline">
       <div class="timeline-item reveal">
         <span class="timeline-year">2016</span>
         <div class="timeline-body">
-          <h3>The Beginning</h3>
-          <p>KAM Motorworld opens its doors in Kota Samarahan — a small shop with a big promise: honest service, fair prices, and parts that last.</p>
+          <h3 data-i18n="about.t1title">The Beginning</h3>
+          <p data-i18n="about.t1body">KAM Motorworld opens its doors in Kota Samarahan — a small shop with a big promise: honest service, fair prices, and parts that last.</p>
         </div>
       </div>
       <div class="timeline-item reveal">
         <span class="timeline-year">2023</span>
         <div class="timeline-body">
-          <h3>Rebrand &amp; Reborn</h3>
-          <p>A renewed identity, a sharper focus — built around lasting trust, premium quality, and expert solutions for every rider who walks through the door.</p>
+          <h3 data-i18n="about.t2title">Rebrand &amp; Reborn</h3>
+          <p data-i18n="about.t2body">A renewed identity, a sharper focus — built around lasting trust, premium quality, and expert solutions for every rider who walks through the door.</p>
         </div>
       </div>
       <div class="timeline-item reveal">
-        <span class="timeline-year">TODAY</span>
+        <span class="timeline-year" data-i18n="about.t3year">TODAY</span>
         <div class="timeline-body">
-          <h3>Engineered for Riders</h3>
-          <p>A full-service destination for genuine parts, maintenance, repairs, upgrades and customization — built for growth, engineered for riders.</p>
+          <h3 data-i18n="about.t3title">Engineered for Riders</h3>
+          <p data-i18n="about.t3body">A full-service destination for genuine parts, maintenance, repairs, upgrades and customization — built for growth, engineered for riders.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+<div class="ticker-bar ticker-bar-2" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">⚙ This website is built by KOBIS Berhad</span>
+  </div>
+</div>
+
 <!-- ============ Strategic Core ============ -->
 <section class="core">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker kicker-light">OUR STRATEGIC CORE</p>
-      <h2 class="light">To equip every rider with the parts, service, and expertise they need to ride further, safer, and with confidence.</h2>
+      <p class="kicker kicker-light" data-i18n="core.kicker">OUR STRATEGIC CORE</p>
+      <h2 class="light" data-i18n="core.title">To equip every rider with the parts, service, and expertise they need to ride further, safer, and with confidence.</h2>
     </div>
     <div class="core-grid">
       <div class="core-card reveal">
         <span class="core-num">01</span>
-        <h3>Lasting Trust</h3>
-        <p>Built on honesty and consistency — the kind of relationships that keep riders coming back for years.</p>
+        <h3 data-i18n="core.c1title">Lasting Trust</h3>
+        <p data-i18n="core.c1body">Built on honesty and consistency — the kind of relationships that keep riders coming back for years.</p>
       </div>
       <div class="core-card reveal">
         <span class="core-num">02</span>
-        <h3>Premium Quality</h3>
-        <p>Genuine parts, proper tools, and craftsmanship that respects your machine and your investment.</p>
+        <h3 data-i18n="core.c2title">Premium Quality</h3>
+        <p data-i18n="core.c2body">Genuine parts, proper tools, and craftsmanship that respects your machine and your investment.</p>
       </div>
       <div class="core-card reveal">
         <span class="core-num">03</span>
-        <h3>Expert Solutions</h3>
-        <p>Skilled technicians who diagnose right the first time and solve problems, not just symptoms.</p>
+        <h3 data-i18n="core.c3title">Expert Solutions</h3>
+        <p data-i18n="core.c3body">Skilled technicians who diagnose right the first time and solve problems, not just symptoms.</p>
       </div>
     </div>
   </div>
@@ -144,29 +184,29 @@
 <section class="capabilities" id="capabilities">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker">END-TO-END RIDER CAPABILITIES</p>
-      <h2>Everything your bike needs.<br>Under one roof.</h2>
+      <p class="kicker" data-i18n="cap.kicker">END-TO-END RIDER CAPABILITIES</p>
+      <h2 data-i18n="cap.title">Everything your bike needs.<br>Under one roof.</h2>
     </div>
     <div class="cap-grid">
       <div class="cap-card reveal">
         <div class="cap-icon">⚙️</div>
-        <h3>Genuine Spare Parts</h3>
-        <p>Authentic, quality-checked parts sourced for reliability — no shortcuts, no compromises.</p>
+        <h3 data-i18n="cap.c1title">Genuine Spare Parts</h3>
+        <p data-i18n="cap.c1body">Authentic, quality-checked parts sourced for reliability — no shortcuts, no compromises.</p>
       </div>
       <div class="cap-card cap-card-feat reveal">
         <div class="cap-icon">🛠️</div>
-        <h3>Comprehensive Maintenance</h3>
-        <p>Routine servicing, oil changes, tune-ups and inspections to keep your ride running at its best.</p>
+        <h3 data-i18n="cap.c2title">Comprehensive Maintenance</h3>
+        <p data-i18n="cap.c2body">Routine servicing, oil changes, tune-ups and inspections to keep your ride running at its best.</p>
       </div>
       <div class="cap-card reveal">
         <div class="cap-icon">🔧</div>
-        <h3>Expert Repairs &amp; Upgrades</h3>
-        <p>From engine work to performance upgrades, our technicians bring precision and experience to every job.</p>
+        <h3 data-i18n="cap.c3title">Expert Repairs &amp; Upgrades</h3>
+        <p data-i18n="cap.c3body">From engine work to performance upgrades, our technicians bring precision and experience to every job.</p>
       </div>
       <div class="cap-card reveal">
         <div class="cap-icon">🏍️</div>
-        <h3>Accessories &amp; Customization</h3>
-        <p>Personalize your ride with accessories and custom builds that reflect your style and needs.</p>
+        <h3 data-i18n="cap.c4title">Accessories &amp; Customization</h3>
+        <p data-i18n="cap.c4body">Personalize your ride with accessories and custom builds that reflect your style and needs.</p>
       </div>
     </div>
   </div>
@@ -176,29 +216,29 @@
 <section class="why" id="why">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker kicker-light">BUILT FOR GROWTH. ENGINEERED FOR RIDERS.</p>
-      <h2 class="light">Why riders <span class="accent-text">choose KAM.</span></h2>
+      <p class="kicker kicker-light" data-i18n="why.kicker">BUILT FOR GROWTH. ENGINEERED FOR RIDERS.</p>
+      <h2 class="light" data-i18n="why.title">Why riders <span class="accent-text">choose KAM.</span></h2>
     </div>
     <div class="why-grid">
       <div class="why-card reveal">
         <span class="why-icon">🧠</span>
-        <h3>Deep Expertise</h3>
-        <p>Years of hands-on experience across makes and models — diagnosing right, every time.</p>
+        <h3 data-i18n="why.c1title">Deep Expertise</h3>
+        <p data-i18n="why.c1body">Years of hands-on experience across makes and models — diagnosing right, every time.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">✅</span>
-        <h3>Uncompromised Quality</h3>
-        <p>Genuine parts and proper procedures — built to last, not just to leave the shop running.</p>
+        <h3 data-i18n="why.c2title">Uncompromised Quality</h3>
+        <p data-i18n="why.c2body">Genuine parts and proper procedures — built to last, not just to leave the shop running.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🤝</span>
-        <h3>Rider-First Approach</h3>
-        <p>Honest advice, transparent pricing, and service that puts your safety and satisfaction first.</p>
+        <h3 data-i18n="why.c3title">Rider-First Approach</h3>
+        <p data-i18n="why.c3body">Honest advice, transparent pricing, and service that puts your safety and satisfaction first.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">💰</span>
-        <h3>Outstanding Value</h3>
-        <p>Premium work at prices that respect your wallet — quality service shouldn't break the bank.</p>
+        <h3 data-i18n="why.c4title">Outstanding Value</h3>
+        <p data-i18n="why.c4body">Premium work at prices that respect your wallet — quality service shouldn't break the bank.</p>
       </div>
     </div>
   </div>
@@ -208,33 +248,44 @@
 <section class="contact" id="contact">
   <div class="section-inner contact-grid">
     <div class="contact-info reveal">
-      <p class="kicker">READY TO UPGRADE YOUR RIDE?</p>
-      <h2 class="light">Bring your bike in.<br>Leave it better than ever.</h2>
+      <p class="kicker" data-i18n="contact.kicker">READY TO UPGRADE YOUR RIDE?</p>
+      <h2 class="light" data-i18n="contact.title">Bring your bike in.<br>Leave it better than ever.</h2>
       <div class="info-row">
-        <span class="info-label">Address</span>
-        <span class="info-val">Grd Flr, Sublot 5, Lot 2281, Block 26, Jalan Dato Mohd. Musa, 94300 Kota Samarahan, Sarawak</span>
+        <span class="info-label" data-i18n="contact.addrlabel">Address</span>
+        <span class="info-val" data-i18n="contact.addr">Grd Flr, Sublot 5, Lot 2281, Block 26, Jalan Dato Mohd. Musa, 94300 Kota Samarahan, Sarawak</span>
       </div>
       <div class="info-row">
-        <span class="info-label">Phone</span>
+        <span class="info-label" data-i18n="contact.phonelabel">Phone</span>
         <span class="info-val">016-8075562 (Ah Chen) · 016-5058789 (Jessy)</span>
       </div>
       <div class="info-row">
-        <span class="info-label">Email</span>
+        <span class="info-label" data-i18n="contact.emaillabel">Email</span>
         <span class="info-val">kammotorworld@gmail.com</span>
       </div>
-      <a href="https://www.google.com/maps/search/Lot+2281+Block+26+Jalan+Dato+Mohd+Musa+Kota+Samarahan" target="_blank" rel="noopener" class="btn btn-primary">Get Directions <span>→</span></a>
+      <a href="https://www.google.com/maps/search/Lot+2281+Block+26+Jalan+Dato+Mohd+Musa+Kota+Samarahan" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="contact.cta">Get Directions <span>→</span></a>
     </div>
-    <div class="contact-map reveal" aria-hidden="true">
-      <div class="map-card">
-        <div class="map-pin">📍</div>
-        <p>KAM Motorworld<br>Kota Samarahan, Sarawak</p>
-      </div>
+    <div class="contact-map reveal">
+      <iframe
+        src="https://www.google.com/maps?q=Grd+Flr,+Sublot+5,+Lot+2281,+Block+26,+Jalan+Dato+Mohd.+Musa,+94300+Kota+Samarahan,+Sarawak&output=embed"
+        width="100%" height="320" style="border:0" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade" title="KAM Motorworld location map" class="map-frame"></iframe>
     </div>
   </div>
 </section>
 
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-mark">KAM</span><span class="logo-rest">MOTOR<br>WORLD</span>
+    </div>
+    <p data-i18n="footer.tagline">Premium Parts. Expert Service. Built to Ride. — Kota Samarahan, Sarawak.</p>
+    <p class="footer-copy" data-i18n="footer.copy">&copy; 2026 KAM Motorworld. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
 <footer class="kobis-bar">
-  <p>This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem</p>
+  <p data-i18n="footer.credit">This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem</p>
 </footer>
 
 <script src="app.js"></script>
