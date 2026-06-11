@@ -1,3 +1,14 @@
+// ============ Dynamic ticker message ============
+fetch('content/settings.json')
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (!data?.ticker) return;
+    document.querySelectorAll('.ticker-item').forEach(el => {
+      el.textContent = data.ticker;
+    });
+  })
+  .catch(() => {});
+
 // ============ Motion: tilt + hero parallax ============
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
@@ -74,7 +85,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 const translations = {
   en: {
     'nav.about': 'About', 'nav.services': 'Services', 'nav.why': 'Why Us',
-    'nav.area': 'Service Area', 'nav.contact': 'Contact', 'nav.cta': 'Book a Service',
+    'nav.area': 'Service Area', 'nav.contact': 'Contact', 'nav.gallery': 'Gallery', 'nav.news': 'News', 'nav.cta': 'Book a Service',
+    'gallery.eyebrow': 'Gallery', 'gallery.title': 'Our Work in Pictures.', 'gallery.sub': 'A look at recent installations, repairs and maintenance jobs across Kota Samarahan and Greater Kuching.', 'gallery.loading': 'Loading photos…',
+    'news.eyebrow': 'News', 'news.title': 'News & Stories.', 'news.sub': 'Updates, milestones and stories from the Shiraz Empire team.', 'news.loading': 'Loading news…',
     'hero.eyebrow': 'Kota Samarahan — Air-Conditioning Specialists',
     'hero.title': 'Cool Comfort, <em>Done Right</em>.',
     'hero.sub': "Shiraz Empire supplies, installs, maintains and repairs air-conditioning units across Kota Samarahan and greater Kuching — straightforward pricing and technicians who take care of the details.",
@@ -138,7 +151,9 @@ const translations = {
   },
   bm: {
     'nav.about': 'Tentang', 'nav.services': 'Perkhidmatan', 'nav.why': 'Kelebihan',
-    'nav.area': 'Kawasan', 'nav.contact': 'Hubungi', 'nav.cta': 'Tempah Servis',
+    'nav.area': 'Kawasan', 'nav.contact': 'Hubungi', 'nav.gallery': 'Galeri', 'nav.news': 'Berita', 'nav.cta': 'Tempah Servis',
+    'gallery.eyebrow': 'Galeri', 'gallery.title': 'Hasil Kerja Kami.', 'gallery.sub': 'Lihat pemasangan, pembaikan dan penyelenggaraan terkini di Kota Samarahan dan Kuching.', 'gallery.loading': 'Memuatkan gambar…',
+    'news.eyebrow': 'Berita', 'news.title': 'Berita & Cerita.', 'news.sub': 'Kemas kini, pencapaian dan cerita daripada pasukan Shiraz Empire.', 'news.loading': 'Memuatkan berita…',
     'hero.eyebrow': 'Kota Samarahan — Pakar Penyaman Udara',
     'hero.title': 'Keselesaan Sejuk, <em>Dilakukan Dengan Betul</em>.',
     'hero.sub': 'Shiraz Empire membekal, memasang, menyelenggara dan membaik pulih unit penyaman udara di Kota Samarahan dan Kuching — harga jelas dan juruteknik yang teliti dengan kerja mereka.',
@@ -202,7 +217,9 @@ const translations = {
   },
   zh: {
     'nav.about': '关于我们', 'nav.services': '服务项目', 'nav.why': '我们的优势',
-    'nav.area': '服务区域', 'nav.contact': '联系我们', 'nav.cta': '预约服务',
+    'nav.area': '服务区域', 'nav.contact': '联系我们', 'nav.gallery': '图库', 'nav.news': '新闻', 'nav.cta': '预约服务',
+    'gallery.eyebrow': '图库', 'gallery.title': '我们的工作实录。', 'gallery.sub': '查看我们在 Kota Samarahan 与大古晋地区的安装、维修与保养工作。', 'gallery.loading': '正在载入照片…',
+    'news.eyebrow': '新闻', 'news.title': '新闻与故事。', 'news.sub': 'Shiraz Empire 团队的最新消息与故事。', 'news.loading': '正在载入新闻…',
     'hero.eyebrow': 'Kota Samarahan — 冷气专家',
     'hero.title': '尊享清凉，<em>用心做好</em>。',
     'hero.sub': 'Shiraz Empire 为 Kota Samarahan 及古晋一带提供冷气供应、安装、保养与维修服务 — 价格清楚明白，技师做事细心。',
@@ -266,7 +283,9 @@ const translations = {
   },
   ib: {
     'nav.about': 'Pasal Kami', 'nav.services': 'Pengawa', 'nav.why': 'Kenapa Kami',
-    'nav.area': 'Kawasan Pengawa', 'nav.contact': 'Berandau', 'nav.cta': 'Pesan Pengawa',
+    'nav.area': 'Kawasan Pengawa', 'nav.contact': 'Berandau', 'nav.gallery': 'Gambar', 'nav.news': 'Berita', 'nav.cta': 'Pesan Pengawa',
+    'gallery.eyebrow': 'Gambar', 'gallery.title': 'Pengawa Kami Dalam Gambar.', 'gallery.sub': 'Gambar pemasangan, pengubah enggau pengintu ti baru di Kota Samarahan enggau Kuching.', 'gallery.loading': 'Ngemuatka gambar…',
+    'news.eyebrow': 'Berita', 'news.title': 'Berita & Cherita.', 'news.sub': 'Berita, pencapaian enggau cherita ari pasukan Shiraz Empire.', 'news.loading': 'Ngemuatka berita…',
     'hero.eyebrow': 'Kota Samarahan — Pakar Penyaman Udara',
     'hero.title': 'Chelap Ti Nyamai, <em>Dikereja Enggau Bujur</em>.',
     'hero.sub': 'Shiraz Empire nyadi, masang, ngintu enggau ngubah unit penyaman udara di Kota Samarahan enggau Kuching — reti ti chelap enggau jejantan ti bera ka pengawa sida.',

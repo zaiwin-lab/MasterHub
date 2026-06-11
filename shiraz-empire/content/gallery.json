@@ -1,0 +1,11 @@
+{
+  "photos": [
+    { "image": "/assets/hero-tech.jpg", "caption": "On-site installation, Kota Samarahan" },
+    { "image": "/assets/ac-install.jpg", "caption": "Wall-mounted unit installation" },
+    { "image": "/assets/ac-unit-wall.jpg", "caption": "Completed indoor unit" },
+    { "image": "/assets/ac-outdoor-units.jpg", "caption": "Outdoor compressor units" },
+    { "image": "/assets/tech-tools.jpg", "caption": "Service & maintenance toolkit" },
+    { "image": "/assets/tech-portrait.jpg", "caption": "Our technician at work" },
+    { "image": "/assets/building-aircon.jpg", "caption": "Commercial cooling project" }
+  ]
+}
