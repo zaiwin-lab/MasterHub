@@ -84,10 +84,46 @@ ul { list-style: none; }
   mask-image: linear-gradient(to bottom, transparent, black 15%, black 60%, transparent);
 }
 
+/* ============ Ticker bar ============ */
+.ticker-bar {
+  position: sticky;
+  top: 0;
+  z-index: 110;
+  overflow: hidden;
+  height: 32px;
+  background: linear-gradient(135deg, var(--ink), var(--ink-2));
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding-left: 48px;
+  animation: ticker-scroll 22s linear infinite;
+  will-change: transform;
+}
+.ticker-item {
+  font-family: var(--font-mono);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--ice-lt);
+  flex: none;
+}
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
+}
+
 /* ============ Nav ============ */
 .nav {
   position: sticky;
-  top: 0;
+  top: 32px;
   z-index: 100;
   backdrop-filter: blur(14px) saturate(140%);
   background: rgba(244,249,255,.7);
