@@ -559,7 +559,12 @@ h2.light { color: var(--cream); }
   color: rgba(246,243,238,.7);
   transition: color .25s var(--ease);
 }
-.kobis-bar a:hover { color: var(--orange); }
+.kobis-bar a:hover {
+  background: linear-gradient(120deg, var(--orange), var(--orange-2), var(--orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 /* ============ Reveal on scroll ============ */
 .reveal {

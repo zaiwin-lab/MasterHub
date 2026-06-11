@@ -147,7 +147,7 @@ const translations = {
     'contact.getbody': 'Reach out for a free quote, an emergency repair, or to schedule routine maintenance.',
     'footer.tagline': 'Cool Comfort, Honest Service — Kota Samarahan, Sarawak.',
     'footer.copy': '© 2026 Shiraz Empire. All rights reserved.',
-    'footer.credit': 'Website crafted by <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.credit': 'This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem',
   },
   bm: {
     'nav.about': 'Tentang', 'nav.services': 'Perkhidmatan', 'nav.why': 'Kelebihan',
@@ -213,7 +213,7 @@ const translations = {
     'contact.getbody': 'Hubungi kami untuk sebut harga percuma, pembaikan kecemasan, atau jadual penyelenggaraan rutin.',
     'footer.tagline': 'Keselesaan Sejuk, Servis Jujur — Kota Samarahan, Sarawak.',
     'footer.copy': '© 2026 Shiraz Empire. Hak cipta terpelihara.',
-    'footer.credit': 'Laman web direka oleh <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.credit': 'Pengalaman Digital Ini Adalah Sebahagian daripada Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   },
   zh: {
     'nav.about': '关于我们', 'nav.services': '服务项目', 'nav.why': '我们的优势',
@@ -279,7 +279,7 @@ const translations = {
     'contact.getbody': '欢迎联系我们获取免费报价、紧急维修，或安排定期保养。',
     'footer.tagline': '尊享清凉，诚心服务 — Kota Samarahan, Sarawak。',
     'footer.copy': '© 2026 Shiraz Empire。版权所有。',
-    'footer.credit': '网站由 <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> 制作',
+    'footer.credit': '此数字体验是 <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> 创新生态系统的一部分',
   },
   ib: {
     'nav.about': 'Pasal Kami', 'nav.services': 'Pengawa', 'nav.why': 'Kenapa Kami',
@@ -345,7 +345,7 @@ const translations = {
     'contact.getbody': 'Berandau enggau kami ke sebut reti percuma, pengubah kecemasan, tauka pengintu sebaka.',
     'footer.tagline': 'Chelap Ti Nyamai, Pengawa Ti Bujur — Kota Samarahan, Sarawak.',
     'footer.copy': '© 2026 Shiraz Empire. Semua Hak Tedaun.',
-    'footer.credit': 'Website digaga ulih <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.credit': 'Pengalaman Digital Tu Sebagi ari Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   }
 };
 
