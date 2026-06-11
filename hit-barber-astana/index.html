@@ -12,26 +12,54 @@
 </head>
 <body>
 
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+  </div>
+</div>
+
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a href="#top" class="logo">
       <span class="logo-mark">HIT</span><span class="logo-rest">BARBER<br>ASTANA</span>
     </a>
     <nav class="nav-links">
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#why">Why Us</a>
-      <a href="#location">Location</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#why" data-i18n="nav.why">Why Us</a>
+      <a href="#location" data-i18n="nav.location">Location</a>
     </nav>
-    <a href="#location" class="btn btn-nav">Book a Cut</a>
+    <div class="nav-right">
+      <div class="nav-lang">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="bm">BM</button>
+        <button class="lang-btn" data-lang="zh">中</button>
+        <button class="lang-btn" data-lang="ib">IB</button>
+      </div>
+      <a href="#location" class="btn btn-nav" data-i18n="nav.cta">Book a Cut</a>
+    </div>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#why">Why Us</a>
-    <a href="#location">Location</a>
-    <a href="#location" class="btn btn-primary">Book a Cut</a>
+    <a href="#about" data-i18n="nav.about">About</a>
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#why" data-i18n="nav.why">Why Us</a>
+    <a href="#location" data-i18n="nav.location">Location</a>
+    <div class="nav-lang nav-lang-mobile">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="bm">BM</button>
+      <button class="lang-btn" data-lang="zh">中</button>
+      <button class="lang-btn" data-lang="ib">IB</button>
+    </div>
+    <a href="#location" class="btn btn-primary" data-i18n="nav.cta">Book a Cut</a>
   </div>
 </header>
 
@@ -42,30 +70,30 @@
     <div class="hero-grid"></div>
   </div>
   <div class="hero-inner">
-    <p class="eyebrow reveal">PETRA JAYA · KUCHING · SARAWAK</p>
+    <p class="eyebrow reveal" data-i18n="hero.eyebrow">PETRA JAYA · KUCHING · SARAWAK</p>
     <h1 class="hero-title reveal">
-      <span class="line">FRESH CUT.</span>
-      <span class="line accent">FRESH CONFIDENCE.</span>
+      <span class="line" data-i18n="hero.title1">FRESH CUT.</span>
+      <span class="line accent" data-i18n="hero.title2">FRESH CONFIDENCE.</span>
     </h1>
-    <p class="hero-sub reveal">A modern community barbershop for students, professionals and families — sharp fades, friendly faces, and prices that make sense for Petra Jaya.</p>
+    <p class="hero-sub reveal" data-i18n="hero.sub">A modern community barbershop for students, professionals and families — sharp fades, friendly faces, and prices that make sense for Petra Jaya.</p>
     <div class="hero-cta reveal">
-      <a href="#location" class="btn btn-primary">Book a Cut <span>→</span></a>
-      <a href="#services" class="btn btn-ghost">Explore Services</a>
+      <a href="#location" class="btn btn-primary" data-i18n="hero.cta1">Book a Cut <span>→</span></a>
+      <a href="#services" class="btn btn-ghost" data-i18n="hero.cta2">Explore Services</a>
     </div>
     <div class="hero-stats reveal">
       <div class="stat">
         <span class="stat-num">9:30–6:30</span>
-        <span class="stat-label">Open Daily</span>
+        <span class="stat-label" data-i18n="hero.stat1">Open Daily</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-num">Affordable</span>
-        <span class="stat-label">Honest Pricing</span>
+        <span class="stat-num" data-i18n="hero.stat2num">Affordable</span>
+        <span class="stat-label" data-i18n="hero.stat2">Honest Pricing</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-num">Modern</span>
-        <span class="stat-label">Fade &amp; Style Experts</span>
+        <span class="stat-num" data-i18n="hero.stat3num">Modern</span>
+        <span class="stat-label" data-i18n="hero.stat3">Fade &amp; Style Experts</span>
       </div>
     </div>
   </div>
@@ -83,69 +111,83 @@
 <section class="about" id="about">
   <div class="section-inner about-grid">
     <div class="about-head reveal">
-      <p class="kicker">WHO WE ARE</p>
-      <h2>Your Style.<br>Your Confidence.</h2>
-      <p class="about-lead">Built for today's generation, Hit Barber Astana goes beyond the haircut. We help you express your personality, build confidence, and stay current — every single visit.</p>
+      <p class="kicker" data-i18n="about.kicker">WHO WE ARE</p>
+      <h2 data-i18n="about.title">Your Style.<br>Your Confidence.</h2>
+      <p class="about-lead" data-i18n="about.lead">Built for today's generation, Hit Barber Astana goes beyond the haircut. We help you express your personality, build confidence, and stay current — every single visit.</p>
     </div>
     <div class="about-cards">
       <div class="about-card reveal">
         <span class="card-num">01</span>
-        <h3>The Vision</h3>
-        <p>To become the most trusted and preferred community barbershop for young people, families, and working adults in Petra Jaya and beyond.</p>
+        <h3 data-i18n="about.card1.title">The Vision</h3>
+        <p data-i18n="about.card1.body">To become the most trusted and preferred community barbershop for young people, families, and working adults in Petra Jaya and beyond.</p>
       </div>
       <div class="about-card reveal">
         <span class="card-num">02</span>
-        <h3>The Mission</h3>
-        <p>To deliver quality grooming experiences through skilled craftsmanship, modern styling, excellent customer service, and affordable pricing.</p>
+        <h3 data-i18n="about.card2.title">The Mission</h3>
+        <p data-i18n="about.card2.body">To deliver quality grooming experiences through skilled craftsmanship, modern styling, excellent customer service, and affordable pricing.</p>
       </div>
       <div class="about-card reveal">
         <span class="card-num">03</span>
-        <h3>The Belief</h3>
-        <p>We don't just cut hair. We engineer positive energy and self-belief — so you walk out feeling like the best version of yourself.</p>
+        <h3 data-i18n="about.card3.title">The Belief</h3>
+        <p data-i18n="about.card3.body">We don't just cut hair. We engineer positive energy and self-belief — so you walk out feeling like the best version of yourself.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+<div class="ticker-bar ticker-bar-2" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+    <span class="ticker-item">✂ This website is built by KOBIS Berhad</span>
+  </div>
+</div>
+
 <!-- ============ Grooming Ecosystem / Services ============ -->
 <section class="services" id="services">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker kicker-light">THE GROOMING ECOSYSTEM</p>
-      <h2 class="light">A complete lifecycle —<br>styled in the chair, ready between visits.</h2>
+      <p class="kicker kicker-light" data-i18n="services.kicker">THE GROOMING ECOSYSTEM</p>
+      <h2 class="light" data-i18n="services.title">A complete lifecycle —<br>styled in the chair, ready between visits.</h2>
     </div>
     <div class="services-grid">
       <div class="service-card reveal">
         <div class="service-icon">✂️</div>
-        <h3>The Cut</h3>
+        <h3 data-i18n="services.card1.title">The Cut</h3>
         <ul>
-          <li>Modern Fade Cuts</li>
-          <li>Classic Haircuts</li>
-          <li>Student Cuts</li>
-          <li>Children's Haircuts</li>
-          <li>Senior Citizen Haircuts</li>
+          <li data-i18n="services.card1.li1">Modern Fade Cuts</li>
+          <li data-i18n="services.card1.li2">Classic Haircuts</li>
+          <li data-i18n="services.card1.li3">Student Cuts</li>
+          <li data-i18n="services.card1.li4">Children's Haircuts</li>
+          <li data-i18n="services.card1.li5">Senior Citizen Haircuts</li>
         </ul>
       </div>
       <div class="service-card service-card-feat reveal">
         <div class="service-icon">💧</div>
-        <h3>The Care</h3>
+        <h3 data-i18n="services.card2.title">The Care</h3>
         <ul>
-          <li>Hair Wash &amp; Massage</li>
-          <li>Backwash Service</li>
-          <li>Hair Treatment</li>
-          <li>Hair Consultation</li>
-          <li>Beard &amp; Mustache Grooming</li>
+          <li data-i18n="services.card2.li1">Hair Wash &amp; Massage</li>
+          <li data-i18n="services.card2.li2">Backwash Service</li>
+          <li data-i18n="services.card2.li3">Hair Treatment</li>
+          <li data-i18n="services.card2.li4">Hair Consultation</li>
+          <li data-i18n="services.card2.li5">Beard &amp; Mustache Grooming</li>
         </ul>
       </div>
       <div class="service-card reveal">
         <div class="service-icon">🧴</div>
-        <h3>The Keep</h3>
+        <h3 data-i18n="services.card3.title">The Keep</h3>
         <ul>
-          <li>Pomade &amp; Hair Clay</li>
-          <li>Styling Products</li>
-          <li>Hair Serum &amp; Tonic</li>
-          <li>Beard Oil</li>
-          <li>Leave-In Conditioner &amp; Accessories</li>
+          <li data-i18n="services.card3.li1">Pomade &amp; Hair Clay</li>
+          <li data-i18n="services.card3.li2">Styling Products</li>
+          <li data-i18n="services.card3.li3">Hair Serum &amp; Tonic</li>
+          <li data-i18n="services.card3.li4">Beard Oil</li>
+          <li data-i18n="services.card3.li5">Leave-In Conditioner &amp; Accessories</li>
         </ul>
       </div>
     </div>
@@ -156,39 +198,39 @@
 <section class="why" id="why">
   <div class="section-inner">
     <div class="section-head reveal">
-      <p class="kicker">WHY HIT BARBER WINS</p>
-      <h2>Not premium. Not cheap.<br>Just <span class="accent-text">right</span> for Petra Jaya.</h2>
+      <p class="kicker" data-i18n="why.kicker">WHY HIT BARBER WINS</p>
+      <h2 data-i18n="why.title">Not premium. Not cheap.<br>Just <span class="accent-text">right</span> for Petra Jaya.</h2>
     </div>
     <div class="why-grid">
       <div class="why-card reveal">
         <span class="why-icon">📈</span>
-        <h3>Modern Styles That Matter</h3>
-        <p>Understanding today's trends — fades, textures and cuts that are Instagram &amp; TikTok-ready.</p>
+        <h3 data-i18n="why.card1.title">Modern Styles That Matter</h3>
+        <p data-i18n="why.card1.body">Understanding today's trends — fades, textures and cuts that are Instagram &amp; TikTok-ready.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🪒</span>
-        <h3>Skilled &amp; Passionate Barbers</h3>
-        <p>Care, precision and detail in every chair, every single time.</p>
+        <h3 data-i18n="why.card2.title">Skilled &amp; Passionate Barbers</h3>
+        <p data-i18n="why.card2.body">Care, precision and detail in every chair, every single time.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🏷️</span>
-        <h3>Affordable &amp; Accessible</h3>
-        <p>Prices that make sense for Petra Jaya — quality grooming for everyone.</p>
+        <h3 data-i18n="why.card3.title">Affordable &amp; Accessible</h3>
+        <p data-i18n="why.card3.body">Prices that make sense for Petra Jaya — quality grooming for everyone.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🛋️</span>
-        <h3>Comfortable Environment</h3>
-        <p>A clean, positive, relaxing space that feels like a welcome — not a wait.</p>
+        <h3 data-i18n="why.card4.title">Comfortable Environment</h3>
+        <p data-i18n="why.card4.body">A clean, positive, relaxing space that feels like a welcome — not a wait.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🔁</span>
-        <h3>Consistent Service</h3>
-        <p>Reliable quality on every single visit, so you always know what to expect.</p>
+        <h3 data-i18n="why.card5.title">Consistent Service</h3>
+        <p data-i18n="why.card5.body">Reliable quality on every single visit, so you always know what to expect.</p>
       </div>
       <div class="why-card reveal">
         <span class="why-icon">🤝</span>
-        <h3>Real Community Connection</h3>
-        <p>Relationships over transactions — growing together with the people around us.</p>
+        <h3 data-i18n="why.card6.title">Real Community Connection</h3>
+        <p data-i18n="why.card6.body">Relationships over transactions — growing together with the people around us.</p>
       </div>
     </div>
   </div>
@@ -197,15 +239,15 @@
 <!-- ============ Brand DNA strip ============ -->
 <section class="dna">
   <div class="section-inner">
-    <p class="dna-tag reveal">CREATIVE · CONFIDENT · ENERGETIC · AUTHENTIC</p>
+    <p class="dna-tag reveal" data-i18n="dna.tag">CREATIVE · CONFIDENT · ENERGETIC · AUTHENTIC</p>
     <div class="dna-row reveal">
-      <div class="dna-item"><h4>Trendy</h4><p>Updated styles &amp; modern techniques.</p></div>
-      <div class="dna-item"><h4>Confident</h4><p>Fostering positive energy.</p></div>
-      <div class="dna-item"><h4>Friendly</h4><p>Every customer welcomed like a friend.</p></div>
-      <div class="dna-item"><h4>Affordable</h4><p>Quality grooming for everyone.</p></div>
-      <div class="dna-item"><h4>Customer-First</h4><p>Relationships &amp; satisfaction guaranteed.</p></div>
+      <div class="dna-item"><h4 data-i18n="dna.item1.title">Trendy</h4><p data-i18n="dna.item1.body">Updated styles &amp; modern techniques.</p></div>
+      <div class="dna-item"><h4 data-i18n="dna.item2.title">Confident</h4><p data-i18n="dna.item2.body">Fostering positive energy.</p></div>
+      <div class="dna-item"><h4 data-i18n="dna.item3.title">Friendly</h4><p data-i18n="dna.item3.body">Every customer welcomed like a friend.</p></div>
+      <div class="dna-item"><h4 data-i18n="dna.item4.title">Affordable</h4><p data-i18n="dna.item4.body">Quality grooming for everyone.</p></div>
+      <div class="dna-item"><h4 data-i18n="dna.item5.title">Customer-First</h4><p data-i18n="dna.item5.body">Relationships &amp; satisfaction guaranteed.</p></div>
     </div>
-    <div class="dna-banner reveal">COMMUNITY — Growing together with the people around us.</div>
+    <div class="dna-banner reveal" data-i18n="dna.banner">COMMUNITY — Growing together with the people around us.</div>
   </div>
 </section>
 
@@ -213,33 +255,47 @@
 <section class="location" id="location">
   <div class="section-inner location-grid">
     <div class="location-info reveal">
-      <p class="kicker kicker-light">VISIT US</p>
-      <h2 class="light">Walk in. Walk out<br>with fresh confidence.</h2>
+      <p class="kicker kicker-light" data-i18n="location.kicker">VISIT US</p>
+      <h2 class="light" data-i18n="location.title">Walk in. Walk out<br>with fresh confidence.</h2>
       <div class="info-row">
-        <span class="info-label">Address</span>
-        <span class="info-val">Hit Barber Astana, Arked MARA Astana, Petra Jaya, Kuching, Sarawak</span>
+        <span class="info-label" data-i18n="location.addrlabel">Address</span>
+        <span class="info-val" data-i18n="location.addrval">Hit Barber Astana, Arked MARA Astana, Petra Jaya, Kuching, Sarawak</span>
       </div>
       <div class="info-row">
-        <span class="info-label">Hours</span>
-        <span class="info-val">Daily — 9:30 AM to 6:30 PM</span>
+        <span class="info-label" data-i18n="location.hourslabel">Hours</span>
+        <span class="info-val" data-i18n="location.hoursval">Daily — 9:30 AM to 6:30 PM</span>
       </div>
       <div class="info-row">
-        <span class="info-label">Tagline</span>
-        <span class="info-val">Fresh Styles. Great Vibes. Real Confidence. ✂️🔥</span>
+        <span class="info-label" data-i18n="location.taglinelabel">Tagline</span>
+        <span class="info-val" data-i18n="location.taglineval">Fresh Styles. Great Vibes. Real Confidence. ✂️🔥</span>
       </div>
-      <a href="https://www.google.com/maps/search/Arked+MARA+Astana+Petra+Jaya+Kuching" target="_blank" rel="noopener" class="btn btn-primary">Get Directions <span>→</span></a>
+      <a href="https://www.google.com/maps/search/Arked+MARA+Astana+Petra+Jaya+Kuching" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="location.cta">Get Directions <span>→</span></a>
     </div>
-    <div class="location-map reveal" aria-hidden="true">
+    <div class="location-map reveal">
       <div class="map-card">
-        <div class="map-pin">📍</div>
-        <p>Arked MARA Astana<br>Petra Jaya, Kuching</p>
+        <iframe
+          src="https://www.google.com/maps?q=Hit+Barber+Astana,+Arked+MARA+Astana,+Petra+Jaya,+Kuching,+Sarawak&output=embed"
+          width="100%" height="320" style="border:0" allowfullscreen=""
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Hit Barber Astana location map — Arked MARA Astana, Petra Jaya, Kuching"></iframe>
       </div>
     </div>
   </div>
 </section>
 
+<footer class="footer">
+  <div class="section-inner footer-inner">
+    <a href="#top" class="footer-brand">
+      <span class="logo-mark">HIT</span><span class="logo-rest">BARBER<br>ASTANA</span>
+    </a>
+    <p data-i18n="footer.tagline">Fresh Cut. Fresh Confidence. — Petra Jaya, Kuching, Sarawak.</p>
+    <p class="footer-copy" data-i18n="footer.copy">&copy; 2026 Hit Barber Astana. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
 <footer class="kobis-bar">
-  <p>This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem</p>
+  <p data-i18n="footer.credit">This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem</p>
 </footer>
 
 <script src="app.js"></script>
