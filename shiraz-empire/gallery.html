@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery | Shiraz Empire — Kota Samarahan</title>
+<meta name="description" content="Photo gallery of Shiraz Empire's air-conditioning installations, repairs and maintenance work in Kota Samarahan, Sarawak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-frost" aria-hidden="true">
+  <div class="frost-orb frost-orb-1"></div>
+  <div class="frost-orb frost-orb-2"></div>
+  <div class="frost-grid"></div>
+</div>
+
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+    <span class="ticker-item">❅ This website built by KOBIS Berhad</span>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html#top" class="nav-logo">
+      <span class="nav-logo-mark">❅</span>
+      SHIRAZ <em>EMPIRE</em>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#about" data-i18n="nav.about">About</a>
+      <a href="index.html#services" data-i18n="nav.services">Services</a>
+      <a href="index.html#why" data-i18n="nav.why">Why Us</a>
+      <a href="index.html#area" data-i18n="nav.area">Service Area</a>
+      <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+      <a href="gallery.html" class="active" data-i18n="nav.gallery">Gallery</a>
+      <a href="news.html" data-i18n="nav.news">News</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-lang">
+        <button class="lang-btn active" data-lang="bm">BM</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="zh">中</button>
+        <button class="lang-btn" data-lang="ib">IB</button>
+      </div>
+      <a href="index.html#contact" class="nav-cta" data-i18n="nav.cta">Book a Service</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero reveal">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="gallery.eyebrow">Galeri</p>
+      <h1 class="section-title" data-i18n="gallery.title">Our Work in Pictures.</h1>
+      <p class="section-sub" data-i18n="gallery.sub">A look at recent installations, repairs and maintenance jobs across Kota Samarahan and Greater Kuching.</p>
+    </div>
+  </section>
+
+  <section class="gallery-section reveal">
+    <div class="section-inner">
+      <div class="gallery-grid" id="galleryGrid">
+        <p class="gallery-empty" data-i18n="gallery.loading">Loading photos…</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="nav-logo-mark">❅</span> SHIRAZ <em>EMPIRE</em>
+    </div>
+    <p data-i18n="footer.tagline">Cool Comfort, Honest Service — Kota Samarahan, Sarawak.</p>
+    <p class="footer-copy" data-i18n="footer.copy">&copy; 2026 Shiraz Empire. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="kobis-bar">
+  <p data-i18n="footer.credit">Website crafted by <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a></p>
+</div>
+
+<script src="app.js"></script>
+<script>
+  fetch('content/gallery.json')
+    .then(r => r.json())
+    .then(data => {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      (data.photos || []).forEach(photo => {
+        const fig = document.createElement('figure');
+        fig.className = 'gallery-item';
+        fig.innerHTML = `<img src="${photo.image}" alt="${photo.caption || ''}" loading="lazy">` +
+          (photo.caption ? `<figcaption>${photo.caption}</figcaption>` : '');
+        grid.appendChild(fig);
+      });
+    })
+    .catch(() => {
+      document.getElementById('galleryGrid').innerHTML = '<p class="gallery-empty">Unable to load gallery.</p>';
+    });
+</script>
+</body>
+</html>

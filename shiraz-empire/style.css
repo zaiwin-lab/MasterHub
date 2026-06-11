@@ -867,9 +867,107 @@ section { padding: 80px 0; }
   .area-grid { grid-template-columns: 1fr; }
   .hero-stats { grid-template-columns: repeat(2, 1fr); }
 }
+/* ============ Gallery & News pages ============ */
+.nav-links a.active { color: var(--royal); }
+
+.page-hero {
+  padding: 160px 0 40px;
+  text-align: center;
+}
+.page-hero .section-sub { margin: 0 auto; max-width: 620px; }
+
+.gallery-section { padding: 40px 0 100px; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(11,27,43,.12);
+  background: var(--white);
+}
+.gallery-item img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s var(--ease);
+}
+.gallery-item:hover img { transform: scale(1.06); }
+.gallery-item figcaption {
+  padding: 14px 16px;
+  font-size: .9rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.gallery-empty {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 40px 0;
+  grid-column: 1 / -1;
+}
+
+.news-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.news-item {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  background: var(--white);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(11,27,43,.1);
+}
+.news-item:not(:has(.news-image)) { grid-template-columns: 1fr; }
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.news-content {
+  padding: 24px 24px 24px 0;
+}
+.news-item:not(:has(.news-image)) .news-content { padding: 24px; }
+.news-date {
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  color: var(--royal);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.news-headline {
+  font-size: 1.25rem;
+  margin: 6px 0 10px;
+}
+.news-body {
+  color: var(--ink-soft);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .news-item { grid-template-columns: 1fr; }
+  .news-content { padding: 20px; }
+  .news-image img { aspect-ratio: 16/9; }
+}
+
 @media (max-width: 560px) {
   .service-grid { grid-template-columns: 1fr; }
   .nav-right .nav-cta { display: none; }
   .about-collage { gap: 16px; }
   .polaroid { width: 140px; }
+  .gallery-grid { grid-template-columns: 1fr; }
+  .page-hero { padding: 130px 0 30px; }
 }

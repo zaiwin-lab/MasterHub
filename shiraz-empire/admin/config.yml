@@ -1,0 +1,46 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "shiraz-empire/assets/gallery"
+public_folder: "/assets/gallery"
+
+collections:
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - file: "shiraz-empire/content/settings.json"
+        label: "General Settings"
+        name: "general"
+        fields:
+          - { label: "Top Ticker Message", name: "ticker", widget: "string" }
+
+  - name: "gallery"
+    label: "Gallery"
+    files:
+      - file: "shiraz-empire/content/gallery.json"
+        label: "Gallery Photos"
+        name: "gallery"
+        fields:
+          - label: "Photos"
+            name: "photos"
+            widget: "list"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Caption", name: "caption", widget: "string", required: false }
+
+  - name: "news"
+    label: "News & Stories"
+    files:
+      - file: "shiraz-empire/content/news.json"
+        label: "News Posts"
+        name: "news"
+        fields:
+          - label: "Posts"
+            name: "posts"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "datetime" }
+              - { label: "Image", name: "image", widget: "image", required: false }
+              - { label: "Body", name: "body", widget: "text" }
