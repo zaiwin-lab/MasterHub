@@ -94,19 +94,18 @@
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
-        <div class="ac-unit">
-          <div class="ac-body">
-            <div class="ac-vent">
-              <span></span><span></span><span></span><span></span><span></span>
-            </div>
-            <div class="ac-display">
-              <span class="ac-temp">18°</span>
-              <span class="ac-dot"></span>
-            </div>
+        <div class="hero-photo-wrap">
+          <div class="hero-radiance"></div>
+          <figure class="hero-photo">
+            <img src="assets/hero-tech.jpg" alt="" loading="eager">
+          </figure>
+          <figure class="hero-photo-mini">
+            <img src="assets/ac-unit-wall.jpg" alt="" loading="lazy">
+          </figure>
+          <div class="hero-badge">
+            <span class="ac-temp">18°C</span>
+            <span class="ac-dot"></span>
           </div>
-          <div class="ac-airflow af-1"></div>
-          <div class="ac-airflow af-2"></div>
-          <div class="ac-airflow af-3"></div>
           <div class="snowflake sf-1">❅</div>
           <div class="snowflake sf-2">❆</div>
           <div class="snowflake sf-3">❅</div>
@@ -117,11 +116,26 @@
     </div>
   </section>
 
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Supply ❅ Install ❅ Maintain ❅ Repair ❅ Cool Comfort ❅ Kota Samarahan ❅ </span>
+      <span class="marquee-item">Supply ❅ Install ❅ Maintain ❅ Repair ❅ Cool Comfort ❅ Kota Samarahan ❅ </span>
+      <span class="marquee-item">Supply ❅ Install ❅ Maintain ❅ Repair ❅ Cool Comfort ❅ Kota Samarahan ❅ </span>
+      <span class="marquee-item">Supply ❅ Install ❅ Maintain ❅ Repair ❅ Cool Comfort ❅ Kota Samarahan ❅ </span>
+    </div>
+  </div>
+
   <!-- ABOUT -->
   <section class="about reveal" id="about">
     <div class="section-inner">
       <p class="section-eyebrow" data-i18n="about.eyebrow">Tentang Kami</p>
       <h2 class="section-title" data-i18n="about.title">Built on Trust, Run with Pride.</h2>
+      <div class="about-collage" aria-hidden="true">
+        <figure class="polaroid polaroid-1"><img src="assets/tech-portrait.jpg" alt="" loading="lazy"></figure>
+        <figure class="polaroid polaroid-2"><img src="assets/ac-install.jpg" alt="" loading="lazy"></figure>
+        <figure class="polaroid polaroid-3"><img src="assets/tech-tools.jpg" alt="" loading="lazy"></figure>
+      </div>
       <div class="about-grid">
         <div class="about-card">
           <p data-i18n="about.p1">
@@ -174,22 +188,26 @@
       <h2 class="section-title" data-i18n="services.title">Four Pillars of Cool.</h2>
       <p class="section-sub" data-i18n="services.sub">From a brand-new unit to a unit on its last breath — Shiraz Empire covers the full lifecycle of your air-conditioning.</p>
       <div class="service-grid">
-        <div class="service-card">
+        <div class="service-card" data-tilt>
+          <div class="service-photo"><img src="assets/ac-outdoor-units.jpg" alt="" loading="lazy"></div>
           <div class="service-icon icon-supply">❄</div>
           <h3 data-i18n="service1.title">Aircon Supply</h3>
           <p data-i18n="service1.body">Quality air-conditioning units sourced and supplied for homes, offices, shoplots and event spaces — matched to your space and budget.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-tilt>
+          <div class="service-photo"><img src="assets/ac-install.jpg" alt="" loading="lazy"></div>
           <div class="service-icon icon-install">🛠</div>
           <h3 data-i18n="service2.title">Installation</h3>
           <p data-i18n="service2.body">Professional, neat installation with proper piping, drainage and wiring — done right the first time, every time.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-tilt>
+          <div class="service-photo"><img src="assets/tech-tools.jpg" alt="" loading="lazy"></div>
           <div class="service-icon icon-maintain">⚙</div>
           <h3 data-i18n="service3.title">Maintenance</h3>
           <p data-i18n="service3.body">Regular chemical wash, gas top-up and filter cleaning to keep your unit running cold, efficient and odour-free.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-tilt>
+          <div class="service-photo"><img src="assets/ac-unit-wall.jpg" alt="" loading="lazy"></div>
           <div class="service-icon icon-repair">🔧</div>
           <h3 data-i18n="service4.title">Repair &amp; Servicing</h3>
           <p data-i18n="service4.body">Diagnostics and repair for units that aren't cooling, leaking or making noise — with honest advice on repair vs. replace.</p>
@@ -274,6 +292,7 @@
     <div class="section-inner">
       <p class="section-eyebrow" data-i18n="contact.eyebrow">Hubungi Kami</p>
       <h2 class="section-title" data-i18n="contact.title">Let's Cool Things Down.</h2>
+      <figure class="contact-photo" aria-hidden="true"><img src="assets/building-aircon.jpg" alt="" loading="lazy"></figure>
       <div class="contact-grid">
         <div class="contact-card">
           <h3 data-i18n="contact.ownertitle">Founder</h3>
