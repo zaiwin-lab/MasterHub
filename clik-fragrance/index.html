@@ -43,11 +43,13 @@
       <div class="hero-grid"></div>
 
       <div class="hero-bottle-wrap">
-        <div class="bottle bottle-confidence">
-          <span class="bottle-cap"></span>
-          <span class="bottle-neck"></span>
-          <span class="bottle-body"><span class="bottle-liquid"></span></span>
-        </div>
+        <div class="hero-radiance"></div>
+        <figure class="hero-photo">
+          <img src="assets/hero-bottle.jpg" alt="Golden perfume bottle glowing in warm light" fetchpriority="high" />
+        </figure>
+        <figure class="hero-photo-mini">
+          <img src="assets/bottle-flowers.jpg" alt="Amber fragrance bottle with white flowers" loading="lazy" decoding="async" />
+        </figure>
       </div>
 
       <span class="sparkle" style="top:14%; left:60%; animation-delay:0s;"></span>
@@ -99,6 +101,22 @@
     </div>
   </section>
 
+  <!-- MOOD MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Confident</span><span class="mq-star">✦</span>
+      <span>Calm</span><span class="mq-star">✦</span>
+      <span>Magnetic</span><span class="mq-star">✦</span>
+      <span>Focused</span><span class="mq-star">✦</span>
+      <span>Joyful</span><span class="mq-star">✦</span>
+      <span>Confident</span><span class="mq-star">✦</span>
+      <span>Calm</span><span class="mq-star">✦</span>
+      <span>Magnetic</span><span class="mq-star">✦</span>
+      <span>Focused</span><span class="mq-star">✦</span>
+      <span>Joyful</span><span class="mq-star">✦</span>
+    </div>
+  </div>
+
   <!-- BRAND CONCEPT -->
   <section class="concept" id="concept">
     <div class="section-sparkles">
@@ -120,6 +138,20 @@
         attraction, focus, and joy. Pick the mood you want to wear,
         and let the scent carry you through your day.
       </p>
+      <div class="concept-collage reveal" aria-label="Clik community moments">
+        <figure class="polaroid polaroid-1">
+          <img src="assets/community-grwm.jpg" alt="Smiling young man in a hat" loading="lazy" decoding="async" />
+          <figcaption>GRWM ✦ daily fit</figcaption>
+        </figure>
+        <figure class="polaroid polaroid-2">
+          <img src="assets/bottle-flowers.jpg" alt="Golden perfume bottle with flowers" loading="lazy" decoding="async" />
+          <figcaption>scent of the day</figcaption>
+        </figure>
+        <figure class="polaroid polaroid-3">
+          <img src="assets/community-golden.jpg" alt="Young woman with golden-hour glow" loading="lazy" decoding="async" />
+          <figcaption>mood: magnetic</figcaption>
+        </figure>
+      </div>
       <div class="concept-grid">
         <div class="concept-card reveal">
           <div class="concept-icon">●</div>
@@ -155,56 +187,71 @@
       <h2 class="section-title reveal" data-i18n="collections.title">Find the scent that matches your energy.</h2>
 
       <div class="collection-grid">
-        <div class="collection-card reveal">
-          <div class="collection-glow glow-confidence"></div>
-          <div class="bottle bottle-confidence">
-            <span class="bottle-cap"></span><span class="bottle-neck"></span>
-            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        <div class="collection-card reveal" data-tilt>
+          <div class="collection-photo photo-confidence">
+            <img src="assets/mood-bold.jpg" alt="Confident young woman" loading="lazy" decoding="async" />
+            <div class="bottle bottle-confidence">
+              <span class="bottle-cap"></span><span class="bottle-neck"></span>
+              <span class="bottle-body"><span class="bottle-liquid"></span></span>
+            </div>
           </div>
+          <div class="collection-glow glow-confidence"></div>
           <div class="collection-tag" data-i18n="collection.bold.tag">Confidence</div>
           <h3>BOLD</h3>
           <p data-i18n="collection.bold.desc">A warm, magnetic blend for the days you walk in and own the room.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
-        <div class="collection-card reveal">
-          <div class="collection-glow glow-calm"></div>
-          <div class="bottle bottle-calm">
-            <span class="bottle-cap"></span><span class="bottle-neck"></span>
-            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        <div class="collection-card reveal" data-tilt>
+          <div class="collection-photo photo-calm">
+            <img src="assets/mood-serene.jpg" alt="Calm young woman in soft blue light" loading="lazy" decoding="async" />
+            <div class="bottle bottle-calm">
+              <span class="bottle-cap"></span><span class="bottle-neck"></span>
+              <span class="bottle-body"><span class="bottle-liquid"></span></span>
+            </div>
           </div>
+          <div class="collection-glow glow-calm"></div>
           <div class="collection-tag" data-i18n="collection.serene.tag">Calm</div>
           <h3>SERENE</h3>
           <p data-i18n="collection.serene.desc">Soft, powdery and grounding — for slow mornings and quiet focus.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
-        <div class="collection-card reveal">
-          <div class="collection-glow glow-attraction"></div>
-          <div class="bottle bottle-attraction">
-            <span class="bottle-cap"></span><span class="bottle-neck"></span>
-            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        <div class="collection-card reveal" data-tilt>
+          <div class="collection-photo photo-attraction">
+            <img src="assets/mood-muse.jpg" alt="Young woman against a pink wall" loading="lazy" decoding="async" />
+            <div class="bottle bottle-attraction">
+              <span class="bottle-cap"></span><span class="bottle-neck"></span>
+              <span class="bottle-body"><span class="bottle-liquid"></span></span>
+            </div>
           </div>
+          <div class="collection-glow glow-attraction"></div>
           <div class="collection-tag" data-i18n="collection.muse.tag">Attraction</div>
           <h3>MUSE</h3>
           <p data-i18n="collection.muse.desc">Sweet and alluring — designed for date nights and golden-hour energy.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
-        <div class="collection-card reveal">
-          <div class="collection-glow glow-focus"></div>
-          <div class="bottle bottle-focus">
-            <span class="bottle-cap"></span><span class="bottle-neck"></span>
-            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        <div class="collection-card reveal" data-tilt>
+          <div class="collection-photo photo-focus">
+            <img src="assets/mood-clarity.jpg" alt="Young man sitting in a round window" loading="lazy" decoding="async" />
+            <div class="bottle bottle-focus">
+              <span class="bottle-cap"></span><span class="bottle-neck"></span>
+              <span class="bottle-body"><span class="bottle-liquid"></span></span>
+            </div>
           </div>
+          <div class="collection-glow glow-focus"></div>
           <div class="collection-tag" data-i18n="collection.clarity.tag">Focus</div>
           <h3>CLARITY</h3>
           <p data-i18n="collection.clarity.desc">Crisp and clean — a fresh reset for study sessions and deep work.</p>
           <div class="collection-price">RM 25 <span>/ 10ml</span></div>
         </div>
-        <div class="collection-card reveal">
-          <div class="collection-glow glow-joy"></div>
-          <div class="bottle bottle-joy">
-            <span class="bottle-cap"></span><span class="bottle-neck"></span>
-            <span class="bottle-body"><span class="bottle-liquid"></span></span>
+        <div class="collection-card reveal" data-tilt>
+          <div class="collection-photo photo-joy">
+            <img src="assets/mood-sunny.jpg" alt="Young woman smiling in a denim jacket" loading="lazy" decoding="async" />
+            <div class="bottle bottle-joy">
+              <span class="bottle-cap"></span><span class="bottle-neck"></span>
+              <span class="bottle-body"><span class="bottle-liquid"></span></span>
+            </div>
           </div>
+          <div class="collection-glow glow-joy"></div>
           <div class="collection-tag" data-i18n="collection.sunny.tag">Joy</div>
           <h3>SUNNY</h3>
           <p data-i18n="collection.sunny.desc">Bright, fruity and playful — for good days and even better ones.</p>
@@ -267,6 +314,9 @@
         <a href="https://www.tiktok.com/@clikfragrance" class="btn-ghost" target="_blank" rel="noopener"><span data-i18n="story.follow">Follow @clikfragrance</span> →</a>
       </div>
       <div class="story-visual reveal">
+        <figure class="story-photo">
+          <img src="assets/story-bottles.jpg" alt="Collection of amber fragrance bottles" loading="lazy" decoding="async" />
+        </figure>
         <div class="story-card">
           <div class="story-card-row"><span data-i18n="story.founded.label">Founded</span><strong>2026 · Kuching, Sarawak</strong></div>
           <div class="story-card-row"><span data-i18n="story.format.label">Format</span><strong data-i18n="story.format.value">10ml travel-size bottles</strong></div>
