@@ -1,3 +1,35 @@
+// ============ Motion: tilt + hero parallax ============
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+if (!prefersReducedMotion && !isTouch) {
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(900px) rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  const hero = document.getElementById('top');
+  const heroPhotoWrap = document.querySelector('.hero-photo-wrap');
+  hero?.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    if (heroPhotoWrap) {
+      heroPhotoWrap.style.transform = `translate(${(x * 16).toFixed(2)}px, ${(y * 16).toFixed(2)}px)`;
+    }
+  });
+  hero?.addEventListener('mouseleave', () => {
+    if (heroPhotoWrap) heroPhotoWrap.style.transform = '';
+  });
+}
+
 // ============ Nav scroll state ============
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
