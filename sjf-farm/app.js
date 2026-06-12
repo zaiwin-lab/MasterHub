@@ -1,8 +1,18 @@
-// Nav background on scroll
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Nav background on scroll + scroll progress bar
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
+const progress = document.getElementById('scrollProgress');
+function onScroll() {
+  const y = window.scrollY;
+  nav.classList.toggle('scrolled', y > 40);
+  if (progress) {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+  }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
 
 // Reveal-on-scroll animations
 const revealEls = document.querySelectorAll('.reveal');
@@ -13,8 +23,7 @@ const observer = new IntersectionObserver((entries) => {
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.15 });
-
+}, { threshold: 0.12 });
 revealEls.forEach((el) => observer.observe(el));
 
 // Smooth-scroll for in-page nav links
@@ -28,11 +37,145 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
+// ─── Animated stat counters ──────────────────────────────
+function animateCount(el) {
+  const target = parseFloat(el.dataset.count);
+  if (el.dataset.plain) { // years etc — count from a recent baseline
+    const start = target - 12;
+    const dur = 1400; const t0 = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - t0) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(start + (target - start) * eased);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    return;
+  }
+  const suffix = el.dataset.suffix || '';
+  const dur = 1400; const t0 = performance.now();
+  const tick = (now) => {
+    const p = Math.min((now - t0) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+const counters = document.querySelectorAll('[data-count]');
+if (reduceMotion) {
+  counters.forEach((el) => { el.textContent = el.dataset.count + (el.dataset.suffix || ''); });
+} else {
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) { animateCount(entry.target); countObs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.6 });
+  counters.forEach((el) => countObs.observe(el));
+}
+
+// ─── Parallax on scroll ──────────────────────────────────
+const parallaxEls = Array.from(document.querySelectorAll('[data-parallax]'));
+if (!reduceMotion && parallaxEls.length) {
+  let ticking = false;
+  const runParallax = () => {
+    const vh = window.innerHeight;
+    parallaxEls.forEach((el) => {
+      const speed = parseFloat(el.dataset.parallax) || 0.1;
+      const rect = el.getBoundingClientRect();
+      const offset = (rect.top + rect.height / 2 - vh / 2) * -speed;
+      el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+    });
+    ticking = false;
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(runParallax); ticking = true; }
+  }, { passive: true });
+  runParallax();
+}
+
+// ─── 3D tilt on hover ────────────────────────────────────
+if (!reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+  document.querySelectorAll('[data-tilt]').forEach((el) => {
+    const max = 7;
+    el.style.transition = 'transform .2s var(--ease)';
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(900px) rotateY(${px * max}deg) rotateX(${-py * max}deg) translateY(-4px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(900px) rotateY(0) rotateX(0)';
+    });
+  });
+
+  // ─── Magnetic buttons ──────────────────────────────────
+  document.querySelectorAll('.magnetic').forEach((el) => {
+    el.style.transition = 'transform .25s var(--ease)';
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) * 0.3;
+      const y = (e.clientY - r.top - r.height / 2) * 0.4;
+      el.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0,0)'; });
+  });
+
+  // ─── Ambient cursor glow ───────────────────────────────
+  const glow = document.getElementById('cursorGlow');
+  if (glow) {
+    window.addEventListener('mousemove', (e) => {
+      glow.style.opacity = '1';
+      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    });
+    document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+  }
+}
+
+// ─── Gallery lightbox ────────────────────────────────────
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+function openLightbox(src, alt) {
+  if (!lightbox) return;
+  lightboxImg.src = src; lightboxImg.alt = alt || '';
+  lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  if (!lightbox) return;
+  lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('[data-lightbox]').forEach((el) => {
+  el.addEventListener('click', () => {
+    const img = el.querySelector('img');
+    openLightbox(el.dataset.lightbox, img ? img.alt : '');
+  });
+});
+if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+if (lightbox) lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
 // ─── Language toggle (BM / EN / 中 / IB) ─────────────────
 const translations = {
   en: {
-    'nav.about': 'Our Story', 'nav.products': 'Produce', 'nav.process': 'Process',
+    'nav.about': 'Our Story', 'nav.products': 'Produce', 'nav.gallery': 'Gallery', 'nav.process': 'Process',
     'nav.team': 'Team', 'nav.contact': 'Contact', 'nav.cta': 'Partner With Us',
+
+    'hero.badge.title': 'Cili Geronong', 'hero.badge.sub': 'Flagship Habanero harvest',
+    'story.badge': 'Growing in Sarawak since',
+    'products.tag1': 'Flagship Crop', 'products.tag2': 'Fresh Greens',
+    'gallery.eyebrow': 'In The Field',
+    'gallery.title': 'The harvest, <em>up close</em>',
+    'gallery.sub': 'From seed trays to packed crates — a look inside the daily work behind every delivery.',
+    'gallery.cap1': 'Cili Geronong at peak ripeness',
+    'gallery.cap2': 'Seedlings under controlled care',
+    'gallery.cap3': 'Hand-tended from day one',
+    'gallery.cap4': 'Our team in the field',
+    'gallery.cap5': 'Crisp salad greens, daily',
+    'gallery.cap6': 'Premium leafy heads',
 
     'hero.eyebrow': 'Santubong, Kuching, Sarawak — Modern Agriculture',
     'hero.title1': 'Modern Agriculture,', 'hero.title.em': 'Tangible', 'hero.title2': ' Results.',
@@ -121,8 +264,21 @@ const translations = {
   },
 
   bm: {
-    'nav.about': 'Kisah Kami', 'nav.products': 'Hasil Tani', 'nav.process': 'Proses',
+    'nav.about': 'Kisah Kami', 'nav.products': 'Hasil Tani', 'nav.gallery': 'Galeri', 'nav.process': 'Proses',
     'nav.team': 'Pasukan', 'nav.contact': 'Hubungi', 'nav.cta': 'Jalin Kerjasama',
+
+    'hero.badge.title': 'Cili Geronong', 'hero.badge.sub': 'Tuaian Habanero utama',
+    'story.badge': 'Membesar di Sarawak sejak',
+    'products.tag1': 'Tanaman Utama', 'products.tag2': 'Sayur Segar',
+    'gallery.eyebrow': 'Di Ladang',
+    'gallery.title': 'Hasil tuaian, <em>lebih dekat</em>',
+    'gallery.sub': 'Dari dulang benih ke peti dibungkus — lihat kerja harian di sebalik setiap penghantaran.',
+    'gallery.cap1': 'Cili Geronong pada kematangan optimum',
+    'gallery.cap2': 'Anak benih dalam jagaan terkawal',
+    'gallery.cap3': 'Dijaga dengan tangan sejak hari pertama',
+    'gallery.cap4': 'Pasukan kami di ladang',
+    'gallery.cap5': 'Sayur salad rangup, setiap hari',
+    'gallery.cap6': 'Sayur berdaun premium',
 
     'hero.eyebrow': 'Santubong, Kuching, Sarawak — Pertanian Moden',
     'hero.title1': 'Pertanian Moden,', 'hero.title.em': 'Hasil', 'hero.title2': ' Yang Nyata.',
@@ -211,8 +367,21 @@ const translations = {
   },
 
   zh: {
-    'nav.about': '我们的故事', 'nav.products': '农产品', 'nav.process': '流程',
+    'nav.about': '我们的故事', 'nav.products': '农产品', 'nav.gallery': '图库', 'nav.process': '流程',
     'nav.team': '团队', 'nav.contact': '联系我们', 'nav.cta': '商业合作',
+
+    'hero.badge.title': 'Cili Geronong 辣椒', 'hero.badge.sub': '旗舰哈瓦那辣椒收成',
+    'story.badge': '扎根砂拉越自',
+    'products.tag1': '旗舰作物', 'products.tag2': '新鲜叶菜',
+    'gallery.eyebrow': '田间实录',
+    'gallery.title': '近观<em>收成</em>',
+    'gallery.sub': '从育苗盘到打包装箱——一窥每一次交付背后的日常工作。',
+    'gallery.cap1': '成熟巅峰的哈瓦那辣椒',
+    'gallery.cap2': '受控养护中的幼苗',
+    'gallery.cap3': '从第一天起悉心照料',
+    'gallery.cap4': '我们在田间的团队',
+    'gallery.cap5': '每日爽脆沙拉叶菜',
+    'gallery.cap6': '优质叶菜',
 
     'hero.eyebrow': '砂拉越古晋santubong — 现代农业',
     'hero.title1': '现代农业，', 'hero.title.em': '实在的', 'hero.title2': ' 成果。',
@@ -301,8 +470,21 @@ const translations = {
   },
 
   ib: {
-    'nav.about': 'Pekara Kami', 'nav.products': 'Asil Tanam', 'nav.process': 'Pemproses',
+    'nav.about': 'Pekara Kami', 'nav.products': 'Asil Tanam', 'nav.gallery': 'Gambar', 'nav.process': 'Pemproses',
     'nav.team': 'Raban Kami', 'nav.contact': 'Berabung', 'nav.cta': 'Begulai Enggau Kami',
+
+    'hero.badge.title': 'Cili Geronong', 'hero.badge.sub': 'Asil Habanero utama',
+    'story.badge': 'Mansang di Sarawak ari',
+    'products.tag1': 'Asil Utama', 'products.tag2': 'Sayur Seger',
+    'gallery.eyebrow': 'Ba Kebun',
+    'gallery.title': 'Asil tuai, <em>semak agi</em>',
+    'gallery.sub': 'Ari dulang benih ngagai peti dibungkus — meda pengawa tiap hari ba pun tiap kiriman.',
+    'gallery.cap1': 'Cili Geronong ti mansau bendar',
+    'gallery.cap2': 'Anak benih ti dijaga',
+    'gallery.cap3': 'Dijaga ngena jari ari hari keterubah',
+    'gallery.cap4': 'Raban kami ba kebun',
+    'gallery.cap5': 'Sayur salad rangup, tiap hari',
+    'gallery.cap6': 'Sayur daun premium',
 
     'hero.eyebrow': 'Santubong, Kuching, Sarawak — Pertanian Moden',
     'hero.title1': 'Pertanian Moden,', 'hero.title.em': 'Asil', 'hero.title2': ' Ti Bendar.',
