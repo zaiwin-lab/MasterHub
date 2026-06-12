@@ -104,7 +104,7 @@ const translations = {
     'contact.meta': 'Kuching, Sarawak, Malaysia',
     'footer.rights': '© 2026 Clik Fragrance. All rights reserved.',
     'footer.tagline': 'Designed with ✦ for everyday self-expression.',
-    'footer.credit': 'Web experience by',
+    'footer.credit': 'This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem',
   },
   bm: {
     'nav.collections': 'Koleksi', 'nav.story': 'Kisah Kami', 'nav.bundles': 'Set Bundle',
@@ -146,7 +146,7 @@ const translations = {
     'contact.meta': 'Kuching, Sarawak, Malaysia',
     'footer.rights': '© 2026 Clik Fragrance. Hak cipta terpelihara.',
     'footer.tagline': 'Direka dengan ✦ untuk ekspresi diri harian.',
-    'footer.credit': 'Pengalaman web oleh',
+    'footer.credit': 'Pengalaman Digital Ini Adalah Sebahagian daripada Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   },
   zh: {
     'nav.collections': '系列', 'nav.story': '我们的故事', 'nav.bundles': '套装',
@@ -188,7 +188,7 @@ const translations = {
     'contact.meta': '古晋，砂拉越，马来西亚',
     'footer.rights': '© 2026 Clik Fragrance. 版权所有。',
     'footer.tagline': '用 ✦ 设计，为每日自我表达而生。',
-    'footer.credit': '网站体验由',
+    'footer.credit': '此数字体验是 <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> 创新生态系统的一部分',
   },
   ib: {
     'nav.collections': 'Koleksi', 'nav.story': 'Cherita Kami', 'nav.bundles': 'Bundle',
@@ -230,7 +230,7 @@ const translations = {
     'contact.meta': 'Kuching, Sarawak, Malaysia',
     'footer.rights': '© 2026 Clik Fragrance. Semua hak diau.',
     'footer.tagline': 'Digaga enggau ✦ ke chara nuan nunjukka diri sehari-hari.',
-    'footer.credit': 'Pengalaman web digaga ulih',
+    'footer.credit': 'Pengalaman Digital Tu Sebagi ari Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   },
 };
 

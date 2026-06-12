@@ -62,9 +62,54 @@ body {
   .section-inner { padding: 70px 24px; }
 }
 
+/* ─── Ticker bars ──────────────────────────────────── */
+.ticker-bar {
+  position: sticky; top: 0; z-index: 200;
+  height: 32px;
+  overflow: hidden;
+  background: var(--ink);
+  display: flex; align-items: center;
+}
+
+.ticker-track {
+  display: flex; gap: 48px; white-space: nowrap;
+  animation: ticker-scroll 22s linear infinite;
+}
+
+.ticker-item {
+  font-size: .75rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.85);
+  letter-spacing: .05em;
+  padding: 0 24px;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-bar-2 {
+  position: static;
+  height: 30px;
+  margin: 24px 0;
+  background: var(--paper);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.ticker-bar-2 .ticker-item {
+  opacity: .35;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
+}
+
 /* ─── Nav ──────────────────────────────────────────── */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  position: fixed; top: 32px; left: 0; right: 0; z-index: 100;
   padding: 20px 40px;
   display: flex; align-items: center;
   background: rgba(20, 17, 28, 0);
@@ -1040,23 +1085,67 @@ body {
 .footer { border-top: 1px solid var(--glass-border); }
 
 .footer-inner {
-  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
   padding: 32px 40px;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: rgba(247,245,250,.4);
+  text-align: center;
 }
 
-.footer-credit a {
-  color: var(--coral-lt);
+.footer-brand {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display, inherit);
+  font-size: 1rem;
+  color: var(--paper);
+}
+
+.footer-brand .nav-logo-mark { color: var(--lime); }
+.footer-brand em { font-style: normal; color: var(--coral); }
+
+.footer-copy {
+  color: rgba(247,245,250,.4);
+}
+
+/* ─── KOBIS Berhad credit bar ───────────────────────── */
+.kobis-bar {
+  height: .75in;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 16px 24px;
+  background: var(--ink);
+}
+
+.kobis-bar .kobis-text {
+  font-size: .72rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.85);
+  letter-spacing: 0.02em;
+}
+
+.kobis-bar a {
+  color: rgba(255,255,255,.85);
   text-decoration: none;
-  border-bottom: 1px solid oklch(0.72 0.20 28 / .35);
-  transition: border-color .25s var(--ease), color .25s var(--ease);
+  font-weight: 500;
 }
 
-.footer-credit a:hover {
-  color: var(--lime);
-  border-color: var(--lime);
+.kobis-bar a:hover {
+  background: linear-gradient(120deg, var(--coral-lt), var(--coral), var(--lime));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─── Map embed ─────────────────────────────────────── */
+.map-embed {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.map-embed iframe {
+  display: block;
 }
 
 /* ─── Reveal animation ─────────────────────────────── */
