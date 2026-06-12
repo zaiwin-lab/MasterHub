@@ -78,6 +78,7 @@ const translations = {
     'infra.label2': 'Land Area', 'infra.value2': '1 Full Acre',
     'infra.label3': 'Primary Facilities', 'infra.value3': '4 Large-Scale Rain Shelter Greenhouses',
     'infra.label4': 'Dimensions', 'infra.value4': '60 ft × 100 ft per structure',
+    'infra.map.label': 'Find Us', 'infra.map.cta': 'Open in Google Maps →',
 
     'products.eyebrow': 'Premium Harvest',
     'products.title': 'From greenhouse to <em>market</em>, every day',
@@ -168,6 +169,7 @@ const translations = {
     'infra.label2': 'Keluasan Tanah', 'infra.value2': '1 Ekar Penuh',
     'infra.label3': 'Kemudahan Utama', 'infra.value3': '4 Rumah Hijau Pelindung Hujan Berskala Besar',
     'infra.label4': 'Dimensi', 'infra.value4': '60 kaki × 100 kaki setiap struktur',
+    'infra.map.label': 'Cari Kami', 'infra.map.cta': 'Buka di Google Maps →',
 
     'products.eyebrow': 'Hasil Premium',
     'products.title': 'Dari rumah hijau ke <em>pasaran</em>, setiap hari',
@@ -258,6 +260,7 @@ const translations = {
     'infra.label2': '土地面积', 'infra.value2': '一整英亩',
     'infra.label3': '主要设施', 'infra.value3': '4座大型防雨温室',
     'infra.label4': '尺寸', 'infra.value4': '每座结构 60尺 × 100尺',
+    'infra.map.label': '找到我们', 'infra.map.cta': '在 Google 地图打开 →',
 
     'products.eyebrow': '优质农产',
     'products.title': '从温室到<em>市场</em>，每一天',
@@ -348,6 +351,7 @@ const translations = {
     'infra.label2': 'Besai Tanah', 'infra.value2': '1 Ekar Tepenuh',
     'infra.label3': 'Kemudahan Utama', 'infra.value3': '4 Rumah Hijau Pelindung Ujan Ti Besai',
     'infra.label4': 'Besai Bangunan', 'infra.value4': '60 kaki × 100 kaki sa-bangunan',
+    'infra.map.label': 'Gita Kami', 'infra.map.cta': 'Buka ba Google Maps →',
 
     'products.eyebrow': 'Asil Premium',
     'products.title': 'Ari rumah hijau ngagai <em>pasar</em>, sehari-hari',

@@ -225,78 +225,53 @@ body {
   pointer-events: none;
 }
 
-/* ─── Greenhouse illustration (CSS) ─────────────────── */
-.greenhouse {
-  position: relative;
-  width: 240px; height: 200px;
-}
-
-.greenhouse-arch {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 220px; height: 150px;
-  border: 2px solid rgba(46,42,34,.18);
-  border-bottom: none;
-  border-radius: 110px 110px 0 0;
-  background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,0) 60%);
-}
-
-.greenhouse-arch::before, .greenhouse-arch::after {
-  content: '';
-  position: absolute; top: 0; bottom: 0;
-  width: 1px;
-  background: rgba(46,42,34,.14);
-}
-
-.greenhouse-arch::before { left: 33%; transform: skewY(0deg); border-radius: 50% 0 0 0 / 100% 0 0 0; }
-.greenhouse-arch::after  { left: 66%; }
-
-.greenhouse-rib {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 220px; height: 150px;
-  border-radius: 110px 110px 0 0;
-  background:
-    repeating-linear-gradient(100deg, transparent 0 28px, rgba(46,42,34,.06) 28px 30px);
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 100%, black 60%, transparent 100%);
-}
-
-.greenhouse-base {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 240px; height: 6px;
-  background: linear-gradient(90deg, transparent, var(--green-lt), transparent);
-  opacity: .5;
-  border-radius: 3px;
-}
-
-.greenhouse-rows {
-  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
-  width: 180px; height: 70px;
-  display: flex; gap: 10px; align-items: flex-end; justify-content: center;
-}
-
-.greenhouse-rows span {
-  display: block; width: 14px; border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, var(--green-lt), var(--green));
-  opacity: .8;
-}
-
-.greenhouse-rows span:nth-child(1) { height: 34px; }
-.greenhouse-rows span:nth-child(2) { height: 50px; }
-.greenhouse-rows span:nth-child(3) { height: 40px; }
-.greenhouse-rows span:nth-child(4) { height: 58px; }
-.greenhouse-rows span:nth-child(5) { height: 44px; }
-.greenhouse-rows span:nth-child(6) { height: 36px; }
-.greenhouse-rows span:nth-child(7) { height: 52px; }
-
-.hero-greenhouse-wrap {
+/* ─── Hero botanical emblem (SVG) ───────────────────── */
+.hero-emblem-wrap {
   position: absolute;
-  right: 6%; top: 52%;
+  right: 5%; top: 50%;
   transform: translateY(-50%);
   z-index: 1;
-  opacity: .9;
+  width: clamp(280px, 30vw, 400px);
+  animation: emblem-float 7s ease-in-out infinite;
+}
+
+.hero-emblem { width: 100%; height: auto; overflow: visible; }
+
+@keyframes emblem-float {
+  0%, 100% { transform: translateY(-50%); }
+  50%      { transform: translateY(calc(-50% - 14px)); }
+}
+
+.emblem-orbit { transform-box: fill-box; transform-origin: center; animation: emblem-spin 48s linear infinite; }
+@keyframes emblem-spin { to { transform: rotate(360deg); } }
+
+.emblem-plant { transform-box: fill-box; transform-origin: center bottom; animation: emblem-sway 6s ease-in-out infinite; }
+@keyframes emblem-sway {
+  0%, 100% { transform: translate(130px, 150px) rotate(-1.6deg); }
+  50%      { transform: translate(130px, 150px) rotate(1.6deg); }
+}
+
+.emblem-chili { transform-box: fill-box; transform-origin: top center; animation: emblem-dangle 4.2s ease-in-out infinite; }
+.emblem-chili-2 { animation-delay: .6s; animation-duration: 5s; }
+@keyframes emblem-dangle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+.emblem-dot { animation: emblem-twinkle 3s ease-in-out infinite; }
+.emblem-dot.d2 { animation-delay: .8s; }
+.emblem-dot.d3 { animation-delay: 1.5s; }
+@keyframes emblem-twinkle {
+  0%, 100% { opacity: .3; transform: scale(.7); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-emblem-wrap, .emblem-orbit, .emblem-plant, .emblem-chili, .emblem-dot { animation: none; }
 }
 
 @media (max-width: 1000px) {
-  .hero-greenhouse-wrap { display: none; }
+  .hero-emblem-wrap { display: none; }
 }
 
 .hero-inner {
@@ -629,6 +604,74 @@ body {
   font-size: 1.4rem;
   line-height: 1.4;
   color: var(--paper);
+}
+
+/* ─── Infrastructure map (own row) ─────────────────── */
+.infra-map {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 24px;
+  align-items: stretch;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+}
+
+@media (max-width: 760px) {
+  .infra-map { grid-template-columns: 1fr; }
+}
+
+.infra-map-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 16px;
+}
+
+.infra-map-info .infra-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--forest);
+  margin-bottom: 12px;
+}
+
+.infra-map-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.35;
+  color: var(--paper);
+  margin-bottom: 20px;
+}
+
+.infra-map-link {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold-lt);
+  text-decoration: none;
+  transition: color .25s var(--ease), transform .25s var(--ease);
+  align-self: flex-start;
+}
+
+.infra-map-link:hover { color: var(--gold); transform: translateX(3px); }
+
+.infra-map-frame {
+  position: relative;
+  min-height: 280px;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.infra-map-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* ─── Products ─────────────────────────────────────── */
