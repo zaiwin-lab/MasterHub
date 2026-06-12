@@ -95,7 +95,8 @@ const translations = {
     'contact.social3': 'Instagram', 'contact.social4': 'TikTok',
 
     'footer.rights': '© 2026 Snow Buko & Desserts. All rights reserved.',
-    'footer.credit': 'Web experience by <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.tagline': 'Creamy Buko, Premium Taste — across Sarawak.',
+    'footer.credit': 'This Digital Experience is Part of the <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem',
   },
 
   bm: {
@@ -163,7 +164,8 @@ const translations = {
     'contact.social3': 'Instagram', 'contact.social4': 'TikTok',
 
     'footer.rights': '© 2026 Snow Buko & Desserts. Hak cipta terpelihara.',
-    'footer.credit': 'Pengalaman web digaga oleh <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.tagline': 'Buko Berkrim, Rasa Premium — di seluruh Sarawak.',
+    'footer.credit': 'Pengalaman Digital Ini Adalah Sebahagian daripada Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   },
 
   zh: {
@@ -231,7 +233,8 @@ const translations = {
     'contact.social3': 'Instagram', 'contact.social4': 'TikTok',
 
     'footer.rights': '© 2026 Snow Buko & Desserts. 版权所有。',
-    'footer.credit': '网站由 <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> 打造',
+    'footer.tagline': '香浓椰奶冻，尊享美味 — 遍布砂拉越。',
+    'footer.credit': '此数字体验是 <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> 创新生态系统的一部分',
   },
 
   ib: {
@@ -299,7 +302,8 @@ const translations = {
     'contact.social3': 'Instagram', 'contact.social4': 'TikTok',
 
     'footer.rights': '© 2026 Snow Buko & Desserts. Semua hak diau.',
-    'footer.credit': 'Pengalaman web digaga ulih <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
+    'footer.tagline': 'Buko Berkrim, Rasa Premium — perengkah Sarawak.',
+    'footer.credit': 'Pengalaman Digital Tu Sebagi ari Ekosistem Inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>',
   },
 };
 

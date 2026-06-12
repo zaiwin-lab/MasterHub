@@ -57,7 +57,7 @@ body {
 
 /* ─── Nav ──────────────────────────────────────────── */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  position: fixed; top: 32px; left: 0; right: 0; z-index: 100;
   padding: 20px 40px;
   display: flex; align-items: center;
   background: rgba(255, 250, 246, 0);
@@ -768,15 +768,32 @@ body {
 
 .footer-links a:hover { color: var(--berry-lt); }
 
-.footer-rights {
+.footer-rights,
+.footer-copy {
   font-size: 0.8rem;
   color: rgba(58,36,54,.4);
+}
+
+.footer-brand-wrap {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+
+.footer-tagline {
+  width: 100%;
+  font-size: 0.85rem;
+  color: rgba(58,36,54,.55);
+  margin-top: 4px;
+}
+
+.footer-copy {
+  width: 100%;
+  margin-top: 2px;
 }
 
 /* ─── KOBIS Berhad credit bar ──────────────────────── */
 .kobis-bar {
   background: #07090b;
-  height: 1.5in;
+  height: .75in;
   display: flex; align-items: center; justify-content: center;
   text-align: center;
   padding: 16px 24px;
@@ -784,20 +801,88 @@ body {
 
 .kobis-bar .kobis-text {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: rgba(255,250,246,.45);
+  font-size: .72rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(255,250,246,.85);
 }
 
 .kobis-bar a {
-  color: #ff9eb5;
+  color: rgba(255,250,246,.85);
   text-decoration: none;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: 500;
   transition: color .25s var(--ease);
 }
 
-.kobis-bar a:hover { color: #ffffff; }
+.kobis-bar a:hover {
+  background: linear-gradient(120deg, var(--berry-lt), var(--berry), var(--mint-lt));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─── Ticker bars ──────────────────────────────────── */
+.ticker-bar {
+  position: sticky;
+  top: 0;
+  z-index: 110;
+  overflow: hidden;
+  height: 32px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding-left: 48px;
+  white-space: nowrap;
+  animation: ticker-scroll 22s linear infinite;
+  will-change: transform;
+}
+
+.ticker-item {
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .05em;
+  color: var(--paper);
+  padding: 0 24px;
+  flex: none;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-bar-2 {
+  position: static;
+  height: 30px;
+  margin: 24px 0;
+  background: var(--paper-2);
+  border-top: 1px solid rgba(58,36,54,.08);
+  border-bottom: 1px solid rgba(58,36,54,.08);
+}
+
+.ticker-bar-2 .ticker-item {
+  color: var(--ink);
+  opacity: .35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
+}
+
+/* ─── Map embed ────────────────────────────────────── */
+.map-embed {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 24px;
+  width: 100%;
+}
+.map-embed iframe { display: block; }
 
 /* ─── Reveal animation ─────────────────────────────── */
 .reveal {
