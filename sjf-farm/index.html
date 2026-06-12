@@ -8,6 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  .ticker-bar{position:sticky;top:0;z-index:200;height:32px;overflow:hidden;background:#2f6b3f;display:flex;align-items:center}
+  .ticker-track{display:flex;align-items:center;gap:48px;padding-left:48px;white-space:nowrap;flex-wrap:nowrap}
+  .ticker-item{font-size:.75rem;font-weight:500;letter-spacing:.05em;padding:0 24px;flex:none;white-space:nowrap}
+  .ticker-icon{width:14px;height:14px;vertical-align:-2px;margin-right:2px;flex:none}
+</style>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
