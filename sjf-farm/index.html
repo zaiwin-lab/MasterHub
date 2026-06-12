@@ -5,23 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SJF Enterprise — Modern Agriculture, Tangible Results</title>
 <meta name="description" content="SJF Enterprise (SJF Farm) — a Bumiputera modern agriculture enterprise in Santubong, Kuching, Sarawak. Premium Cili Geronong (Habanero) and fresh leafy vegetables, grown through systematic farming and digital marketing." />
-
-<meta property="og:title" content="SJF Enterprise — Modern Agriculture, Tangible Results" />
-<meta property="og:description" content="Premium Cili Geronong (Habanero) and fresh leafy vegetables, grown under controlled greenhouse conditions in Santubong, Kuching, Sarawak." />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="assets/chili-harvest.jpg" />
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="assets/field-hero.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- Scroll progress + ambient cursor glow -->
-<div class="scroll-progress" id="scrollProgress"></div>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
 <nav class="nav" id="nav">
   <div class="nav-inner">
@@ -29,7 +18,6 @@
     <div class="nav-links">
       <a href="#about" data-i18n="nav.about">Our Story</a>
       <a href="#products" data-i18n="nav.products">Produce</a>
-      <a href="#gallery" data-i18n="nav.gallery">Gallery</a>
       <a href="#process" data-i18n="nav.process">Process</a>
       <a href="#team" data-i18n="nav.team">Team</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
@@ -40,135 +28,98 @@
       <button data-lang="zh">中</button>
       <button data-lang="ib">IB</button>
     </div>
-    <a href="#contact" class="nav-cta magnetic" data-i18n="nav.cta">Partner With Us</a>
+    <a href="#contact" class="nav-cta" data-i18n="nav.cta">Partner With Us</a>
   </div>
 </nav>
 
 <!-- ─── Hero ─────────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-media" data-parallax="0.18">
-    <img src="assets/field-hero.jpg" alt="Golden-hour farmland at sunrise" class="hero-img" />
-    <div class="hero-scrim"></div>
-    <div class="hero-rays"></div>
-    <div class="hero-aurora hero-aurora-1"></div>
-    <div class="hero-aurora hero-aurora-2"></div>
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
     <div class="hero-grid"></div>
   </div>
 
-  <span class="sparkle" style="top:18%; left:58%; animation-delay:0s;"></span>
+  <span class="sparkle" style="top:14%; left:60%; animation-delay:0s;"></span>
   <span class="sparkle" style="top:30%; left:80%; animation-delay:.4s;"></span>
   <span class="sparkle" style="top:52%; left:68%; animation-delay:.9s;"></span>
-  <span class="sparkle" style="top:24%; left:88%; animation-delay:.2s;"></span>
-  <span class="sparkle" style="top:12%; left:74%; animation-delay:1.3s;"></span>
-  <span class="sparkle" style="top:66%; left:84%; animation-delay:1.7s;"></span>
-  <span class="sparkle" style="top:40%; left:92%; animation-delay:1.1s;"></span>
+  <span class="sparkle" style="top:68%; left:88%; animation-delay:.2s;"></span>
+  <span class="sparkle" style="top:10%; left:90%; animation-delay:1.3s;"></span>
+  <span class="sparkle" style="top:80%; left:62%; animation-delay:1.7s;"></span>
+  <span class="sparkle" style="top:22%; left:72%; animation-delay:.6s;"></span>
+  <span class="sparkle" style="top:44%; left:92%; animation-delay:1.1s;"></span>
   <span class="sparkle" style="top:60%; left:55%; animation-delay:1.9s;"></span>
+  <span class="sparkle" style="top:36%; left:64%; animation-delay:2.2s;"></span>
+  <span class="sparkle" style="top:90%; left:78%; animation-delay:.1s;"></span>
+  <span class="sparkle" style="top:5%; left:75%; animation-delay:1.5s;"></span>
+
+  <div class="hero-greenhouse-wrap">
+    <div class="greenhouse">
+      <div class="greenhouse-arch"></div>
+      <div class="greenhouse-rib"></div>
+      <div class="greenhouse-rows">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="greenhouse-base"></div>
+    </div>
+  </div>
 
   <div class="hero-inner">
-    <div class="hero-copy">
-      <div class="hero-eyebrow reveal"><span class="eyebrow-dot"></span> <span data-i18n="hero.eyebrow">Santubong, Kuching, Sarawak — Modern Agriculture</span></div>
-      <h1 class="hero-title reveal">
-        <span data-i18n="hero.title1">Modern Agriculture,</span>
-        <em data-i18n="hero.title.em">Tangible</em>
-        <span data-i18n="hero.title2"> Results.</span>
-      </h1>
-      <p class="hero-sub reveal" data-i18n="hero.sub">SJF Enterprise is a Bumiputera agricultural business growing premium Cili Geronong (Habanero) and fresh leafy vegetables under controlled greenhouse conditions — built on systematic farming, real infrastructure, and an active digital presence.</p>
-      <div class="hero-actions reveal">
-        <a href="#products" class="btn-primary magnetic" data-i18n="hero.cta1">Our Produce</a>
-        <a href="#contact" class="btn-ghost magnetic" data-i18n="hero.cta2">Partner With Us</a>
-      </div>
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span> <span data-i18n="hero.eyebrow">Santubong, Kuching, Sarawak — Modern Agriculture</span></div>
+    <h1 class="hero-title">
+      <span data-i18n="hero.title1">Modern Agriculture,</span>
+      <em data-i18n="hero.title.em">Tangible</em>
+      <span data-i18n="hero.title2"> Results.</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero.sub">SJF Enterprise is a Bumiputera agricultural business growing premium Cili Geronong (Habanero) and fresh leafy vegetables under controlled greenhouse conditions — built on systematic farming, real infrastructure, and an active digital presence.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary" data-i18n="hero.cta1">Our Produce</a>
+      <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Partner With Us</a>
     </div>
-
-    <div class="hero-showcase reveal" data-tilt>
-      <div class="hero-showcase-img">
-        <img src="assets/chili-harvest.jpg" alt="Freshly harvested red Cili Geronong chillies" />
-        <div class="hero-showcase-shine"></div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">2019</span>
+        <span class="stat-label" data-i18n="hero.stat1">Established as a registered Bumiputera enterprise</span>
       </div>
-      <div class="hero-showcase-badge">
-        <span class="badge-pulse"></span>
-        <div>
-          <strong data-i18n="hero.badge.title">Cili Geronong</strong>
-          <span data-i18n="hero.badge.sub">Flagship Habanero harvest</span>
-        </div>
+      <div class="stat">
+        <span class="stat-num">1</span>
+        <span class="stat-label" data-i18n="hero.stat2">Full acre of controlled greenhouse farmland</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label" data-i18n="hero.stat3">Large-scale rain-shelter greenhouses</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">10K+</span>
+        <span class="stat-label" data-i18n="hero.stat4">Followers across our digital channels</span>
       </div>
     </div>
   </div>
-
-  <div class="hero-stats">
-    <div class="stat reveal">
-      <span class="stat-num" data-count="2019" data-plain="1">2019</span>
-      <span class="stat-label" data-i18n="hero.stat1">Established as a registered Bumiputera enterprise</span>
-    </div>
-    <div class="stat reveal">
-      <span class="stat-num" data-count="1">1</span>
-      <span class="stat-label" data-i18n="hero.stat2">Full acre of controlled greenhouse farmland</span>
-    </div>
-    <div class="stat reveal">
-      <span class="stat-num" data-count="4">4</span>
-      <span class="stat-label" data-i18n="hero.stat3">Large-scale rain-shelter greenhouses</span>
-    </div>
-    <div class="stat reveal">
-      <span class="stat-num" data-count="10" data-suffix="K+">10K+</span>
-      <span class="stat-label" data-i18n="hero.stat4">Followers across our digital channels</span>
-    </div>
-  </div>
-
-  <a href="#about" class="hero-scroll-cue" aria-label="Scroll down">
-    <span class="scroll-cue-dot"></span>
-  </a>
 </section>
-
-<!-- ─── Marquee trust strip ──────────────────────────── -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span>Cili Geronong</span><span class="marquee-dot">✦</span>
-    <span>Fresh Leafy Greens</span><span class="marquee-dot">✦</span>
-    <span>Controlled Greenhouses</span><span class="marquee-dot">✦</span>
-    <span>Systematic Farming</span><span class="marquee-dot">✦</span>
-    <span>Bumiputera Enterprise</span><span class="marquee-dot">✦</span>
-    <span>Santubong · Sarawak</span><span class="marquee-dot">✦</span>
-    <span>Cili Geronong</span><span class="marquee-dot">✦</span>
-    <span>Fresh Leafy Greens</span><span class="marquee-dot">✦</span>
-    <span>Controlled Greenhouses</span><span class="marquee-dot">✦</span>
-    <span>Systematic Farming</span><span class="marquee-dot">✦</span>
-    <span>Bumiputera Enterprise</span><span class="marquee-dot">✦</span>
-    <span>Santubong · Sarawak</span><span class="marquee-dot">✦</span>
-  </div>
-</div>
 
 <!-- ─── About / Story ───────────────────────────────── -->
 <section class="about" id="about">
   <div class="section-sparkles">
     <span class="sparkle" style="top:12%; left:8%; animation-delay:.3s;"></span>
     <span class="sparkle" style="top:78%; left:92%; animation-delay:.9s;"></span>
+    <span class="sparkle" style="top:50%; left:50%; animation-delay:1.6s;"></span>
     <span class="sparkle" style="top:30%; left:88%; animation-delay:.6s;"></span>
     <span class="sparkle" style="top:65%; left:14%; animation-delay:1.2s;"></span>
+    <span class="sparkle" style="top:90%; left:48%; animation-delay:2.0s;"></span>
   </div>
   <div class="section-inner">
-    <div class="story-layout">
-      <div class="story-media reveal" data-tilt>
-        <div class="story-media-frame" data-parallax="0.06">
-          <img src="assets/people-harvest.jpg" alt="Farm team harvesting fresh produce in the field" />
-        </div>
-        <div class="story-badge">
-          <span class="story-badge-num">2019</span>
-          <span class="story-badge-text" data-i18n="story.badge">Growing in Sarawak since</span>
-        </div>
-        <img src="assets/chili-single.jpg" alt="A single fresh red chilli" class="story-accent" data-parallax="0.12" />
+    <div class="section-eyebrow" data-i18n="about.eyebrow">Our Story</div>
+    <h2 class="section-title reveal" data-i18n="about.title">Rooted in <em>Sarawak</em>, growing for the future</h2>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <p data-i18n="about.p1">Established in 2019, SJF Enterprise (Reg. No. 116118) is a dedicated Bumiputera enterprise operating in the modern agricultural sector, based in Santubong, Kuching, Sarawak.</p>
+        <p data-i18n="about.p2">We were founded to solve a simple, critical need: meeting market demand for consistently fresh, high-quality local produce.</p>
+        <p data-i18n="about.p3">By combining systematic farming methods with a commitment to our local economy, we have built a progressive agricultural business that creates real jobs and delivers real value to the community.</p>
       </div>
-      <div class="story-text">
-        <div class="section-eyebrow" data-i18n="about.eyebrow">Our Story</div>
-        <h2 class="section-title reveal" data-i18n="about.title">Rooted in <em>Sarawak</em>, growing for the future</h2>
-        <div class="story-paras reveal">
-          <p data-i18n="about.p1">Established in 2019, SJF Enterprise (Reg. No. 116118) is a dedicated Bumiputera enterprise operating in the modern agricultural sector, based in Santubong, Kuching, Sarawak.</p>
-          <p data-i18n="about.p2">We were founded to solve a simple, critical need: meeting market demand for consistently fresh, high-quality local produce.</p>
-          <p data-i18n="about.p3">By combining systematic farming methods with a commitment to our local economy, we have built a progressive agricultural business that creates real jobs and delivers real value to the community.</p>
-        </div>
-        <div class="story-values reveal">
-          <div class="value-row"><strong data-i18n="vm.strong1">Quality First.</strong> <span data-i18n="vm.text1">An uncompromising focus on producing premium, high-grade agricultural yields.</span></div>
-          <div class="value-row"><strong data-i18n="vm.strong2">Systematic Operations.</strong> <span data-i18n="vm.text2">Every farm activity is managed through highly organised, professional and modern frameworks.</span></div>
-          <div class="value-row"><strong data-i18n="vm.strong3">Community Impact.</strong> <span data-i18n="vm.text3">Creating employment opportunities and contributing directly to the economic development of our local community.</span></div>
-        </div>
+      <div class="about-card reveal">
+        <p><strong data-i18n="vm.strong1">Quality First.</strong> <span data-i18n="vm.text1">An uncompromising focus on producing premium, high-grade agricultural yields.</span></p>
+        <p><strong data-i18n="vm.strong2">Systematic Operations.</strong> <span data-i18n="vm.text2">Every farm activity is managed through highly organised, professional and modern frameworks.</span></p>
+        <p><strong data-i18n="vm.strong3">Community Impact.</strong> <span data-i18n="vm.text3">Creating employment opportunities and contributing directly to the economic development of our local community.</span></p>
       </div>
     </div>
   </div>
@@ -180,11 +131,11 @@
     <div class="section-eyebrow" data-i18n="vision.eyebrow">Vision &amp; Mission</div>
     <h2 class="section-title reveal" data-i18n="vision.heading">Where we're <em>headed</em>, and how we get there</h2>
     <div class="vm-grid">
-      <div class="vm-card reveal" data-tilt>
+      <div class="vm-card reveal">
         <h3 data-i18n="vision.title">Our Vision</h3>
         <p data-i18n="vision.text">To be a highly competitive, progressive modern agricultural enterprise — recognised locally and nationally for our integration of systematic farming and effective market reach.</p>
       </div>
-      <div class="vm-card reveal" data-tilt>
+      <div class="vm-card reveal">
         <h3 data-i18n="mission.title">Our Mission</h3>
         <div class="mission-list">
           <div class="mission-item">
@@ -216,6 +167,8 @@
     <span class="sparkle" style="top:40%; left:4%; animation-delay:.2s;"></span>
     <span class="sparkle" style="top:88%; left:60%; animation-delay:1.4s;"></span>
     <span class="sparkle" style="top:18%; left:48%; animation-delay:1.0s;"></span>
+    <span class="sparkle" style="top:60%; left:80%; animation-delay:1.8s;"></span>
+    <span class="sparkle" style="top:75%; left:25%; animation-delay:.5s;"></span>
   </div>
   <div class="section-inner">
     <div class="section-eyebrow" data-i18n="pillars.eyebrow">Why Partner With Us</div>
@@ -261,30 +214,26 @@
   </div>
 </section>
 
-<!-- ─── Infrastructure (cinematic band) ──────────────── -->
+<!-- ─── Infrastructure ──────────────────────────────── -->
 <section class="infra" id="infra">
-  <div class="infra-bg" data-parallax="0.12">
-    <img src="assets/field-rows.jpg" alt="Aerial view of cultivated crop rows" />
-    <div class="infra-scrim"></div>
-  </div>
   <div class="section-inner">
-    <div class="section-eyebrow light" data-i18n="infra.eyebrow">Our Infrastructure</div>
-    <h2 class="section-title light reveal" data-i18n="infra.title">Tangible assets, <em>real</em> capacity</h2>
-    <p class="section-sub light reveal" data-i18n="infra.sub">Our operations are anchored by robust physical assets. These controlled environments protect crops from unpredictable weather, ensuring a steady, reliable yield year-round.</p>
+    <div class="section-eyebrow" data-i18n="infra.eyebrow">Our Infrastructure</div>
+    <h2 class="section-title reveal" data-i18n="infra.title">Tangible assets, <em>real</em> capacity</h2>
+    <p class="section-sub reveal" data-i18n="infra.sub">Our operations are anchored by robust physical assets. These controlled environments protect crops from unpredictable weather, ensuring a steady, reliable yield year-round.</p>
     <div class="infra-grid">
-      <div class="infra-card reveal" data-tilt>
+      <div class="infra-card reveal">
         <div class="infra-label" data-i18n="infra.label1">Location</div>
         <div class="infra-value" data-i18n="infra.value1">TKPM Rampangi, Jalan Santubong, Kuching, Sarawak</div>
       </div>
-      <div class="infra-card reveal" data-tilt>
+      <div class="infra-card reveal">
         <div class="infra-label" data-i18n="infra.label2">Land Area</div>
         <div class="infra-value" data-i18n="infra.value2">1 Full Acre</div>
       </div>
-      <div class="infra-card reveal" data-tilt>
+      <div class="infra-card reveal">
         <div class="infra-label" data-i18n="infra.label3">Primary Facilities</div>
         <div class="infra-value" data-i18n="infra.value3">4 Large-Scale Rain Shelter Greenhouses</div>
       </div>
-      <div class="infra-card reveal" data-tilt>
+      <div class="infra-card reveal">
         <div class="infra-label" data-i18n="infra.label4">Dimensions</div>
         <div class="infra-value" data-i18n="infra.value4">60 ft × 100 ft per structure</div>
       </div>
@@ -299,67 +248,25 @@
     <span class="sparkle" style="top:25%; left:82%; animation-delay:1.4s;"></span>
     <span class="sparkle" style="top:75%; left:30%; animation-delay:.7s;"></span>
     <span class="sparkle" style="top:65%; left:75%; animation-delay:1.9s;"></span>
+    <span class="sparkle" style="top:5%; left:55%; animation-delay:.3s;"></span>
+    <span class="sparkle" style="top:45%; left:10%; animation-delay:1.1s;"></span>
+    <span class="sparkle" style="top:90%; left:65%; animation-delay:1.7s;"></span>
   </div>
   <div class="section-inner">
     <div class="section-eyebrow" data-i18n="products.eyebrow">Premium Harvest</div>
     <h2 class="section-title reveal" data-i18n="products.title">From greenhouse to <em>market</em>, every day</h2>
     <p class="section-sub reveal" data-i18n="products.sub">Inside our facilities, agriculture is treated as an exact science — modern fertigation and systematic farm management optimise plant health, minimise waste, and guarantee a uniform, high-quality harvest.</p>
     <div class="product-grid">
-      <div class="product-card reveal" data-tilt>
-        <div class="product-media">
-          <img src="assets/chili-harvest.jpg" alt="Bright red Cili Geronong habanero harvest" />
-          <span class="product-tag" data-i18n="products.tag1">Flagship Crop</span>
-        </div>
-        <div class="product-body">
-          <h3 data-i18n="product1.title">Cili Geronong (Habanero)</h3>
-          <p data-i18n="product1.desc">Our flagship crop, cultivated under strict quality controls. By managing the growing environment precisely, we deliver chillies with exceptional colour, size, and heat — meeting the rigorous standards of local suppliers and commercial buyers.</p>
-        </div>
+      <div class="product-card reveal">
+        <div class="icon-chili"><span class="stem"></span><span class="pod"></span></div>
+        <h3 data-i18n="product1.title">Cili Geronong (Habanero)</h3>
+        <p data-i18n="product1.desc">Our flagship crop, cultivated under strict quality controls. By managing the growing environment precisely, we deliver chillies with exceptional colour, size, and heat — meeting the rigorous standards of local suppliers and commercial buyers.</p>
       </div>
-      <div class="product-card reveal" data-tilt>
-        <div class="product-media">
-          <img src="assets/leafy-hero.jpg" alt="Crisp fresh butterhead lettuce" />
-          <span class="product-tag" data-i18n="products.tag2">Fresh Greens</span>
-        </div>
-        <div class="product-body">
-          <h3 data-i18n="product2.title">Fresh Leafy Vegetables</h3>
-          <p data-i18n="product2.desc">Alongside our robust chilli production, SJF Enterprise cultivates premium leafy greens. Our systematic approach ensures every head is crisp, vibrant, and market-ready the moment it leaves the greenhouse.</p>
-        </div>
+      <div class="product-card reveal">
+        <div class="icon-leaf"><span class="leaf leaf-1"></span><span class="leaf leaf-2"></span></div>
+        <h3 data-i18n="product2.title">Fresh Leafy Vegetables</h3>
+        <p data-i18n="product2.desc">Alongside our robust chilli production, SJF Enterprise cultivates premium leafy greens. Our systematic approach ensures every head is crisp, vibrant, and market-ready the moment it leaves the greenhouse.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── Gallery ─────────────────────────────────────── -->
-<section class="gallery" id="gallery">
-  <div class="section-inner">
-    <div class="section-eyebrow" data-i18n="gallery.eyebrow">In The Field</div>
-    <h2 class="section-title reveal" data-i18n="gallery.title">The harvest, <em>up close</em></h2>
-    <p class="section-sub reveal" data-i18n="gallery.sub">From seed trays to packed crates — a look inside the daily work behind every delivery.</p>
-    <div class="gallery-grid">
-      <figure class="gallery-item gi-tall reveal" data-lightbox="assets/chili-harvest.jpg">
-        <img src="assets/chili-harvest.jpg" alt="Red chilli harvest" loading="lazy" />
-        <figcaption data-i18n="gallery.cap1">Cili Geronong at peak ripeness</figcaption>
-      </figure>
-      <figure class="gallery-item reveal" data-lightbox="assets/seedlings.jpg">
-        <img src="assets/seedlings.jpg" alt="Young seedlings in trays" loading="lazy" />
-        <figcaption data-i18n="gallery.cap2">Seedlings under controlled care</figcaption>
-      </figure>
-      <figure class="gallery-item reveal" data-lightbox="assets/planting-hands.jpg">
-        <img src="assets/planting-hands.jpg" alt="Hands planting seedlings" loading="lazy" />
-        <figcaption data-i18n="gallery.cap3">Hand-tended from day one</figcaption>
-      </figure>
-      <figure class="gallery-item gi-wide reveal" data-lightbox="assets/people-harvest.jpg">
-        <img src="assets/people-harvest.jpg" alt="Farm team harvesting" loading="lazy" />
-        <figcaption data-i18n="gallery.cap4">Our team in the field</figcaption>
-      </figure>
-      <figure class="gallery-item reveal" data-lightbox="assets/salad-leaves.jpg">
-        <img src="assets/salad-leaves.jpg" alt="Fresh crisp salad leaves" loading="lazy" />
-        <figcaption data-i18n="gallery.cap5">Crisp salad greens, daily</figcaption>
-      </figure>
-      <figure class="gallery-item reveal" data-lightbox="assets/leafy-hero.jpg">
-        <img src="assets/leafy-hero.jpg" alt="Premium fresh lettuce" loading="lazy" />
-        <figcaption data-i18n="gallery.cap6">Premium leafy heads</figcaption>
-      </figure>
     </div>
   </div>
 </section>
@@ -371,35 +278,20 @@
     <h2 class="section-title reveal" data-i18n="process.title">From <em>Farm</em> to Market</h2>
     <p class="section-sub reveal" data-i18n="process.sub">A consistent, traceable process — from the moment a seed is planted to the moment produce reaches our partners.</p>
     <div class="process-grid">
-      <div class="process-card reveal" data-tilt>
-        <div class="process-media">
-          <img src="assets/planting-hands.jpg" alt="Controlled cultivation" loading="lazy" />
-          <span class="process-step">1</span>
-        </div>
-        <div class="process-body">
-          <h3 data-i18n="process1.title">Controlled Cultivation</h3>
-          <p data-i18n="process1.desc">Planting and nurturing crops in systematic, weather-protected environments.</p>
-        </div>
+      <div class="process-card reveal">
+        <div class="process-step">1</div>
+        <h3 data-i18n="process1.title">Controlled Cultivation</h3>
+        <p data-i18n="process1.desc">Planting and nurturing crops in systematic, weather-protected environments.</p>
       </div>
-      <div class="process-card reveal" data-tilt>
-        <div class="process-media">
-          <img src="assets/potting.jpg" alt="Quality assurance and packing" loading="lazy" />
-          <span class="process-step">2</span>
-        </div>
-        <div class="process-body">
-          <h3 data-i18n="process2.title">Quality Assurance &amp; Packing</h3>
-          <p data-i18n="process2.desc">Harvesting at peak freshness and meticulously packing the produce in our on-site facilities.</p>
-        </div>
+      <div class="process-card reveal">
+        <div class="process-step">2</div>
+        <h3 data-i18n="process2.title">Quality Assurance &amp; Packing</h3>
+        <p data-i18n="process2.desc">Harvesting at peak freshness and meticulously packing the produce in our on-site facilities.</p>
       </div>
-      <div class="process-card reveal" data-tilt>
-        <div class="process-media">
-          <img src="assets/people-harvest.jpg" alt="Direct supply to partners" loading="lazy" />
-          <span class="process-step">3</span>
-        </div>
-        <div class="process-body">
-          <h3 data-i18n="process3.title">Direct Supply</h3>
-          <p data-i18n="process3.desc">Delivering consistent volumes of fresh agricultural goods directly to local customers, small traders, and commercial partners.</p>
-        </div>
+      <div class="process-card reveal">
+        <div class="process-step">3</div>
+        <h3 data-i18n="process3.title">Direct Supply</h3>
+        <p data-i18n="process3.desc">Delivering consistent volumes of fresh agricultural goods directly to local customers, small traders, and commercial partners.</p>
       </div>
     </div>
   </div>
@@ -411,12 +303,13 @@
     <span class="sparkle" style="top:10%; left:85%; animation-delay:.4s;"></span>
     <span class="sparkle" style="top:55%; left:6%; animation-delay:1.3s;"></span>
     <span class="sparkle" style="top:85%; left:55%; animation-delay:.8s;"></span>
+    <span class="sparkle" style="top:30%; left:40%; animation-delay:1.9s;"></span>
   </div>
   <div class="section-inner">
     <div class="section-eyebrow" data-i18n="team.eyebrow">Our People</div>
     <h2 class="section-title reveal" data-i18n="team.title">A structured, <em>accountable</em> team</h2>
     <p class="section-sub reveal" data-i18n="team.sub">Technology and infrastructure are only as good as the people who manage them. Every package that leaves our facility is hand-inspected and logged.</p>
-    <div class="team-lead reveal" data-tilt>
+    <div class="team-lead reveal">
       <div class="team-avatar">AT</div>
       <div>
         <h3>Ahmad Tarmizi Bin Ahamad Sabirin</h3>
@@ -455,21 +348,22 @@
     <span class="sparkle" style="top:12%; left:12%; animation-delay:.6s;"></span>
     <span class="sparkle" style="top:70%; left:88%; animation-delay:1.5s;"></span>
     <span class="sparkle" style="top:40%; left:50%; animation-delay:1.0s;"></span>
+    <span class="sparkle" style="top:85%; left:30%; animation-delay:.2s;"></span>
   </div>
   <div class="section-inner">
     <div class="section-eyebrow" data-i18n="contact.eyebrow">Get In Touch</div>
     <h2 class="section-title reveal" data-i18n="contact.title">Let's grow <em>together</em></h2>
     <p class="section-sub reveal" data-i18n="contact.sub">With a clear roadmap, systematic management, and proven infrastructure, SJF Enterprise is primed for steady expansion in the modern agricultural sector. Reach out — we'd love to hear from you.</p>
     <div class="contact-grid">
-      <div class="contact-card reveal" data-tilt>
+      <div class="contact-card reveal">
         <div class="label" data-i18n="contact.address.label">Visit Us</div>
         <div class="value" data-i18n="contact.address.value">Room 1, Ground Floor, Lot 3542, Blok 18, Salak Land District, Jalan Bako, 93050 Kuching, Sarawak, Malaysia.</div>
       </div>
-      <div class="contact-card reveal" data-tilt>
+      <div class="contact-card reveal">
         <div class="label" data-i18n="contact.phone.label">Call / WhatsApp</div>
         <div class="value"><a href="tel:+60149903757">+6014-990 3757</a><br><a href="tel:+60113313357">+6011-3313 3357</a></div>
       </div>
-      <div class="contact-card reveal" data-tilt>
+      <div class="contact-card reveal">
         <div class="label" data-i18n="contact.email.label">Email</div>
         <div class="value"><a href="mailto:sjfarm20@gmail.com">sjfarm20@gmail.com</a></div>
       </div>
@@ -490,7 +384,6 @@
     <div class="footer-links">
       <a href="#about" data-i18n="nav.about">Our Story</a>
       <a href="#products" data-i18n="nav.products">Produce</a>
-      <a href="#gallery" data-i18n="nav.gallery">Gallery</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </div>
     <div class="footer-rights" data-i18n="footer.rights">© 2026 SJF Enterprise (116118). All rights reserved.</div>
@@ -499,12 +392,6 @@
 
 <div class="kobis-bar">
   <div class="kobis-text" data-i18n="footer.credit">Web experience by <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a></div>
-</div>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
-  <img id="lightboxImg" src="" alt="" />
 </div>
 
 <script src="app.js"></script>
