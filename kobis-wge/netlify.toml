@@ -1,0 +1,17 @@
+# KOBIS Website Growth Engine — static SPA, zero build step.
+[build]
+  publish = "."
+
+# Hash-based routing means index.html serves every path already, but this
+# keeps any future deep-link / pretty-URL setup resilient.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
