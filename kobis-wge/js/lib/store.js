@@ -9,6 +9,7 @@
 import { scoreProspect } from './scoring.js';
 import { PRICING } from './pricing.js';
 import { generateWebsite } from './aigen.js';
+import * as remote from './db.js';
 
 const KEY = 'kobis_wge_v1';
 const listeners = new Set();
@@ -151,10 +152,39 @@ function load() {
   try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch {}
   return null;
 }
-function persist() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} emit(); }
+let syncTimer = null;
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {}
+  // Write-through to Supabase when configured (debounced, fire-and-forget).
+  if (db && db.role !== undefined && remote.isConfigured()) {
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(() => remote.pushAll(db), 800);
+  }
+  emit();
+}
 function emit() { listeners.forEach(fn => fn(db)); }
 
 export function init() { db = load() || seed(); return db; }
+
+// Async boot: hydrate from Supabase when configured, else local/seed.
+// Views stay fully synchronous — only the initial boot awaits.
+export async function boot() {
+  const local = load();
+  if (remote.isConfigured()) {
+    const snapshot = await remote.hydrateAll();
+    if (snapshot && (snapshot.prospects?.length || snapshot.clients?.length)) {
+      // merge remote tables onto a fresh shell so UI-only fields (role) exist
+      db = { ...seed(), ...snapshot, role: (local && local.role) || 'admin' };
+    } else {
+      // first run against an empty database: seed locally then push up
+      db = local || seed();
+      remote.pushAll(db);
+    }
+  } else {
+    db = local || seed();
+  }
+  return db;
+}
 export function subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); }
 export function reset() { db = seed(); persist(); }
 export function get() { return db; }

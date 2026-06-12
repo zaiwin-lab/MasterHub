@@ -15,7 +15,8 @@ import { renderWaitlist } from './views/waitlist.js';
 import { renderPreview } from './views/preview.js';
 import { renderClientPortal } from './views/client.js';
 
-store.init();
+// Boot: hydrate from Supabase if configured (config.js), else browser-local.
+await store.boot();
 
 const app = document.getElementById('app');
 
