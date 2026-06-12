@@ -1177,3 +1177,11 @@ body {
   .eyebrow-dot { animation: none; }
   .hero-photo::after { animation: none; }
 }
+
+.ticker-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: -2px;
+  margin-right: 2px;
+  flex: none;
+}
