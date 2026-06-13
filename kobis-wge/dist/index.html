@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOBIS Website Growth Engine</title>
+  <meta name="description" content="Build First. Sell Later. Grow Forever. The KOBIS engine that creates website previews for businesses before they buy." />
+  <meta name="theme-color" content="#07090f" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ==========================================================================
+   KOBIS Website Growth Engine — Design System
+   "Build First. Sell Later. Grow Forever."
+   A single, cohesive token system powering the admin engine, the client
+   dashboard, and the public hub. Preview business sites are themed separately.
+   ========================================================================== */
+
+/* ----------------------------------- Tokens ----------------------------- */
+:root {
+  /* Brand surfaces — deep midnight with engineered depth */
+  --ink-900: #07090f;
+  --ink-850: #0a0d15;
+  --ink-800: #0d111c;
+  --ink-750: #11162370;
+  --ink-700: #161c2d;
+  --ink-600: #1d2538;
+  --line: #232b40;
+  --line-soft: #1a2033;
+
+  /* Text */
+  --tx-hi: #f4f7ff;
+  --tx: #c5cde0;
+  --tx-mid: #8d97b3;
+  --tx-lo: #5e6884;
+
+  /* Signature palette */
+  --grow: #00e5a0;          /* primary — growth / activation */
+  --grow-deep: #00b582;
+  --grow-glow: #00e5a033;
+  --violet: #7c5cff;        /* secondary — intelligence / AI */
+  --violet-glow: #7c5cff2e;
+  --amber: #ffb547;         /* credits / money */
+  --amber-glow: #ffb5472e;
+  --rose: #ff5d73;          /* risk / churn */
+  --sky: #4cc9ff;           /* analytics */
+
+  /* Semantic */
+  --ok: var(--grow);
+  --warn: var(--amber);
+  --bad: var(--rose);
+
+  /* Radius / shadow / motion */
+  --r-xs: 8px; --r-sm: 12px; --r-md: 16px; --r-lg: 22px; --r-xl: 30px;
+  --sh-1: 0 1px 2px rgba(0,0,0,.4);
+  --sh-2: 0 10px 30px -12px rgba(0,0,0,.6);
+  --sh-3: 0 24px 60px -20px rgba(0,0,0,.7);
+  --glow-grow: 0 0 0 1px var(--grow-glow), 0 12px 40px -16px var(--grow-glow);
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --maxw: 1280px;
+}
+
+/* ----------------------------------- Reset ------------------------------ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--ink-900);
+  color: var(--tx);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; }
+h1,h2,h3,h4 { font-family: var(--font-display); color: var(--tx-hi); line-height: 1.1; letter-spacing: -.02em; font-weight: 700; }
+::selection { background: var(--grow); color: var(--ink-900); }
+
+/* App ambient background — engineered gradient mesh */
+.app-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 12% -5%, var(--violet-glow), transparent 60%),
+    radial-gradient(55% 45% at 100% 0%, var(--grow-glow), transparent 55%),
+    radial-gradient(50% 60% at 50% 120%, #1a224033, transparent 60%),
+    var(--ink-900);
+}
+.app-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, #ffffff05 1px, transparent 0);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(70% 70% at 50% 30%, #000 30%, transparent 100%);
+}
+
+/* ----------------------------------- Layout ----------------------------- */
+.shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.main { min-width: 0; }
+.view { padding: 32px clamp(20px, 4vw, 48px) 80px; max-width: var(--maxw); margin: 0 auto; animation: viewIn .5s var(--ease-out) both; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ----------------------------------- Sidebar ---------------------------- */
+.sidebar {
+  position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, var(--ink-850), var(--ink-900));
+  border-right: 1px solid var(--line-soft); padding: 22px 16px; gap: 6px;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 6px 10px 20px; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+  background: linear-gradient(140deg, var(--grow), var(--grow-deep));
+  color: var(--ink-900); font-family: var(--font-display); font-weight: 800; font-size: 19px;
+  box-shadow: 0 8px 24px -8px var(--grow-glow), inset 0 1px 0 #ffffff66;
+}
+.brand-name { font-family: var(--font-display); font-weight: 700; color: var(--tx-hi); font-size: 16px; letter-spacing: -.01em; }
+.brand-sub { font-size: 11px; color: var(--tx-lo); letter-spacing: .14em; text-transform: uppercase; }
+
+.nav-group-label { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--tx-lo); padding: 14px 12px 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--r-sm);
+  color: var(--tx-mid); font-size: 14px; font-weight: 500; transition: all .2s var(--ease); position: relative;
+}
+.nav-item svg { width: 18px; height: 18px; opacity: .8; flex: none; }
+.nav-item:hover { background: var(--ink-700); color: var(--tx-hi); }
+.nav-item.active { background: linear-gradient(100deg, var(--grow-glow), transparent); color: var(--tx-hi); }
+.nav-item.active::before { content: ""; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); width: 3px; height: 22px; border-radius: 0 3px 3px 0; background: var(--grow); box-shadow: 0 0 12px var(--grow); }
+.nav-item .nav-badge { margin-left: auto; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--ink-600); color: var(--tx); }
+.sidebar-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+
+/* Role switcher (RBAC — Rec 9) */
+.role-switch { display: flex; gap: 4px; background: var(--ink-800); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 10px; }
+.role-switch button { flex: 1; font-size: 11.5px; font-weight: 600; padding: 6px; border-radius: 7px; color: var(--tx-mid); transition: all .2s; }
+.role-switch button.on { background: var(--ink-600); color: var(--tx-hi); box-shadow: var(--sh-1); }
+.user-chip { display: flex; align-items: center; gap: 10px; padding: 8px; }
+.avatar { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--ink-900); background: linear-gradient(140deg, var(--violet), #a98bff); }
+
+/* ----------------------------------- Topbar ----------------------------- */
+.topbar { display: flex; align-items: center; gap: 16px; padding: 20px clamp(20px,4vw,48px) 0; max-width: var(--maxw); margin: 0 auto; }
+.crumbs { font-size: 13px; color: var(--tx-lo); }
+.crumbs b { color: var(--tx); font-weight: 600; }
+.topbar-spacer { flex: 1; }
+
+/* ----------------------------------- Headings --------------------------- */
+.page-head { margin-bottom: 26px; }
+.page-title { font-size: clamp(24px, 3.4vw, 34px); }
+.page-sub { color: var(--tx-mid); margin-top: 6px; max-width: 60ch; font-size: 14.5px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--grow); margin-bottom: 12px; }
+.eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--grow); border-radius: 2px; }
+
+/* ----------------------------------- Cards ------------------------------ */
+.card {
+  background: linear-gradient(180deg, var(--ink-800), var(--ink-850));
+  border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px;
+  box-shadow: var(--sh-2); position: relative;
+}
+.card-pad-lg { padding: 26px; }
+.card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.card-head h3 { font-size: 16px; }
+.card-head .sub { font-size: 12.5px; color: var(--tx-lo); }
+
+.grid { display: grid; gap: 18px; }
+.g-2 { grid-template-columns: repeat(2, 1fr); }
+.g-3 { grid-template-columns: repeat(3, 1fr); }
+.g-4 { grid-template-columns: repeat(4, 1fr); }
+.span-2 { grid-column: span 2; }
+
+/* ----------------------------------- Metric / KPI ----------------------- */
+.kpi { padding: 20px; overflow: hidden; }
+.kpi-label { font-size: 12.5px; color: var(--tx-mid); display: flex; align-items: center; gap: 8px; }
+.kpi-icon { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; }
+.kpi-value { font-family: var(--font-display); font-size: 30px; font-weight: 700; color: var(--tx-hi); margin-top: 12px; letter-spacing: -.02em; }
+.kpi-value small { font-size: 15px; color: var(--tx-mid); font-weight: 500; }
+.kpi-foot { margin-top: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.delta-up { color: var(--grow); } .delta-down { color: var(--rose); }
+.spark { margin-top: 14px; height: 38px; width: 100%; }
+
+/* tint helpers */
+.t-grow { background: var(--grow-glow); color: var(--grow); }
+.t-violet { background: var(--violet-glow); color: var(--violet); }
+.t-amber { background: var(--amber-glow); color: var(--amber); }
+.t-sky { background: #4cc9ff26; color: var(--sky); }
+.t-rose { background: #ff5d7326; color: var(--rose); }
+
+/* ----------------------------------- Buttons ---------------------------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: var(--r-sm); transition: all .2s var(--ease); white-space: nowrap; }
+.btn svg { width: 17px; height: 17px; }
+.btn-primary { background: linear-gradient(135deg, var(--grow), var(--grow-deep)); color: var(--ink-900); box-shadow: 0 10px 26px -10px var(--grow-glow), inset 0 1px 0 #ffffff66; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 16px 34px -12px var(--grow-glow), inset 0 1px 0 #ffffff66; }
+.btn-ghost { background: var(--ink-700); color: var(--tx-hi); border: 1px solid var(--line); }
+.btn-ghost:hover { background: var(--ink-600); border-color: #2c3650; }
+.btn-violet { background: linear-gradient(135deg, var(--violet), #6344e0); color: #fff; box-shadow: 0 10px 26px -10px var(--violet-glow); }
+.btn-violet:hover { transform: translateY(-1px); }
+.btn-wa { background: #25d366; color: #062e16; box-shadow: 0 10px 26px -12px #25d36666; }
+.btn-wa:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.btn-sm { padding: 8px 13px; font-size: 13px; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+
+/* ----------------------------------- Pills / badges --------------------- */
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--ink-700); color: var(--tx); }
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+.pill-grow { background: var(--grow-glow); color: var(--grow); border-color: transparent; }
+.pill-violet { background: var(--violet-glow); color: #b6a4ff; border-color: transparent; }
+.pill-amber { background: var(--amber-glow); color: var(--amber); border-color: transparent; }
+.pill-sky { background: #4cc9ff20; color: var(--sky); border-color: transparent; }
+.pill-rose { background: #ff5d7320; color: #ff8a99; border-color: transparent; }
+
+/* ----------------------------------- Score ring ------------------------- */
+.score-ring { --val: 0; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; position: relative; flex: none;
+  background: conic-gradient(var(--ring-c, var(--grow)) calc(var(--val) * 1%), var(--ink-700) 0); }
+.score-ring::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--ink-850); }
+.score-ring span { position: relative; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--tx-hi); }
+
+/* ----------------------------------- Pipeline (kanban) ------------------ */
+.pipeline { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 14px; scroll-snap-type: x proximity; }
+.pipe-col { flex: 0 0 282px; scroll-snap-align: start; background: var(--ink-850); border: 1px solid var(--line-soft); border-radius: var(--r-md); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
+.pipe-col-head { display: flex; align-items: center; gap: 8px; padding: 4px 6px 2px; }
+.pipe-col-head .label { font-size: 12.5px; font-weight: 700; color: var(--tx-hi); }
+.pipe-col-head .count { font-size: 11px; font-weight: 700; color: var(--tx-mid); background: var(--ink-700); padding: 1px 8px; border-radius: 999px; }
+.pipe-col-bar { height: 3px; border-radius: 3px; margin: 0 6px; }
+.lead-card { background: linear-gradient(180deg, var(--ink-800), var(--ink-850)); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 13px; cursor: pointer; transition: all .2s var(--ease); }
+.lead-card:hover { border-color: #313c5a; transform: translateY(-2px); box-shadow: var(--sh-2); }
+.lead-card .lc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.lead-card .lc-name { font-weight: 700; color: var(--tx-hi); font-size: 13.5px; }
+.lead-card .lc-cat { font-size: 11.5px; color: var(--tx-lo); margin-top: 2px; }
+.lead-card .lc-meta { display: flex; gap: 8px; margin-top: 11px; flex-wrap: wrap; }
+.lead-card .lc-tag { font-size: 10.5px; color: var(--tx-mid); display: flex; align-items: center; gap: 4px; }
+
+/* ----------------------------------- Table ------------------------------ */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--tx-lo); font-weight: 700; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.tbl td { padding: 13px 14px; border-bottom: 1px solid var(--line-soft); color: var(--tx); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr { transition: background .15s; }
+.tbl tbody tr:hover { background: #ffffff04; }
+.tbl .num { font-variant-numeric: tabular-nums; font-family: var(--font-display); }
+
+/* ----------------------------------- Forms ------------------------------ */
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--tx); margin-bottom: 7px; }
+.field .hint { font-size: 11.5px; color: var(--tx-lo); font-weight: 400; }
+.input, .select, textarea.input {
+  width: 100%; background: var(--ink-900); border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 11px 13px; color: var(--tx-hi); font-size: 14px; transition: all .2s; outline: none;
+}
+.input:focus, .select:focus, textarea.input:focus { border-color: var(--grow); box-shadow: 0 0 0 3px var(--grow-glow); }
+.input::placeholder { color: var(--tx-lo); }
+textarea.input { resize: vertical; min-height: 90px; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ----------------------------------- Modal ------------------------------ */
+.modal-scrim { position: fixed; inset: 0; background: #04060bcc; backdrop-filter: blur(8px); z-index: 100; display: grid; place-items: center; padding: 20px; animation: fade .25s var(--ease); }
+@keyframes fade { from { opacity: 0; } }
+.modal { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; background: linear-gradient(180deg, var(--ink-800), var(--ink-850)); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--sh-3); animation: pop .35s var(--ease-out); }
+.modal-wide { width: min(820px, 100%); }
+@keyframes pop { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+.modal-head { padding: 22px 24px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: flex-start; gap: 14px; }
+.modal-body { padding: 24px; }
+.modal-foot { padding: 18px 24px; border-top: 1px solid var(--line-soft); display: flex; gap: 10px; justify-content: flex-end; background: #ffffff03; }
+.modal-x { margin-left: auto; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: var(--tx-mid); background: var(--ink-700); }
+.modal-x:hover { color: var(--tx-hi); background: var(--ink-600); }
+
+/* ----------------------------------- Misc ------------------------------- */
+.divider { height: 1px; background: var(--line-soft); margin: 18px 0; }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wrap { flex-wrap: wrap; }
+.muted { color: var(--tx-mid); }
+.dim { color: var(--tx-lo); }
+.hi { color: var(--tx-hi); }
+.mono { font-variant-numeric: tabular-nums; }
+.stack { display: flex; flex-direction: column; }
+.gap-6{gap:6px}.gap-8{gap:8px}.gap-10{gap:10px}.gap-14{gap:14px}.gap-18{gap:18px}
+.mt-8{margin-top:8px}.mt-14{margin-top:14px}.mt-18{margin-top:18px}.mt-24{margin-top:24px}
+.text-sm { font-size: 13px; } .text-xs { font-size: 11.5px; }
+.fw-700 { font-weight: 700; } .fw-600 { font-weight: 600; }
+.center { text-align: center; }
+.toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: var(--ink-700); border: 1px solid var(--line); border-left: 3px solid var(--grow); border-radius: var(--r-sm); padding: 13px 16px; box-shadow: var(--sh-3); display: flex; align-items: center; gap: 11px; min-width: 260px; animation: toastIn .4s var(--ease-out); }
+.toast.violet { border-left-color: var(--violet); } .toast.amber { border-left-color: var(--amber); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } }
+
+/* progress bar */
+.bar { height: 7px; border-radius: 999px; background: var(--ink-700); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--grow), var(--grow-deep)); transition: width .8s var(--ease-out); }
+
+/* empty state */
+.empty { text-align: center; padding: 50px 20px; color: var(--tx-lo); }
+.empty svg { width: 42px; height: 42px; opacity: .4; margin-bottom: 14px; }
+
+/* checklist (SOP) */
+.sop-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+.sop-step:last-child { border-bottom: none; }
+.sop-day { flex: none; width: 54px; text-align: center; }
+.sop-day .d { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--tx-hi); }
+.sop-day .l { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--tx-lo); }
+.sop-check { width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--line); flex: none; display: grid; place-items: center; transition: all .2s; cursor: pointer; }
+.sop-check.done { background: var(--grow); border-color: var(--grow); }
+.sop-check.done svg { color: var(--ink-900); }
+
+/* responsive */
+@media (max-width: 1080px) { .g-4 { grid-template-columns: repeat(2,1fr); } .g-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 920px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; left: 0; top: 0; z-index: 90; transform: translateX(-100%); transition: transform .3s var(--ease); width: 260px; }
+  .sidebar.open { transform: none; box-shadow: var(--sh-3); }
+  .menu-btn { display: grid !important; }
+  .scrim-nav { position: fixed; inset: 0; background: #04060b99; z-index: 89; }
+}
+@media (max-width: 720px) { .g-2,.g-3,.g-4 { grid-template-columns: 1fr; } .span-2 { grid-column: auto; } .field-row { grid-template-columns: 1fr; } }
+.menu-btn { display: none; width: 40px; height: 40px; border-radius: 10px; place-items: center; background: var(--ink-700); border: 1px solid var(--line); color: var(--tx-hi); }
+
+/* ==========================================================================
+   Public surfaces — Launch Hub, themed business previews, activation popup,
+   client portal, and admin detail extras.
+   ========================================================================== */
+
+/* ============================ LAUNCH HUB ================================= */
+.lh-nav { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 24px; padding: 16px clamp(20px,5vw,64px); background: #07090fcc; backdrop-filter: blur(14px); border-bottom: 1px solid var(--line-soft); }
+.lh-nav .brand { padding: 0; }
+.lh-nav-links { display: flex; gap: 26px; margin-left: auto; }
+.lh-nav-links a { font-size: 14px; color: var(--tx-mid); font-weight: 500; transition: color .2s; }
+.lh-nav-links a:hover { color: var(--tx-hi); }
+@media (max-width: 760px) { .lh-nav-links { display: none; } }
+
+.lh-hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; max-width: var(--maxw); margin: 0 auto; padding: clamp(48px,8vw,96px) clamp(20px,5vw,64px); }
+.lh-hero-inner { max-width: 600px; }
+.lh-h1 { font-size: clamp(40px, 7vw, 72px); line-height: 1.02; letter-spacing: -.03em; margin: 20px 0; }
+.grad { background: linear-gradient(120deg, var(--grow), #5effc4 60%, var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lh-lead { font-size: clamp(16px, 2vw, 19px); color: var(--tx); max-width: 54ch; }
+.lh-lead b { color: var(--tx-hi); }
+.lh-cta-row { display: flex; gap: 12px; margin: 30px 0 24px; flex-wrap: wrap; }
+.lh-trust { display: flex; flex-wrap: wrap; gap: 18px; }
+.lh-trust span { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--tx-mid); }
+.lh-trust svg { width: 16px; height: 16px; color: var(--grow); }
+@media (max-width: 900px) { .lh-hero { grid-template-columns: 1fr; } .lh-hero-card { display: none; } }
+
+/* mini preview card (hero art) */
+.mini-prev { background: linear-gradient(180deg, var(--ink-700), var(--ink-800)); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--sh-3); transform: rotate(1.5deg); transition: transform .4s var(--ease); }
+.mini-prev:hover { transform: rotate(0); }
+.mini-prev-bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: var(--ink-850); border-bottom: 1px solid var(--line-soft); }
+.mini-prev-bar span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.mini-prev-bar span:first-child { background: #ff5d73; } .mini-prev-bar span:nth-child(2) { background: #ffb547; } .mini-prev-bar span:nth-child(3) { background: var(--grow); }
+.mini-prev-bar em { margin-left: auto; font-size: 11px; color: var(--tx-lo); font-style: normal; }
+.mini-prev-body { padding: 0 0 18px; }
+.mini-marker { display: flex; align-items: center; gap: 7px; justify-content: center; font-size: 11px; color: var(--ink-900); background: var(--grow); padding: 8px; font-weight: 600; }
+.mini-marker svg { width: 14px; height: 14px; }
+.mini-hero { padding: 30px 24px; text-align: center; background: radial-gradient(circle at 50% 0%, #e0a86822, transparent 70%); }
+.mini-eyebrow { font-size: 10px; letter-spacing: .2em; color: #e0a868; font-weight: 700; }
+.mini-title { font-family: Georgia, serif; font-size: 30px; color: #fff; margin: 8px 0 4px; }
+.mini-sub { font-size: 13px; color: var(--tx-mid); font-style: italic; }
+.mini-cta { display: inline-block; margin-top: 16px; background: #e0a868; color: #1a1410; font-weight: 700; font-size: 12px; padding: 9px 16px; border-radius: 999px; }
+.mini-thumbs { display: flex; gap: 8px; padding: 18px 24px 0; }
+.mini-thumb { flex: 1; height: 50px; border-radius: 8px; background: linear-gradient(135deg, #2a2018, #3a2c1f); }
+
+.lh-band { max-width: var(--maxw); margin: 0 auto; padding: clamp(40px,7vw,88px) clamp(20px,5vw,64px); }
+.lh-section-head { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+.lh-section-head h2 { font-size: clamp(26px, 4vw, 40px); }
+.lh-section-head .eyebrow { justify-content: center; }
+.lh-section-head .eyebrow::before { display: none; }
+
+.lh-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.lh-compare-col { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px; }
+.lh-compare-col.bad { background: linear-gradient(180deg, #1a1014, var(--ink-850)); }
+.lh-compare-col.good { background: linear-gradient(180deg, #0a1a14, var(--ink-850)); border-color: var(--grow-glow); box-shadow: var(--glow-grow); }
+.lh-compare-tag { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--tx-mid); margin-bottom: 18px; }
+.lh-compare-col.good .lh-compare-tag { color: var(--grow); }
+.lh-flow-step { display: inline-flex; align-items: center; font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--tx-hi); }
+.lh-flow-step .arr { margin: 0 10px; color: var(--tx-lo); }
+.lh-compare-note { margin-top: 18px; color: var(--tx-mid); font-size: 14px; }
+@media (max-width: 760px) { .lh-compare { grid-template-columns: 1fr; } }
+
+.lh-feature-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+.lh-feature { background: linear-gradient(180deg, var(--ink-800), var(--ink-850)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 24px; transition: transform .3s var(--ease), border-color .3s; }
+.lh-feature:hover { transform: translateY(-4px); border-color: #2c3650; }
+.lh-feature-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 16px; }
+.lh-feature h3 { font-size: 16px; margin-bottom: 8px; }
+.lh-feature p { font-size: 13.5px; color: var(--tx-mid); }
+@media (max-width: 980px) { .lh-feature-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .lh-feature-grid { grid-template-columns: 1fr; } }
+
+.lh-pricing { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; align-items: start; }
+.lh-price-card { background: linear-gradient(180deg, #0a1a14, var(--ink-850)); border: 1px solid var(--grow-glow); border-radius: var(--r-lg); padding: 30px; box-shadow: var(--glow-grow); }
+.lh-price-tag { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--grow); }
+.lh-price { font-family: var(--font-display); font-size: 46px; font-weight: 800; color: var(--tx-hi); margin: 10px 0 6px; display: flex; align-items: baseline; gap: 12px; }
+.lh-price s { font-size: 22px; color: var(--tx-lo); font-weight: 400; }
+.lh-price span { font-size: 15px; color: var(--tx-mid); font-weight: 500; }
+.lh-price-list { list-style: none; margin: 20px 0; display: grid; gap: 11px; }
+.lh-price-list li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--tx); }
+.lh-price-list svg { width: 17px; height: 17px; color: var(--grow); flex: none; }
+.lh-renewal { margin-top: 16px; font-size: 13px; color: var(--tx-mid); text-align: center; }
+.lh-addons { background: linear-gradient(180deg, var(--ink-800), var(--ink-850)); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px; }
+.lh-addons h4 { font-size: 15px; margin-bottom: 16px; }
+.lh-addon { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+.lh-addon-price { margin-left: auto; font-family: var(--font-display); font-weight: 700; color: var(--tx-hi); white-space: nowrap; }
+.lh-addon-foot { margin-top: 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--violet); }
+.lh-addon-foot svg { width: 16px; height: 16px; }
+@media (max-width: 820px) { .lh-pricing { grid-template-columns: 1fr; } }
+
+.lh-request { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.lh-request-copy h2 { font-size: clamp(26px,4vw,38px); }
+.lh-request-copy p { margin-top: 12px; }
+.lh-waitlist-meta { display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; font-size: 14px; color: var(--tx); }
+.lh-waitlist-meta svg { width: 18px; height: 18px; color: var(--grow); }
+.lh-form { padding: 28px; }
+@media (max-width: 820px) { .lh-request { grid-template-columns: 1fr; } }
+
+.lh-foot { max-width: var(--maxw); margin: 0 auto; padding: 30px clamp(20px,5vw,64px); display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line-soft); flex-wrap: wrap; }
+
+/* ============================ BUSINESS PREVIEW SITE ===================== */
+.site { background: var(--site-bg); color: var(--site-tint); font-family: var(--site-font); min-height: 100vh; }
+.site-marker { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 9px 16px; font-size: 12.5px; font-family: var(--font-body); background: var(--grow); color: #06231a; font-weight: 600; }
+.site-marker svg { width: 15px; height: 15px; }
+.site-marker-exp { opacity: .8; }
+.site-marker-cta { margin-left: 10px; background: #06231a; color: var(--grow); font-weight: 700; font-size: 12px; padding: 5px 13px; border-radius: 999px; font-family: var(--font-body); }
+.site-marker-cta:hover { transform: scale(1.04); }
+
+.site-nav { display: flex; align-items: center; gap: 28px; padding: 22px clamp(20px,6vw,72px); }
+.site-logo { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+.site-links { display: flex; gap: 26px; margin-left: auto; font-family: var(--font-body); }
+.site-links a { font-size: 14px; color: var(--site-tint); opacity: .8; transition: opacity .2s; }
+.site-links a:hover { opacity: 1; }
+.site-wa { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--site-bg); background: var(--site-accent); padding: 9px 16px; border-radius: 999px; }
+.site-wa svg { width: 16px; height: 16px; }
+@media (max-width: 720px) { .site-links { display: none; } }
+
+.site-hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 30px; align-items: center; padding: clamp(40px,8vw,96px) clamp(20px,6vw,72px); position: relative; }
+.site-eyebrow { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: .22em; color: var(--site-accent); }
+.site-h1 { font-size: clamp(38px, 6vw, 68px); line-height: 1.04; color: #fff; margin: 18px 0; }
+.site-sub { font-size: clamp(16px,2vw,21px); opacity: .82; font-style: italic; max-width: 30ch; }
+.site-hero-cta { display: flex; gap: 12px; margin: 30px 0; flex-wrap: wrap; font-family: var(--font-body); }
+.site-btn-primary { background: var(--site-accent); color: var(--site-bg); font-weight: 700; padding: 13px 24px; border-radius: 999px; font-size: 15px; transition: transform .2s; }
+.site-btn-primary:hover { transform: translateY(-2px); }
+.site-btn-ghost { border: 1px solid #ffffff33; color: var(--site-tint); padding: 13px 22px; border-radius: 999px; font-size: 15px; }
+.site-stats { display: flex; gap: 34px; margin-top: 12px; font-family: var(--font-body); }
+.site-stats div { display: flex; flex-direction: column; }
+.site-stats b { font-size: 26px; color: #fff; font-family: var(--site-font); }
+.site-stats span { font-size: 12px; opacity: .6; text-transform: uppercase; letter-spacing: .08em; }
+.site-hero-art { aspect-ratio: 1; position: relative; }
+.site-hero-blob { position: absolute; inset: 0; border-radius: 38% 62% 58% 42% / 48% 41% 59% 52%; background: linear-gradient(140deg, var(--site-accent), transparent 80%); opacity: .5; filter: blur(2px); animation: morph 12s ease-in-out infinite; }
+@keyframes morph { 50% { border-radius: 58% 42% 38% 62% / 42% 59% 41% 58%; transform: rotate(12deg); } }
+@media (max-width: 800px) { .site-hero { grid-template-columns: 1fr; } .site-hero-art { display: none; } }
+
+.site-section { padding: clamp(40px,7vw,88px) clamp(20px,6vw,72px); max-width: 1180px; margin: 0 auto; }
+.site-alt { background: #ffffff06; }
+.site-tag { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--site-accent); margin-bottom: 12px; }
+.center-tag { text-align: center; }
+.site-h2 { font-size: clamp(26px, 4vw, 42px); color: #fff; }
+.site-h2.center { text-align: center; margin-bottom: 36px; }
+.site-2col { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: start; }
+.site-body { font-size: clamp(15px,1.6vw,18px); line-height: 1.7; opacity: .85; }
+@media (max-width: 760px) { .site-2col { grid-template-columns: 1fr; gap: 16px; } }
+
+.site-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.site-card { border: 1px solid #ffffff14; border-radius: 18px; padding: 24px; background: #ffffff08; transition: transform .3s var(--ease), background .3s; }
+.site-card:hover { transform: translateY(-5px); background: #ffffff12; }
+.site-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.site-card h3 { color: #fff; font-size: 18px; }
+.site-price { color: var(--site-accent); font-weight: 700; font-family: var(--font-body); white-space: nowrap; }
+.site-card p { font-size: 14px; opacity: .72; font-family: var(--font-body); }
+@media (max-width: 820px) { .site-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .site-grid { grid-template-columns: 1fr; } }
+
+.site-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.site-shot { aspect-ratio: 4/3; border-radius: 16px; display: grid; place-items: center; font-family: var(--font-body); font-size: 13px; color: #ffffffaa; text-align: center; padding: 12px; border: 1px solid #ffffff10; position: relative; overflow: hidden; }
+.site-shot span { position: relative; z-index: 1; font-weight: 600; }
+.site-shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, var(--site-accent), transparent 70%); opacity: .22; }
+.site-shot-0::after { opacity: .3; } .site-shot-1::after { opacity: .15; background: linear-gradient(135deg, #fff, transparent 70%); } .site-shot-2::after { opacity: .26; }
+@media (max-width: 640px) { .site-gallery { grid-template-columns: 1fr 1fr; } }
+
+.site-contact { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+.site-contact-lines { margin: 22px 0; display: grid; gap: 12px; font-family: var(--font-body); }
+.site-contact-line { display: flex; align-items: center; gap: 11px; font-size: 15px; opacity: .85; }
+.site-contact-line svg { width: 18px; height: 18px; color: var(--site-accent); }
+.site-btn-wa { display: inline-flex; align-items: center; gap: 9px; background: #25d366; color: #06231a; font-weight: 700; padding: 14px 24px; border-radius: 999px; font-family: var(--font-body); font-size: 15px; }
+.site-btn-wa svg { width: 18px; height: 18px; }
+.site-contact-card { background: #ffffff08; border: 1px solid #ffffff14; border-radius: 20px; padding: 18px; }
+.site-mini-map { height: 160px; border-radius: 14px; background: linear-gradient(135deg, var(--site-accent), transparent), repeating-linear-gradient(45deg, #ffffff08 0 10px, transparent 10px 20px); }
+.site-socials { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; font-family: var(--font-body); }
+.site-socials span { font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid #ffffff20; opacity: .8; }
+@media (max-width: 760px) { .site-contact { grid-template-columns: 1fr; } }
+
+.site-foot { display: flex; align-items: center; justify-content: space-between; padding: 24px clamp(20px,6vw,72px); border-top: 1px solid #ffffff14; font-family: var(--font-body); font-size: 13px; opacity: .7; flex-wrap: wrap; gap: 10px; }
+.site-foot-mark { display: inline-flex; align-items: center; gap: 7px; }
+.site-foot-mark svg { width: 14px; height: 14px; color: var(--grow); }
+
+.site-float { position: fixed; bottom: 22px; right: 22px; z-index: 60; display: inline-flex; align-items: center; gap: 9px; background: var(--grow); color: #06231a; font-family: var(--font-body); font-weight: 700; font-size: 14px; padding: 14px 22px; border-radius: 999px; box-shadow: 0 16px 40px -12px #00e5a077; animation: floatPulse 3s ease-in-out infinite; }
+.site-float svg { width: 18px; height: 18px; }
+@keyframes floatPulse { 50% { transform: translateY(-4px); } }
+
+/* ============================ ACTIVATION POPUP ========================== */
+.act-modal { width: min(760px, 100%); overflow: hidden; }
+.act-head { padding: 30px 30px 24px; text-align: center; background: radial-gradient(circle at 50% 0%, var(--grow-glow), transparent 70%); border-bottom: 1px solid var(--line-soft); position: relative; }
+.act-head h2 { font-size: clamp(22px,3vw,30px); margin: 14px 0 0; }
+.act-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--grow); background: var(--grow-glow); padding: 6px 14px; border-radius: 999px; }
+.act-badge svg { width: 15px; height: 15px; }
+.act-price { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-top: 14px; }
+.act-price s { color: var(--tx-lo); font-size: 22px; }
+.act-price b { font-family: var(--font-display); font-size: 44px; color: var(--tx-hi); }
+.act-price span { color: var(--tx-mid); font-size: 14px; }
+.act-body { padding: 26px 30px; }
+.act-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tx-lo); margin-bottom: 14px; }
+.act-inc { display: flex; align-items: center; gap: 10px; font-size: 14px; padding: 6px 0; color: var(--tx); }
+.act-inc svg { width: 16px; height: 16px; color: var(--grow); flex: none; }
+.act-renewal { margin-top: 14px; font-size: 12.5px; color: var(--tx-mid); padding: 10px 12px; background: var(--ink-900); border-radius: 10px; }
+.act-addon { display: flex; align-items: center; gap: 13px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: border-color .2s; }
+.act-addon:hover { border-color: #2c3650; }
+.act-addon input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--grow); flex: none; }
+.act-addon b { display: block; font-size: 14px; color: var(--tx-hi); }
+.act-addon span { font-size: 12px; color: var(--tx-mid); }
+.act-addon em { margin-left: auto; font-style: normal; font-family: var(--font-display); font-weight: 700; color: var(--tx-hi); white-space: nowrap; }
+.act-addon-num { flex: none; }
+.act-addon-num input { width: 56px; padding: 7px; }
+.act-sum { margin-top: 14px; padding: 14px; background: var(--ink-900); border-radius: 12px; display: grid; gap: 7px; }
+.act-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 30px; border-top: 1px solid var(--line-soft); background: #ffffff03; flex-wrap: wrap; }
+.act-foot-total { font-size: 14px; color: var(--tx-mid); }
+.act-foot-total b { font-family: var(--font-display); font-size: 26px; color: var(--tx-hi); margin-left: 8px; }
+
+/* ============================ ADMIN DETAIL EXTRAS ====================== */
+.prev-frame { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--ink-900); }
+.prev-frame-bar { display: flex; gap: 6px; padding: 9px 12px; background: var(--ink-850); border-bottom: 1px solid var(--line-soft); }
+.prev-frame-bar span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.prev-frame iframe { width: 100%; height: 420px; border: 0; background: #fff; display: block; }
+.addon-row { display: flex; align-items: center; gap: 13px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; cursor: pointer; }
+.addon-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--grow); }
+.addon-amt { margin-left: auto; font-family: var(--font-display); font-weight: 700; color: var(--tx-hi); }
+.step-num { width: 26px; height: 26px; border-radius: 8px; background: var(--violet-glow); color: #b6a4ff; display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+
+/* generation modal */
+.gen-orb { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 30% 30%, var(--violet), #4a2fb0); box-shadow: 0 0 0 0 var(--violet-glow); animation: orb 1.6s ease-out infinite; }
+.gen-orb svg { width: 34px; height: 34px; }
+@keyframes orb { 0% { box-shadow: 0 0 0 0 #7c5cff66; } 100% { box-shadow: 0 0 0 26px #7c5cff00; } }
+.gen-steps { margin-top: 22px; text-align: left; display: grid; gap: 9px; }
+.gen-line { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--tx-mid); opacity: .6; transition: opacity .3s, color .3s; }
+.gen-line.done { color: var(--grow); opacity: 1; }
+.gen-line.done .gen-spin svg { animation: none; }
+.gen-line.done .gen-spin { color: var(--grow); }
+.gen-spin svg { width: 16px; height: 16px; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.mb-14 { margin-bottom: 14px; }
+
+/* ============================ CLIENT PORTAL ============================ */
+.cp { min-height: 100vh; }
+.cp-nav { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px clamp(16px,4vw,40px); background: #07090fcc; backdrop-filter: blur(14px); border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
+.cp-nav .brand-mark { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(140deg, var(--violet), #a98bff); color: #fff; }
+.cp-body { max-width: var(--maxw); margin: 0 auto; padding: 32px clamp(16px,4vw,40px) 80px; }
+.cp-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.cp-shot { aspect-ratio: 1; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--line); display: grid; place-items: center; color: var(--tx-lo); }
+.empty-shot svg { width: 26px; height: 26px; opacity: .4; }
+.add-shot { flex-direction: column; gap: 6px; font-size: 11px; color: var(--tx-mid); border-style: dashed; cursor: pointer; transition: all .2s; }
+.add-shot:hover { border-color: var(--grow); color: var(--grow); }
+.add-shot svg { width: 22px; height: 22px; }
+@media (max-width: 640px) { .cp-gallery { grid-template-columns: 1fr 1fr; } }
+.cp-referral { background: linear-gradient(180deg, #0a1a14, var(--ink-850)); border-color: var(--grow-glow); }
+.cp-credit { margin-top: 16px; padding: 16px; background: var(--ink-900); border-radius: 14px; }
+
+</style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2300e5a0'/><text x='50' y='70' font-size='60' font-family='sans-serif' font-weight='800' fill='%2307090f' text-anchor='middle'>K</text></svg>" />
+</head>
+<body>
+  <div class="app-bg"></div>
+  <div id="app"></div>
+  <!-- Backend config. Empty = browser-only mode. Add your Supabase keys to go live. -->
+  <script>window.KOBIS_CONFIG={supabaseUrl:"",supabaseAnonKey:""};</script>
+  <script type="module">
+// js/lib/scoring.js
+var CATEGORY_TIER = {
+  cafe: "A",
+  restaurant: "A",
+  catering: "A",
+  "food-brand": "A",
+  "home-food": "A",
+  influencer: "B",
+  creator: "B",
+  "personal-brand": "B",
+  trainer: "B",
+  coach: "B",
+  consultant: "B",
+  contractor: "C",
+  aircond: "C",
+  electrical: "C",
+  plumbing: "C",
+  landscaping: "C"
+};
+var CATEGORY_LABEL = {
+  cafe: "Cafe",
+  restaurant: "Restaurant",
+  catering: "Catering",
+  "food-brand": "Food Brand",
+  "home-food": "Home-Based Food",
+  influencer: "Influencer",
+  creator: "Content Creator",
+  "personal-brand": "Personal Brand",
+  trainer: "Trainer",
+  coach: "Coach",
+  consultant: "Consultant",
+  contractor: "Contractor",
+  aircond: "Aircond Service",
+  electrical: "Electrical",
+  plumbing: "Plumbing",
+  landscaping: "Landscaping"
+};
+var TIER_POINTS = { A: 30, B: 22, C: 15 };
+function scoreProspect(p) {
+  const factors = [];
+  const tier = CATEGORY_TIER[p.business_category] || "C";
+  factors.push({ label: "Business category", points: TIER_POINTS[tier], max: 30, note: `Priority ${tier}` });
+  const followers = p.followers || 0;
+  let social = 0;
+  if (followers >= 20000)
+    social = 25;
+  else if (followers >= 8000)
+    social = 20;
+  else if (followers >= 3000)
+    social = 14;
+  else if (followers >= 800)
+    social = 8;
+  else
+    social = 3;
+  factors.push({ label: "Social reach", points: social, max: 25, note: fmtFollowers(followers) });
+  const presenceMap = { none: 20, poor: 16, social_only: 14, decent: 6 };
+  const pres = presenceMap[p.web_presence] ?? 10;
+  factors.push({ label: "Web presence gap", points: pres, max: 20, note: PRESENCE_LABEL[p.web_presence] || "—" });
+  const engMap = { high: 15, medium: 10, low: 4 };
+  const eng = engMap[p.engagement] ?? 8;
+  factors.push({ label: "Engagement & activity", points: eng, max: 15, note: cap(p.engagement) });
+  const affMap = { strong: 10, likely: 7, unsure: 3 };
+  const aff = affMap[p.affordability] ?? 5;
+  factors.push({ label: "Affordability signal", points: aff, max: 10, note: cap(p.affordability) });
+  const total = factors.reduce((s, f) => s + f.points, 0);
+  return { total, band: band(total), factors };
+}
+function band(total) {
+  if (total >= 80)
+    return { key: "hot", label: "Hot", color: "grow" };
+  if (total >= 70)
+    return { key: "qualified", label: "Qualified", color: "sky" };
+  if (total >= 50)
+    return { key: "nurture", label: "Nurture", color: "amber" };
+  return { key: "low", label: "Low intent", color: "rose" };
+}
+var QUALIFY_THRESHOLD = 70;
+var PRESENCE_LABEL = { none: "No website", poor: "Poor website", social_only: "Social only", decent: "Has decent site" };
+function fmtFollowers(n) {
+  return n >= 1000 ? (n / 1000).toFixed(n % 1000 ? 1 : 0) + "k followers" : n + " followers";
+}
+function cap(s) {
+  return s ? s[0].toUpperCase() + s.slice(1) : "—";
+}
+
+// js/lib/pricing.js
+var PRICING = {
+  websiteValue: 1000,
+  activation: 500,
+  renewal: 300,
+  addons: {
+    chatbot: {
+      id: "chatbot",
+      label: "AI Chatbot Setup",
+      price: 200,
+      recurring: false,
+      blurb: "Auto-FAQ, lead capture, WhatsApp redirection & business assistant."
+    },
+    news: {
+      id: "news",
+      label: "News & Updates Module",
+      price: 100,
+      recurring: false,
+      blurb: "Post promotions, events & company announcements."
+    },
+    email: {
+      id: "email",
+      label: "Extra Business Email",
+      price: 50,
+      recurring: true,
+      unit: "/year",
+      blurb: "Additional branded mailbox e.g. sales@yourbrand.com."
+    }
+  },
+  referral: { rewardPerActivation: 50, cashRedeemThreshold: 500 }
+};
+var KOBIS_WHATSAPP = "60123456789";
+function quote(sel = {}) {
+  const lines = [{ label: "Website Activation (Launch Promo)", amount: PRICING.activation }];
+  if (sel.chatbot)
+    lines.push({ label: PRICING.addons.chatbot.label, amount: PRICING.addons.chatbot.price });
+  if (sel.news)
+    lines.push({ label: PRICING.addons.news.label, amount: PRICING.addons.news.price });
+  const emails = Number(sel.emailCount) || 0;
+  if (emails > 0)
+    lines.push({ label: `Extra Business Email × ${emails}`, amount: PRICING.addons.email.price * emails });
+  const total = lines.reduce((s, l) => s + l.amount, 0);
+  const saved = PRICING.websiteValue - PRICING.activation;
+  return { lines, total, saved };
+}
+function whatsappActivation({ companyName, demoUrl, sel = {} }) {
+  const q = quote(sel);
+  const addonLines = q.lines.slice(1).map((l) => `• ${l.label}: RM${l.amount}`).join(`
+`);
+  const msg = `Hi KOBIS, I would like to activate my website preview.
+
+*Company:* ${companyName || "—"}
+*Preview:* ${demoUrl || "—"}
+
+*Package*
+• Website Activation (Launch Promo): RM${PRICING.activation}${addonLines ? `
+` + addonLines : ""}
+
+*Total: RM${q.total}*
+
+Please assist me with activation. Thank you!`;
+  return `https://wa.me/${KOBIS_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+function whatsappOutreach(prospect, demoUrl, body) {
+  const phone = (prospect.phone || "").replace(/[^0-9]/g, "");
+  const text = body || `Hi ${prospect.contact_person || ""}, this is KOBIS Berhad \uD83D\uDC4B
+
+We prepared a professional website preview for ${prospect.company_name} — no cost to view:
+${demoUrl}
+
+Would love your thoughts!`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+}
+var FOLLOWUP_CADENCE = [
+  { day: 1, label: "Send preview + value prop", tone: "Initial", sample: (p) => `Hi ${p.contact_person?.split(" ")[0] || ""}! We built a free website preview for ${p.company_name}. Take a look — no strings attached \uD83D\uDC47` },
+  { day: 3, label: "First follow-up (if no reply)", tone: "Check-in", sample: (p) => `Hi ${p.contact_person?.split(" ")[0] || ""}, did you get a chance to view your ${p.company_name} website preview? Happy to tweak anything \uD83D\uDE4C` },
+  { day: 7, label: "Final nudge before archiving", tone: "Last call", sample: (p) => `Hi ${p.contact_person?.split(" ")[0] || ""} — final check-in on your ${p.company_name} preview. We'll keep it live for 2 more days before it expires. Want to activate?` }
+];
+
+// js/lib/aigen.js
+var TONE = {
+  A: { mood: "warm, appetising, local-favourite", cta: "Order on WhatsApp", sectionName: "Menu" },
+  B: { mood: "bold, personal, aspirational", cta: "Work With Me", sectionName: "Services" },
+  C: { mood: "trustworthy, fast, professional", cta: "Get a Free Quote", sectionName: "Services" }
+};
+var SEEDS = {
+  cafe: ["Signature Flat White", "House Cold Brew", "Butter Croissant", "Avocado Sourdough", "Matcha Latte", "Basque Cheesecake"],
+  restaurant: ["Chef’s Set Lunch", "Nasi Lemak Special", "Grilled Seafood Platter", "Signature Curry", "Weekend Brunch", "Private Dining"],
+  catering: ["Corporate Lunch Boxes", "Wedding Buffet", "Hi-Tea Packages", "Mini Buffet (20–50 pax)", "Live Stations", "Custom Menus"],
+  "food-brand": ["Sambal Range", "Frozen Ready-Meals", "Artisan Sauces", "Gift Bundles", "Wholesale Supply", "Subscription Box"],
+  "home-food": ["Daily Home Set", "Frozen Pack Delivery", "Kuih Platters", "Pre-Order Specials", "Bulk Orders", "Raya / Festive Packs"],
+  influencer: ["Brand Collaborations", "Sponsored Content", "UGC Packages", "Event Appearances", "Affiliate Partnerships", "Media Kit"],
+  creator: ["Sponsored Videos", "Channel Management", "Content Licensing", "Workshops", "Consulting Calls", "Merch Drops"],
+  "personal-brand": ["Keynote Speaking", "1:1 Mentoring", "Online Course", "Brand Partnerships", "Newsletter", "Community"],
+  trainer: ["Personal Training", "Group Classes", "Online Coaching", "Nutrition Plans", "Transformation Program", "Corporate Wellness"],
+  coach: ["1:1 Coaching", "Group Programs", "Strategy Intensives", "Workshops", "Accountability Plans", "Resources"],
+  consultant: ["Strategy Audit", "Implementation", "Retainer Advisory", "Workshops", "Done-With-You", "Speaking"],
+  contractor: ["Renovation", "Project Management", "Custom Build", "Maintenance", "Free Site Survey", "Warranty"],
+  aircond: ["Service & Cleaning", "Installation", "Gas Top-Up", "Chemical Wash", "Repair", "Maintenance Contract"],
+  electrical: ["Wiring & Rewiring", "Installation", "Fault Diagnosis", "Lighting", "Safety Inspection", "Emergency Call-Out"],
+  plumbing: ["Leak Repair", "Installation", "Water Heater", "Drainage", "Bathroom Fit-Out", "Emergency Service"],
+  landscaping: ["Garden Design", "Maintenance", "Turfing", "Hardscaping", "Plant Supply", "Irrigation"]
+};
+var GALLERY_PLAN = {
+  A: ["Signature dishes", "Interior & ambience", "Behind the counter", "Happy customers", "Plating close-ups", "The team"],
+  B: ["Headshots & portraits", "On stage / at work", "Client results", "Behind the scenes", "Featured in", "Highlights"],
+  C: ["Completed projects", "Before & after", "Team on site", "Equipment", "Certifications", "Happy clients"]
+};
+function brandHandleFrom(name) {
+  return (name || "brand").toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+function generateWebsite(p) {
+  const tier = CATEGORY_TIER[p.business_category] || "C";
+  const t = TONE[tier];
+  const catLabel = CATEGORY_LABEL[p.business_category] || "Business";
+  const name = p.company_name || "Your Business";
+  const city = p.city || "Malaysia";
+  const desc = (p.business_description || "").trim();
+  const isFood = tier === "A";
+  const headlines = [
+    isFood ? `${name} — ${city}’s New Favourite` : `${name}`,
+    isFood ? `Freshly made. Locally loved.` : tier === "B" ? `${catLabel} who gets results` : `${city}’s trusted ${catLabel.toLowerCase()}`
+  ];
+  const services = (SEEDS[p.business_category] || SEEDS.consultant).map((title, i) => ({
+    title,
+    blurb: isFood ? ["House favourite", "Made fresh daily", "Customer pick", "Best seller", "Seasonal", "Signature"][i % 6] : ["Tailored to you", "Fast turnaround", "Fixed pricing", "Fully guaranteed", "No surprises", "Expert-led"][i % 6],
+    price: isFood ? `RM${[12, 9, 15, 18, 14, 22][i % 6]}` : null
+  }));
+  return {
+    meta: { name, category: p.business_category, catLabel, tier, city, handle: brandHandleFrom(name), generatedAt: new Date().toISOString() },
+    theme: themeFor(tier, p.business_category),
+    hero: {
+      eyebrow: catLabel.toUpperCase(),
+      headline: headlines[0],
+      sub: headlines[1],
+      primaryCta: t.cta,
+      secondaryCta: "View " + t.sectionName
+    },
+    about: {
+      title: `About ${name}`,
+      body: desc ? polish(desc, name, catLabel, city) : `${name} is a ${city}-based ${catLabel.toLowerCase()} built on a simple promise: ${t.mood.split(",")[0]} quality, every single time. What started as a passion has grown into a name locals trust — and we’re just getting started.`,
+      stats: statsFor(tier, p)
+    },
+    servicesSection: { name: t.sectionName, items: services },
+    gallery: { plan: GALLERY_PLAN[tier], note: "Upload 6–12 of your best photos in the dashboard after activation." },
+    contact: {
+      whatsappCta: t.cta,
+      lines: [
+        p.phone ? { icon: "phone", label: p.phone } : null,
+        p.email ? { icon: "mail", label: p.email } : null,
+        { icon: "building", label: city + ", Malaysia" }
+      ].filter(Boolean),
+      socials: [
+        p.instagram_url ? { k: "Instagram", v: p.instagram_url } : null,
+        p.facebook_url ? { k: "Facebook", v: p.facebook_url } : null,
+        p.tiktok_url ? { k: "TikTok", v: p.tiktok_url } : null
+      ].filter(Boolean)
+    }
+  };
+}
+function polish(desc, name, cat, city) {
+  let d = desc.trim();
+  if (d.length < 140) {
+    d += ` Based in ${city}, ${name} is fast becoming a name locals recommend — combining genuine ${cat.toLowerCase()} craft with the kind of service that keeps people coming back.`;
+  }
+  return d.charAt(0).toUpperCase() + d.slice(1);
+}
+function statsFor(tier, p) {
+  const f = p.followers || 0;
+  const reach = f >= 1000 ? (f / 1000).toFixed(f % 1000 ? 1 : 0) + "k" : f || "—";
+  if (tier === "A")
+    return [{ k: "4.9★", v: "Avg. rating" }, { k: reach, v: "Followers" }, { k: "Daily", v: "Fresh" }];
+  if (tier === "B")
+    return [{ k: reach, v: "Community" }, { k: "100%", v: "Hands-on" }, { k: "5★", v: "Rated" }];
+  return [{ k: "10+ yrs", v: "Experience" }, { k: "Same-day", v: "Response" }, { k: "100%", v: "Guaranteed" }];
+}
+function themeFor(tier, cat) {
+  const map = {
+    cafe: { bg: "#1a1410", accent: "#e0a868", tint: "#f3e9dc", font: "serif", label: "Warm Editorial" },
+    restaurant: { bg: "#16100e", accent: "#d4664a", tint: "#f4e6df", font: "serif", label: "Appetite" },
+    catering: { bg: "#141611", accent: "#9bbf6a", tint: "#eef3e6", font: "serif", label: "Fresh" },
+    influencer: { bg: "#0f0d18", accent: "#b87cff", tint: "#ece7f7", font: "sans", label: "Bold Personal" },
+    "personal-brand": { bg: "#0f0d18", accent: "#7c9bff", tint: "#e7ecf7", font: "sans", label: "Aspirational" },
+    contractor: { bg: "#0d1116", accent: "#4cc9ff", tint: "#dceef7", font: "sans", label: "Trust & Speed" },
+    aircond: { bg: "#0d1116", accent: "#4cc9ff", tint: "#dceef7", font: "sans", label: "Cool Pro" }
+  };
+  return map[cat] || (tier === "A" ? { bg: "#1a1410", accent: "#e0a868", tint: "#f3e9dc", font: "serif", label: "Warm Editorial" } : tier === "B" ? { bg: "#0f0d18", accent: "#b87cff", tint: "#ece7f7", font: "sans", label: "Bold Personal" } : { bg: "#0d1116", accent: "#4cc9ff", tint: "#dceef7", font: "sans", label: "Trust & Speed" });
+}
+var GEN_STEPS = [
+  "Reading business profile & socials…",
+  "Analysing category & tone of voice…",
+  "Writing hero & value proposition…",
+  "Drafting About story…",
+  `Structuring services & pricing…`,
+  "Planning gallery layout…",
+  "Assembling contact & WhatsApp CTA…",
+  "Applying industry theme…"
+];
+
+// js/lib/db.js
+var TABLES = ["prospects", "clients", "orders", "referrals", "credit_wallets", "waitlist", "team_members"];
+function cfg() {
+  const c = typeof window !== "undefined" && window.KOBIS_CONFIG || {};
+  return { url: (c.supabaseUrl || "").replace(/\/$/, ""), key: c.supabaseAnonKey || "" };
+}
+function isConfigured() {
+  const { url, key } = cfg();
+  return !!(url && key && url.startsWith("http"));
+}
+function headers() {
+  const { key } = cfg();
+  return { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+}
+async function hydrateAll() {
+  if (!isConfigured())
+    return null;
+  const { url } = cfg();
+  try {
+    const out = {};
+    await Promise.all(TABLES.map(async (t) => {
+      const res = await fetch(`${url}/rest/v1/${t}?select=data`, { headers: headers() });
+      if (!res.ok)
+        throw new Error(`${t}: ${res.status}`);
+      const rows = await res.json();
+      out[t] = rows.map((r) => r.data);
+    }));
+    return out;
+  } catch (e) {
+    console.warn("[KOBIS] Supabase hydrate failed, using local data:", e.message);
+    return null;
+  }
+}
+async function pushAll(state) {
+  if (!isConfigured())
+    return;
+  const { url } = cfg();
+  for (const t of TABLES) {
+    const rows = state[t];
+    if (!Array.isArray(rows) || !rows.length)
+      continue;
+    try {
+      const docs = rows.map((r) => ({ id: r.id, data: r, updated_at: new Date().toISOString() }));
+      await fetch(`${url}/rest/v1/${t}?on_conflict=id`, {
+        method: "POST",
+        headers: { ...headers(), Prefer: "resolution=merge-duplicates,return=minimal" },
+        body: JSON.stringify(docs)
+      });
+    } catch (e) {
+      console.warn(`[KOBIS] Supabase push ${t} failed:`, e.message);
+    }
+  }
+}
+
+// js/lib/store.js
+var KEY = "kobis_wge_v1";
+var listeners = new Set;
+var db = null;
+var STATUSES = [
+  { id: "identified", label: "Prospect Identified", color: "#5e6884" },
+  { id: "generated", label: "Website Generated", color: "#7c5cff" },
+  { id: "sent", label: "Preview Sent", color: "#4cc9ff" },
+  { id: "interested", label: "Interested", color: "#ffb547" },
+  { id: "quoted", label: "Quotation Sent", color: "#ff9d4c" },
+  { id: "activated", label: "Activated", color: "#00e5a0" },
+  { id: "renewal", label: "Renewal Due", color: "#ff5d73" }
+];
+var statusLabel = (id) => STATUSES.find((s) => s.id === id)?.label || id;
+var statusColor = (id) => STATUSES.find((s) => s.id === id)?.color || "#5e6884";
+var uid = (pfx) => pfx + "_" + Math.random().toString(36).slice(2, 9);
+var now = () => new Date().toISOString();
+var daysFromNow = (d) => new Date(Date.now() + d * 86400000).toISOString();
+var daysAgo = (d) => new Date(Date.now() - d * 86400000).toISOString();
+var slug = (s) => (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function seed() {
+  const raw = [
+    [
+      "Kopi Tujuh",
+      "Aiman Rahim",
+      "cafe",
+      "Bangsar",
+      12400,
+      "none",
+      "high",
+      "likely",
+      "sent",
+      "Specialty coffee bar in Bangsar known for single-origin pour-overs and house-baked pastries.",
+      "aimankopi"
+    ],
+    [
+      "Rendang Royale",
+      "Siti Nordin",
+      "restaurant",
+      "Shah Alam",
+      28700,
+      "poor",
+      "high",
+      "strong",
+      "interested",
+      "Family restaurant serving heritage Negeri Sembilan rendang recipes for three generations.",
+      "rendangroyale"
+    ],
+    [
+      "The Glow Studio",
+      "Mei Ling",
+      "personal-brand",
+      "Mont Kiara",
+      41200,
+      "social_only",
+      "high",
+      "strong",
+      "quoted",
+      "Skincare educator and aesthetician building a personal coaching brand around confident, healthy skin.",
+      "glowmei"
+    ],
+    [
+      "CoolBreeze Aircond",
+      "Ravi Kumar",
+      "aircond",
+      "Klang",
+      1900,
+      "none",
+      "medium",
+      "likely",
+      "generated",
+      "Aircond servicing and installation across Klang Valley, 12 years in operation, 5-star rated.",
+      "coolbreeze"
+    ],
+    [
+      "Nasi Lemak Mak Cik",
+      "Faridah Yusof",
+      "home-food",
+      "Cheras",
+      6800,
+      "none",
+      "high",
+      "likely",
+      "identified",
+      "Home-based nasi lemak and kuih business with a loyal Cheras following and daily pre-orders.",
+      "maknasilemak"
+    ],
+    [
+      "FitWith Danish",
+      "Danish Aziz",
+      "trainer",
+      "Petaling Jaya",
+      33500,
+      "social_only",
+      "high",
+      "strong",
+      "activated",
+      "Personal trainer and online coach specialising in busy-professional transformations.",
+      "fitdanish"
+    ],
+    [
+      "Sambal Sister",
+      "Lina Tan",
+      "food-brand",
+      "Subang",
+      18900,
+      "poor",
+      "medium",
+      "likely",
+      "sent",
+      "Artisan sambal and chilli paste brand sold at markets, scaling into e-commerce.",
+      "sambalsister"
+    ],
+    [
+      "Verde Landscapes",
+      "Hafiz Omar",
+      "landscaping",
+      "Putrajaya",
+      2400,
+      "none",
+      "low",
+      "likely",
+      "identified",
+      "Landscape design and garden maintenance for homes and offices around Putrajaya.",
+      "verdeland"
+    ],
+    [
+      "Brew & Bloom",
+      "Jasmine Lee",
+      "cafe",
+      "Damansara",
+      9300,
+      "social_only",
+      "medium",
+      "likely",
+      "interested",
+      "Cosy cafe and florist hybrid — coffee, brunch and fresh bouquets under one roof.",
+      "brewbloom"
+    ],
+    [
+      "Spark Electrical",
+      "Tan Wei Jie",
+      "electrical",
+      "Puchong",
+      1200,
+      "none",
+      "medium",
+      "unsure",
+      "generated",
+      "Licensed electrician handling residential wiring, lighting and emergency call-outs.",
+      "sparkelec"
+    ],
+    [
+      "Coach Aisyah",
+      "Aisyah Karim",
+      "coach",
+      "KL Sentral",
+      52000,
+      "social_only",
+      "high",
+      "strong",
+      "quoted",
+      "Career and confidence coach for Malaysian women, runs sold-out group programs.",
+      "coachaisyah"
+    ],
+    [
+      "Tok Wan Catering",
+      "Zulkifli Hamid",
+      "catering",
+      "Ampang",
+      7600,
+      "poor",
+      "medium",
+      "likely",
+      "sent",
+      "Full-service event catering — weddings, corporate and hi-tea — across Klang Valley.",
+      "tokwancater"
+    ],
+    [
+      "Studio Lumen",
+      "Nadia Iskandar",
+      "creator",
+      "Bangsar South",
+      67000,
+      "social_only",
+      "high",
+      "strong",
+      "activated",
+      "Content creator and videographer producing brand films and short-form social content.",
+      "studiolumen"
+    ],
+    [
+      "PipeFix Pro",
+      "Gerald Lim",
+      "plumbing",
+      "Cheras",
+      800,
+      "none",
+      "low",
+      "likely",
+      "identified",
+      "24-hour plumbing service — leaks, water heaters and bathroom fit-outs.",
+      "pipefixpro"
+    ],
+    [
+      "Helah Bakes",
+      "Nurul Huda",
+      "home-food",
+      "Gombak",
+      15400,
+      "social_only",
+      "high",
+      "likely",
+      "interested",
+      "Home baker famous for Basque cheesecake and festive cookie boxes, pre-order only.",
+      "helahbakes"
+    ]
+  ];
+  const prospects = raw.map((r, i) => {
+    const [company, person, category, city, followers, web_presence, engagement, affordability, status, business_description, handle] = r;
+    const sc = scoreProspect({ business_category: category, followers, web_presence, engagement, affordability });
+    const hasPreview = ["generated", "sent", "interested", "quoted", "activated", "renewal"].includes(status);
+    const sent = ["sent", "interested", "quoted", "activated", "renewal"].includes(status);
+    const p = {
+      id: uid("prs"),
+      company_name: company,
+      contact_person: person,
+      phone: "+60" + (12000000 + i * 137911),
+      email: `${handle}@gmail.com`,
+      business_category: category,
+      city,
+      followers,
+      web_presence,
+      engagement,
+      affordability,
+      facebook_url: `facebook.com/${handle}`,
+      instagram_url: `instagram.com/${handle}`,
+      tiktok_url: i % 2 ? `tiktok.com/@${handle}` : "",
+      existing_website: web_presence === "decent" ? `${handle}.com` : "",
+      demo_slug: hasPreview ? handle : "",
+      demo_website_url: hasPreview ? `${location.origin}${location.pathname}#/preview/${handle}` : "",
+      website_spec: null,
+      status,
+      score: sc.total,
+      notes: "",
+      referred_by: i === 5 ? "fitdanish-seed" : "",
+      preview_expires_at: sent ? daysFromNow(14 - i % 10) : null,
+      created_at: daysAgo(30 - i),
+      analytics: sent ? { opens: [2, 5, 0, 8, 1, 11, 3, 0, 6, 4, 9, 2, 14, 0, 7][i] || 0, unique: [1, 3, 0, 4, 1, 6, 2, 0, 3, 2, 5, 1, 7, 0, 4][i] || 0, lastOpenedAt: i % 3 ? daysAgo(i % 5) : null } : { opens: 0, unique: 0, lastOpenedAt: null }
+    };
+    if (hasPreview) {
+      try {
+        p.website_spec = generateWebsite(p);
+      } catch {
+        p.website_spec = null;
+      }
+    }
+    return p;
+  });
+  const clients = [];
+  const orders = [];
+  const referrals = [];
+  const wallets = [];
+  prospects.filter((p) => ["activated", "renewal"].includes(p.status)).forEach((p, i) => {
+    const refCode = p.demo_slug || slug(p.company_name);
+    const c = {
+      id: uid("cli"),
+      prospect_id: p.id,
+      company_name: p.company_name,
+      contact_person: p.contact_person,
+      phone: p.phone,
+      email: p.email,
+      activated_website_url: p.demo_website_url,
+      package_price: 500 + (i === 0 ? 300 : 100),
+      activation_date: daysAgo(20 - i * 4),
+      renewal_due_date: daysFromNow(345 - i * 30),
+      referral_code: refCode,
+      gallery: [],
+      announcement: "",
+      created_at: daysAgo(20 - i * 4)
+    };
+    clients.push(c);
+    orders.push({
+      id: uid("ord"),
+      client_id: c.id,
+      activation_fee: 500,
+      ai_chatbot: i === 0,
+      news_module: true,
+      extra_email_count: i === 0 ? 1 : 0,
+      total_amount: c.package_price,
+      payment_status: "confirmed",
+      created_at: c.activation_date
+    });
+    wallets.push({ id: uid("wal"), client_id: c.id, credit_balance: i === 0 ? 150 : 50, total_credit_earned: i === 0 ? 150 : 50, cash_redeemed: 0, updated_at: now() });
+  });
+  if (clients[0]) {
+    referrals.push({ id: uid("ref"), referrer_client_id: clients[0].id, referred_company_name: "Sambal Sister", referred_client_id: null, activation_status: "pending", reward_amount: 50, reward_type: "renewal_credit", created_at: daysAgo(6) }, { id: uid("ref"), referrer_client_id: clients[0].id, referred_company_name: "Brew & Bloom", referred_client_id: null, activation_status: "confirmed", reward_amount: 50, reward_type: "renewal_credit", created_at: daysAgo(12) }, { id: uid("ref"), referrer_client_id: clients[0].id, referred_company_name: "Kopi Tujuh", referred_client_id: null, activation_status: "confirmed", reward_amount: 50, reward_type: "renewal_credit", created_at: daysAgo(18) });
+  }
+  const team = [
+    { id: "tm_1", name: "You", initials: "YO", role: "admin", email: "admin@kobis.my" },
+    { id: "tm_2", name: "Imran Sales", initials: "IS", role: "sales", email: "imran@kobis.my" }
+  ];
+  const waitlist = [
+    { id: uid("wl"), company_name: "Teh Tarik Lab", contact_person: "Khairul", email: "hello@tehtariklab.my", business_category: "cafe", referral_code: "fitdanish", position: 1, created_at: daysAgo(2) },
+    { id: uid("wl"), company_name: "Glow Aesthetics", contact_person: "Wendy", email: "wendy@glowaes.my", business_category: "personal-brand", referral_code: "", position: 2, created_at: daysAgo(1) }
+  ];
+  return { prospects, clients, orders, referrals, credit_wallets: wallets, link_events: [], followups: [], waitlist, team_members: team, role: "admin", seededAt: now() };
+}
+function load() {
+  try {
+    const s = localStorage.getItem(KEY);
+    if (s)
+      return JSON.parse(s);
+  } catch {}
+  return null;
+}
+var syncTimer = null;
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(db));
+  } catch {}
+  if (db && db.role !== undefined && isConfigured()) {
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(() => pushAll(db), 800);
+  }
+  emit();
+}
+function emit() {
+  listeners.forEach((fn) => fn(db));
+}
+async function boot() {
+  const local = load();
+  if (isConfigured()) {
+    const snapshot = await hydrateAll();
+    if (snapshot && (snapshot.prospects?.length || snapshot.clients?.length)) {
+      db = { ...seed(), ...snapshot, role: local && local.role || "admin" };
+    } else {
+      db = local || seed();
+      pushAll(db);
+    }
+  } else {
+    db = local || seed();
+  }
+  return db;
+}
+function subscribe(fn) {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
+var prospects = () => db.prospects;
+var clients = () => db.clients;
+var orders = () => db.orders;
+var referrals = () => db.referrals;
+var wallets = () => db.credit_wallets;
+var waitlist = () => db.waitlist;
+var team = () => db.team_members;
+var role = () => db.role;
+var prospectBySlug = (s) => db.prospects.find((p) => p.demo_slug === s);
+var prospectById = (id) => db.prospects.find((p) => p.id === id);
+var clientById = (id) => db.clients.find((c) => c.id === id);
+var walletForClient = (id) => db.credit_wallets.find((w) => w.client_id === id);
+var referralsForClient = (id) => db.referrals.filter((r) => r.referrer_client_id === id);
+function setRole(r) {
+  db.role = r;
+  persist();
+}
+function addProspect(data) {
+  const sc = scoreProspect(data);
+  const p = {
+    id: uid("prs"),
+    status: "identified",
+    score: sc.total,
+    created_at: now(),
+    demo_slug: "",
+    demo_website_url: "",
+    website_spec: null,
+    preview_expires_at: null,
+    analytics: { opens: 0, unique: 0, lastOpenedAt: null },
+    notes: "",
+    referred_by: data.referred_by || "",
+    ...data
+  };
+  db.prospects.unshift(p);
+  persist();
+  return p;
+}
+function updateProspect(id, patch) {
+  const p = prospectById(id);
+  if (!p)
+    return;
+  Object.assign(p, patch);
+  if (["business_category", "followers", "web_presence", "engagement", "affordability"].some((k) => (k in patch))) {
+    p.score = scoreProspect(p).total;
+  }
+  persist();
+  return p;
+}
+function setStatus(id, status) {
+  return updateProspect(id, { status });
+}
+function generateForProspect(id) {
+  const p = prospectById(id);
+  if (!p)
+    return;
+  const handle = p.demo_slug || slug(p.company_name);
+  const spec = generateWebsite(p);
+  Object.assign(p, {
+    demo_slug: handle,
+    demo_website_url: `${location.origin}${location.pathname}#/preview/${handle}`,
+    website_spec: spec,
+    status: p.status === "identified" ? "generated" : p.status,
+    preview_expires_at: p.preview_expires_at || daysFromNow(14)
+  });
+  persist();
+  return p;
+}
+function recordOpen(slugStr) {
+  const p = prospectBySlug(slugStr);
+  if (!p)
+    return;
+  p.analytics = p.analytics || { opens: 0, unique: 0, lastOpenedAt: null };
+  p.analytics.opens += 1;
+  p.analytics.lastOpenedAt = now();
+  if (["generated", "sent"].includes(p.status) && p.status !== "sent")
+    p.status = "sent";
+  db.link_events.push({ id: uid("evt"), prospect_id: p.id, type: "open", created_at: now() });
+  persist();
+}
+function activateProspect(id, sel) {
+  const p = prospectById(id);
+  if (!p)
+    return;
+  const total = 500 + (sel.chatbot ? 200 : 0) + (sel.news ? 100 : 0) + (Number(sel.emailCount) || 0) * 50;
+  const c = {
+    id: uid("cli"),
+    prospect_id: p.id,
+    company_name: p.company_name,
+    contact_person: p.contact_person,
+    phone: p.phone,
+    email: p.email,
+    activated_website_url: p.demo_website_url,
+    package_price: total,
+    activation_date: now(),
+    renewal_due_date: daysFromNow(365),
+    referral_code: p.demo_slug || slug(p.company_name),
+    gallery: [],
+    announcement: "",
+    created_at: now()
+  };
+  db.clients.unshift(c);
+  db.orders.unshift({
+    id: uid("ord"),
+    client_id: c.id,
+    activation_fee: 500,
+    ai_chatbot: !!sel.chatbot,
+    news_module: !!sel.news,
+    extra_email_count: Number(sel.emailCount) || 0,
+    total_amount: total,
+    payment_status: "confirmed",
+    created_at: now()
+  });
+  db.credit_wallets.push({ id: uid("wal"), client_id: c.id, credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0, updated_at: now() });
+  p.status = "activated";
+  if (p.referred_by) {
+    const refClient = db.clients.find((cl) => cl.referral_code === p.referred_by);
+    if (refClient) {
+      db.referrals.push({ id: uid("ref"), referrer_client_id: refClient.id, referred_company_name: p.company_name, referred_client_id: c.id, activation_status: "confirmed", reward_amount: PRICING.referral.rewardPerActivation, reward_type: "renewal_credit", created_at: now() });
+      const w = walletForClient(refClient.id);
+      if (w) {
+        w.credit_balance += PRICING.referral.rewardPerActivation;
+        w.total_credit_earned += PRICING.referral.rewardPerActivation;
+        w.updated_at = now();
+      }
+    }
+  }
+  persist();
+  return c;
+}
+function updateClient(id, patch) {
+  const c = clientById(id);
+  if (c) {
+    Object.assign(c, patch);
+    persist();
+  }
+  return c;
+}
+function redeemCash(clientId) {
+  const w = walletForClient(clientId);
+  if (!w || w.credit_balance < PRICING.referral.cashRedeemThreshold)
+    return false;
+  w.credit_balance -= PRICING.referral.cashRedeemThreshold;
+  w.cash_redeemed += PRICING.referral.cashRedeemThreshold;
+  w.updated_at = now();
+  persist();
+  return true;
+}
+function joinWaitlist(data) {
+  const w = { id: uid("wl"), position: db.waitlist.length + 1, created_at: now(), ...data };
+  db.waitlist.push(w);
+  persist();
+  return w;
+}
+
+// js/lib/router.js
+var routes = [];
+var notFound = () => '<div class="empty">Not found</div>';
+function route(pattern, handler) {
+  routes.push({ pattern, parts: pattern.split("/"), handler });
+}
+function setNotFound(fn) {
+  notFound = fn;
+}
+function current() {
+  const hash = (location.hash || "#/").slice(1) || "/";
+  const [path] = hash.split("?");
+  const segs = path.split("/").filter(Boolean);
+  for (const r of routes) {
+    const rp = r.parts.filter(Boolean);
+    if (rp.length !== segs.length)
+      continue;
+    const params = {};
+    let ok = true;
+    for (let i = 0;i < rp.length; i++) {
+      if (rp[i].startsWith(":"))
+        params[rp[i].slice(1)] = decodeURIComponent(segs[i]);
+      else if (rp[i] !== segs[i]) {
+        ok = false;
+        break;
+      }
+    }
+    if (ok)
+      return { handler: r.handler, params, path };
+  }
+  return { handler: notFound, params: {}, path };
+}
+function onChange(fn) {
+  window.addEventListener("hashchange", fn);
+}
+
+// js/lib/icons.js
+var P = {
+  dashboard: '<path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/>',
+  pipeline: '<path d="M3 6h18M3 12h12M3 18h6"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
+  preview: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v9h14v-9M12 8C12 5 9 3 7.5 4.5S7 8 12 8ZM12 8c0-3 3-5 4.5-3.5S17 8 12 8Z"/>',
+  spark: '<path d="M12 3v4M12 17v4M5 12H3M21 12h-2M6 6l-1.5-1.5M19.5 19.5 18 18M6 18l-1.5 1.5M19.5 4.5 18 6"/><circle cx="12" cy="12" r="4"/>',
+  rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09Z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/>',
+  money: '<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/>',
+  whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3Z"/><path d="M8.5 9c0 4 2.5 6.5 6.5 6.5"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  arrowUp: '<path d="M12 19V5M5 12l7-7 7 7"/>',
+  arrowRight: '<path d="M5 12h14M13 5l7 7-7 7"/>',
+  bolt: '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  shield: '<path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/>',
+  fire: '<path d="M12 2c1 4 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 1-3s0 2 2 2c0-3-1-5 2-8Z"/>',
+  building: '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h6v6H9z"/>',
+  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2Z"/>',
+  menu: '<path d="M3 12h18M3 6h18M3 18h18"/>',
+  trend: '<path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/>',
+  star: '<path d="M12 2l3 6.5 7 .8-5 4.8 1.3 7L12 17.8 5.4 21l1.3-7-5-4.8 7-.8Z"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
+  megaphone: '<path d="M3 11v2a1 1 0 0 0 1 1h2l8 5V5l-8 5H4a1 1 0 0 0-1 1Z"/><path d="M18 8a4 4 0 0 1 0 8"/>',
+  layers: '<path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 11h-5a2 2 0 0 0 0 4h5v-4Z"/>',
+  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  send: '<path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/>',
+  hourglass: '<path d="M5 22h14M5 2h14M6 2c0 5 4 7 6 10 2-3 6-5 6-10M6 22c0-5 4-7 6-10 2 3 6 5 6 10"/>'
+};
+function icon(name, cls = "") {
+  const path = P[name] || P.spark;
+  return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+}
+
+// js/lib/ui.js
+var RM = (n) => "RM" + (Math.round(n) || 0).toLocaleString("en-MY");
+var pct = (n) => (n * 100).toFixed(n >= 0.1 ? 0 : 1) + "%";
+var fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" }) : "—";
+var timeAgo = (iso) => {
+  if (!iso)
+    return "never";
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60)
+    return "just now";
+  if (s < 3600)
+    return Math.floor(s / 60) + "m ago";
+  if (s < 86400)
+    return Math.floor(s / 3600) + "h ago";
+  return Math.floor(s / 86400) + "d ago";
+};
+var daysUntil = (iso) => iso ? Math.ceil((new Date(iso) - Date.now()) / 86400000) : null;
+function toast(msg, kind = "grow") {
+  let wrap = document.querySelector(".toast-wrap");
+  if (!wrap) {
+    wrap = document.createElement("div");
+    wrap.className = "toast-wrap";
+    document.body.appendChild(wrap);
+  }
+  const el = document.createElement("div");
+  el.className = "toast " + (kind === "grow" ? "" : kind);
+  el.innerHTML = `<span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = "all .3s";
+    el.style.opacity = "0";
+    el.style.transform = "translateX(40px)";
+    setTimeout(() => el.remove(), 320);
+  }, 3200);
+}
+function sparkline(points, color = "#00e5a0", h = 38, w = 220) {
+  const max = Math.max(...points, 1), min = Math.min(...points, 0);
+  const range = max - min || 1;
+  const step = w / (points.length - 1);
+  const pts = points.map((p, i) => [i * step, h - (p - min) / range * (h - 6) - 3]);
+  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const area = d + ` L ${w} ${h} L 0 ${h} Z`;
+  const gid = "g" + Math.random().toString(36).slice(2, 7);
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${color}" stop-opacity=".28"/><stop offset="1" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#${gid})"/>
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+function metrics() {
+  const prospects2 = prospects();
+  const clients2 = clients();
+  const orders2 = orders();
+  const wallets2 = wallets();
+  const referrals2 = referrals();
+  const totalProspects = prospects2.length;
+  const generated = prospects2.filter((p) => p.website_spec).length;
+  const activations = clients2.length;
+  const sentOrLater = prospects2.filter((p) => ["sent", "interested", "quoted", "activated", "renewal"].includes(p.status)).length;
+  const conv = sentOrLater ? activations / sentOrLater : 0;
+  const upsellRevenue = orders2.reduce((s, o) => s + (o.total_amount - o.activation_fee), 0);
+  const activationRevenue = orders2.reduce((s, o) => s + o.activation_fee, 0);
+  const renewalRevenue = clients2.length * PRICING.renewal;
+  const creditsIssued = referrals2.filter((r) => r.activation_status === "confirmed").reduce((s, r) => s + r.reward_amount, 0);
+  const cashRedeemed = wallets2.reduce((s, w) => s + w.cash_redeemed, 0);
+  const totalRevenue = orders2.reduce((s, o) => s + o.total_amount, 0);
+  const ltv = activations ? Math.round((totalRevenue + renewalRevenue) / activations) : 1400;
+  return {
+    totalProspects,
+    generated,
+    activations,
+    conv,
+    sentOrLater,
+    upsellRevenue,
+    activationRevenue,
+    renewalRevenue,
+    totalRevenue,
+    creditsIssued,
+    cashRedeemed,
+    ltv,
+    pipelineValue: prospects2.filter((p) => ["interested", "quoted"].includes(p.status)).length * PRICING.activation
+  };
+}
+function byStatus() {
+  const map = {};
+  STATUSES.forEach((s) => map[s.id] = []);
+  prospects().forEach((p) => {
+    (map[p.status] = map[p.status] || []).push(p);
+  });
+  return map;
+}
+
+// js/views/landing.js
+function renderLanding() {
+  const q = location.hash.split("?")[1] || "";
+  const ref = new URLSearchParams(q).get("ref") || "";
+  setTimeout(wire, 0);
+  return `
+  <header class="lh-nav">
+    <a class="brand" href="#/"><div class="brand-mark">K</div>
+      <div><div class="brand-name">KOBIS</div><div class="brand-sub">Berhad</div></div></a>
+    <nav class="lh-nav-links">
+      <a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#request">Request preview</a>
+    </nav>
+    <a class="btn btn-ghost btn-sm" href="#/admin">${icon("dashboard")} Engine Login</a>
+  </header>
+
+  <section class="lh-hero">
+    <div class="lh-hero-inner">
+      <span class="pill pill-grow">${icon("bolt")} The website you can see before you buy</span>
+      <h1 class="lh-h1">Build First.<br><span class="grad">Sell Later.</span> Grow Forever.</h1>
+      <p class="lh-lead">KOBIS builds a complete, professional website preview for your business — <b>before</b> you pay a cent. Love it? Activate ownership for a one-time <b>${RM(PRICING.activation)}</b>. That's it.</p>
+      <div class="lh-cta-row">
+        <a class="btn btn-primary" href="#request">${icon("rocket")} Request my free preview</a>
+        <a class="btn btn-ghost" href="#/preview/aimankopi">${icon("eye")} See a live example</a>
+      </div>
+      <div class="lh-trust">
+        ${[["No deposit", "check"], ["No contracts", "check"], ["See it before you pay", "check"], ["Live in days, not weeks", "check"]].map(([t, i]) => `<span>${icon(i)} ${t}</span>`).join("")}
+      </div>
+    </div>
+    <div class="lh-hero-card">
+      ${miniPreviewCard()}
+    </div>
+  </section>
+
+  <section class="lh-band" id="how">
+    <div class="lh-section-head">
+      <span class="eyebrow">The inverted model</span>
+      <h2>We removed the scariest part of buying a website: <span class="grad">uncertainty.</span></h2>
+    </div>
+    <div class="lh-compare">
+      <div class="lh-compare-col bad">
+        <div class="lh-compare-tag">Traditional agency · high friction</div>
+        ${["Proposal", "Discussion", "Deposit", "Build", "Revisions", "Pay"].map((s, i, a) => `<div class="lh-flow-step">${s}${i < a.length - 1 ? '<span class="arr">→</span>' : ""}</div>`).join("")}
+        <p class="lh-compare-note">Weeks of back-and-forth before you see anything real.</p>
+      </div>
+      <div class="lh-compare-col good">
+        <div class="lh-compare-tag">KOBIS engine · zero friction</div>
+        ${["Identify", "Build Preview", "Send", "Activate", "Upsell", "Renew"].map((s, i, a) => `<div class="lh-flow-step">${s}${i < a.length - 1 ? '<span class="arr">→</span>' : ""}</div>`).join("")}
+        <p class="lh-compare-note">You see exactly what you'll own — then decide.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lh-band">
+    <div class="lh-feature-grid">
+      ${[
+    ["eye", "Tangible proof", "See the finished website before any commitment — not a mockup, the real thing."],
+    ["spark", "AI-assisted build", "Smart generation turns your socials into a polished site in hours, not weeks."],
+    ["gift", "Grow by referral", "Earn ${RM(50)} renewal credit for every business you refer. Cash out at ${RM(500)}."],
+    ["shield", "Yours to keep", "Activate and you own it — hosting, domain, business email & dashboard included."]
+  ].map(([ic, t, d]) => `
+        <div class="lh-feature">
+          <div class="lh-feature-ic t-grow">${icon(ic)}</div>
+          <h3>${t}</h3><p>${d.replace("${RM(50)}", RM(50)).replace("${RM(500)}", RM(500))}</p>
+        </div>`).join("")}
+    </div>
+  </section>
+
+  <section class="lh-band" id="pricing">
+    <div class="lh-section-head">
+      <span class="eyebrow">Simple, honest pricing</span>
+      <h2>One website. <span class="grad">${RM(PRICING.activation)}</span> to own it.</h2>
+      <p class="muted">Selected Business Launch Promotion — ${RM(PRICING.websiteValue)} value.</p>
+    </div>
+    <div class="lh-pricing">
+      <div class="lh-price-card featured">
+        <div class="lh-price-tag">Activation</div>
+        <div class="lh-price"><s>${RM(PRICING.websiteValue)}</s> ${RM(PRICING.activation)}<span>one-time</span></div>
+        <ul class="lh-price-list">
+          ${["Website ownership activation", "1-year hosting", "Domain setup", "1 business email", "Admin dashboard access", "Gallery & announcement updates", "Basic technical support"].map((f) => `<li>${icon("check")} ${f}</li>`).join("")}
+        </ul>
+        <a class="btn btn-primary btn-block" href="#request">Request my preview</a>
+        <div class="lh-renewal">Then ${RM(PRICING.renewal)}/year — domain, hosting & maintenance.</div>
+      </div>
+      <div class="lh-addons">
+        <h4>Power it up</h4>
+        ${Object.values(PRICING.addons).map((a) => `
+          <div class="lh-addon">
+            <div><div class="fw-600 hi">${a.label}</div><div class="text-xs dim">${a.blurb}</div></div>
+            <div class="lh-addon-price">${RM(a.price)}${a.unit || ""}</div>
+          </div>`).join("")}
+        <div class="lh-addon-foot">${icon("spark")} First-payment potential up to <b>${RM(800)}</b> with add-ons.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lh-band" id="request">
+    <div class="lh-request">
+      <div class="lh-request-copy">
+        <span class="eyebrow">Phase 2 · invite-only</span>
+        <h2>Join the preview waitlist</h2>
+        <p class="muted">We build a limited number of previews each week to keep quality high. Drop your details and we'll prepare yours.</p>
+        <div class="lh-waitlist-meta">${icon("users")} <b id="wlCount">${waitlist().length}</b> businesses in the queue</div>
+        ${ref ? `<div class="pill pill-violet mt-14">${icon("gift")} Referred by <b style="margin-left:4px">${ref}</b> — attribution locked in</div>` : ""}
+      </div>
+      <form class="lh-form card" id="wlForm">
+        <div class="field"><label>Business name</label><input class="input" name="company_name" required placeholder="e.g. Kopi Tujuh" /></div>
+        <div class="field-row">
+          <div class="field"><label>Contact person</label><input class="input" name="contact_person" required placeholder="Your name" /></div>
+          <div class="field"><label>Email</label><input class="input" type="email" name="email" required placeholder="you@business.com" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Category</label>
+            <select class="select" name="business_category">
+              ${Object.entries(CATEGORY_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field"><label>Referral code <span class="hint">(optional)</span></label>
+            <input class="input" name="referral_code" value="${ref}" placeholder="friend's code" /></div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">${icon("send")} Join the waitlist</button>
+        <div class="text-xs dim center mt-8">Preview prepared by KOBIS Berhad · no payment required</div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="lh-foot">
+    <div class="row gap-10"><div class="brand-mark" style="width:30px;height:30px;font-size:15px">K</div><b class="hi">KOBIS Berhad</b></div>
+    <div class="text-xs dim">Build First. Sell Later. Grow Forever. · © ${new Date().getFullYear()} KOBIS Website Growth Engine</div>
+    <a class="text-xs" href="#/admin" style="color:var(--grow)">Engine dashboard →</a>
+  </footer>`;
+}
+function miniPreviewCard() {
+  return `<div class="mini-prev">
+    <div class="mini-prev-bar"><span></span><span></span><span></span><em>kobislaunch.com/preview</em></div>
+    <div class="mini-prev-body">
+      <div class="mini-marker">${icon("shield")} Professional Website Preview · KOBIS Berhad</div>
+      <div class="mini-hero">
+        <div class="mini-eyebrow">CAFE · BANGSAR</div>
+        <div class="mini-title">Kopi Tujuh</div>
+        <div class="mini-sub">Freshly made. Locally loved.</div>
+        <div class="mini-cta">Activate Website Ownership</div>
+      </div>
+      <div class="mini-thumbs">${[1, 2, 3].map(() => '<div class="mini-thumb"></div>').join("")}</div>
+    </div>
+  </div>`;
+}
+function wire() {
+  const form = document.getElementById("wlForm");
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    joinWaitlist(Object.fromEntries(fd.entries()));
+    toast("\uD83C\uDF89 You're on the waitlist! KOBIS will prepare your preview.", "grow");
+    form.reset();
+    const c = document.getElementById("wlCount");
+    if (c)
+      c.textContent = waitlist().length;
+  });
+}
+
+// js/views/dashboard.js
+function renderDashboard() {
+  const m = metrics();
+  const role2 = role();
+  const buckets = byStatus();
+  return `
+  <div class="page-head between wrap">
+    <div>
+      <span class="eyebrow">${icon("bolt")} Command Center</span>
+      <h1 class="page-title">Good to see you. Here's the engine.</h1>
+      <p class="page-sub">Every prospect, preview, activation and ringgit — live. ${role2 === "sales" ? "Sales view: financials hidden." : ""}</p>
+    </div>
+    <a class="btn btn-primary" href="#/admin/prospects">${icon("plus")} New prospect</a>
+  </div>
+
+  <div class="grid g-4">
+    ${kpi("target", "t-violet", "Prospects", m.totalProspects, `${m.generated} previews generated`, [4, 6, 5, 8, 7, 9, 11, m.totalProspects], "#7c5cff")}
+    ${kpi("rocket", "t-grow", "Activations", m.activations, `${pct(m.conv)} conversion`, [0, 1, 1, 2, 2, 3, 3, m.activations], "#00e5a0")}
+    ${role2 === "admin" ? kpi("money", "t-amber", "Total revenue", RM(m.totalRevenue), `${RM(m.renewalRevenue)} renewals/yr`, [200, 500, 800, 1200, 1600, 2100, 2600, m.totalRevenue], "#ffb547", true) : kpi("eye", "t-sky", "Previews sent", m.sentOrLater, "awaiting response", [1, 2, 3, 4, 5, 6, 7, m.sentOrLater], "#4cc9ff")}
+    ${kpi("gift", "t-sky", "Referral credits", RM(m.creditsIssued), `${RM(m.cashRedeemed)} cashed out`, [0, 0, 50, 50, 100, 100, 150, m.creditsIssued], "#4cc9ff", true)}
+  </div>
+
+  <div class="grid g-3 mt-18">
+    <div class="card span-2">
+      <div class="card-head"><h3>Pipeline health</h3><span class="sub">prospects by stage</span>
+        <a class="btn btn-ghost btn-sm" style="margin-left:auto" href="#/admin/pipeline">${icon("pipeline")} Open board</a></div>
+      ${pipelineBars(buckets)}
+    </div>
+    ${role2 === "admin" ? revenueCard(m) : automationCard()}
+  </div>
+
+  <div class="grid g-3 mt-18">
+    <div class="card">
+      <div class="card-head"><div class="kpi-icon t-rose">${icon("fire")}</div><h3>Hot leads</h3>
+        <span class="pill pill-rose" style="margin-left:auto">≥ ${QUALIFY_THRESHOLD} score</span></div>
+      ${hotLeads()}
+    </div>
+    <div class="card span-2">
+      <div class="card-head"><div class="kpi-icon t-grow">${icon("bolt")}</div><h3>Automation feed</h3>
+        <span class="sub">what the engine did for you</span></div>
+      ${activityFeed()}
+    </div>
+  </div>`;
+}
+function kpi(ic, tint, label, value, foot, spark, color, isMoney) {
+  return `<div class="card kpi">
+    <div class="kpi-label"><span class="kpi-icon ${tint}">${icon(ic)}</span> ${label}</div>
+    <div class="kpi-value">${value}</div>
+    <div class="kpi-foot"><span class="delta-up">${icon("arrowUp")}</span><span class="muted">${foot}</span></div>
+    ${sparkline(spark, color)}
+  </div>`;
+}
+function pipelineBars(buckets) {
+  const max = Math.max(...STATUSES.map((s) => (buckets[s.id] || []).length), 1);
+  return `<div class="stack gap-10">${STATUSES.map((s) => {
+    const n = (buckets[s.id] || []).length;
+    return `<div class="row gap-14">
+      <div style="width:140px" class="text-sm fw-600 hi">${s.label}</div>
+      <div class="bar" style="flex:1"><i style="width:${n / max * 100}%;background:${s.color}"></i></div>
+      <div class="num fw-700 hi" style="width:28px;text-align:right">${n}</div>
+    </div>`;
+  }).join("")}</div>`;
+}
+function revenueCard(m) {
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-amber">${icon("chart")}</div><h3>Revenue mix</h3></div>
+    ${[["Activations", m.activationRevenue, "#00e5a0"], ["Add-on upsells", m.upsellRevenue, "#7c5cff"], ["Renewals (annualised)", m.renewalRevenue, "#ffb547"]].map(([l, v, c]) => {
+    const tot = m.activationRevenue + m.upsellRevenue + m.renewalRevenue || 1;
+    return `<div class="mt-14"><div class="between text-sm"><span class="muted">${l}</span><span class="fw-700 hi mono">${RM(v)}</span></div>
+        <div class="bar mt-8"><i style="width:${v / tot * 100}%;background:${c}"></i></div></div>`;
+  }).join("")}
+    <div class="divider"></div>
+    <div class="between"><span class="muted text-sm">Avg. customer LTV</span><span class="kpi-value" style="font-size:22px">${RM(m.ltv)}+</span></div>
+  </div>`;
+}
+function automationCard() {
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-grow">${icon("spark")}</div><h3>Engine automation</h3></div>
+    <div class="stack gap-14">
+      ${[
+    ["Auto lead scoring", "Every prospect ranked 0–100 on entry", "target"],
+    ["AI website generation", "Socials → full site spec in seconds", "spark"],
+    ["WhatsApp quoting", "Pre-filled activation messages", "whatsapp"],
+    ["Referral auto-credit", "Wallet credited on payment", "gift"]
+  ].map(([t, d, i]) => `<div class="row gap-14"><div class="kpi-icon t-grow">${icon(i)}</div>
+          <div><div class="fw-600 hi text-sm">${t}</div><div class="text-xs dim">${d}</div></div></div>`).join("")}
+    </div>
+  </div>`;
+}
+function hotLeads() {
+  const hot = [...prospects()].filter((p) => !["activated", "renewal"].includes(p.status)).sort((a, b) => b.score - a.score).slice(0, 5);
+  if (!hot.length)
+    return `<div class="empty">${icon("check")}<div>Pipeline all converted \uD83C\uDF89</div></div>`;
+  return `<div class="stack gap-10">${hot.map((p) => {
+    const b = band(p.score);
+    return `<a class="lead-card" href="#/admin/prospect/${p.id}">
+      <div class="lc-top">
+        <div><div class="lc-name">${p.company_name}</div><div class="lc-cat">${p.city} · ${(p.followers / 1000).toFixed(1)}k followers</div></div>
+        <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
+      </div>
+    </a>`;
+  }).join("")}</div>`;
+}
+function activityFeed() {
+  const items = [];
+  prospects().filter((p) => p.website_spec).slice(0, 3).forEach((p) => items.push(["spark", "violet", `AI generated a website for <b>${p.company_name}</b>`, p.created_at]));
+  prospects().filter((p) => p.analytics?.opens > 0).sort((a, b) => new Date(b.analytics.lastOpenedAt) - new Date(a.analytics.lastOpenedAt)).slice(0, 3).forEach((p) => items.push(["eye", "sky", `<b>${p.company_name}</b> opened their preview (${p.analytics.opens}×)`, p.analytics.lastOpenedAt]));
+  referrals().filter((r) => r.activation_status === "confirmed").slice(0, 2).forEach((r) => items.push(["gift", "amber", `Referral credit awarded for <b>${r.referred_company_name}</b>`, r.created_at]));
+  clients().slice(0, 2).forEach((c) => items.push(["rocket", "grow", `<b>${c.company_name}</b> activated · ${RM(c.package_price)}`, c.activation_date]));
+  items.sort((a, b) => new Date(b[3]) - new Date(a[3]));
+  return `<div class="stack">${items.slice(0, 7).map(([ic, col, txt, t]) => `
+    <div class="sop-step" style="padding:11px 0;border-color:var(--line-soft)">
+      <div class="kpi-icon t-${col}" style="flex:none">${icon(ic)}</div>
+      <div style="flex:1"><div class="text-sm hi">${txt}</div><div class="text-xs dim">${timeAgo(t)}</div></div>
+    </div>`).join("")}</div>`;
+}
+
+// js/views/pipeline.js
+function renderPipeline() {
+  const buckets = byStatus();
+  setTimeout(wire2, 0);
+  return `
+  <div class="page-head between wrap">
+    <div>
+      <span class="eyebrow">${icon("pipeline")} Lead Pipeline</span>
+      <h1 class="page-title">Move every prospect to activated.</h1>
+      <p class="page-sub">Click a card to open it. Use the arrow to advance a prospect to the next stage.</p>
+    </div>
+    <a class="btn btn-primary" href="#/admin/prospects">${icon("plus")} New prospect</a>
+  </div>
+
+  <div class="pipeline">
+    ${STATUSES.map((s) => col(s, buckets[s.id] || [])).join("")}
+  </div>`;
+}
+function col(s, items) {
+  return `<div class="pipe-col">
+    <div class="pipe-col-head">
+      <span class="dot" style="width:8px;height:8px;border-radius:50%;background:${s.color}"></span>
+      <span class="label">${s.label}</span>
+      <span class="count">${items.length}</span>
+    </div>
+    <div class="pipe-col-bar" style="background:${s.color}33"></div>
+    ${items.length ? items.map(card).join("") : `<div class="text-xs dim center" style="padding:20px 0">empty</div>`}
+  </div>`;
+}
+function card(p) {
+  const b = band(p.score);
+  const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  const nextIdx = STATUSES.findIndex((s) => s.id === p.status);
+  const canAdvance = nextIdx >= 0 && nextIdx < STATUSES.length - 1;
+  return `<div class="lead-card" data-open="${p.id}">
+    <div class="lc-top">
+      <div><div class="lc-name">${p.company_name}</div>
+      <div class="lc-cat">${CATEGORY_LABEL[p.business_category] || ""} · ${p.city}</div></div>
+      <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
+    </div>
+    <div class="lc-meta">
+      ${p.website_spec ? `<span class="lc-tag">${icon("spark")} preview</span>` : ""}
+      ${p.analytics?.opens ? `<span class="lc-tag">${icon("eye")} ${p.analytics.opens} opens</span>` : ""}
+      ${expiry !== null && expiry <= 5 ? `<span class="lc-tag" style="color:var(--rose)">${icon("clock")} ${expiry}d left</span>` : ""}
+    </div>
+    ${canAdvance ? `<button class="btn btn-ghost btn-sm" style="width:100%;margin-top:11px;justify-content:space-between" data-advance="${p.id}">
+      <span class="text-xs dim">Move to ${STATUSES[nextIdx + 1].label}</span>${icon("arrowRight")}</button>` : ""}
+  </div>`;
+}
+function wire2() {
+  document.querySelectorAll("[data-advance]").forEach((b) => b.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const id = b.dataset.advance;
+    const p = prospectById(id);
+    const idx = STATUSES.findIndex((s) => s.id === p.status);
+    setStatus(id, STATUSES[idx + 1].id);
+  }));
+  document.querySelectorAll("[data-open]").forEach((c) => c.addEventListener("click", () => {
+    location.hash = "#/admin/prospect/" + c.dataset.open;
+  }));
+}
+
+// js/lib/modal.js
+var host = null;
+function openModal(html, { wide = false } = {}) {
+  closeModal();
+  host = document.createElement("div");
+  host.className = "modal-scrim";
+  host.innerHTML = `<div class="modal ${wide ? "modal-wide" : ""}" role="dialog" aria-modal="true">${html}</div>`;
+  host.addEventListener("mousedown", (e) => {
+    if (e.target === host)
+      closeModal();
+  });
+  document.body.appendChild(host);
+  document.addEventListener("keydown", esc);
+  return host.querySelector(".modal");
+}
+function closeModal() {
+  if (host) {
+    host.remove();
+    host = null;
+    document.removeEventListener("keydown", esc);
+  }
+}
+function esc(e) {
+  if (e.key === "Escape")
+    closeModal();
+}
+
+// js/views/prospects.js
+var listFilter = "all";
+var listSort = "score";
+function renderProspects() {
+  setTimeout(wireList, 0);
+  let rows = [...prospects()];
+  if (listFilter === "qualified")
+    rows = rows.filter((p) => p.score >= QUALIFY_THRESHOLD);
+  else if (listFilter === "no-preview")
+    rows = rows.filter((p) => !p.website_spec);
+  else if (listFilter !== "all")
+    rows = rows.filter((p) => p.status === listFilter);
+  rows.sort((a, b) => listSort === "score" ? b.score - a.score : new Date(b.created_at) - new Date(a.created_at));
+  return `
+  <div class="page-head between wrap">
+    <div>
+      <span class="eyebrow">${icon("target")} Prospects</span>
+      <h1 class="page-title">${prospects().length} businesses in the engine</h1>
+      <p class="page-sub">Auto-scored on entry. Generate previews for anyone at or above the ${QUALIFY_THRESHOLD}-point qualification line.</p>
+    </div>
+    <button class="btn btn-primary" id="addBtn">${icon("plus")} Add prospect</button>
+  </div>
+
+  <div class="between wrap mb-14" style="margin-bottom:16px;gap:10px">
+    <div class="row gap-8 wrap" id="filters">
+      ${[["all", "All"], ["qualified", `Qualified ≥${QUALIFY_THRESHOLD}`], ["no-preview", "No preview"], ["interested", "Interested"], ["quoted", "Quoted"]].map(([k, l]) => `<button class="pill ${listFilter === k ? "pill-grow" : ""}" data-filter="${k}">${l}</button>`).join("")}
+    </div>
+    <div class="row gap-8">
+      <span class="text-xs dim">Sort</span>
+      <button class="pill ${listSort === "score" ? "pill-grow" : ""}" data-sort="score">Score</button>
+      <button class="pill ${listSort === "recent" ? "pill-grow" : ""}" data-sort="recent">Recent</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:6px 6px 2px">
+    <table class="tbl">
+      <thead><tr><th>Business</th><th>Category</th><th>Score</th><th>Status</th><th>Preview</th><th>Opens</th><th></th></tr></thead>
+      <tbody>
+        ${rows.map(rowHtml).join("") || `<tr><td colspan="7"><div class="empty">${icon("target")}<div>No prospects match.</div></div></td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+function rowHtml(p) {
+  const b = band(p.score);
+  return `<tr data-open="${p.id}" style="cursor:pointer">
+    <td><div class="fw-700 hi">${p.company_name}</div><div class="text-xs dim">${p.contact_person} · ${p.city}</div></td>
+    <td><span class="pill">${CATEGORY_LABEL[p.business_category] || "—"}</span> <span class="text-xs dim">${CATEGORY_TIER[p.business_category] || ""}</span></td>
+    <td><div class="row gap-8"><div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:38px;height:38px"><span style="font-size:12px">${p.score}</span></div><span class="pill pill-${b.color}">${b.label}</span></div></td>
+    <td><span class="pill" style="color:${statusColor(p.status)}"><span class="dot" style="background:${statusColor(p.status)}"></span>${statusLabel(p.status)}</span></td>
+    <td>${p.website_spec ? `<span class="pill pill-violet">${icon("spark")} ready</span>` : `<span class="text-xs dim">—</span>`}</td>
+    <td class="num">${p.analytics?.opens || 0}</td>
+    <td>${icon("arrowRight", "")}</td>
+  </tr>`;
+}
+function wireList() {
+  document.getElementById("addBtn")?.addEventListener("click", openAddModal);
+  document.querySelectorAll("[data-open]").forEach((r) => r.addEventListener("click", () => location.hash = "#/admin/prospect/" + r.dataset.open));
+  document.querySelectorAll("[data-filter]").forEach((b) => b.addEventListener("click", () => {
+    listFilter = b.dataset.filter;
+    rerenderList();
+  }));
+  document.querySelectorAll("[data-sort]").forEach((b) => b.addEventListener("click", () => {
+    listSort = b.dataset.sort;
+    rerenderList();
+  }));
+}
+function rerenderList() {
+  const v = document.getElementById("view");
+  if (v) {
+    v.innerHTML = renderProspects();
+  }
+}
+function openAddModal() {
+  const draft = { business_category: "cafe", followers: 5000, web_presence: "none", engagement: "high", affordability: "likely" };
+  const m = openModal(addModalHtml(draft));
+  const refresh = () => {
+    const f = m.querySelector("#addForm");
+    draft.business_category = f.business_category.value;
+    draft.followers = Number(f.followers.value) || 0;
+    draft.web_presence = f.web_presence.value;
+    draft.engagement = f.engagement.value;
+    draft.affordability = f.affordability.value;
+    m.querySelector("#scorePreview").innerHTML = scorePreview(draft);
+  };
+  m.querySelectorAll("select,input[name=followers]").forEach((el) => el.addEventListener("input", refresh));
+  m.querySelector("#addForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fd = Object.fromEntries(new FormData(e.target).entries());
+    fd.followers = Number(fd.followers) || 0;
+    const p = addProspect(fd);
+    closeModal();
+    toast(`Added ${p.company_name} · scored ${p.score}/100`, "grow");
+    location.hash = "#/admin/prospect/" + p.id;
+  });
+  refresh();
+}
+function addModalHtml(d) {
+  return `
+  <div class="modal-head"><div class="kpi-icon t-violet">${icon("plus")}</div>
+    <div><h3>Add prospect</h3><div class="text-xs dim">Auto-scored live as you type</div></div>
+    <button class="modal-x" onclick="this.closest('.modal-scrim').remove()">${icon("x")}</button></div>
+  <div class="modal-body">
+    <form id="addForm">
+      <div class="field"><label>Business name</label><input class="input" name="company_name" required placeholder="e.g. Kopi Tujuh"/></div>
+      <div class="field-row">
+        <div class="field"><label>Contact person</label><input class="input" name="contact_person" required placeholder="Owner name"/></div>
+        <div class="field"><label>City</label><input class="input" name="city" placeholder="e.g. Bangsar"/></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Phone</label><input class="input" name="phone" placeholder="+60..."/></div>
+        <div class="field"><label>Email</label><input class="input" type="email" name="email" placeholder="owner@business.com"/></div>
+      </div>
+      <div class="field"><label>Business description</label><textarea class="input" name="business_description" placeholder="What do they do? Feeds AI generation."></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>Instagram</label><input class="input" name="instagram_url" placeholder="instagram.com/..."/></div>
+        <div class="field"><label>Facebook</label><input class="input" name="facebook_url" placeholder="facebook.com/..."/></div>
+      </div>
+      <div class="divider"></div>
+      <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Lead scoring inputs</div>
+      <div class="field-row">
+        <div class="field"><label>Category</label><select class="select" name="business_category">
+          ${Object.entries(CATEGORY_LABEL).map(([k, v]) => `<option value="${k}" ${k === d.business_category ? "selected" : ""}>${v} · ${CATEGORY_TIER[k]}</option>`).join("")}
+        </select></div>
+        <div class="field"><label>Followers</label><input class="input" type="number" name="followers" value="${d.followers}" min="0"/></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Web presence</label><select class="select" name="web_presence">
+          ${Object.entries(PRESENCE_LABEL).map(([k, v]) => `<option value="${k}" ${k === d.web_presence ? "selected" : ""}>${v}</option>`).join("")}
+        </select></div>
+        <div class="field"><label>Engagement</label><select class="select" name="engagement">
+          ${["high", "medium", "low"].map((k) => `<option value="${k}" ${k === d.engagement ? "selected" : ""}>${k[0].toUpperCase() + k.slice(1)}</option>`).join("")}
+        </select></div>
+      </div>
+      <div class="field"><label>Affordability signal <span class="hint">— can they afford ${RM(PRICING.activation)}?</span></label>
+        <select class="select" name="affordability">
+          ${[["strong", "Strong"], ["likely", "Likely"], ["unsure", "Unsure"]].map(([k, v]) => `<option value="${k}" ${k === d.affordability ? "selected" : ""}>${v}</option>`).join("")}
+        </select></div>
+      <div id="scorePreview"></div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" onclick="this.closest('.modal-scrim').remove()">Cancel</button>
+    <button class="btn btn-primary" form="addForm" type="submit">${icon("check")} Add & score</button>
+  </div>`;
+}
+function scorePreview(d) {
+  const s = scoreProspect(d);
+  const b = band(s.total);
+  return `<div class="card" style="background:var(--ink-900);margin-top:6px">
+    <div class="between"><div class="row gap-14">
+      <div class="score-ring" style="--val:${s.total};--ring-c:var(--${b.color});width:54px;height:54px"><span style="font-size:16px">${s.total}</span></div>
+      <div><div class="fw-700 hi">${b.label} lead</div><div class="text-xs dim">${s.total >= QUALIFY_THRESHOLD ? "Auto-qualifies for preview generation" : "Below " + QUALIFY_THRESHOLD + "-pt line — nurture first"}</div></div>
+    </div></div>
+    <div class="divider"></div>
+    ${s.factors.map((f) => `<div class="between text-xs" style="padding:3px 0"><span class="muted">${f.label} <span class="dim">· ${f.note}</span></span><span class="mono fw-600 hi">${f.points}/${f.max}</span></div>`).join("")}
+  </div>`;
+}
+function renderProspectDetail(id) {
+  const p = prospectById(id);
+  if (!p)
+    return `<div class="empty">${icon("target")}<div>Prospect not found.</div><a class="btn btn-ghost mt-14" href="#/admin/prospects">Back</a></div>`;
+  setTimeout(() => wireDetail(p), 0);
+  const sc = scoreProspect(p);
+  const b = band(p.score);
+  const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  const isClient = ["activated", "renewal"].includes(p.status);
+  return `
+  <a class="text-sm dim row gap-6" href="#/admin/prospects" style="margin-bottom:16px">${icon("arrowRight")} <span style="transform:rotate(180deg);display:inline-block">${""}</span>← Back to prospects</a>
+  <div class="page-head between wrap">
+    <div class="row gap-14">
+      <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:60px;height:60px"><span style="font-size:18px">${p.score}</span></div>
+      <div>
+        <h1 class="page-title" style="font-size:28px">${p.company_name}</h1>
+        <div class="row gap-8 wrap mt-8">
+          <span class="pill pill-${b.color}">${b.label}</span>
+          <span class="pill">${CATEGORY_LABEL[p.business_category]} · Priority ${CATEGORY_TIER[p.business_category]}</span>
+          <span class="pill" style="color:${statusColor(p.status)}"><span class="dot" style="background:${statusColor(p.status)}"></span>${statusLabel(p.status)}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row gap-10 wrap">
+      ${p.website_spec ? `<a class="btn btn-ghost" href="#/preview/${p.demo_slug}" target="_blank">${icon("eye")} Open preview</a>` : ""}
+      ${isClient ? `<a class="btn btn-primary" href="#/client/${clients().find((c) => c.prospect_id === p.id)?.id}">${icon("dashboard")} Client dashboard</a>` : p.website_spec ? `<button class="btn btn-primary" id="activateBtn">${icon("rocket")} Activate</button>` : `<button class="btn btn-violet" id="genBtn">${icon("spark")} Generate website</button>`}
+    </div>
+  </div>
+
+  <div class="grid g-3">
+    <div class="stack gap-18 span-2">
+      ${p.website_spec ? previewCard(p, expiry) : generatePromptCard(p)}
+      ${sopCard(p)}
+    </div>
+    <div class="stack gap-18">
+      ${scoreCard(sc, b)}
+      ${profileCard(p)}
+    </div>
+  </div>`;
+}
+function generatePromptCard(p) {
+  return `<div class="card card-pad-lg" id="genCard">
+    <div class="row gap-14"><div class="kpi-icon t-violet" style="width:44px;height:44px">${icon("spark")}</div>
+      <div><h3>AI website generation</h3><div class="text-sm dim">Turn ${p.company_name}'s profile into a complete, themed website — instantly.</div></div></div>
+    <div class="divider"></div>
+    <div class="between wrap gap-10">
+      <div class="text-sm muted">Reads category, socials & description → hero, about, services, gallery plan & contact.</div>
+      <button class="btn btn-violet" id="genBtn2">${icon("bolt")} Generate now</button>
+    </div>
+  </div>`;
+}
+function previewCard(p, expiry) {
+  const a = p.analytics || { opens: 0, unique: 0 };
+  const previewUrl = `${location.origin}${location.pathname}#/preview/${p.demo_slug}`;
+  return `<div class="card card-pad-lg">
+    <div class="card-head"><div class="kpi-icon t-grow">${icon("preview")}</div><h3>Website preview</h3>
+      ${expiry !== null ? `<span class="pill ${expiry <= 5 ? "pill-rose" : "pill-amber"}" style="margin-left:auto">${icon("clock")} ${expiry > 0 ? expiry + " days left" : "expired"}</span>` : ""}</div>
+    <div class="prev-frame">
+      <div class="prev-frame-bar"><span></span><span></span><span></span></div>
+      <iframe src="#/preview/${p.demo_slug}" title="preview" loading="lazy"></iframe>
+    </div>
+    <div class="field mt-14"><label>Shareable preview link</label>
+      <div class="row gap-8"><input class="input mono" id="prevLink" readonly value="${previewUrl}"/>
+        <button class="btn btn-ghost" id="copyLink">${icon("copy")}</button></div>
+    </div>
+    <div class="grid g-3 mt-14">
+      ${[["Opens", a.opens, "eye"], ["Unique", a.unique, "users"], ["Last open", a.lastOpenedAt ? timeAgo(a.lastOpenedAt) : "—", "clock"]].map(([l, v, i]) => `<div class="card" style="background:var(--ink-900);padding:14px"><div class="kpi-label">${icon(i)} ${l}</div><div class="kpi-value" style="font-size:22px;margin-top:6px">${v}</div></div>`).join("")}
+    </div>
+    <div class="row gap-10 mt-14 wrap">
+      <a class="btn btn-wa" href="${whatsappOutreach(p, previewUrl)}" target="_blank">${icon("whatsapp")} Send via WhatsApp</a>
+      <button class="btn btn-ghost" id="markSent">${icon("send")} Mark as sent</button>
+    </div>
+  </div>`;
+}
+function sopCard(p) {
+  return `<div class="card card-pad-lg">
+    <div class="card-head"><div class="kpi-icon t-sky">${icon("whatsapp")}</div><h3>WhatsApp follow-up SOP</h3>
+      <span class="sub">Rec 4 · systematised cadence</span></div>
+    ${FOLLOWUP_CADENCE.map((step, i) => `
+      <div class="sop-step">
+        <div class="sop-day"><div class="d">D${step.day}</div><div class="l">${step.tone}</div></div>
+        <div style="flex:1">
+          <div class="fw-600 hi text-sm">${step.label}</div>
+          <div class="text-xs dim" style="margin-top:4px;font-style:italic">"${step.sample(p)}"</div>
+        </div>
+        <button class="sop-check" data-sop="${i}">${icon("check")}</button>
+      </div>`).join("")}
+  </div>`;
+}
+function scoreCard(sc, b) {
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-${b.color}">${icon("chart")}</div><h3>Lead score</h3>
+      <span class="pill pill-${b.color}" style="margin-left:auto">${sc.total}/100</span></div>
+    ${sc.factors.map((f) => `<div style="margin-bottom:12px">
+      <div class="between text-xs"><span class="muted">${f.label}</span><span class="mono fw-600 hi">${f.points}/${f.max}</span></div>
+      <div class="bar mt-8"><i style="width:${f.points / f.max * 100}%"></i></div>
+      <div class="text-xs dim" style="margin-top:3px">${f.note}</div>
+    </div>`).join("")}
+  </div>`;
+}
+function profileCard(p) {
+  const rows = [
+    ["users", "Contact", p.contact_person],
+    ["phone", "Phone", p.phone],
+    ["mail", "Email", p.email],
+    ["building", "City", p.city],
+    ["eye", "Web presence", PRESENCE_LABEL[p.web_presence]],
+    ["gift", "Referred by", p.referred_by || "—"]
+  ];
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-violet">${icon("building")}</div><h3>Profile</h3></div>
+    ${rows.map(([i, l, v]) => `<div class="between" style="padding:9px 0;border-bottom:1px solid var(--line-soft)">
+      <span class="text-xs dim row gap-8">${icon(i)} ${l}</span><span class="text-sm hi fw-600" style="text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">${v || "—"}</span></div>`).join("")}
+    <div class="row gap-8 wrap mt-14">
+      ${[["instagram_url", "IG"], ["facebook_url", "FB"], ["tiktok_url", "TT"]].filter(([k]) => p[k]).map(([k, l]) => `<a class="pill" href="https://${p[k]}" target="_blank">${icon("link")} ${l}</a>`).join("")}
+    </div>
+    ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${p.business_description}</div>` : ""}
+  </div>`;
+}
+function wireDetail(p) {
+  const gen = () => runGeneration(p);
+  document.getElementById("genBtn")?.addEventListener("click", gen);
+  document.getElementById("genBtn2")?.addEventListener("click", gen);
+  document.getElementById("activateBtn")?.addEventListener("click", () => openActivateModal(p));
+  document.getElementById("copyLink")?.addEventListener("click", () => {
+    const inp = document.getElementById("prevLink");
+    navigator.clipboard?.writeText(inp.value);
+    toast("Preview link copied", "sky");
+  });
+  document.getElementById("markSent")?.addEventListener("click", () => {
+    setStatus(p.id, "sent");
+    toast("Marked as sent");
+  });
+  document.querySelectorAll("[data-sop]").forEach((b) => b.addEventListener("click", () => b.classList.toggle("done")));
+}
+function runGeneration(p) {
+  const m = openModal(`
+    <div class="modal-body center" style="padding:36px 28px">
+      <div class="gen-orb">${icon("spark")}</div>
+      <h3 style="margin-top:18px">Generating ${p.company_name}'s website</h3>
+      <div class="text-sm dim" style="margin-top:6px">AI is assembling the site from their profile…</div>
+      <div id="genSteps" class="gen-steps"></div>
+    </div>`);
+  const host2 = m.querySelector("#genSteps");
+  let i = 0;
+  const tick = () => {
+    if (i < GEN_STEPS.length) {
+      const done = host2.querySelectorAll(".gen-line.done").length;
+      host2.querySelectorAll(".gen-line").forEach((l) => l.classList.add("done"));
+      const line = document.createElement("div");
+      line.className = "gen-line";
+      line.innerHTML = `<span class="gen-spin">${icon("bolt")}</span> ${GEN_STEPS[i]}`;
+      host2.appendChild(line);
+      i++;
+      setTimeout(tick, 360);
+    } else {
+      host2.querySelectorAll(".gen-line").forEach((l) => l.classList.add("done"));
+      setTimeout(() => {
+        generateForProspect(p.id);
+        closeModal();
+        toast("✨ Website generated — preview is live", "violet");
+      }, 450);
+    }
+  };
+  tick();
+}
+function openActivateModal(p) {
+  const sel = { chatbot: false, news: false, emailCount: 0 };
+  const m = openModal(activateHtml(p, sel), { wide: true });
+  const refresh = () => m.querySelector("#actSummary").innerHTML = activateSummary(p, sel);
+  m.querySelectorAll("[data-addon]").forEach((el) => el.addEventListener("change", () => {
+    if (el.dataset.addon === "email")
+      sel.emailCount = Number(el.value) || 0;
+    else
+      sel[el.dataset.addon] = el.checked;
+    refresh();
+  }));
+  m.querySelector("#confirmPay")?.addEventListener("click", () => {
+    const c = activateProspect(p.id, sel);
+    closeModal();
+    toast(`\uD83D\uDCB0 ${p.company_name} activated · ${RM(c.package_price)} confirmed`, "grow");
+    location.hash = "#/client/" + c.id;
+  });
+  refresh();
+}
+function activateHtml(p, sel) {
+  return `
+  <div class="modal-head"><div class="kpi-icon t-grow">${icon("rocket")}</div>
+    <div><h3>Activate ${p.company_name}</h3><div class="text-xs dim">Confirm package & record payment</div></div>
+    <button class="modal-x" onclick="this.closest('.modal-scrim').remove()">${icon("x")}</button></div>
+  <div class="modal-body">
+    <div class="grid g-2" style="gap:22px">
+      <div>
+        <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Add-ons</div>
+        <label class="addon-row"><input type="checkbox" data-addon="chatbot"/><div><div class="fw-600 hi">${PRICING.addons.chatbot.label}</div><div class="text-xs dim">${PRICING.addons.chatbot.blurb}</div></div><span class="addon-amt">${RM(PRICING.addons.chatbot.price)}</span></label>
+        <label class="addon-row"><input type="checkbox" data-addon="news"/><div><div class="fw-600 hi">${PRICING.addons.news.label}</div><div class="text-xs dim">${PRICING.addons.news.blurb}</div></div><span class="addon-amt">${RM(PRICING.addons.news.price)}</span></label>
+        <div class="addon-row"><div><div class="fw-600 hi">${PRICING.addons.email.label}</div><div class="text-xs dim">${PRICING.addons.email.blurb}</div></div>
+          <input class="input" style="width:64px" type="number" min="0" value="0" data-addon="email"/></div>
+      </div>
+      <div id="actSummary"></div>
+    </div>
+  </div>`;
+}
+function activateSummary(p, sel) {
+  const q = quote(sel);
+  return `<div class="card" style="background:var(--ink-900)">
+    <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Order summary</div>
+    ${q.lines.map((l) => `<div class="between text-sm" style="padding:6px 0"><span class="muted">${l.label}</span><span class="mono fw-600 hi">${RM(l.amount)}</span></div>`).join("")}
+    <div class="divider"></div>
+    <div class="between"><span class="fw-700 hi">Total today</span><span class="kpi-value" style="font-size:26px">${RM(q.total)}</span></div>
+    <div class="text-xs dim mt-8">You save ${RM(q.saved)} vs. ${RM(PRICING.websiteValue)} value · then ${RM(PRICING.renewal)}/yr</div>
+    ${p.referred_by ? `<div class="pill pill-violet mt-14">${icon("gift")} Referrer "${p.referred_by}" earns ${RM(PRICING.referral.rewardPerActivation)} on confirm</div>` : ""}
+    <button class="btn btn-primary btn-block mt-18" id="confirmPay">${icon("check")} Confirm payment & activate</button>
+    <div class="text-xs dim center mt-8">Records order · awards referral · provisions dashboard</div>
+  </div>`;
+}
+
+// js/views/clients.js
+function renderClients() {
+  if (role() !== "admin")
+    return rbacBlock();
+  const m = metrics();
+  const clients2 = clients();
+  return `
+  <div class="page-head">
+    <span class="eyebrow">${icon("money")} Clients & Orders</span>
+    <h1 class="page-title">${clients2.length} activated · ${RM(m.totalRevenue)} collected</h1>
+    <p class="page-sub">Every activation, order breakdown and upcoming renewal in one ledger.</p>
+  </div>
+
+  <div class="grid g-4">
+    ${stat("rocket", "t-grow", "Activations", clients2.length)}
+    ${stat("money", "t-amber", "Revenue", RM(m.totalRevenue))}
+    ${stat("spark", "t-violet", "Upsell revenue", RM(m.upsellRevenue))}
+    ${stat("clock", "t-sky", "Renewals/yr", RM(m.renewalRevenue))}
+  </div>
+
+  <div class="card mt-18" style="padding:6px 6px 2px">
+    <table class="tbl">
+      <thead><tr><th>Client</th><th>Package</th><th>Add-ons</th><th>Paid</th><th>Activated</th><th>Renewal due</th><th></th></tr></thead>
+      <tbody>
+        ${clients2.map(rowHtml2).join("") || `<tr><td colspan="7"><div class="empty">${icon("money")}<div>No activations yet.</div></div></td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+function rowHtml2(c) {
+  const o = orders().find((x) => x.client_id === c.id) || {};
+  const addons = [o.ai_chatbot && "Chatbot", o.news_module && "News", o.extra_email_count && `${o.extra_email_count}× email`].filter(Boolean);
+  const due = daysUntil(c.renewal_due_date);
+  return `<tr>
+    <td><div class="fw-700 hi">${c.company_name}</div><div class="text-xs dim">${c.contact_person}</div></td>
+    <td><span class="pill pill-grow">Activation</span></td>
+    <td>${addons.length ? addons.map((a) => `<span class="pill" style="margin:2px">${a}</span>`).join("") : '<span class="text-xs dim">—</span>'}</td>
+    <td class="num fw-700 hi">${RM(c.package_price)}</td>
+    <td class="text-sm muted">${fmtDate(c.activation_date)}</td>
+    <td>${due <= 30 ? `<span class="pill pill-rose">${due}d</span>` : `<span class="text-sm muted">${fmtDate(c.renewal_due_date)}</span>`}</td>
+    <td><a class="btn btn-ghost btn-sm" href="#/client/${c.id}">${icon("eye")} Portal</a></td>
+  </tr>`;
+}
+function stat(ic, tint, label, value) {
+  return `<div class="card kpi"><div class="kpi-label"><span class="kpi-icon ${tint}">${icon(ic)}</span> ${label}</div>
+    <div class="kpi-value">${value}</div></div>`;
+}
+function rbacBlock() {
+  return `<div class="empty" style="padding:80px 20px">
+    <div class="kpi-icon t-rose" style="width:56px;height:56px;margin:0 auto 18px">${icon("shield")}</div>
+    <h3 style="color:var(--tx-hi)">Restricted — Admin only</h3>
+    <p class="muted mt-8" style="max-width:46ch;margin-inline:auto">Financial data and payment records are protected by role-based access control (Rec 9). Switch to the Admin role to view this section.</p>
+  </div>`;
+}
+
+// js/views/referrals.js
+function renderReferrals() {
+  if (role() !== "admin")
+    return rbacBlock();
+  setTimeout(wire3, 0);
+  const wallets2 = wallets();
+  const refs = referrals();
+  const totalIssued = refs.filter((r) => r.activation_status === "confirmed").reduce((s, r) => s + r.reward_amount, 0);
+  const eligible = wallets2.filter((w) => w.credit_balance >= PRICING.referral.cashRedeemThreshold).length;
+  return `
+  <div class="page-head">
+    <span class="eyebrow">${icon("gift")} Referrals & Credits</span>
+    <h1 class="page-title">Organic growth, tracked to the ringgit</h1>
+    <p class="page-sub">Every activation earns the referrer ${RM(PRICING.referral.rewardPerActivation)} renewal credit (released on payment confirmation — Rec 5). Cash-out unlocks at ${RM(PRICING.referral.cashRedeemThreshold)}.</p>
+  </div>
+
+  <div class="grid g-4">
+    ${stat2("gift", "t-grow", "Credits issued", RM(totalIssued))}
+    ${stat2("users", "t-violet", "Referrers", wallets2.filter((w) => w.total_credit_earned > 0).length)}
+    ${stat2("check", "t-sky", "Confirmed referrals", refs.filter((r) => r.activation_status === "confirmed").length)}
+    ${stat2("money", "t-amber", "Cash-out eligible", eligible)}
+  </div>
+
+  <div class="grid g-3 mt-18">
+    <div class="card span-2">
+      <div class="card-head"><div class="kpi-icon t-grow">${icon("wallet")}</div><h3>Credit wallets</h3></div>
+      <table class="tbl">
+        <thead><tr><th>Client</th><th>Referrals</th><th>Earned</th><th>Balance</th><th>Cashed</th><th></th></tr></thead>
+        <tbody>
+          ${wallets2.map(walletRow).join("") || `<tr><td colspan="6"><div class="empty">No wallets yet.</div></td></tr>`}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="kpi-icon t-violet">${icon("link")}</div><h3>How it flows</h3></div>
+      ${["Client shares unique referral link", "Referred business activates & pays", `${RM(50)} auto-credited on confirmation`, `At ${RM(500)} → redeem for cash`].map((t, i) => `<div class="row gap-14" style="padding:11px 0;border-bottom:1px solid var(--line-soft)">
+          <div class="step-num">${i + 1}</div><div class="text-sm hi">${t}</div></div>`).join("")}
+      <div class="pill pill-grow mt-14" style="width:100%;justify-content:center;padding:8px">${icon("shield")} Credit = domain & hosting renewals only</div>
+    </div>
+  </div>
+
+  <div class="card mt-18">
+    <div class="card-head"><div class="kpi-icon t-sky">${icon("gift")}</div><h3>Referral ledger</h3></div>
+    <table class="tbl">
+      <thead><tr><th>Referrer</th><th>Referred business</th><th>Status</th><th>Reward</th><th>When</th></tr></thead>
+      <tbody>
+        ${refs.slice().reverse().map(refRow).join("") || `<tr><td colspan="5"><div class="empty">No referrals yet.</div></td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+function walletRow(w) {
+  const c = clientById(w.client_id);
+  const n = referralsForClient(w.client_id).length;
+  const eligible = w.credit_balance >= PRICING.referral.cashRedeemThreshold;
+  const pctTo = Math.min(100, w.credit_balance / PRICING.referral.cashRedeemThreshold * 100);
+  return `<tr>
+    <td><div class="fw-700 hi">${c?.company_name || "—"}</div><div class="text-xs dim mono">ref/${c?.referral_code || ""}</div></td>
+    <td class="num">${n}</td>
+    <td class="num muted">${RM(w.total_credit_earned)}</td>
+    <td><div class="fw-700 hi mono">${RM(w.credit_balance)}</div><div class="bar" style="width:80px;margin-top:5px"><i style="width:${pctTo}%"></i></div></td>
+    <td class="num muted">${RM(w.cash_redeemed)}</td>
+    <td>${eligible ? `<button class="btn btn-primary btn-sm" data-redeem="${w.client_id}">${icon("money")} Redeem ${RM(500)}</button>` : `<span class="text-xs dim">${RM(PRICING.referral.cashRedeemThreshold - w.credit_balance)} to go</span>`}</td>
+  </tr>`;
+}
+function refRow(r) {
+  const c = clientById(r.referrer_client_id);
+  const ok = r.activation_status === "confirmed";
+  return `<tr>
+    <td class="fw-600 hi">${c?.company_name || "—"}</td>
+    <td>${r.referred_company_name}</td>
+    <td><span class="pill ${ok ? "pill-grow" : "pill-amber"}"><span class="dot" style="background:${ok ? "var(--grow)" : "var(--amber)"}"></span>${ok ? "Confirmed" : "Pending"}</span></td>
+    <td class="num fw-600 hi">${RM(r.reward_amount)}</td>
+    <td class="text-sm muted">${timeAgo(r.created_at)}</td>
+  </tr>`;
+}
+function stat2(ic, tint, label, value) {
+  return `<div class="card kpi"><div class="kpi-label"><span class="kpi-icon ${tint}">${icon(ic)}</span> ${label}</div><div class="kpi-value">${value}</div></div>`;
+}
+function wire3() {
+  document.querySelectorAll("[data-redeem]").forEach((b) => b.addEventListener("click", () => {
+    if (redeemCash(b.dataset.redeem))
+      toast(`${RM(500)} cash redemption recorded`, "amber");
+  }));
+}
+
+// js/views/waitlist.js
+function renderWaitlist() {
+  setTimeout(wire4, 0);
+  const wl = waitlist();
+  const BATCH = 20;
+  return `
+  <div class="page-head">
+    <span class="eyebrow">${icon("hourglass")} Waitlist · Phase 2</span>
+    <h1 class="page-title">Controlled onboarding</h1>
+    <p class="page-sub">Invite-only intake keeps preview quality high and the team from burning out (Rec 6). Invite in batches of ${BATCH}/week.</p>
+  </div>
+
+  <div class="grid g-3">
+    <div class="card kpi"><div class="kpi-label"><span class="kpi-icon t-violet">${icon("users")}</span> In queue</div><div class="kpi-value">${wl.length}</div></div>
+    <div class="card kpi"><div class="kpi-label"><span class="kpi-icon t-grow">${icon("send")}</span> Batch capacity</div><div class="kpi-value">${BATCH}<small>/week</small></div></div>
+    <div class="card kpi"><div class="kpi-label"><span class="kpi-icon t-amber">${icon("gift")}</span> Via referral</div><div class="kpi-value">${wl.filter((w) => w.referral_code).length}</div></div>
+  </div>
+
+  <div class="card mt-18" style="padding:6px 6px 2px">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Business</th><th>Category</th><th>Referral</th><th>Joined</th><th></th></tr></thead>
+      <tbody>
+        ${wl.map((w, i) => `<tr>
+          <td class="num dim">${i + 1}</td>
+          <td><div class="fw-700 hi">${w.company_name}</div><div class="text-xs dim">${w.contact_person} · ${w.email}</div></td>
+          <td><span class="pill">${CATEGORY_LABEL[w.business_category] || "—"}</span></td>
+          <td>${w.referral_code ? `<span class="pill pill-violet">${icon("gift")} ${w.referral_code}</span>` : '<span class="text-xs dim">—</span>'}</td>
+          <td class="text-sm muted">${timeAgo(w.created_at)}</td>
+          <td><button class="btn btn-primary btn-sm" data-invite="${w.id}">${icon("rocket")} Convert to prospect</button></td>
+        </tr>`).join("") || `<tr><td colspan="6"><div class="empty">${icon("hourglass")}<div>Waitlist empty.</div></div></td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+function wire4() {
+  document.querySelectorAll("[data-invite]").forEach((b) => b.addEventListener("click", () => {
+    const w = waitlist().find((x) => x.id === b.dataset.invite);
+    const p = addProspect({
+      company_name: w.company_name,
+      contact_person: w.contact_person,
+      email: w.email,
+      business_category: w.business_category,
+      city: "",
+      followers: 0,
+      web_presence: "none",
+      engagement: "medium",
+      affordability: "likely",
+      referred_by: w.referral_code || ""
+    });
+    const idx = waitlist().findIndex((x) => x.id === w.id);
+    if (idx > -1)
+      waitlist().splice(idx, 1);
+    toast(`${w.company_name} moved into the pipeline`, "grow");
+    location.hash = "#/admin/prospect/" + p.id;
+  }));
+}
+
+// js/views/preview.js
+var recorded = new Set;
+function renderPreview(slug2) {
+  const p = prospectBySlug(slug2);
+  if (!p || !p.website_spec) {
+    return `<div class="empty" style="min-height:100vh;display:grid;place-content:center">
+      ${icon("preview")}<div>Preview not found or not yet generated.</div>
+      <a class="btn btn-ghost mt-14" href="#/">Back to KOBIS</a></div>`;
+  }
+  if (!window.frameElement && !recorded.has(slug2)) {
+    recorded.add(slug2);
+    setTimeout(() => recordOpen(slug2), 600);
+  }
+  const s = p.website_spec, t = s.theme;
+  const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  setTimeout(() => wire5(p), 0);
+  return `
+  <div class="site" style="--site-bg:${t.bg};--site-accent:${t.accent};--site-tint:${t.tint};--site-font:${t.font === "serif" ? "Georgia, 'Times New Roman', serif" : "'Sora', sans-serif"}">
+    <div class="site-marker">${icon("shield")} Professional Website Preview Prepared by <b>KOBIS Berhad</b>
+      ${expiry !== null ? `<span class="site-marker-exp">· preview ${expiry > 0 ? "expires in " + expiry + " days" : "expired"}</span>` : ""}
+      <button class="site-marker-cta" data-activate>Activate Website Ownership</button>
+    </div>
+
+    <header class="site-nav">
+      <div class="site-logo">${s.meta.name}</div>
+      <nav class="site-links">
+        <a href="#site-about">About</a><a href="#site-services">${s.servicesSection.name}</a>
+        <a href="#site-gallery">Gallery</a><a href="#site-contact">Contact</a>
+      </nav>
+      <a class="site-wa" href="#site-contact">${icon("whatsapp")} WhatsApp</a>
+    </header>
+
+    <section class="site-hero">
+      <div class="site-hero-inner">
+        <div class="site-eyebrow">${s.hero.eyebrow}</div>
+        <h1 class="site-h1">${s.hero.headline}</h1>
+        <p class="site-sub">${s.hero.sub}</p>
+        <div class="site-hero-cta">
+          <a class="site-btn-primary" href="#site-contact">${s.hero.primaryCta}</a>
+          <a class="site-btn-ghost" href="#site-services">${s.hero.secondaryCta}</a>
+        </div>
+        <div class="site-stats">${s.about.stats.map((st) => `<div><b>${st.k}</b><span>${st.v}</span></div>`).join("")}</div>
+      </div>
+      <div class="site-hero-art"><div class="site-hero-blob"></div></div>
+    </section>
+
+    <section class="site-section" id="site-about">
+      <div class="site-2col">
+        <div><div class="site-tag">About</div><h2 class="site-h2">${s.about.title}</h2></div>
+        <p class="site-body">${s.about.body}</p>
+      </div>
+    </section>
+
+    <section class="site-section site-alt" id="site-services">
+      <div class="site-tag center-tag">${s.servicesSection.name}</div>
+      <h2 class="site-h2 center">What we offer</h2>
+      <div class="site-grid">
+        ${s.servicesSection.items.map((it) => `<div class="site-card">
+          <div class="site-card-top"><h3>${it.title}</h3>${it.price ? `<span class="site-price">${it.price}</span>` : ""}</div>
+          <p>${it.blurb}</p></div>`).join("")}
+      </div>
+    </section>
+
+    <section class="site-section" id="site-gallery">
+      <div class="site-tag center-tag">Gallery</div>
+      <h2 class="site-h2 center">A look inside</h2>
+      <div class="site-gallery">
+        ${s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join("")}
+      </div>
+    </section>
+
+    <section class="site-section site-alt" id="site-contact">
+      <div class="site-contact">
+        <div>
+          <div class="site-tag">Get in touch</div>
+          <h2 class="site-h2">${s.hero.primaryCta}</h2>
+          <p class="site-body">We'd love to hear from you. Reach out and we'll respond fast.</p>
+          <div class="site-contact-lines">
+            ${s.contact.lines.map((l) => `<div class="site-contact-line">${icon(l.icon)} ${l.label}</div>`).join("")}
+          </div>
+          <a class="site-btn-wa" href="#" data-activate>${icon("whatsapp")} ${s.hero.primaryCta} on WhatsApp</a>
+        </div>
+        <div class="site-contact-card">
+          <div class="site-mini-map"></div>
+          <div class="site-socials">
+            ${s.contact.socials.map((so) => `<span>${so.k}</span>`).join("") || "<span>Follow us</span>"}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-foot">
+      <span>© ${new Date().getFullYear()} ${s.meta.name}</span>
+      <span class="site-foot-mark">${icon("shield")} Built with KOBIS Berhad</span>
+    </footer>
+
+    <button class="site-float" data-activate>${icon("rocket")} Activate Website Ownership</button>
+  </div>`;
+}
+function wire5(p) {
+  document.querySelectorAll("[data-activate]").forEach((b) => b.addEventListener("click", (e) => {
+    e.preventDefault();
+    openActivation(p);
+  }));
+}
+function openActivation(p) {
+  const sel = { chatbot: false, news: false, emailCount: 0 };
+  const scrim = document.createElement("div");
+  scrim.className = "modal-scrim";
+  scrim.innerHTML = popupHtml(p, sel);
+  scrim.addEventListener("mousedown", (e) => {
+    if (e.target === scrim)
+      scrim.remove();
+  });
+  document.body.appendChild(scrim);
+  const refresh = () => {
+    scrim.querySelector("#pkgSummary").innerHTML = pkgSummary(sel);
+    const q = quote(sel);
+    scrim.querySelector("#waBtn").href = whatsappActivation({ companyName: p.company_name, demoUrl: p.demo_website_url, sel });
+    scrim.querySelector("#waTotal").textContent = RM(q.total);
+  };
+  scrim.querySelector(".modal-x").addEventListener("click", () => scrim.remove());
+  scrim.querySelectorAll("[data-addon]").forEach((el) => el.addEventListener("change", () => {
+    if (el.dataset.addon === "email")
+      sel.emailCount = Number(el.value) || 0;
+    else
+      sel[el.dataset.addon] = el.checked;
+    refresh();
+  }));
+  refresh();
+}
+function popupHtml(p, sel) {
+  return `<div class="modal modal-wide act-modal" role="dialog" aria-modal="true">
+    <div class="act-head">
+      <button class="modal-x">${icon("x")}</button>
+      <div class="act-badge">${icon("rocket")} Selected Business Launch Promotion</div>
+      <h2>Own your website, ${p.company_name}</h2>
+      <div class="act-price"><s>${RM(PRICING.websiteValue)}</s><b>${RM(PRICING.activation)}</b><span>one-time activation</span></div>
+    </div>
+    <div class="act-body">
+      <div class="grid g-2" style="gap:24px">
+        <div>
+          <div class="act-label">Included in activation</div>
+          ${["Website ownership activation", "1-year hosting", "Domain setup", "1 business email", "Admin dashboard access", "Gallery & announcement updates", "Basic technical support"].map((f) => `<div class="act-inc">${icon("check")} ${f}</div>`).join("")}
+          <div class="act-renewal">Then just ${RM(PRICING.renewal)}/year — domain, hosting & maintenance.</div>
+        </div>
+        <div>
+          <div class="act-label">Power it up (optional)</div>
+          <label class="act-addon"><input type="checkbox" data-addon="chatbot"/>
+            <div><b>${PRICING.addons.chatbot.label}</b><span>${PRICING.addons.chatbot.blurb}</span></div><em>${RM(PRICING.addons.chatbot.price)}</em></label>
+          <label class="act-addon"><input type="checkbox" data-addon="news"/>
+            <div><b>${PRICING.addons.news.label}</b><span>${PRICING.addons.news.blurb}</span></div><em>${RM(PRICING.addons.news.price)}</em></label>
+          <label class="act-addon"><span class="act-addon-num"><input class="input" type="number" min="0" value="0" data-addon="email"/></span>
+            <div><b>${PRICING.addons.email.label}</b><span>${PRICING.addons.email.blurb}</span></div><em>${RM(PRICING.addons.email.price)}/yr</em></label>
+          <div id="pkgSummary"></div>
+        </div>
+      </div>
+    </div>
+    <div class="act-foot">
+      <div class="act-foot-total">Total today <b id="waTotal">${RM(PRICING.activation)}</b></div>
+      <a class="btn btn-wa" id="waBtn" target="_blank" href="#">${icon("whatsapp")} Proceed via WhatsApp</a>
+    </div>
+  </div>`;
+}
+function pkgSummary(sel) {
+  const q = quote(sel);
+  return `<div class="act-sum">
+    ${q.lines.map((l) => `<div class="between text-sm"><span class="muted">${l.label}</span><span class="mono fw-600">${RM(l.amount)}</span></div>`).join("")}
+  </div>`;
+}
+
+// js/views/client.js
+function renderClientPortal(id) {
+  const c = clientById(id);
+  if (!c)
+    return `<div class="empty" style="min-height:100vh;display:grid;place-content:center">${icon("users")}<div>Client not found.</div><a class="btn btn-ghost mt-14" href="#/admin/clients">Back</a></div>`;
+  const w = walletForClient(c.id) || { credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0 };
+  const refs = referralsForClient(c.id);
+  const o = orders().find((x) => x.client_id === c.id) || {};
+  const renewDue = daysUntil(c.renewal_due_date);
+  const refLink = `${location.origin}${location.pathname}#/?ref=${c.referral_code}`;
+  const pctTo = Math.min(100, w.credit_balance / PRICING.referral.cashRedeemThreshold * 100);
+  setTimeout(() => wire6(c), 0);
+  return `
+  <div class="cp">
+    <header class="cp-nav">
+      <div class="row gap-12"><div class="brand-mark">${c.company_name[0]}</div>
+        <div><div class="brand-name">${c.company_name}</div><div class="brand-sub">Client Dashboard</div></div></div>
+      <div class="row gap-10">
+        <span class="pill pill-grow">${icon("check")} Active</span>
+        <a class="btn btn-ghost btn-sm" href="${c.activated_website_url}" target="_blank">${icon("eye")} View site</a>
+        <a class="btn btn-ghost btn-sm" href="#/admin/clients">${icon("dashboard")} Engine</a>
+      </div>
+    </header>
+
+    <div class="cp-body">
+      <div class="page-head">
+        <span class="eyebrow">${icon("rocket")} Welcome aboard</span>
+        <h1 class="page-title">Manage ${c.company_name}</h1>
+        <p class="page-sub">Your website is live and yours to manage. Update content anytime — changes publish instantly.</p>
+      </div>
+
+      <div class="grid g-4">
+        ${stat3("money", "t-grow", "Plan", RM(c.package_price))}
+        ${stat3("clock", "t-amber", "Renewal", renewDue + " days")}
+        ${stat3("gift", "t-violet", "Referral credit", RM(w.credit_balance))}
+        ${stat3("users", "t-sky", "Referrals", refs.length)}
+      </div>
+
+      <div class="grid g-3 mt-18">
+        <div class="stack gap-18 span-2">
+          <div class="card">
+            <div class="card-head"><div class="kpi-icon t-violet">${icon("image")}</div><h3>Gallery</h3><span class="sub">add your best photos</span></div>
+            <div class="cp-gallery" id="cpGallery">
+              ${(c.gallery.length ? c.gallery : ["", "", ""]).map((g, i) => g ? `<div class="cp-shot" style="background-image:url('${g}')"></div>` : `<div class="cp-shot empty-shot">${icon("image")}</div>`).join("")}
+              <button class="cp-shot add-shot" id="addShot">${icon("plus")}<span>Add image URL</span></button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="kpi-icon t-amber">${icon("megaphone")}</div><h3>Moving / announcement</h3></div>
+            <div class="field"><textarea class="input" id="announceBox" placeholder="e.g. We're moving to a new location from 1 July! New address: ...">${c.announcement || ""}</textarea></div>
+            <button class="btn btn-primary btn-sm" id="saveAnnounce">${icon("check")} Publish announcement</button>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="kpi-icon t-sky">${icon("phone")}</div><h3>Contact details</h3></div>
+            <div class="field-row">
+              <div class="field"><label>Phone</label><input class="input" id="cPhone" value="${c.phone || ""}"/></div>
+              <div class="field"><label>Email</label><input class="input" id="cEmail" value="${c.email || ""}"/></div>
+            </div>
+            <button class="btn btn-primary btn-sm" id="saveContact">${icon("check")} Save contact</button>
+          </div>
+        </div>
+
+        <div class="stack gap-18">
+          <div class="card cp-referral">
+            <div class="card-head"><div class="kpi-icon t-grow">${icon("gift")}</div><h3>Refer & earn</h3></div>
+            <p class="text-sm muted">Earn <b class="hi">${RM(PRICING.referral.rewardPerActivation)}</b> renewal credit for every business that activates through your link.</p>
+            <div class="field mt-14"><label>Your referral link</label>
+              <div class="row gap-8"><input class="input mono text-xs" id="refLink" readonly value="${refLink}"/>
+                <button class="btn btn-ghost" id="copyRef">${icon("copy")}</button></div>
+            </div>
+            <div class="cp-credit">
+              <div class="between"><span class="text-sm muted">Credit balance</span><span class="kpi-value" style="font-size:22px">${RM(w.credit_balance)}</span></div>
+              <div class="bar mt-8"><i style="width:${pctTo}%"></i></div>
+              <div class="text-xs dim mt-8">${w.credit_balance >= PRICING.referral.cashRedeemThreshold ? "\uD83C\uDF89 Eligible to redeem " + RM(PRICING.referral.cashRedeemThreshold) + " cash!" : RM(PRICING.referral.cashRedeemThreshold - w.credit_balance) + " more to unlock " + RM(PRICING.referral.cashRedeemThreshold) + " cash-out"}</div>
+              ${w.credit_balance >= PRICING.referral.cashRedeemThreshold ? `<button class="btn btn-primary btn-block mt-14" id="redeemBtn">${icon("money")} Redeem ${RM(PRICING.referral.cashRedeemThreshold)} cash</button>` : ""}
+            </div>
+            <div class="divider"></div>
+            <div class="text-xs dim">${refs.length ? "Your referrals" : "No referrals yet — share your link!"}</div>
+            ${refs.map((r) => `<div class="between" style="padding:8px 0;border-bottom:1px solid var(--line-soft)">
+              <span class="text-sm hi">${r.referred_company_name}</span>
+              <span class="pill ${r.activation_status === "confirmed" ? "pill-grow" : "pill-amber"}">${r.activation_status === "confirmed" ? "+" + RM(r.reward_amount) : "pending"}</span></div>`).join("")}
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="kpi-icon t-amber">${icon("money")}</div><h3>Your plan</h3></div>
+            ${[
+    ["Activation", RM(o.activation_fee || 500)],
+    o.ai_chatbot ? ["AI Chatbot", RM(PRICING.addons.chatbot.price)] : null,
+    o.news_module ? ["News Module", RM(PRICING.addons.news.price)] : null,
+    o.extra_email_count ? [`${o.extra_email_count}× Email`, RM(o.extra_email_count * PRICING.addons.email.price)] : null,
+    ["Activated", fmtDate(c.activation_date)],
+    ["Renews", fmtDate(c.renewal_due_date)]
+  ].filter(Boolean).map(([l, v]) => `<div class="between" style="padding:8px 0;border-bottom:1px solid var(--line-soft)"><span class="text-sm muted">${l}</span><span class="text-sm fw-600 hi">${v}</span></div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function stat3(ic, tint, label, value) {
+  return `<div class="card kpi"><div class="kpi-label"><span class="kpi-icon ${tint}">${icon(ic)}</span> ${label}</div><div class="kpi-value" style="font-size:24px">${value}</div></div>`;
+}
+function wire6(c) {
+  document.getElementById("saveAnnounce")?.addEventListener("click", () => {
+    updateClient(c.id, { announcement: document.getElementById("announceBox").value });
+    toast("Announcement published", "amber");
+  });
+  document.getElementById("saveContact")?.addEventListener("click", () => {
+    updateClient(c.id, { phone: document.getElementById("cPhone").value, email: document.getElementById("cEmail").value });
+    toast("Contact details saved");
+  });
+  document.getElementById("addShot")?.addEventListener("click", () => {
+    const url = prompt("Paste an image URL for your gallery:");
+    if (url) {
+      const g = [...c.gallery, url];
+      updateClient(c.id, { gallery: g });
+      toast("Image added to gallery", "violet");
+    }
+  });
+  document.getElementById("copyRef")?.addEventListener("click", () => {
+    navigator.clipboard?.writeText(document.getElementById("refLink").value);
+    toast("Referral link copied", "grow");
+  });
+  document.getElementById("redeemBtn")?.addEventListener("click", () => {
+    if (redeemCash(c.id))
+      toast(`${RM(PRICING.referral.cashRedeemThreshold)} cash redemption requested`, "amber");
+  });
+}
+
+// js/app.js
+await boot();
+var app = document.getElementById("app");
+var NAV = [
+  { group: "Engine", items: [
+    { path: "/admin", label: "Command Center", icon: "dashboard" },
+    { path: "/admin/pipeline", label: "Lead Pipeline", icon: "pipeline", badge: () => prospects().filter((p) => !["activated", "renewal"].includes(p.status)).length },
+    { path: "/admin/prospects", label: "Prospects", icon: "target" }
+  ] },
+  { group: "Revenue", items: [
+    { path: "/admin/clients", label: "Clients & Orders", icon: "money", badge: () => clients().length },
+    { path: "/admin/referrals", label: "Referrals & Credits", icon: "gift" },
+    { path: "/admin/waitlist", label: "Waitlist", icon: "hourglass", badge: () => waitlist().length, roles: ["admin"] }
+  ] },
+  { group: "Public", items: [
+    { path: "/", label: "Launch Hub", icon: "rocket" },
+    { path: "/preview/aimankopi", label: "Sample Preview", icon: "eye" }
+  ] }
+];
+route("/", () => full(renderLanding()));
+route("/preview/:slug", ({ params }) => full(renderPreview(params.slug)));
+route("/client/:id", ({ params }) => full(renderClientPortal(params.id)));
+route("/admin", () => shell(renderDashboard(), "/admin"));
+route("/admin/pipeline", () => shell(renderPipeline(), "/admin/pipeline"));
+route("/admin/prospects", () => shell(renderProspects(), "/admin/prospects"));
+route("/admin/prospect/:id", ({ params }) => shell(renderProspectDetail(params.id), "/admin/prospects"));
+route("/admin/clients", () => shell(renderClients(), "/admin/clients"));
+route("/admin/referrals", () => shell(renderReferrals(), "/admin/referrals"));
+route("/admin/waitlist", () => shell(renderWaitlist(), "/admin/waitlist"));
+setNotFound(() => full(renderLanding()));
+function full(html) {
+  app.innerHTML = `<div class="main">${html}</div>`;
+  window.scrollTo(0, 0);
+}
+function shell(content, active) {
+  const role2 = role();
+  app.innerHTML = `
+    <div class="shell">
+      ${sidebar(active, role2)}
+      <div class="main">
+        ${topbar(active)}
+        <div class="view" id="view">${content}</div>
+      </div>
+    </div>
+    <div class="scrim-nav" id="scrimNav" hidden></div>`;
+  wireShell();
+  window.scrollTo(0, 0);
+}
+function sidebar(active, role2) {
+  const me = team().find((t) => t.role === role2) || team()[0];
+  const groups = NAV.map((g) => {
+    const items = g.items.filter((it) => !it.roles || it.roles.includes(role2));
+    if (!items.length)
+      return "";
+    return `<div class="nav-group-label">${g.group}</div>` + items.map((it) => {
+      const isActive = active === it.path || it.path !== "/" && active.startsWith(it.path) && it.path !== "/admin" || active === it.path;
+      const badge = it.badge ? `<span class="nav-badge">${it.badge()}</span>` : "";
+      return `<a class="nav-item ${active === it.path ? "active" : ""}" href="#${it.path}">${icon(it.icon)}<span>${it.label}</span>${badge}</a>`;
+    }).join("");
+  }).join("");
+  return `<aside class="sidebar" id="sidebar">
+    <a class="brand" href="#/admin">
+      <div class="brand-mark">K</div>
+      <div><div class="brand-name">KOBIS</div><div class="brand-sub">Growth Engine</div></div>
+    </a>
+    ${groups}
+    <div class="sidebar-foot">
+      <div class="text-xs dim" style="padding:0 8px 8px;letter-spacing:.12em;text-transform:uppercase">Access Role</div>
+      <div class="role-switch" id="roleSwitch">
+        <button data-role="admin" class="${role2 === "admin" ? "on" : ""}">Admin</button>
+        <button data-role="sales" class="${role2 === "sales" ? "on" : ""}">Sales Agent</button>
+      </div>
+      <div class="user-chip">
+        <div class="avatar">${me.initials}</div>
+        <div><div class="text-sm fw-600 hi">${me.name}</div><div class="text-xs dim">${me.email}</div></div>
+      </div>
+    </div>
+  </aside>`;
+}
+function topbar(active) {
+  const map = {
+    "/admin": "Command Center",
+    "/admin/pipeline": "Lead Pipeline",
+    "/admin/prospects": "Prospects",
+    "/admin/clients": "Clients & Orders",
+    "/admin/referrals": "Referrals & Credits",
+    "/admin/waitlist": "Waitlist"
+  };
+  const name = map[active] || "Prospect";
+  return `<div class="topbar">
+    <button class="menu-btn" id="menuBtn">${icon("menu")}</button>
+    <div class="crumbs">KOBIS Engine <span class="dim">/</span> <b>${name}</b></div>
+    <div class="topbar-spacer"></div>
+    <a class="btn btn-ghost btn-sm" href="#/" target="_self">${icon("eye")} View Launch Hub</a>
+  </div>`;
+}
+function wireShell() {
+  document.getElementById("roleSwitch")?.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-role]");
+    if (!b)
+      return;
+    setRole(b.dataset.role);
+  });
+  const sb = document.getElementById("sidebar");
+  const scrim = document.getElementById("scrimNav");
+  document.getElementById("menuBtn")?.addEventListener("click", () => {
+    sb.classList.add("open");
+    scrim.hidden = false;
+  });
+  scrim?.addEventListener("click", () => {
+    sb.classList.remove("open");
+    scrim.hidden = true;
+  });
+}
+function render() {
+  const { handler, params, path } = current();
+  handler({ params, path });
+}
+onChange(() => {
+  document.querySelectorAll(".modal-scrim").forEach((el) => el.remove());
+  render();
+});
+subscribe(() => {
+  const { handler, params, path } = current();
+  handler({ params, path });
+});
+render();
+
+</script>
+</body>
+</html>

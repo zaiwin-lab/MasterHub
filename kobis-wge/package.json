@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 8099",
+    "build": "bun build.mjs",
     "test": "node smoke.mjs"
   },
   "devDependencies": {
