@@ -67,6 +67,8 @@ export function generateWebsite(p) {
 
   return {
     meta: { name, category: p.business_category, catLabel, tier, city, handle: brandHandleFrom(name), generatedAt: new Date().toISOString() },
+    tagline: isFood ? `${catLabel} • ${city}` : `${catLabel} based in ${city}, Malaysia`,
+    mapQuery: `${name}, ${city}, Malaysia`,
     theme: themeFor(tier, p.business_category),
     hero: {
       eyebrow: catLabel.toUpperCase(),

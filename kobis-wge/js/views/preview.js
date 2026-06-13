@@ -1,6 +1,8 @@
-// Live website PREVIEW (Module B) + Activation popup (Module C) + WhatsApp (D).
-// Themed per industry from the AI-generated spec. Records opens (Rec 3) and
-// shows a preview-expiry notice (Rec 2). No login required (core UX rule).
+// Live website PREVIEW (Module B) built to the KOBIS Berhad "Standard Client
+// Website" master template: dual KOBIS ticker bars, 4-language switcher
+// (EN/BM/中/IB), Google Maps embed, and the signature footer + KOBIS credit
+// bar. Plus the SaaS layer: activation popup (Module C) → WhatsApp (D),
+// preview-open analytics (Rec 3) and expiry (Rec 2). No login required.
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
 import { RM, daysUntil } from '../lib/ui.js';
@@ -9,6 +11,43 @@ import { quote, whatsappActivation, PRICING } from '../lib/pricing.js';
 // Record each preview open at most once per app session (a store mutation
 // re-renders the active view, so without this guard recordOpen would loop).
 const recorded = new Set();
+let curLang = 'en';
+let curSlug = null;
+
+// ---- 4-language chrome dictionary (business copy stays as generated) -------
+// NOTE: Iban (ib) strings are an auto-draft — have a native speaker review per
+// client. Ticker stays in English by design (see master spec).
+const T = {
+  en: { about:'About', gallery:'Gallery', contact:'Contact', whatWeOffer:'What we offer', aLookInside:'A look inside', getInTouch:'Get in touch', findUs:'Find us', followUs:'Follow us', allRights:'All rights reserved', activate:'Activate Website Ownership' },
+  bm: { about:'Tentang', gallery:'Galeri', contact:'Hubungi', whatWeOffer:'Apa yang kami tawarkan', aLookInside:'Lihat lebih dekat', getInTouch:'Hubungi kami', findUs:'Cari kami', followUs:'Ikuti kami', allRights:'Hak cipta terpelihara', activate:'Aktifkan Pemilikan Laman Web' },
+  zh: { about:'关于', gallery:'图库', contact:'联系', whatWeOffer:'我们的服务', aLookInside:'走进我们', getInTouch:'联系我们', findUs:'找到我们', followUs:'关注我们', allRights:'版权所有', activate:'激活网站所有权' },
+  ib: { about:'Pasal Kami', gallery:'Galeri', contact:'Kontak', whatWeOffer:'Utai ti kami tawarka', aLookInside:'Peda ba dalam', getInTouch:'Kontak kami', findUs:'Giga kami', followUs:'Titih kami', allRights:'Semua hak ditagang', activate:'Aktifka Empu Laman Web' },
+};
+const LANGS = [['en','EN'],['bm','BM'],['zh','中'],['ib','IB']];
+
+// ---- industry ticker icon (inline SVG, 14px, currentColor) ----------------
+const TICKER_ICONS = {
+  food: '<path d="M3 2v7a3 3 0 0 0 6 0V2M6 9v13M17 2c-2 0-3 2-3 5s1 5 3 5 3-2 3-5-1-5-3-5Zm0 10v10"/>',
+  star: '<path d="M12 2l2.6 6.6L21 9.3l-5 4.3 1.6 6.4L12 16.9 6.4 20l1.6-6.4-5-4.3 6.4-.7Z"/>',
+  seedling: '<path d="M12 22V12M12 12C12 8 9 6 4 6c0 4 3 6 8 6Zm0-2c0-3 3-5 8-5 0 3-3 5-8 5Z"/>',
+  snowflake: '<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>',
+  bolt: '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/>',
+  wrench: '<path d="M14 6a4 4 0 0 1 5 5l-9 9-4-4 9-9a4 4 0 0 1-1-1Z"/>',
+  gear: '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2 .5.5 2-2 1-1.5-1.5L14 16l.5 2-2 .5-1-2-2 .5-.5-2L6 16l-1.5 1.5-2-1 .5-2L1 12l2-.5-.5-2 2-1L6 10l2-1.5L7.5 6l2-.5 1 2 2-.5.5 2L16 8l1.5-1.5 2 1-.5 2Z"/>',
+};
+function tickerIconFor(cat) {
+  const map = { cafe:'food', restaurant:'food', catering:'food', 'food-brand':'food', 'home-food':'food',
+    influencer:'star', creator:'star', 'personal-brand':'star', trainer:'star', coach:'star', consultant:'star',
+    contractor:'wrench', aircond:'snowflake', electrical:'bolt', plumbing:'wrench', landscaping:'seedling' };
+  return TICKER_ICONS[map[cat] || 'gear'];
+}
+function tickerSvg(cat) {
+  return `<svg class="ticker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${tickerIconFor(cat)}</svg>`;
+}
+function tickerTrack(cat) {
+  const unit = `<span class="ticker-item">${tickerSvg(cat)} This website is built by KOBIS Berhad</span>`;
+  return `<div class="ticker-track">${unit.repeat(8)}</div>`;
+}
 
 export function renderPreview(slug) {
   const p = store.prospectBySlug(slug);
@@ -17,29 +56,35 @@ export function renderPreview(slug) {
       ${icon('preview')}<div>Preview not found or not yet generated.</div>
       <a class="btn btn-ghost mt-14" href="#/">Back to KOBIS</a></div>`;
   }
-  // record the open once (analytics) — skip inside the admin iframe preview
+  curSlug = slug;
   if (!window.frameElement && !recorded.has(slug)) {
     recorded.add(slug);
     setTimeout(() => store.recordOpen(slug), 600);
   }
 
-  const s = p.website_spec, t = s.theme;
+  const s = p.website_spec, t = s.theme, tr = T[curLang] || T.en, cat = s.meta.category;
   const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(s.mapQuery || (s.meta.name + ', Malaysia'))}&output=embed`;
   setTimeout(() => wire(p), 0);
 
   return `
   <div class="site" style="--site-bg:${t.bg};--site-accent:${t.accent};--site-tint:${t.tint};--site-font:${t.font === 'serif' ? 'Georgia, \'Times New Roman\', serif' : '\'Sora\', sans-serif'}">
+
+    <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+    <div class="ticker-bar ticker-top">${tickerTrack(cat)}</div>
+
     <div class="site-marker">${icon('shield')} Professional Website Preview Prepared by <b>KOBIS Berhad</b>
       ${expiry !== null ? `<span class="site-marker-exp">· preview ${expiry > 0 ? 'expires in ' + expiry + ' days' : 'expired'}</span>` : ''}
-      <button class="site-marker-cta" data-activate>Activate Website Ownership</button>
+      <button class="site-marker-cta" data-activate>${tr.activate}</button>
     </div>
 
     <header class="site-nav">
       <div class="site-logo">${s.meta.name}</div>
       <nav class="site-links">
-        <a href="#site-about">About</a><a href="#site-services">${s.servicesSection.name}</a>
-        <a href="#site-gallery">Gallery</a><a href="#site-contact">Contact</a>
+        <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+        <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
       </nav>
+      <div class="lang-switch">${LANGS.map(([k, l]) => `<button class="${curLang === k ? 'on' : ''}" data-lang="${k}">${l}</button>`).join('')}</div>
       <a class="site-wa" href="#site-contact">${icon('whatsapp')} WhatsApp</a>
     </header>
 
@@ -59,14 +104,14 @@ export function renderPreview(slug) {
 
     <section class="site-section" id="site-about">
       <div class="site-2col">
-        <div><div class="site-tag">About</div><h2 class="site-h2">${s.about.title}</h2></div>
+        <div><div class="site-tag">${tr.about}</div><h2 class="site-h2">${s.about.title}</h2></div>
         <p class="site-body">${s.about.body}</p>
       </div>
     </section>
 
     <section class="site-section site-alt" id="site-services">
       <div class="site-tag center-tag">${s.servicesSection.name}</div>
-      <h2 class="site-h2 center">What we offer</h2>
+      <h2 class="site-h2 center">${tr.whatWeOffer}</h2>
       <div class="site-grid">
         ${s.servicesSection.items.map(it => `<div class="site-card">
           <div class="site-card-top"><h3>${it.title}</h3>${it.price ? `<span class="site-price">${it.price}</span>` : ''}</div>
@@ -75,17 +120,20 @@ export function renderPreview(slug) {
     </section>
 
     <section class="site-section" id="site-gallery">
-      <div class="site-tag center-tag">Gallery</div>
-      <h2 class="site-h2 center">A look inside</h2>
+      <div class="site-tag center-tag">${tr.gallery}</div>
+      <h2 class="site-h2 center">${tr.aLookInside}</h2>
       <div class="site-gallery">
         ${s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join('')}
       </div>
     </section>
 
+    <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+    <div class="ticker-bar ticker-mid">${tickerTrack(cat)}</div>
+
     <section class="site-section site-alt" id="site-contact">
       <div class="site-contact">
         <div>
-          <div class="site-tag">Get in touch</div>
+          <div class="site-tag">${tr.getInTouch}</div>
           <h2 class="site-h2">${s.hero.primaryCta}</h2>
           <p class="site-body">We'd love to hear from you. Reach out and we'll respond fast.</p>
           <div class="site-contact-lines">
@@ -94,28 +142,56 @@ export function renderPreview(slug) {
           <a class="site-btn-wa" href="#" data-activate>${icon('whatsapp')} ${s.hero.primaryCta} on WhatsApp</a>
         </div>
         <div class="site-contact-card">
-          <div class="site-mini-map"></div>
-          <div class="site-socials">
-            ${s.contact.socials.map(so => `<span>${so.k}</span>`).join('') || '<span>Follow us</span>'}
+          <div class="site-tag" style="margin-bottom:10px">${tr.findUs}</div>
+          <div class="map-embed">
+            <iframe src="${mapSrc}" width="100%" height="240" style="border:0" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade" title="${s.meta.name} map"></iframe>
+          </div>
+          <div class="site-socials"><span class="dim-label">${tr.followUs}:</span>
+            ${s.contact.socials.map(so => `<span>${so.k}</span>`).join('') || '<span>—</span>'}
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="site-foot">
-      <span>© ${new Date().getFullYear()} ${s.meta.name}</span>
-      <span class="site-foot-mark">${icon('shield')} Built with KOBIS Berhad</span>
+    <!-- Signature KOBIS footer: brand block + tagline + copyright + credit bar -->
+    <footer class="site-foot-wrap">
+      <div class="site-foot-main">
+        <div class="footer-brand">
+          <div class="footer-mark">${s.meta.name[0]}</div>
+          <div>
+            <div class="footer-name">${s.meta.name}</div>
+            <div class="footer-tagline">${s.tagline || s.meta.catLabel}</div>
+          </div>
+        </div>
+        <nav class="footer-links">
+          <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+          <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
+        </nav>
+      </div>
+      <div class="footer-copy"><p>© ${new Date().getFullYear()} ${s.meta.name}. ${tr.allRights}.</p></div>
+      <div class="kobis-bar">
+        This Digital Experience is Part of the
+        <a class="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>
+        Innovation Ecosystem
+      </div>
     </footer>
 
-    <button class="site-float" data-activate>${icon('rocket')} Activate Website Ownership</button>
+    <button class="site-float" data-activate>${icon('rocket')} ${tr.activate}</button>
   </div>`;
 }
 
-// ---- activation popup (Module C → D) -------------------------------------
+// ---- interaction ---------------------------------------------------------
 function wire(p) {
   document.querySelectorAll('[data-activate]').forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openActivation(p); }));
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    curLang = b.dataset.lang;
+    const host = document.querySelector('.main');
+    if (host) { host.innerHTML = renderPreview(curSlug); }
+  }));
 }
 
+// ---- activation popup (Module C → D) -------------------------------------
 function openActivation(p) {
   const sel = { chatbot: false, news: false, emailCount: 0 };
   const scrim = document.createElement('div');

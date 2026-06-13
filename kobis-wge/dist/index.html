@@ -416,7 +416,7 @@ textarea.input { resize: vertical; min-height: 90px; line-height: 1.5; }
 
 /* ============================ BUSINESS PREVIEW SITE ===================== */
 .site { background: var(--site-bg); color: var(--site-tint); font-family: var(--site-font); min-height: 100vh; }
-.site-marker { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 9px 16px; font-size: 12.5px; font-family: var(--font-body); background: var(--grow); color: #06231a; font-weight: 600; }
+.site-marker { position: sticky; top: 32px; z-index: 50; display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 9px 16px; font-size: 12.5px; font-family: var(--font-body); background: var(--grow); color: #06231a; font-weight: 600; }
 .site-marker svg { width: 15px; height: 15px; }
 .site-marker-exp { opacity: .8; }
 .site-marker-cta { margin-left: 10px; background: #06231a; color: var(--grow); font-weight: 700; font-size: 12px; padding: 5px 13px; border-radius: 999px; font-family: var(--font-body); }
@@ -560,6 +560,45 @@ textarea.input { resize: vertical; min-height: 90px; line-height: 1.5; }
 @media (max-width: 640px) { .cp-gallery { grid-template-columns: 1fr 1fr; } }
 .cp-referral { background: linear-gradient(180deg, #0a1a14, var(--ink-850)); border-color: var(--grow-glow); }
 .cp-credit { margin-top: 16px; padding: 16px; background: var(--ink-900); border-radius: 14px; }
+
+/* ============================ KOBIS TICKER BARS ========================== */
+.ticker-bar { width: 100%; overflow: hidden; white-space: nowrap; }
+.ticker-top { position: sticky; top: 0; z-index: 60; height: 32px; background: color-mix(in srgb, var(--site-bg) 70%, #000); border-bottom: 1px solid #ffffff14; }
+.ticker-mid { height: 30px; opacity: .35; margin: 8px 0; }
+.ticker-track { display: inline-flex; align-items: center; height: 100%; gap: 0; animation: ticker-scroll 22s linear infinite; will-change: transform; }
+.ticker-item { display: inline-flex; align-items: center; gap: 6px; padding: 0 22px; font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--site-accent); text-transform: uppercase; }
+.ticker-icon { width: 14px; height: 14px; vertical-align: -2px; flex: none; }
+@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+/* language switcher in nav */
+.lang-switch { display: inline-flex; gap: 2px; background: #ffffff12; border: 1px solid #ffffff1f; border-radius: 999px; padding: 3px; margin-left: 6px; font-family: var(--font-body); }
+.lang-switch button { font-size: 11.5px; font-weight: 700; padding: 4px 9px; border-radius: 999px; color: var(--site-tint); opacity: .75; transition: all .2s; }
+.lang-switch button.on { background: var(--site-accent); color: var(--site-bg); opacity: 1; }
+.lang-switch button:hover { opacity: 1; }
+@media (max-width: 720px) { .lang-switch { order: 3; } }
+
+/* Google Maps embed */
+.map-embed { border-radius: 14px; overflow: hidden; border: 1px solid #ffffff14; line-height: 0; }
+.map-embed iframe { display: block; filter: grayscale(.2) contrast(1.05); }
+.dim-label { opacity: .6; font-size: 12px; }
+
+/* ============================ SIGNATURE FOOTER ========================== */
+.site-foot-wrap { font-family: var(--font-body); border-top: 1px solid #ffffff14; }
+.site-foot-main { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 36px clamp(20px,6vw,72px) 24px; max-width: 1180px; margin: 0 auto; }
+.footer-brand { display: flex; align-items: center; gap: 14px; }
+.footer-mark { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-family: var(--site-font); font-weight: 700; font-size: 22px; color: var(--site-bg); background: var(--site-accent); }
+.footer-name { font-family: var(--site-font); font-size: 19px; color: #fff; font-weight: 700; }
+.footer-tagline { font-size: 13px; opacity: .7; margin-top: 2px; }
+.footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer-links a { font-size: 14px; color: var(--site-tint); opacity: .8; transition: opacity .2s; }
+.footer-links a:hover { opacity: 1; color: var(--site-accent); }
+.footer-copy { text-align: center; padding: 16px 20px; font-size: 13px; opacity: .6; border-top: 1px solid #ffffff0d; }
+
+/* KOBIS Berhad credit bar — permanent agency credit */
+.kobis-bar { height: 0.75in; display: flex; align-items: center; justify-content: center; gap: 5px; text-align: center; padding: 0 16px; background: #00000038; font-size: .72rem; font-weight: 300; color: rgba(255,255,255,.85); letter-spacing: .02em; }
+.kobis-bar .kobis-link { font-weight: 600; color: rgba(255,255,255,.95); text-decoration: none; transition: all .3s ease; }
+.kobis-bar .kobis-link:hover { background: linear-gradient(135deg, var(--site-tint), var(--site-accent), var(--site-bg)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2300e5a0'/><text x='50' y='70' font-size='60' font-family='sans-serif' font-weight='800' fill='%2307090f' text-anchor='middle'>K</text></svg>" />
@@ -798,6 +837,8 @@ function generateWebsite(p) {
   }));
   return {
     meta: { name, category: p.business_category, catLabel, tier, city, handle: brandHandleFrom(name), generatedAt: new Date().toISOString() },
+    tagline: isFood ? `${catLabel} • ${city}` : `${catLabel} based in ${city}, Malaysia`,
+    mapQuery: `${name}, ${city}, Malaysia`,
     theme: themeFor(tier, p.business_category),
     hero: {
       eyebrow: catLabel.toUpperCase(),
@@ -2561,6 +2602,52 @@ function wire4() {
 
 // js/views/preview.js
 var recorded = new Set;
+var curLang = "en";
+var curSlug = null;
+var T = {
+  en: { about: "About", gallery: "Gallery", contact: "Contact", whatWeOffer: "What we offer", aLookInside: "A look inside", getInTouch: "Get in touch", findUs: "Find us", followUs: "Follow us", allRights: "All rights reserved", activate: "Activate Website Ownership" },
+  bm: { about: "Tentang", gallery: "Galeri", contact: "Hubungi", whatWeOffer: "Apa yang kami tawarkan", aLookInside: "Lihat lebih dekat", getInTouch: "Hubungi kami", findUs: "Cari kami", followUs: "Ikuti kami", allRights: "Hak cipta terpelihara", activate: "Aktifkan Pemilikan Laman Web" },
+  zh: { about: "关于", gallery: "图库", contact: "联系", whatWeOffer: "我们的服务", aLookInside: "走进我们", getInTouch: "联系我们", findUs: "找到我们", followUs: "关注我们", allRights: "版权所有", activate: "激活网站所有权" },
+  ib: { about: "Pasal Kami", gallery: "Galeri", contact: "Kontak", whatWeOffer: "Utai ti kami tawarka", aLookInside: "Peda ba dalam", getInTouch: "Kontak kami", findUs: "Giga kami", followUs: "Titih kami", allRights: "Semua hak ditagang", activate: "Aktifka Empu Laman Web" }
+};
+var LANGS = [["en", "EN"], ["bm", "BM"], ["zh", "中"], ["ib", "IB"]];
+var TICKER_ICONS = {
+  food: '<path d="M3 2v7a3 3 0 0 0 6 0V2M6 9v13M17 2c-2 0-3 2-3 5s1 5 3 5 3-2 3-5-1-5-3-5Zm0 10v10"/>',
+  star: '<path d="M12 2l2.6 6.6L21 9.3l-5 4.3 1.6 6.4L12 16.9 6.4 20l1.6-6.4-5-4.3 6.4-.7Z"/>',
+  seedling: '<path d="M12 22V12M12 12C12 8 9 6 4 6c0 4 3 6 8 6Zm0-2c0-3 3-5 8-5 0 3-3 5-8 5Z"/>',
+  snowflake: '<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>',
+  bolt: '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/>',
+  wrench: '<path d="M14 6a4 4 0 0 1 5 5l-9 9-4-4 9-9a4 4 0 0 1-1-1Z"/>',
+  gear: '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2 .5.5 2-2 1-1.5-1.5L14 16l.5 2-2 .5-1-2-2 .5-.5-2L6 16l-1.5 1.5-2-1 .5-2L1 12l2-.5-.5-2 2-1L6 10l2-1.5L7.5 6l2-.5 1 2 2-.5.5 2L16 8l1.5-1.5 2 1-.5 2Z"/>'
+};
+function tickerIconFor(cat) {
+  const map = {
+    cafe: "food",
+    restaurant: "food",
+    catering: "food",
+    "food-brand": "food",
+    "home-food": "food",
+    influencer: "star",
+    creator: "star",
+    "personal-brand": "star",
+    trainer: "star",
+    coach: "star",
+    consultant: "star",
+    contractor: "wrench",
+    aircond: "snowflake",
+    electrical: "bolt",
+    plumbing: "wrench",
+    landscaping: "seedling"
+  };
+  return TICKER_ICONS[map[cat] || "gear"];
+}
+function tickerSvg(cat) {
+  return `<svg class="ticker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${tickerIconFor(cat)}</svg>`;
+}
+function tickerTrack(cat) {
+  const unit = `<span class="ticker-item">${tickerSvg(cat)} This website is built by KOBIS Berhad</span>`;
+  return `<div class="ticker-track">${unit.repeat(8)}</div>`;
+}
 function renderPreview(slug2) {
   const p = prospectBySlug(slug2);
   if (!p || !p.website_spec) {
@@ -2568,26 +2655,33 @@ function renderPreview(slug2) {
       ${icon("preview")}<div>Preview not found or not yet generated.</div>
       <a class="btn btn-ghost mt-14" href="#/">Back to KOBIS</a></div>`;
   }
+  curSlug = slug2;
   if (!window.frameElement && !recorded.has(slug2)) {
     recorded.add(slug2);
     setTimeout(() => recordOpen(slug2), 600);
   }
-  const s = p.website_spec, t = s.theme;
+  const s = p.website_spec, t = s.theme, tr = T[curLang] || T.en, cat = s.meta.category;
   const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(s.mapQuery || s.meta.name + ", Malaysia")}&output=embed`;
   setTimeout(() => wire5(p), 0);
   return `
   <div class="site" style="--site-bg:${t.bg};--site-accent:${t.accent};--site-tint:${t.tint};--site-font:${t.font === "serif" ? "Georgia, 'Times New Roman', serif" : "'Sora', sans-serif"}">
+
+    <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+    <div class="ticker-bar ticker-top">${tickerTrack(cat)}</div>
+
     <div class="site-marker">${icon("shield")} Professional Website Preview Prepared by <b>KOBIS Berhad</b>
       ${expiry !== null ? `<span class="site-marker-exp">· preview ${expiry > 0 ? "expires in " + expiry + " days" : "expired"}</span>` : ""}
-      <button class="site-marker-cta" data-activate>Activate Website Ownership</button>
+      <button class="site-marker-cta" data-activate>${tr.activate}</button>
     </div>
 
     <header class="site-nav">
       <div class="site-logo">${s.meta.name}</div>
       <nav class="site-links">
-        <a href="#site-about">About</a><a href="#site-services">${s.servicesSection.name}</a>
-        <a href="#site-gallery">Gallery</a><a href="#site-contact">Contact</a>
+        <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+        <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
       </nav>
+      <div class="lang-switch">${LANGS.map(([k, l]) => `<button class="${curLang === k ? "on" : ""}" data-lang="${k}">${l}</button>`).join("")}</div>
       <a class="site-wa" href="#site-contact">${icon("whatsapp")} WhatsApp</a>
     </header>
 
@@ -2607,14 +2701,14 @@ function renderPreview(slug2) {
 
     <section class="site-section" id="site-about">
       <div class="site-2col">
-        <div><div class="site-tag">About</div><h2 class="site-h2">${s.about.title}</h2></div>
+        <div><div class="site-tag">${tr.about}</div><h2 class="site-h2">${s.about.title}</h2></div>
         <p class="site-body">${s.about.body}</p>
       </div>
     </section>
 
     <section class="site-section site-alt" id="site-services">
       <div class="site-tag center-tag">${s.servicesSection.name}</div>
-      <h2 class="site-h2 center">What we offer</h2>
+      <h2 class="site-h2 center">${tr.whatWeOffer}</h2>
       <div class="site-grid">
         ${s.servicesSection.items.map((it) => `<div class="site-card">
           <div class="site-card-top"><h3>${it.title}</h3>${it.price ? `<span class="site-price">${it.price}</span>` : ""}</div>
@@ -2623,17 +2717,20 @@ function renderPreview(slug2) {
     </section>
 
     <section class="site-section" id="site-gallery">
-      <div class="site-tag center-tag">Gallery</div>
-      <h2 class="site-h2 center">A look inside</h2>
+      <div class="site-tag center-tag">${tr.gallery}</div>
+      <h2 class="site-h2 center">${tr.aLookInside}</h2>
       <div class="site-gallery">
         ${s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join("")}
       </div>
     </section>
 
+    <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+    <div class="ticker-bar ticker-mid">${tickerTrack(cat)}</div>
+
     <section class="site-section site-alt" id="site-contact">
       <div class="site-contact">
         <div>
-          <div class="site-tag">Get in touch</div>
+          <div class="site-tag">${tr.getInTouch}</div>
           <h2 class="site-h2">${s.hero.primaryCta}</h2>
           <p class="site-body">We'd love to hear from you. Reach out and we'll respond fast.</p>
           <div class="site-contact-lines">
@@ -2642,26 +2739,55 @@ function renderPreview(slug2) {
           <a class="site-btn-wa" href="#" data-activate>${icon("whatsapp")} ${s.hero.primaryCta} on WhatsApp</a>
         </div>
         <div class="site-contact-card">
-          <div class="site-mini-map"></div>
-          <div class="site-socials">
-            ${s.contact.socials.map((so) => `<span>${so.k}</span>`).join("") || "<span>Follow us</span>"}
+          <div class="site-tag" style="margin-bottom:10px">${tr.findUs}</div>
+          <div class="map-embed">
+            <iframe src="${mapSrc}" width="100%" height="240" style="border:0" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade" title="${s.meta.name} map"></iframe>
+          </div>
+          <div class="site-socials"><span class="dim-label">${tr.followUs}:</span>
+            ${s.contact.socials.map((so) => `<span>${so.k}</span>`).join("") || "<span>—</span>"}
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="site-foot">
-      <span>© ${new Date().getFullYear()} ${s.meta.name}</span>
-      <span class="site-foot-mark">${icon("shield")} Built with KOBIS Berhad</span>
+    <!-- Signature KOBIS footer: brand block + tagline + copyright + credit bar -->
+    <footer class="site-foot-wrap">
+      <div class="site-foot-main">
+        <div class="footer-brand">
+          <div class="footer-mark">${s.meta.name[0]}</div>
+          <div>
+            <div class="footer-name">${s.meta.name}</div>
+            <div class="footer-tagline">${s.tagline || s.meta.catLabel}</div>
+          </div>
+        </div>
+        <nav class="footer-links">
+          <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+          <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
+        </nav>
+      </div>
+      <div class="footer-copy"><p>© ${new Date().getFullYear()} ${s.meta.name}. ${tr.allRights}.</p></div>
+      <div class="kobis-bar">
+        This Digital Experience is Part of the
+        <a class="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>
+        Innovation Ecosystem
+      </div>
     </footer>
 
-    <button class="site-float" data-activate>${icon("rocket")} Activate Website Ownership</button>
+    <button class="site-float" data-activate>${icon("rocket")} ${tr.activate}</button>
   </div>`;
 }
 function wire5(p) {
   document.querySelectorAll("[data-activate]").forEach((b) => b.addEventListener("click", (e) => {
     e.preventDefault();
     openActivation(p);
+  }));
+  document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => {
+    curLang = b.dataset.lang;
+    const host2 = document.querySelector(".main");
+    if (host2) {
+      host2.innerHTML = renderPreview(curSlug);
+    }
   }));
 }
 function openActivation(p) {

@@ -97,7 +97,7 @@
 
 /* ============================ BUSINESS PREVIEW SITE ===================== */
 .site { background: var(--site-bg); color: var(--site-tint); font-family: var(--site-font); min-height: 100vh; }
-.site-marker { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 9px 16px; font-size: 12.5px; font-family: var(--font-body); background: var(--grow); color: #06231a; font-weight: 600; }
+.site-marker { position: sticky; top: 32px; z-index: 50; display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 9px 16px; font-size: 12.5px; font-family: var(--font-body); background: var(--grow); color: #06231a; font-weight: 600; }
 .site-marker svg { width: 15px; height: 15px; }
 .site-marker-exp { opacity: .8; }
 .site-marker-cta { margin-left: 10px; background: #06231a; color: var(--grow); font-weight: 700; font-size: 12px; padding: 5px 13px; border-radius: 999px; font-family: var(--font-body); }
@@ -241,3 +241,42 @@
 @media (max-width: 640px) { .cp-gallery { grid-template-columns: 1fr 1fr; } }
 .cp-referral { background: linear-gradient(180deg, #0a1a14, var(--ink-850)); border-color: var(--grow-glow); }
 .cp-credit { margin-top: 16px; padding: 16px; background: var(--ink-900); border-radius: 14px; }
+
+/* ============================ KOBIS TICKER BARS ========================== */
+.ticker-bar { width: 100%; overflow: hidden; white-space: nowrap; }
+.ticker-top { position: sticky; top: 0; z-index: 60; height: 32px; background: color-mix(in srgb, var(--site-bg) 70%, #000); border-bottom: 1px solid #ffffff14; }
+.ticker-mid { height: 30px; opacity: .35; margin: 8px 0; }
+.ticker-track { display: inline-flex; align-items: center; height: 100%; gap: 0; animation: ticker-scroll 22s linear infinite; will-change: transform; }
+.ticker-item { display: inline-flex; align-items: center; gap: 6px; padding: 0 22px; font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--site-accent); text-transform: uppercase; }
+.ticker-icon { width: 14px; height: 14px; vertical-align: -2px; flex: none; }
+@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+/* language switcher in nav */
+.lang-switch { display: inline-flex; gap: 2px; background: #ffffff12; border: 1px solid #ffffff1f; border-radius: 999px; padding: 3px; margin-left: 6px; font-family: var(--font-body); }
+.lang-switch button { font-size: 11.5px; font-weight: 700; padding: 4px 9px; border-radius: 999px; color: var(--site-tint); opacity: .75; transition: all .2s; }
+.lang-switch button.on { background: var(--site-accent); color: var(--site-bg); opacity: 1; }
+.lang-switch button:hover { opacity: 1; }
+@media (max-width: 720px) { .lang-switch { order: 3; } }
+
+/* Google Maps embed */
+.map-embed { border-radius: 14px; overflow: hidden; border: 1px solid #ffffff14; line-height: 0; }
+.map-embed iframe { display: block; filter: grayscale(.2) contrast(1.05); }
+.dim-label { opacity: .6; font-size: 12px; }
+
+/* ============================ SIGNATURE FOOTER ========================== */
+.site-foot-wrap { font-family: var(--font-body); border-top: 1px solid #ffffff14; }
+.site-foot-main { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 36px clamp(20px,6vw,72px) 24px; max-width: 1180px; margin: 0 auto; }
+.footer-brand { display: flex; align-items: center; gap: 14px; }
+.footer-mark { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-family: var(--site-font); font-weight: 700; font-size: 22px; color: var(--site-bg); background: var(--site-accent); }
+.footer-name { font-family: var(--site-font); font-size: 19px; color: #fff; font-weight: 700; }
+.footer-tagline { font-size: 13px; opacity: .7; margin-top: 2px; }
+.footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer-links a { font-size: 14px; color: var(--site-tint); opacity: .8; transition: opacity .2s; }
+.footer-links a:hover { opacity: 1; color: var(--site-accent); }
+.footer-copy { text-align: center; padding: 16px 20px; font-size: 13px; opacity: .6; border-top: 1px solid #ffffff0d; }
+
+/* KOBIS Berhad credit bar — permanent agency credit */
+.kobis-bar { height: 0.75in; display: flex; align-items: center; justify-content: center; gap: 5px; text-align: center; padding: 0 16px; background: #00000038; font-size: .72rem; font-weight: 300; color: rgba(255,255,255,.85); letter-spacing: .02em; }
+.kobis-bar .kobis-link { font-weight: 600; color: rgba(255,255,255,.95); text-decoration: none; transition: all .3s ease; }
+.kobis-bar .kobis-link:hover { background: linear-gradient(135deg, var(--site-tint), var(--site-accent), var(--site-bg)); -webkit-background-clip: text; background-clip: text; color: transparent; }
