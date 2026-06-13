@@ -152,16 +152,14 @@ function load() {
   try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch {}
   return null;
 }
-let syncTimer = null;
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {}
-  // Write-through to Supabase when configured (debounced, fire-and-forget).
-  if (db && db.role !== undefined && remote.isConfigured()) {
-    clearTimeout(syncTimer);
-    syncTimer = setTimeout(() => remote.pushAll(db), 800);
-  }
+  try { localStorage.setItem(KEY, JSON.stringify(db)); }
+  catch (e) { console.warn('[KOBIS] local cache full — Supabase remains source of truth'); }
   emit();
 }
+// Row-level write-through: sync only what changed (no whole-table re-uploads).
+function sync(table, ...rows) { if (remote.isConfigured()) remote.upsertRows(table, rows.filter(Boolean)); }
+function syncDel(table, id) { if (remote.isConfigured()) remote.deleteRow(table, id); }
 function emit() { listeners.forEach(fn => fn(db)); }
 
 export function init() { db = load() || seed(); return db; }
@@ -225,6 +223,10 @@ export const referralsForClient = (id) => db.referrals.filter(r => r.referrer_cl
 export function setRole(r) { db.role = r; persist(); }
 
 export function addProspect(data) {
+  // basic input hygiene (A5)
+  if (data.followers != null) data.followers = Math.max(0, Math.min(100000000, Number(data.followers) || 0));
+  ['company_name', 'contact_person', 'city'].forEach(k => { if (typeof data[k] === 'string') data[k] = data[k].trim().slice(0, 120); });
+  if (typeof data.business_description === 'string') data.business_description = data.business_description.slice(0, 2000);
   const sc = scoreProspect(data);
   const p = {
     id: uid('prs'), status: 'identified', score: sc.total, created_at: now(),
@@ -234,6 +236,7 @@ export function addProspect(data) {
   };
   db.prospects.unshift(p);
   persist();
+  sync('prospects', p);
   return p;
 }
 
@@ -244,6 +247,7 @@ export function updateProspect(id, patch) {
     p.score = scoreProspect(p).total;
   }
   persist();
+  sync('prospects', p);
   return p;
 }
 
@@ -262,6 +266,7 @@ export function generateForProspect(id) {
     preview_expires_at: p.preview_expires_at || daysFromNow(14),
   });
   persist();
+  sync('prospects', p);
   return p;
 }
 
@@ -274,6 +279,7 @@ export function recordOpen(slugStr) {
   if (['generated', 'sent'].includes(p.status) && p.status !== 'sent') p.status = 'sent';
   db.link_events.push({ id: uid('evt'), prospect_id: p.id, type: 'open', created_at: now() });
   persist();
+  sync('prospects', p);
 }
 
 // Activation: create client + order + wallet, award referral (Rec 5 timing)
@@ -287,28 +293,33 @@ export function activateProspect(id, sel) {
     referral_code: p.demo_slug || slug(p.company_name), gallery: [], announcement: '', created_at: now(),
   };
   db.clients.unshift(c);
-  db.orders.unshift({
+  const order = {
     id: uid('ord'), client_id: c.id, activation_fee: 500, ai_chatbot: !!sel.chatbot,
     news_module: !!sel.news, extra_email_count: Number(sel.emailCount) || 0,
     total_amount: total, payment_status: 'confirmed', created_at: now(),
-  });
-  db.credit_wallets.push({ id: uid('wal'), client_id: c.id, credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0, updated_at: now() });
+  };
+  db.orders.unshift(order);
+  const wallet = { id: uid('wal'), client_id: c.id, credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0, updated_at: now() };
+  db.credit_wallets.push(wallet);
   p.status = 'activated';
 
   // Referral attribution (Rec 5 + Rec 8): credit referrer on payment confirmed
+  let refRow = null, refWallet = null;
   if (p.referred_by) {
     const refClient = db.clients.find(cl => cl.referral_code === p.referred_by);
     if (refClient) {
-      db.referrals.push({ id: uid('ref'), referrer_client_id: refClient.id, referred_company_name: p.company_name, referred_client_id: c.id, activation_status: 'confirmed', reward_amount: PRICING.referral.rewardPerActivation, reward_type: 'renewal_credit', created_at: now() });
-      const w = walletForClient(refClient.id);
-      if (w) { w.credit_balance += PRICING.referral.rewardPerActivation; w.total_credit_earned += PRICING.referral.rewardPerActivation; w.updated_at = now(); }
+      refRow = { id: uid('ref'), referrer_client_id: refClient.id, referred_company_name: p.company_name, referred_client_id: c.id, activation_status: 'confirmed', reward_amount: PRICING.referral.rewardPerActivation, reward_type: 'renewal_credit', created_at: now() };
+      db.referrals.push(refRow);
+      refWallet = walletForClient(refClient.id);
+      if (refWallet) { refWallet.credit_balance += PRICING.referral.rewardPerActivation; refWallet.total_credit_earned += PRICING.referral.rewardPerActivation; refWallet.updated_at = now(); }
     }
   }
   persist();
+  sync('clients', c); sync('orders', order); sync('credit_wallets', wallet, refWallet); sync('prospects', p); sync('referrals', refRow);
   return c;
 }
 
-export function updateClient(id, patch) { const c = clientById(id); if (c) { Object.assign(c, patch); persist(); } return c; }
+export function updateClient(id, patch) { const c = clientById(id); if (c) { Object.assign(c, patch); persist(); sync('clients', c); } return c; }
 
 export function redeemCash(clientId) {
   const w = walletForClient(clientId); if (!w || w.credit_balance < PRICING.referral.cashRedeemThreshold) return false;
@@ -316,12 +327,29 @@ export function redeemCash(clientId) {
   w.cash_redeemed += PRICING.referral.cashRedeemThreshold;
   w.updated_at = now();
   persist();
+  sync('credit_wallets', w);
   return true;
 }
 
 export function joinWaitlist(data) {
   const w = { id: uid('wl'), position: db.waitlist.length + 1, created_at: now(), ...data };
-  db.waitlist.push(w); persist(); return w;
+  ['company_name', 'contact_person', 'email', 'referral_code'].forEach(k => { if (typeof w[k] === 'string') w[k] = w[k].trim().slice(0, 160); });
+  db.waitlist.push(w); persist(); sync('waitlist', w); return w;
+}
+
+// Remove a waitlist entry locally AND remotely (no resurrection).
+export function removeWaitlist(id) {
+  const i = db.waitlist.findIndex(x => x.id === id);
+  if (i > -1) db.waitlist.splice(i, 1);
+  persist(); syncDel('waitlist', id);
+}
+
+// Load a single prospect by preview slug if it isn't already in memory (scale).
+export async function fetchProspectBySlug(slugStr) {
+  if (prospectBySlug(slugStr)) return prospectBySlug(slugStr);
+  const data = await remote.fetchBySlug(slugStr);
+  if (data) { db.prospects.push(data); return data; }
+  return null;
 }
 
 export { slug, daysFromNow };

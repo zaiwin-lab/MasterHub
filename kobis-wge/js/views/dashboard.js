@@ -1,7 +1,7 @@
 // Admin Command Center — KPIs, revenue, pipeline health, automation feed.
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { metrics, byStatus, RM, pct, sparkline, fmtShort, timeAgo } from '../lib/ui.js';
+import { metrics, byStatus, RM, pct, sparkline, fmtShort, timeAgo, esc } from '../lib/ui.js';
 import { band, QUALIFY_THRESHOLD } from '../lib/scoring.js';
 
 export function renderDashboard() {
@@ -107,7 +107,7 @@ function hotLeads() {
     const b = band(p.score);
     return `<a class="lead-card" href="#/admin/prospect/${p.id}">
       <div class="lc-top">
-        <div><div class="lc-name">${p.company_name}</div><div class="lc-cat">${p.city} · ${(p.followers/1000).toFixed(1)}k followers</div></div>
+        <div><div class="lc-name">${esc(p.company_name)}</div><div class="lc-cat">${esc(p.city)} · ${(p.followers/1000).toFixed(1)}k followers</div></div>
         <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
       </div>
     </a>`;
@@ -118,13 +118,13 @@ function activityFeed() {
   // Synthesize a feed from recent data points
   const items = [];
   store.prospects().filter(p => p.website_spec).slice(0,3).forEach(p =>
-    items.push(['spark','violet', `AI generated a website for <b>${p.company_name}</b>`, p.created_at]));
+    items.push(['spark','violet', `AI generated a website for <b>${esc(p.company_name)}</b>`, p.created_at]));
   store.prospects().filter(p => p.analytics?.opens > 0).sort((a,b)=>new Date(b.analytics.lastOpenedAt)-new Date(a.analytics.lastOpenedAt)).slice(0,3).forEach(p =>
-    items.push(['eye','sky', `<b>${p.company_name}</b> opened their preview (${p.analytics.opens}×)`, p.analytics.lastOpenedAt]));
+    items.push(['eye','sky', `<b>${esc(p.company_name)}</b> opened their preview (${p.analytics.opens}×)`, p.analytics.lastOpenedAt]));
   store.referrals().filter(r=>r.activation_status==='confirmed').slice(0,2).forEach(r =>
-    items.push(['gift','amber', `Referral credit awarded for <b>${r.referred_company_name}</b>`, r.created_at]));
+    items.push(['gift','amber', `Referral credit awarded for <b>${esc(r.referred_company_name)}</b>`, r.created_at]));
   store.clients().slice(0,2).forEach(c =>
-    items.push(['rocket','grow', `<b>${c.company_name}</b> activated · ${RM(c.package_price)}`, c.activation_date]));
+    items.push(['rocket','grow', `<b>${esc(c.company_name)}</b> activated · ${RM(c.package_price)}`, c.activation_date]));
 
   items.sort((a,b) => new Date(b[3]) - new Date(a[3]));
   return `<div class="stack">${items.slice(0,7).map(([ic,col,txt,t]) => `

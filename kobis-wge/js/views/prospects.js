@@ -2,7 +2,7 @@
 // the WhatsApp follow-up SOP, preview expiry, and activation.
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { RM, timeAgo, fmtDate, daysUntil, toast } from '../lib/ui.js';
+import { RM, timeAgo, fmtDate, daysUntil, toast, esc } from '../lib/ui.js';
 import { openModal, closeModal } from '../lib/modal.js';
 import { scoreProspect, band, CATEGORY_LABEL, CATEGORY_TIER, PRESENCE_LABEL, QUALIFY_THRESHOLD } from '../lib/scoring.js';
 import { GEN_STEPS } from '../lib/aigen.js';
@@ -55,7 +55,7 @@ export function renderProspects() {
 function rowHtml(p) {
   const b = band(p.score);
   return `<tr data-open="${p.id}" style="cursor:pointer">
-    <td><div class="fw-700 hi">${p.company_name}</div><div class="text-xs dim">${p.contact_person} · ${p.city}</div></td>
+    <td><div class="fw-700 hi">${esc(p.company_name)}</div><div class="text-xs dim">${esc(p.contact_person)} · ${esc(p.city)}</div></td>
     <td><span class="pill">${CATEGORY_LABEL[p.business_category]||'—'}</span> <span class="text-xs dim">${CATEGORY_TIER[p.business_category]||''}</span></td>
     <td><div class="row gap-8"><div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:38px;height:38px"><span style="font-size:12px">${p.score}</span></div><span class="pill pill-${b.color}">${b.label}</span></div></td>
     <td><span class="pill" style="color:${store.statusColor(p.status)}"><span class="dot" style="background:${store.statusColor(p.status)}"></span>${store.statusLabel(p.status)}</span></td>
@@ -235,7 +235,7 @@ export function renderProspectDetail(id) {
     <div class="row gap-14">
       <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:60px;height:60px"><span style="font-size:18px">${p.score}</span></div>
       <div>
-        <h1 class="page-title" style="font-size:28px">${p.company_name}</h1>
+        <h1 class="page-title" style="font-size:28px">${esc(p.company_name)}</h1>
         <div class="row gap-8 wrap mt-8">
           <span class="pill pill-${b.color}">${b.label}</span>
           <span class="pill">${CATEGORY_LABEL[p.business_category]} · Priority ${CATEGORY_TIER[p.business_category]}</span>
@@ -270,7 +270,7 @@ export function renderProspectDetail(id) {
 function generatePromptCard(p) {
   return `<div class="card card-pad-lg" id="genCard">
     <div class="row gap-14"><div class="kpi-icon t-violet" style="width:44px;height:44px">${icon('spark')}</div>
-      <div><h3>AI website generation</h3><div class="text-sm dim">Turn ${p.company_name}'s profile into a complete, themed website — instantly.</div></div></div>
+      <div><h3>AI website generation</h3><div class="text-sm dim">Turn ${esc(p.company_name)}'s profile into a complete, themed website — instantly.</div></div></div>
     <div class="divider"></div>
     <div class="between wrap gap-10">
       <div class="text-sm muted">Reads category, socials & description → hero, about, services, gallery plan & contact.</div>
@@ -290,7 +290,7 @@ function previewCard(p, expiry) {
       <iframe src="#/preview/${p.demo_slug}" title="preview" loading="lazy"></iframe>
     </div>
     <div class="field mt-14"><label>Shareable preview link</label>
-      <div class="row gap-8"><input class="input mono" id="prevLink" readonly value="${previewUrl}"/>
+      <div class="row gap-8"><input class="input mono" id="prevLink" readonly value="${esc(previewUrl)}"/>
         <button class="btn btn-ghost" id="copyLink">${icon('copy')}</button></div>
     </div>
     <div class="grid g-3 mt-14">
@@ -344,12 +344,12 @@ function profileCard(p) {
   return `<div class="card">
     <div class="card-head"><div class="kpi-icon t-violet">${icon('building')}</div><h3>Profile</h3></div>
     ${rows.map(([i,l,v]) => `<div class="between" style="padding:9px 0;border-bottom:1px solid var(--line-soft)">
-      <span class="text-xs dim row gap-8">${icon(i)} ${l}</span><span class="text-sm hi fw-600" style="text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">${v||'—'}</span></div>`).join('')}
+      <span class="text-xs dim row gap-8">${icon(i)} ${l}</span><span class="text-sm hi fw-600" style="text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">${esc(v||'—')}</span></div>`).join('')}
     <div class="row gap-8 wrap mt-14">
       ${[['instagram_url','IG'],['facebook_url','FB'],['tiktok_url','TT']].filter(([k])=>p[k]).map(([k,l]) =>
-        `<a class="pill" href="https://${p[k]}" target="_blank">${icon('link')} ${l}</a>`).join('')}
+        `<a class="pill" href="https://${esc(p[k])}" target="_blank" rel="noopener">${icon('link')} ${l}</a>`).join('')}
     </div>
-    ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${p.business_description}</div>` : ''}
+    ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${esc(p.business_description)}</div>` : ''}
     ${materialsBlock(p.assets)}
   </div>`;
 }
@@ -359,12 +359,12 @@ function materialsBlock(a) {
   const bits = [];
   if (a.logo) bits.push(`<span class="pill">${icon('image')} logo</span>`);
   if (a.images?.length) bits.push(`<span class="pill">${icon('image')} ${a.images.length} photos</span>`);
-  if (a.pdf?.name) bits.push(`<span class="pill">${icon('preview')} ${a.pdf.name}</span>`);
+  if (a.pdf?.name) bits.push(`<span class="pill">${icon('preview')} ${esc(a.pdf.name)}</span>`);
   if (!bits.length && !a.references?.length) return '';
   return `<div class="divider"></div>
     <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Build materials</div>
     <div class="row gap-8 wrap">${bits.join('')}</div>
-    ${a.references?.length ? `<div class="text-xs dim mt-8">References:</div>${a.references.map(u => `<a class="pill" href="https://${u}" target="_blank" style="margin:3px 3px 0 0">${icon('link')} ${u}</a>`).join('')}` : ''}`;
+    ${a.references?.length ? `<div class="text-xs dim mt-8">References:</div>${a.references.map(u => `<a class="pill" href="https://${esc(u)}" target="_blank" rel="noopener" style="margin:3px 3px 0 0">${icon('link')} ${esc(u)}</a>`).join('')}` : ''}`;
 }
 
 // ---- detail wiring -------------------------------------------------------
@@ -384,7 +384,7 @@ function runGeneration(p) {
   const m = openModal(`
     <div class="modal-body center" style="padding:36px 28px">
       <div class="gen-orb">${icon('spark')}</div>
-      <h3 style="margin-top:18px">Generating ${p.company_name}'s website</h3>
+      <h3 style="margin-top:18px">Generating ${esc(p.company_name)}'s website</h3>
       <div class="text-sm dim" style="margin-top:6px">AI is assembling the site from their profile…</div>
       <div id="genSteps" class="gen-steps"></div>
     </div>`);
@@ -437,7 +437,7 @@ function openActivateModal(p) {
 function activateHtml(p, sel) {
   return `
   <div class="modal-head"><div class="kpi-icon t-grow">${icon('rocket')}</div>
-    <div><h3>Activate ${p.company_name}</h3><div class="text-xs dim">Confirm package & record payment</div></div>
+    <div><h3>Activate ${esc(p.company_name)}</h3><div class="text-xs dim">Confirm package & record payment</div></div>
     <button class="modal-x" onclick="this.closest('.modal-scrim').remove()">${icon('x')}</button></div>
   <div class="modal-body">
     <div class="grid g-2" style="gap:22px">
@@ -461,7 +461,7 @@ function activateSummary(p, sel) {
     <div class="divider"></div>
     <div class="between"><span class="fw-700 hi">Total today</span><span class="kpi-value" style="font-size:26px">${RM(q.total)}</span></div>
     <div class="text-xs dim mt-8">You save ${RM(q.saved)} vs. ${RM(PRICING.websiteValue)} value · then ${RM(PRICING.renewal)}/yr</div>
-    ${p.referred_by ? `<div class="pill pill-violet mt-14">${icon('gift')} Referrer "${p.referred_by}" earns ${RM(PRICING.referral.rewardPerActivation)} on confirm</div>` : ''}
+    ${p.referred_by ? `<div class="pill pill-violet mt-14">${icon('gift')} Referrer "${esc(p.referred_by)}" earns ${RM(PRICING.referral.rewardPerActivation)} on confirm</div>` : ''}
     <button class="btn btn-primary btn-block mt-18" id="confirmPay">${icon('check')} Confirm payment & activate</button>
     <div class="text-xs dim center mt-8">Records order · awards referral · provisions dashboard</div>
   </div>`;

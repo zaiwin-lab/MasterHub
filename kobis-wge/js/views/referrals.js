@@ -1,7 +1,7 @@
 // Referrals & Credits — Module H. Wallets, attribution, cash redemption (Rec 5).
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { RM, fmtDate, timeAgo, toast } from '../lib/ui.js';
+import { RM, fmtDate, timeAgo, toast, esc } from '../lib/ui.js';
 import { PRICING } from '../lib/pricing.js';
 import { rbacBlock } from './clients.js';
 
@@ -63,7 +63,7 @@ function walletRow(w) {
   const eligible = w.credit_balance >= PRICING.referral.cashRedeemThreshold;
   const pctTo = Math.min(100, (w.credit_balance / PRICING.referral.cashRedeemThreshold) * 100);
   return `<tr>
-    <td><div class="fw-700 hi">${c?.company_name || '—'}</div><div class="text-xs dim mono">ref/${c?.referral_code || ''}</div></td>
+    <td><div class="fw-700 hi">${esc(c?.company_name || '—')}</div><div class="text-xs dim mono">ref/${esc(c?.referral_code || '')}</div></td>
     <td class="num">${n}</td>
     <td class="num muted">${RM(w.total_credit_earned)}</td>
     <td><div class="fw-700 hi mono">${RM(w.credit_balance)}</div><div class="bar" style="width:80px;margin-top:5px"><i style="width:${pctTo}%"></i></div></td>
@@ -76,8 +76,8 @@ function refRow(r) {
   const c = store.clientById(r.referrer_client_id);
   const ok = r.activation_status === 'confirmed';
   return `<tr>
-    <td class="fw-600 hi">${c?.company_name || '—'}</td>
-    <td>${r.referred_company_name}</td>
+    <td class="fw-600 hi">${esc(c?.company_name || '—')}</td>
+    <td>${esc(r.referred_company_name)}</td>
     <td><span class="pill ${ok?'pill-grow':'pill-amber'}"><span class="dot" style="background:${ok?'var(--grow)':'var(--amber)'}"></span>${ok?'Confirmed':'Pending'}</span></td>
     <td class="num fw-600 hi">${RM(r.reward_amount)}</td>
     <td class="text-sm muted">${timeAgo(r.created_at)}</td>

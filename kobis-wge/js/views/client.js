@@ -2,7 +2,7 @@
 // plus the client's referral dashboard (Module H view).
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { RM, fmtDate, daysUntil, toast } from '../lib/ui.js';
+import { RM, fmtDate, daysUntil, toast, esc } from '../lib/ui.js';
 import { PRICING } from '../lib/pricing.js';
 
 export function renderClientPortal(id) {
@@ -19,8 +19,8 @@ export function renderClientPortal(id) {
   return `
   <div class="cp">
     <header class="cp-nav">
-      <div class="row gap-12"><div class="brand-mark">${c.company_name[0]}</div>
-        <div><div class="brand-name">${c.company_name}</div><div class="brand-sub">Client Dashboard</div></div></div>
+      <div class="row gap-12"><div class="brand-mark">${esc((c.company_name || '?')[0])}</div>
+        <div><div class="brand-name">${esc(c.company_name)}</div><div class="brand-sub">Client Dashboard</div></div></div>
       <div class="row gap-10">
         <span class="pill pill-grow">${icon('check')} Active</span>
         <a class="btn btn-ghost btn-sm" href="${c.activated_website_url}" target="_blank">${icon('eye')} View site</a>
@@ -31,7 +31,7 @@ export function renderClientPortal(id) {
     <div class="cp-body">
       <div class="page-head">
         <span class="eyebrow">${icon('rocket')} Welcome aboard</span>
-        <h1 class="page-title">Manage ${c.company_name}</h1>
+        <h1 class="page-title">Manage ${esc(c.company_name)}</h1>
         <p class="page-sub">Your website is live and yours to manage. Update content anytime — changes publish instantly.</p>
       </div>
 
@@ -48,7 +48,7 @@ export function renderClientPortal(id) {
             <div class="card-head"><div class="kpi-icon t-violet">${icon('image')}</div><h3>Gallery</h3><span class="sub">add your best photos</span></div>
             <div class="cp-gallery" id="cpGallery">
               ${(c.gallery.length ? c.gallery : ['','','']).map((g, i) => g
-                ? `<div class="cp-shot" style="background-image:url('${g}')"></div>`
+                ? `<div class="cp-shot" style="background-image:url('${esc(g)}')"></div>`
                 : `<div class="cp-shot empty-shot">${icon('image')}</div>`).join('')}
               <button class="cp-shot add-shot" id="addShot">${icon('plus')}<span>Add image URL</span></button>
             </div>
@@ -56,15 +56,15 @@ export function renderClientPortal(id) {
 
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-amber">${icon('megaphone')}</div><h3>Moving / announcement</h3></div>
-            <div class="field"><textarea class="input" id="announceBox" placeholder="e.g. We're moving to a new location from 1 July! New address: ...">${c.announcement || ''}</textarea></div>
+            <div class="field"><textarea class="input" id="announceBox" placeholder="e.g. We're moving to a new location from 1 July! New address: ...">${esc(c.announcement || '')}</textarea></div>
             <button class="btn btn-primary btn-sm" id="saveAnnounce">${icon('check')} Publish announcement</button>
           </div>
 
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-sky">${icon('phone')}</div><h3>Contact details</h3></div>
             <div class="field-row">
-              <div class="field"><label>Phone</label><input class="input" id="cPhone" value="${c.phone || ''}"/></div>
-              <div class="field"><label>Email</label><input class="input" id="cEmail" value="${c.email || ''}"/></div>
+              <div class="field"><label>Phone</label><input class="input" id="cPhone" value="${esc(c.phone || '')}"/></div>
+              <div class="field"><label>Email</label><input class="input" id="cEmail" value="${esc(c.email || '')}"/></div>
             </div>
             <button class="btn btn-primary btn-sm" id="saveContact">${icon('check')} Save contact</button>
           </div>
@@ -75,7 +75,7 @@ export function renderClientPortal(id) {
             <div class="card-head"><div class="kpi-icon t-grow">${icon('gift')}</div><h3>Refer & earn</h3></div>
             <p class="text-sm muted">Earn <b class="hi">${RM(PRICING.referral.rewardPerActivation)}</b> renewal credit for every business that activates through your link.</p>
             <div class="field mt-14"><label>Your referral link</label>
-              <div class="row gap-8"><input class="input mono text-xs" id="refLink" readonly value="${refLink}"/>
+              <div class="row gap-8"><input class="input mono text-xs" id="refLink" readonly value="${esc(refLink)}"/>
                 <button class="btn btn-ghost" id="copyRef">${icon('copy')}</button></div>
             </div>
             <div class="cp-credit">
@@ -90,7 +90,7 @@ export function renderClientPortal(id) {
             <div class="divider"></div>
             <div class="text-xs dim">${refs.length ? 'Your referrals' : 'No referrals yet — share your link!'}</div>
             ${refs.map(r => `<div class="between" style="padding:8px 0;border-bottom:1px solid var(--line-soft)">
-              <span class="text-sm hi">${r.referred_company_name}</span>
+              <span class="text-sm hi">${esc(r.referred_company_name)}</span>
               <span class="pill ${r.activation_status==='confirmed'?'pill-grow':'pill-amber'}">${r.activation_status==='confirmed'?'+'+RM(r.reward_amount):'pending'}</span></div>`).join('')}
           </div>
 

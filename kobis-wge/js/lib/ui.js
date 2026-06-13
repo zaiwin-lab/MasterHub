@@ -2,6 +2,11 @@
 import * as store from './store.js';
 import { PRICING } from './pricing.js';
 
+// Escape user-supplied text before it goes into innerHTML. Covers HTML and
+// quoted-attribute contexts. Use on EVERY value a user can control.
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' };
+export const esc = (s) => String(s ?? '').replace(/[&<>"'`]/g, c => ESC[c]);
+
 export const RM = (n) => 'RM' + (Math.round(n) || 0).toLocaleString('en-MY');
 export const pct = (n) => (n * 100).toFixed(n >= 0.1 ? 0 : 1) + '%';
 export const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
@@ -23,7 +28,9 @@ export function toast(msg, kind = 'grow') {
   if (!wrap) { wrap = document.createElement('div'); wrap.className = 'toast-wrap'; document.body.appendChild(wrap); }
   const el = document.createElement('div');
   el.className = 'toast ' + (kind === 'grow' ? '' : kind);
-  el.innerHTML = `<span>${msg}</span>`;
+  const span = document.createElement('span');
+  span.textContent = msg;            // text-only — never interpret user input as HTML
+  el.appendChild(span);
   wrap.appendChild(el);
   setTimeout(() => { el.style.transition = 'all .3s'; el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; setTimeout(() => el.remove(), 320); }, 3200);
 }

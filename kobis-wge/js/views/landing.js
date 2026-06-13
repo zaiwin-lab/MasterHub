@@ -2,7 +2,7 @@
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
 import { PRICING } from '../lib/pricing.js';
-import { RM, toast } from '../lib/ui.js';
+import { RM, toast, esc } from '../lib/ui.js';
 import { CATEGORY_LABEL } from '../lib/scoring.js';
 
 export function renderLanding() {
@@ -111,7 +111,7 @@ export function renderLanding() {
         <h2>Join the preview waitlist</h2>
         <p class="muted">We build a limited number of previews each week to keep quality high. Drop your details and we'll prepare yours.</p>
         <div class="lh-waitlist-meta">${icon('users')} <b id="wlCount">${store.waitlist().length}</b> businesses in the queue</div>
-        ${ref ? `<div class="pill pill-violet mt-14">${icon('gift')} Referred by <b style="margin-left:4px">${ref}</b> — attribution locked in</div>` : ''}
+        ${ref ? `<div class="pill pill-violet mt-14">${icon('gift')} Referred by <b style="margin-left:4px">${esc(ref)}</b> — attribution locked in</div>` : ''}
       </div>
       <form class="lh-form card" id="wlForm">
         <div class="field"><label>Business name</label><input class="input" name="company_name" required placeholder="e.g. Kopi Tujuh" /></div>
@@ -126,7 +126,7 @@ export function renderLanding() {
             </select>
           </div>
           <div class="field"><label>Referral code <span class="hint">(optional)</span></label>
-            <input class="input" name="referral_code" value="${ref}" placeholder="friend's code" /></div>
+            <input class="input" name="referral_code" value="${esc(ref)}" placeholder="friend's code" /></div>
         </div>
         <button class="btn btn-primary btn-block" type="submit">${icon('send')} Join the waitlist</button>
         <div class="text-xs dim center mt-8">Preview prepared by KOBIS Berhad · no payment required</div>

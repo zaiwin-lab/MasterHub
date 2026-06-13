@@ -70,4 +70,41 @@ export async function pushAll(state) {
   }));
 }
 
+// Push only the specific rows that changed (not the whole table) — kills the
+// write-amplification where one edit re-uploaded every row.
+export async function upsertRows(table, rows) {
+  if (!isConfigured() || !rows || !rows.length) return;
+  const { url } = cfg();
+  try {
+    const docs = rows.map(r => ({ id: r.id, data: r, updated_at: new Date().toISOString() }));
+    await fetch(`${url}/rest/v1/${table}?on_conflict=id`, {
+      method: 'POST',
+      headers: { ...headers(), Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(docs),
+    });
+  } catch (e) { console.warn(`[KOBIS] upsert ${table} failed:`, e.message); }
+}
+
+// Real delete so removed items (waitlist invites, wiped data) don't resurrect.
+export async function deleteRow(table, id) {
+  if (!isConfigured() || !id) return;
+  const { url } = cfg();
+  try {
+    await fetch(`${url}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers: headers() });
+  } catch (e) { console.warn(`[KOBIS] delete ${table} failed:`, e.message); }
+}
+
+// Fetch a single prospect by its preview slug (jsonb filter) — lets the public
+// preview load one record instead of the whole database (scale + Phase B prep).
+export async function fetchBySlug(slug) {
+  if (!isConfigured() || !slug) return null;
+  const { url } = cfg();
+  try {
+    const res = await fetch(`${url}/rest/v1/prospects?data->>demo_slug=eq.${encodeURIComponent(slug)}&select=data&limit=1`, { headers: headers() });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows[0]?.data || null;
+  } catch { return null; }
+}
+
 export const SUPABASE_TABLES = TABLES;

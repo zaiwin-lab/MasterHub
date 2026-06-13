@@ -1,7 +1,7 @@
 // Lead Pipeline — kanban across the 7 blueprint statuses with quick advance.
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { byStatus, RM, timeAgo, daysUntil } from '../lib/ui.js';
+import { byStatus, RM, timeAgo, daysUntil, esc } from '../lib/ui.js';
 import { band } from '../lib/scoring.js';
 import { CATEGORY_LABEL } from '../lib/scoring.js';
 
@@ -43,8 +43,8 @@ function card(p) {
   const canAdvance = nextIdx >= 0 && nextIdx < store.STATUSES.length - 1;
   return `<div class="lead-card" data-open="${p.id}">
     <div class="lc-top">
-      <div><div class="lc-name">${p.company_name}</div>
-      <div class="lc-cat">${CATEGORY_LABEL[p.business_category] || ''} · ${p.city}</div></div>
+      <div><div class="lc-name">${esc(p.company_name)}</div>
+      <div class="lc-cat">${CATEGORY_LABEL[p.business_category] || ''} · ${esc(p.city)}</div></div>
       <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
     </div>
     <div class="lc-meta">

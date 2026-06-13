@@ -18,7 +18,7 @@ export const PRICING = {
   referral: { rewardPerActivation: 50, cashRedeemThreshold: 500 }, // Module H
 };
 
-export const KOBIS_WHATSAPP = '60123456789'; // KOBIS Berhad sales line (demo)
+export const KOBIS_WHATSAPP = '601128465813'; // KOBIS Berhad sales line
 
 // Compute an order total from a selection.
 // sel = { chatbot:bool, news:bool, emailCount:int }

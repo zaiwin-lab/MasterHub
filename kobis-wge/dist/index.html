@@ -758,7 +758,7 @@ var PRICING = {
   },
   referral: { rewardPerActivation: 50, cashRedeemThreshold: 500 }
 };
-var KOBIS_WHATSAPP = "60123456789";
+var KOBIS_WHATSAPP = "601128465813";
 function quote(sel = {}) {
   const lines = [{ label: "Website Activation (Launch Promo)", amount: PRICING.activation }];
   if (sel.chatbot)
@@ -1086,6 +1086,45 @@ async function pushAll(state) {
     }
   }));
 }
+async function upsertRows(table, rows) {
+  if (!isConfigured() || !rows || !rows.length)
+    return;
+  const { url } = cfg();
+  try {
+    const docs = rows.map((r) => ({ id: r.id, data: r, updated_at: new Date().toISOString() }));
+    await fetch(`${url}/rest/v1/${table}?on_conflict=id`, {
+      method: "POST",
+      headers: { ...headers(), Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(docs)
+    });
+  } catch (e) {
+    console.warn(`[KOBIS] upsert ${table} failed:`, e.message);
+  }
+}
+async function deleteRow(table, id) {
+  if (!isConfigured() || !id)
+    return;
+  const { url } = cfg();
+  try {
+    await fetch(`${url}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers() });
+  } catch (e) {
+    console.warn(`[KOBIS] delete ${table} failed:`, e.message);
+  }
+}
+async function fetchBySlug(slug) {
+  if (!isConfigured() || !slug)
+    return null;
+  const { url } = cfg();
+  try {
+    const res = await fetch(`${url}/rest/v1/prospects?data->>demo_slug=eq.${encodeURIComponent(slug)}&select=data&limit=1`, { headers: headers() });
+    if (!res.ok)
+      return null;
+    const rows = await res.json();
+    return rows[0]?.data || null;
+  } catch {
+    return null;
+  }
+}
 
 // js/lib/store.js
 var KEY = "kobis_wge_v1";
@@ -1403,16 +1442,21 @@ function load() {
   } catch {}
   return null;
 }
-var syncTimer = null;
 function persist() {
   try {
     localStorage.setItem(KEY, JSON.stringify(db));
-  } catch {}
-  if (db && db.role !== undefined && isConfigured()) {
-    clearTimeout(syncTimer);
-    syncTimer = setTimeout(() => pushAll(db), 800);
+  } catch (e) {
+    console.warn("[KOBIS] local cache full — Supabase remains source of truth");
   }
   emit();
+}
+function sync(table, ...rows) {
+  if (isConfigured())
+    upsertRows(table, rows.filter(Boolean));
+}
+function syncDel(table, id) {
+  if (isConfigured())
+    deleteRow(table, id);
 }
 function emit() {
   listeners.forEach((fn) => fn(db));
@@ -1477,6 +1521,14 @@ function setRole(r) {
   persist();
 }
 function addProspect(data) {
+  if (data.followers != null)
+    data.followers = Math.max(0, Math.min(1e8, Number(data.followers) || 0));
+  ["company_name", "contact_person", "city"].forEach((k) => {
+    if (typeof data[k] === "string")
+      data[k] = data[k].trim().slice(0, 120);
+  });
+  if (typeof data.business_description === "string")
+    data.business_description = data.business_description.slice(0, 2000);
   const sc = scoreProspect(data);
   const p = {
     id: uid("prs"),
@@ -1494,6 +1546,7 @@ function addProspect(data) {
   };
   db.prospects.unshift(p);
   persist();
+  sync("prospects", p);
   return p;
 }
 function updateProspect(id, patch) {
@@ -1505,6 +1558,7 @@ function updateProspect(id, patch) {
     p.score = scoreProspect(p).total;
   }
   persist();
+  sync("prospects", p);
   return p;
 }
 function setStatus(id, status) {
@@ -1524,6 +1578,7 @@ function generateForProspect(id) {
     preview_expires_at: p.preview_expires_at || daysFromNow(14)
   });
   persist();
+  sync("prospects", p);
   return p;
 }
 function recordOpen(slugStr) {
@@ -1537,6 +1592,7 @@ function recordOpen(slugStr) {
     p.status = "sent";
   db.link_events.push({ id: uid("evt"), prospect_id: p.id, type: "open", created_at: now() });
   persist();
+  sync("prospects", p);
 }
 function activateProspect(id, sel) {
   const p = prospectById(id);
@@ -1560,7 +1616,7 @@ function activateProspect(id, sel) {
     created_at: now()
   };
   db.clients.unshift(c);
-  db.orders.unshift({
+  const order = {
     id: uid("ord"),
     client_id: c.id,
     activation_fee: 500,
@@ -1570,22 +1626,31 @@ function activateProspect(id, sel) {
     total_amount: total,
     payment_status: "confirmed",
     created_at: now()
-  });
-  db.credit_wallets.push({ id: uid("wal"), client_id: c.id, credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0, updated_at: now() });
+  };
+  db.orders.unshift(order);
+  const wallet = { id: uid("wal"), client_id: c.id, credit_balance: 0, total_credit_earned: 0, cash_redeemed: 0, updated_at: now() };
+  db.credit_wallets.push(wallet);
   p.status = "activated";
+  let refRow = null, refWallet = null;
   if (p.referred_by) {
     const refClient = db.clients.find((cl) => cl.referral_code === p.referred_by);
     if (refClient) {
-      db.referrals.push({ id: uid("ref"), referrer_client_id: refClient.id, referred_company_name: p.company_name, referred_client_id: c.id, activation_status: "confirmed", reward_amount: PRICING.referral.rewardPerActivation, reward_type: "renewal_credit", created_at: now() });
-      const w = walletForClient(refClient.id);
-      if (w) {
-        w.credit_balance += PRICING.referral.rewardPerActivation;
-        w.total_credit_earned += PRICING.referral.rewardPerActivation;
-        w.updated_at = now();
+      refRow = { id: uid("ref"), referrer_client_id: refClient.id, referred_company_name: p.company_name, referred_client_id: c.id, activation_status: "confirmed", reward_amount: PRICING.referral.rewardPerActivation, reward_type: "renewal_credit", created_at: now() };
+      db.referrals.push(refRow);
+      refWallet = walletForClient(refClient.id);
+      if (refWallet) {
+        refWallet.credit_balance += PRICING.referral.rewardPerActivation;
+        refWallet.total_credit_earned += PRICING.referral.rewardPerActivation;
+        refWallet.updated_at = now();
       }
     }
   }
   persist();
+  sync("clients", c);
+  sync("orders", order);
+  sync("credit_wallets", wallet, refWallet);
+  sync("prospects", p);
+  sync("referrals", refRow);
   return c;
 }
 function updateClient(id, patch) {
@@ -1593,6 +1658,7 @@ function updateClient(id, patch) {
   if (c) {
     Object.assign(c, patch);
     persist();
+    sync("clients", c);
   }
   return c;
 }
@@ -1604,13 +1670,36 @@ function redeemCash(clientId) {
   w.cash_redeemed += PRICING.referral.cashRedeemThreshold;
   w.updated_at = now();
   persist();
+  sync("credit_wallets", w);
   return true;
 }
 function joinWaitlist(data) {
   const w = { id: uid("wl"), position: db.waitlist.length + 1, created_at: now(), ...data };
+  ["company_name", "contact_person", "email", "referral_code"].forEach((k) => {
+    if (typeof w[k] === "string")
+      w[k] = w[k].trim().slice(0, 160);
+  });
   db.waitlist.push(w);
   persist();
+  sync("waitlist", w);
   return w;
+}
+function removeWaitlist(id) {
+  const i = db.waitlist.findIndex((x) => x.id === id);
+  if (i > -1)
+    db.waitlist.splice(i, 1);
+  persist();
+  syncDel("waitlist", id);
+}
+async function fetchProspectBySlug(slugStr) {
+  if (prospectBySlug(slugStr))
+    return prospectBySlug(slugStr);
+  const data = await fetchBySlug(slugStr);
+  if (data) {
+    db.prospects.push(data);
+    return data;
+  }
+  return null;
 }
 
 // js/lib/router.js
@@ -1693,6 +1782,8 @@ function icon(name, cls = "") {
 }
 
 // js/lib/ui.js
+var ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" };
+var esc = (s) => String(s ?? "").replace(/[&<>"'`]/g, (c) => ESC[c]);
 var RM = (n) => "RM" + (Math.round(n) || 0).toLocaleString("en-MY");
 var pct = (n) => (n * 100).toFixed(n >= 0.1 ? 0 : 1) + "%";
 var fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" }) : "—";
@@ -1718,7 +1809,9 @@ function toast(msg, kind = "grow") {
   }
   const el = document.createElement("div");
   el.className = "toast " + (kind === "grow" ? "" : kind);
-  el.innerHTML = `<span>${msg}</span>`;
+  const span = document.createElement("span");
+  span.textContent = msg;
+  el.appendChild(span);
   wrap.appendChild(el);
   setTimeout(() => {
     el.style.transition = "all .3s";
@@ -1888,7 +1981,7 @@ function renderLanding() {
         <h2>Join the preview waitlist</h2>
         <p class="muted">We build a limited number of previews each week to keep quality high. Drop your details and we'll prepare yours.</p>
         <div class="lh-waitlist-meta">${icon("users")} <b id="wlCount">${waitlist().length}</b> businesses in the queue</div>
-        ${ref ? `<div class="pill pill-violet mt-14">${icon("gift")} Referred by <b style="margin-left:4px">${ref}</b> — attribution locked in</div>` : ""}
+        ${ref ? `<div class="pill pill-violet mt-14">${icon("gift")} Referred by <b style="margin-left:4px">${esc(ref)}</b> — attribution locked in</div>` : ""}
       </div>
       <form class="lh-form card" id="wlForm">
         <div class="field"><label>Business name</label><input class="input" name="company_name" required placeholder="e.g. Kopi Tujuh" /></div>
@@ -1903,7 +1996,7 @@ function renderLanding() {
             </select>
           </div>
           <div class="field"><label>Referral code <span class="hint">(optional)</span></label>
-            <input class="input" name="referral_code" value="${ref}" placeholder="friend's code" /></div>
+            <input class="input" name="referral_code" value="${esc(ref)}" placeholder="friend's code" /></div>
         </div>
         <button class="btn btn-primary btn-block" type="submit">${icon("send")} Join the waitlist</button>
         <div class="text-xs dim center mt-8">Preview prepared by KOBIS Berhad · no payment required</div>
@@ -2043,7 +2136,7 @@ function hotLeads() {
     const b = band(p.score);
     return `<a class="lead-card" href="#/admin/prospect/${p.id}">
       <div class="lc-top">
-        <div><div class="lc-name">${p.company_name}</div><div class="lc-cat">${p.city} · ${(p.followers / 1000).toFixed(1)}k followers</div></div>
+        <div><div class="lc-name">${esc(p.company_name)}</div><div class="lc-cat">${esc(p.city)} · ${(p.followers / 1000).toFixed(1)}k followers</div></div>
         <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
       </div>
     </a>`;
@@ -2051,10 +2144,10 @@ function hotLeads() {
 }
 function activityFeed() {
   const items = [];
-  prospects().filter((p) => p.website_spec).slice(0, 3).forEach((p) => items.push(["spark", "violet", `AI generated a website for <b>${p.company_name}</b>`, p.created_at]));
-  prospects().filter((p) => p.analytics?.opens > 0).sort((a, b) => new Date(b.analytics.lastOpenedAt) - new Date(a.analytics.lastOpenedAt)).slice(0, 3).forEach((p) => items.push(["eye", "sky", `<b>${p.company_name}</b> opened their preview (${p.analytics.opens}×)`, p.analytics.lastOpenedAt]));
-  referrals().filter((r) => r.activation_status === "confirmed").slice(0, 2).forEach((r) => items.push(["gift", "amber", `Referral credit awarded for <b>${r.referred_company_name}</b>`, r.created_at]));
-  clients().slice(0, 2).forEach((c) => items.push(["rocket", "grow", `<b>${c.company_name}</b> activated · ${RM(c.package_price)}`, c.activation_date]));
+  prospects().filter((p) => p.website_spec).slice(0, 3).forEach((p) => items.push(["spark", "violet", `AI generated a website for <b>${esc(p.company_name)}</b>`, p.created_at]));
+  prospects().filter((p) => p.analytics?.opens > 0).sort((a, b) => new Date(b.analytics.lastOpenedAt) - new Date(a.analytics.lastOpenedAt)).slice(0, 3).forEach((p) => items.push(["eye", "sky", `<b>${esc(p.company_name)}</b> opened their preview (${p.analytics.opens}×)`, p.analytics.lastOpenedAt]));
+  referrals().filter((r) => r.activation_status === "confirmed").slice(0, 2).forEach((r) => items.push(["gift", "amber", `Referral credit awarded for <b>${esc(r.referred_company_name)}</b>`, r.created_at]));
+  clients().slice(0, 2).forEach((c) => items.push(["rocket", "grow", `<b>${esc(c.company_name)}</b> activated · ${RM(c.package_price)}`, c.activation_date]));
   items.sort((a, b) => new Date(b[3]) - new Date(a[3]));
   return `<div class="stack">${items.slice(0, 7).map(([ic, col, txt, t]) => `
     <div class="sop-step" style="padding:11px 0;border-color:var(--line-soft)">
@@ -2099,8 +2192,8 @@ function card(p) {
   const canAdvance = nextIdx >= 0 && nextIdx < STATUSES.length - 1;
   return `<div class="lead-card" data-open="${p.id}">
     <div class="lc-top">
-      <div><div class="lc-name">${p.company_name}</div>
-      <div class="lc-cat">${CATEGORY_LABEL[p.business_category] || ""} · ${p.city}</div></div>
+      <div><div class="lc-name">${esc(p.company_name)}</div>
+      <div class="lc-cat">${CATEGORY_LABEL[p.business_category] || ""} · ${esc(p.city)}</div></div>
       <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color})"><span>${p.score}</span></div>
     </div>
     <div class="lc-meta">
@@ -2137,17 +2230,17 @@ function openModal(html, { wide = false } = {}) {
       closeModal();
   });
   document.body.appendChild(host);
-  document.addEventListener("keydown", esc);
+  document.addEventListener("keydown", esc2);
   return host.querySelector(".modal");
 }
 function closeModal() {
   if (host) {
     host.remove();
     host = null;
-    document.removeEventListener("keydown", esc);
+    document.removeEventListener("keydown", esc2);
   }
 }
-function esc(e) {
+function esc2(e) {
   if (e.key === "Escape")
     closeModal();
 }
@@ -2198,7 +2291,7 @@ function renderProspects() {
 function rowHtml(p) {
   const b = band(p.score);
   return `<tr data-open="${p.id}" style="cursor:pointer">
-    <td><div class="fw-700 hi">${p.company_name}</div><div class="text-xs dim">${p.contact_person} · ${p.city}</div></td>
+    <td><div class="fw-700 hi">${esc(p.company_name)}</div><div class="text-xs dim">${esc(p.contact_person)} · ${esc(p.city)}</div></td>
     <td><span class="pill">${CATEGORY_LABEL[p.business_category] || "—"}</span> <span class="text-xs dim">${CATEGORY_TIER[p.business_category] || ""}</span></td>
     <td><div class="row gap-8"><div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:38px;height:38px"><span style="font-size:12px">${p.score}</span></div><span class="pill pill-${b.color}">${b.label}</span></div></td>
     <td><span class="pill" style="color:${statusColor(p.status)}"><span class="dot" style="background:${statusColor(p.status)}"></span>${statusLabel(p.status)}</span></td>
@@ -2402,7 +2495,7 @@ function renderProspectDetail(id) {
     <div class="row gap-14">
       <div class="score-ring" style="--val:${p.score};--ring-c:var(--${b.color});width:60px;height:60px"><span style="font-size:18px">${p.score}</span></div>
       <div>
-        <h1 class="page-title" style="font-size:28px">${p.company_name}</h1>
+        <h1 class="page-title" style="font-size:28px">${esc(p.company_name)}</h1>
         <div class="row gap-8 wrap mt-8">
           <span class="pill pill-${b.color}">${b.label}</span>
           <span class="pill">${CATEGORY_LABEL[p.business_category]} · Priority ${CATEGORY_TIER[p.business_category]}</span>
@@ -2430,7 +2523,7 @@ function renderProspectDetail(id) {
 function generatePromptCard(p) {
   return `<div class="card card-pad-lg" id="genCard">
     <div class="row gap-14"><div class="kpi-icon t-violet" style="width:44px;height:44px">${icon("spark")}</div>
-      <div><h3>AI website generation</h3><div class="text-sm dim">Turn ${p.company_name}'s profile into a complete, themed website — instantly.</div></div></div>
+      <div><h3>AI website generation</h3><div class="text-sm dim">Turn ${esc(p.company_name)}'s profile into a complete, themed website — instantly.</div></div></div>
     <div class="divider"></div>
     <div class="between wrap gap-10">
       <div class="text-sm muted">Reads category, socials & description → hero, about, services, gallery plan & contact.</div>
@@ -2449,7 +2542,7 @@ function previewCard(p, expiry) {
       <iframe src="#/preview/${p.demo_slug}" title="preview" loading="lazy"></iframe>
     </div>
     <div class="field mt-14"><label>Shareable preview link</label>
-      <div class="row gap-8"><input class="input mono" id="prevLink" readonly value="${previewUrl}"/>
+      <div class="row gap-8"><input class="input mono" id="prevLink" readonly value="${esc(previewUrl)}"/>
         <button class="btn btn-ghost" id="copyLink">${icon("copy")}</button></div>
     </div>
     <div class="grid g-3 mt-14">
@@ -2499,11 +2592,11 @@ function profileCard(p) {
   return `<div class="card">
     <div class="card-head"><div class="kpi-icon t-violet">${icon("building")}</div><h3>Profile</h3></div>
     ${rows.map(([i, l, v]) => `<div class="between" style="padding:9px 0;border-bottom:1px solid var(--line-soft)">
-      <span class="text-xs dim row gap-8">${icon(i)} ${l}</span><span class="text-sm hi fw-600" style="text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">${v || "—"}</span></div>`).join("")}
+      <span class="text-xs dim row gap-8">${icon(i)} ${l}</span><span class="text-sm hi fw-600" style="text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">${esc(v || "—")}</span></div>`).join("")}
     <div class="row gap-8 wrap mt-14">
-      ${[["instagram_url", "IG"], ["facebook_url", "FB"], ["tiktok_url", "TT"]].filter(([k]) => p[k]).map(([k, l]) => `<a class="pill" href="https://${p[k]}" target="_blank">${icon("link")} ${l}</a>`).join("")}
+      ${[["instagram_url", "IG"], ["facebook_url", "FB"], ["tiktok_url", "TT"]].filter(([k]) => p[k]).map(([k, l]) => `<a class="pill" href="https://${esc(p[k])}" target="_blank" rel="noopener">${icon("link")} ${l}</a>`).join("")}
     </div>
-    ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${p.business_description}</div>` : ""}
+    ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${esc(p.business_description)}</div>` : ""}
     ${materialsBlock(p.assets)}
   </div>`;
 }
@@ -2516,13 +2609,13 @@ function materialsBlock(a) {
   if (a.images?.length)
     bits.push(`<span class="pill">${icon("image")} ${a.images.length} photos</span>`);
   if (a.pdf?.name)
-    bits.push(`<span class="pill">${icon("preview")} ${a.pdf.name}</span>`);
+    bits.push(`<span class="pill">${icon("preview")} ${esc(a.pdf.name)}</span>`);
   if (!bits.length && !a.references?.length)
     return "";
   return `<div class="divider"></div>
     <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Build materials</div>
     <div class="row gap-8 wrap">${bits.join("")}</div>
-    ${a.references?.length ? `<div class="text-xs dim mt-8">References:</div>${a.references.map((u) => `<a class="pill" href="https://${u}" target="_blank" style="margin:3px 3px 0 0">${icon("link")} ${u}</a>`).join("")}` : ""}`;
+    ${a.references?.length ? `<div class="text-xs dim mt-8">References:</div>${a.references.map((u) => `<a class="pill" href="https://${esc(u)}" target="_blank" rel="noopener" style="margin:3px 3px 0 0">${icon("link")} ${esc(u)}</a>`).join("")}` : ""}`;
 }
 function wireDetail(p) {
   const gen = () => runGeneration(p);
@@ -2544,7 +2637,7 @@ function runGeneration(p) {
   const m = openModal(`
     <div class="modal-body center" style="padding:36px 28px">
       <div class="gen-orb">${icon("spark")}</div>
-      <h3 style="margin-top:18px">Generating ${p.company_name}'s website</h3>
+      <h3 style="margin-top:18px">Generating ${esc(p.company_name)}'s website</h3>
       <div class="text-sm dim" style="margin-top:6px">AI is assembling the site from their profile…</div>
       <div id="genSteps" class="gen-steps"></div>
     </div>`);
@@ -2595,7 +2688,7 @@ function openActivateModal(p) {
 function activateHtml(p, sel) {
   return `
   <div class="modal-head"><div class="kpi-icon t-grow">${icon("rocket")}</div>
-    <div><h3>Activate ${p.company_name}</h3><div class="text-xs dim">Confirm package & record payment</div></div>
+    <div><h3>Activate ${esc(p.company_name)}</h3><div class="text-xs dim">Confirm package & record payment</div></div>
     <button class="modal-x" onclick="this.closest('.modal-scrim').remove()">${icon("x")}</button></div>
   <div class="modal-body">
     <div class="grid g-2" style="gap:22px">
@@ -2618,7 +2711,7 @@ function activateSummary(p, sel) {
     <div class="divider"></div>
     <div class="between"><span class="fw-700 hi">Total today</span><span class="kpi-value" style="font-size:26px">${RM(q.total)}</span></div>
     <div class="text-xs dim mt-8">You save ${RM(q.saved)} vs. ${RM(PRICING.websiteValue)} value · then ${RM(PRICING.renewal)}/yr</div>
-    ${p.referred_by ? `<div class="pill pill-violet mt-14">${icon("gift")} Referrer "${p.referred_by}" earns ${RM(PRICING.referral.rewardPerActivation)} on confirm</div>` : ""}
+    ${p.referred_by ? `<div class="pill pill-violet mt-14">${icon("gift")} Referrer "${esc(p.referred_by)}" earns ${RM(PRICING.referral.rewardPerActivation)} on confirm</div>` : ""}
     <button class="btn btn-primary btn-block mt-18" id="confirmPay">${icon("check")} Confirm payment & activate</button>
     <div class="text-xs dim center mt-8">Records order · awards referral · provisions dashboard</div>
   </div>`;
@@ -2658,7 +2751,7 @@ function rowHtml2(c) {
   const addons = [o.ai_chatbot && "Chatbot", o.news_module && "News", o.extra_email_count && `${o.extra_email_count}× email`].filter(Boolean);
   const due = daysUntil(c.renewal_due_date);
   return `<tr>
-    <td><div class="fw-700 hi">${c.company_name}</div><div class="text-xs dim">${c.contact_person}</div></td>
+    <td><div class="fw-700 hi">${esc(c.company_name)}</div><div class="text-xs dim">${esc(c.contact_person)}</div></td>
     <td><span class="pill pill-grow">Activation</span></td>
     <td>${addons.length ? addons.map((a) => `<span class="pill" style="margin:2px">${a}</span>`).join("") : '<span class="text-xs dim">—</span>'}</td>
     <td class="num fw-700 hi">${RM(c.package_price)}</td>
@@ -2736,7 +2829,7 @@ function walletRow(w) {
   const eligible = w.credit_balance >= PRICING.referral.cashRedeemThreshold;
   const pctTo = Math.min(100, w.credit_balance / PRICING.referral.cashRedeemThreshold * 100);
   return `<tr>
-    <td><div class="fw-700 hi">${c?.company_name || "—"}</div><div class="text-xs dim mono">ref/${c?.referral_code || ""}</div></td>
+    <td><div class="fw-700 hi">${esc(c?.company_name || "—")}</div><div class="text-xs dim mono">ref/${esc(c?.referral_code || "")}</div></td>
     <td class="num">${n}</td>
     <td class="num muted">${RM(w.total_credit_earned)}</td>
     <td><div class="fw-700 hi mono">${RM(w.credit_balance)}</div><div class="bar" style="width:80px;margin-top:5px"><i style="width:${pctTo}%"></i></div></td>
@@ -2748,8 +2841,8 @@ function refRow(r) {
   const c = clientById(r.referrer_client_id);
   const ok = r.activation_status === "confirmed";
   return `<tr>
-    <td class="fw-600 hi">${c?.company_name || "—"}</td>
-    <td>${r.referred_company_name}</td>
+    <td class="fw-600 hi">${esc(c?.company_name || "—")}</td>
+    <td>${esc(r.referred_company_name)}</td>
     <td><span class="pill ${ok ? "pill-grow" : "pill-amber"}"><span class="dot" style="background:${ok ? "var(--grow)" : "var(--amber)"}"></span>${ok ? "Confirmed" : "Pending"}</span></td>
     <td class="num fw-600 hi">${RM(r.reward_amount)}</td>
     <td class="text-sm muted">${timeAgo(r.created_at)}</td>
@@ -2789,9 +2882,9 @@ function renderWaitlist() {
       <tbody>
         ${wl.map((w, i) => `<tr>
           <td class="num dim">${i + 1}</td>
-          <td><div class="fw-700 hi">${w.company_name}</div><div class="text-xs dim">${w.contact_person} · ${w.email}</div></td>
+          <td><div class="fw-700 hi">${esc(w.company_name)}</div><div class="text-xs dim">${esc(w.contact_person)} · ${esc(w.email)}</div></td>
           <td><span class="pill">${CATEGORY_LABEL[w.business_category] || "—"}</span></td>
-          <td>${w.referral_code ? `<span class="pill pill-violet">${icon("gift")} ${w.referral_code}</span>` : '<span class="text-xs dim">—</span>'}</td>
+          <td>${w.referral_code ? `<span class="pill pill-violet">${icon("gift")} ${esc(w.referral_code)}</span>` : '<span class="text-xs dim">—</span>'}</td>
           <td class="text-sm muted">${timeAgo(w.created_at)}</td>
           <td><button class="btn btn-primary btn-sm" data-invite="${w.id}">${icon("rocket")} Convert to prospect</button></td>
         </tr>`).join("") || `<tr><td colspan="6"><div class="empty">${icon("hourglass")}<div>Waitlist empty.</div></div></td></tr>`}
@@ -2814,9 +2907,7 @@ function wire4() {
       affordability: "likely",
       referred_by: w.referral_code || ""
     });
-    const idx = waitlist().findIndex((x) => x.id === w.id);
-    if (idx > -1)
-      waitlist().splice(idx, 1);
+    removeWaitlist(w.id);
     toast(`${w.company_name} moved into the pipeline`, "grow");
     location.hash = "#/admin/prospect/" + p.id;
   }));
@@ -2873,8 +2964,18 @@ function tickerTrack(cat) {
 function renderPreview(slug2) {
   const p = prospectBySlug(slug2);
   if (!p || !p.website_spec) {
+    if (!recorded.has("fetch:" + slug2)) {
+      recorded.add("fetch:" + slug2);
+      fetchProspectBySlug(slug2).then((found) => {
+        if (found && found.website_spec) {
+          const host2 = document.querySelector(".main");
+          if (host2)
+            host2.innerHTML = renderPreview(slug2);
+        }
+      });
+    }
     return `<div class="empty" style="min-height:100vh;display:grid;place-content:center">
-      ${icon("preview")}<div>Preview not found or not yet generated.</div>
+      ${icon("preview")}<div>Loading preview…</div>
       <a class="btn btn-ghost mt-14" href="#/">Back to KOBIS</a></div>`;
   }
   curSlug = slug2;
@@ -2898,9 +2999,9 @@ function renderPreview(slug2) {
     </div>
 
     <header class="site-nav">
-      <div class="site-logo">${s.meta.logo ? `<img class="site-logo-img" src="${s.meta.logo}" alt="${s.meta.name}"/>` : ""}<span>${s.meta.name}</span></div>
+      <div class="site-logo">${s.meta.logo ? `<img class="site-logo-img" src="${esc(s.meta.logo)}" alt="${esc(s.meta.name)}"/>` : ""}<span>${esc(s.meta.name)}</span></div>
       <nav class="site-links">
-        <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+        <a href="#site-about">${tr.about}</a><a href="#site-services">${esc(s.servicesSection.name)}</a>
         <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
       </nav>
       <div class="lang-switch">${LANGS.map(([k, l]) => `<button class="${curLang === k ? "on" : ""}" data-lang="${k}">${l}</button>`).join("")}</div>
@@ -2909,32 +3010,32 @@ function renderPreview(slug2) {
 
     <section class="site-hero">
       <div class="site-hero-inner">
-        <div class="site-eyebrow">${s.hero.eyebrow}</div>
-        <h1 class="site-h1">${s.hero.headline}</h1>
-        <p class="site-sub">${s.hero.sub}</p>
+        <div class="site-eyebrow">${esc(s.hero.eyebrow)}</div>
+        <h1 class="site-h1">${esc(s.hero.headline)}</h1>
+        <p class="site-sub">${esc(s.hero.sub)}</p>
         <div class="site-hero-cta">
-          <a class="site-btn-primary" href="#site-contact">${s.hero.primaryCta}</a>
-          <a class="site-btn-ghost" href="#site-services">${s.hero.secondaryCta}</a>
+          <a class="site-btn-primary" href="#site-contact">${esc(s.hero.primaryCta)}</a>
+          <a class="site-btn-ghost" href="#site-services">${esc(s.hero.secondaryCta)}</a>
         </div>
-        <div class="site-stats">${s.about.stats.map((st) => `<div><b>${st.k}</b><span>${st.v}</span></div>`).join("")}</div>
+        <div class="site-stats">${s.about.stats.map((st) => `<div><b>${esc(st.k)}</b><span>${esc(st.v)}</span></div>`).join("")}</div>
       </div>
-      <div class="site-hero-art">${s.hero.image ? `<div class="site-hero-photo" style="background-image:url('${s.hero.image}')"></div>` : '<div class="site-hero-blob"></div>'}</div>
+      <div class="site-hero-art">${s.hero.image ? `<div class="site-hero-photo" style="background-image:url('${esc(s.hero.image)}')"></div>` : '<div class="site-hero-blob"></div>'}</div>
     </section>
 
     <section class="site-section" id="site-about">
       <div class="site-2col">
-        <div><div class="site-tag">${tr.about}</div><h2 class="site-h2">${s.about.title}</h2></div>
-        <p class="site-body">${s.about.body}</p>
+        <div><div class="site-tag">${tr.about}</div><h2 class="site-h2">${esc(s.about.title)}</h2></div>
+        <p class="site-body">${esc(s.about.body)}</p>
       </div>
     </section>
 
     <section class="site-section site-alt" id="site-services">
-      <div class="site-tag center-tag">${s.servicesSection.name}</div>
+      <div class="site-tag center-tag">${esc(s.servicesSection.name)}</div>
       <h2 class="site-h2 center">${tr.whatWeOffer}</h2>
       <div class="site-grid">
         ${s.servicesSection.items.map((it) => `<div class="site-card">
-          <div class="site-card-top"><h3>${it.title}</h3>${it.price ? `<span class="site-price">${it.price}</span>` : ""}</div>
-          <p>${it.blurb}</p></div>`).join("")}
+          <div class="site-card-top"><h3>${esc(it.title)}</h3>${it.price ? `<span class="site-price">${esc(it.price)}</span>` : ""}</div>
+          <p>${esc(it.blurb)}</p></div>`).join("")}
       </div>
     </section>
 
@@ -2942,7 +3043,7 @@ function renderPreview(slug2) {
       <div class="site-tag center-tag">${tr.gallery}</div>
       <h2 class="site-h2 center">${tr.aLookInside}</h2>
       <div class="site-gallery">
-        ${s.gallery.images && s.gallery.images.length ? s.gallery.images.map((src) => `<div class="site-shot site-shot-photo" style="background-image:url('${src}')"></div>`).join("") : s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join("")}
+        ${s.gallery.images && s.gallery.images.length ? s.gallery.images.map((src) => `<div class="site-shot site-shot-photo" style="background-image:url('${esc(src)}')"></div>`).join("") : s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${esc(g)}</span></div>`).join("")}
       </div>
     </section>
 
@@ -2953,21 +3054,21 @@ function renderPreview(slug2) {
       <div class="site-contact">
         <div>
           <div class="site-tag">${tr.getInTouch}</div>
-          <h2 class="site-h2">${s.hero.primaryCta}</h2>
+          <h2 class="site-h2">${esc(s.hero.primaryCta)}</h2>
           <p class="site-body">We'd love to hear from you. Reach out and we'll respond fast.</p>
           <div class="site-contact-lines">
-            ${s.contact.lines.map((l) => `<div class="site-contact-line">${icon(l.icon)} ${l.label}</div>`).join("")}
+            ${s.contact.lines.map((l) => `<div class="site-contact-line">${icon(l.icon)} ${esc(l.label)}</div>`).join("")}
           </div>
-          <a class="site-btn-wa" href="#" data-activate>${icon("whatsapp")} ${s.hero.primaryCta} on WhatsApp</a>
+          <a class="site-btn-wa" href="#" data-activate>${icon("whatsapp")} ${esc(s.hero.primaryCta)} on WhatsApp</a>
         </div>
         <div class="site-contact-card">
           <div class="site-tag" style="margin-bottom:10px">${tr.findUs}</div>
           <div class="map-embed">
             <iframe src="${mapSrc}" width="100%" height="240" style="border:0" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade" title="${s.meta.name} map"></iframe>
+              referrerpolicy="no-referrer-when-downgrade" title="${esc(s.meta.name)} map"></iframe>
           </div>
           <div class="site-socials"><span class="dim-label">${tr.followUs}:</span>
-            ${s.contact.socials.map((so) => `<span>${so.k}</span>`).join("") || "<span>—</span>"}
+            ${s.contact.socials.map((so) => `<span>${esc(so.k)}</span>`).join("") || "<span>—</span>"}
           </div>
         </div>
       </div>
@@ -2977,18 +3078,18 @@ function renderPreview(slug2) {
     <footer class="site-foot-wrap">
       <div class="site-foot-main">
         <div class="footer-brand">
-          <div class="footer-mark">${s.meta.logo ? `<img src="${s.meta.logo}" alt="${s.meta.name}"/>` : s.meta.name[0]}</div>
+          <div class="footer-mark">${s.meta.logo ? `<img src="${esc(s.meta.logo)}" alt="${esc(s.meta.name)}"/>` : esc((s.meta.name || "?")[0])}</div>
           <div>
-            <div class="footer-name">${s.meta.name}</div>
-            <div class="footer-tagline">${s.tagline || s.meta.catLabel}</div>
+            <div class="footer-name">${esc(s.meta.name)}</div>
+            <div class="footer-tagline">${esc(s.tagline || s.meta.catLabel)}</div>
           </div>
         </div>
         <nav class="footer-links">
-          <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
+          <a href="#site-about">${tr.about}</a><a href="#site-services">${esc(s.servicesSection.name)}</a>
           <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
         </nav>
       </div>
-      <div class="footer-copy"><p>© ${new Date().getFullYear()} ${s.meta.name}. ${tr.allRights}.</p></div>
+      <div class="footer-copy"><p>© ${new Date().getFullYear()} ${esc(s.meta.name)}. ${tr.allRights}.</p></div>
       <div class="kobis-bar">
         This Digital Experience is Part of the
         <a class="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>
@@ -3093,8 +3194,8 @@ function renderClientPortal(id) {
   return `
   <div class="cp">
     <header class="cp-nav">
-      <div class="row gap-12"><div class="brand-mark">${c.company_name[0]}</div>
-        <div><div class="brand-name">${c.company_name}</div><div class="brand-sub">Client Dashboard</div></div></div>
+      <div class="row gap-12"><div class="brand-mark">${esc((c.company_name || "?")[0])}</div>
+        <div><div class="brand-name">${esc(c.company_name)}</div><div class="brand-sub">Client Dashboard</div></div></div>
       <div class="row gap-10">
         <span class="pill pill-grow">${icon("check")} Active</span>
         <a class="btn btn-ghost btn-sm" href="${c.activated_website_url}" target="_blank">${icon("eye")} View site</a>
@@ -3105,7 +3206,7 @@ function renderClientPortal(id) {
     <div class="cp-body">
       <div class="page-head">
         <span class="eyebrow">${icon("rocket")} Welcome aboard</span>
-        <h1 class="page-title">Manage ${c.company_name}</h1>
+        <h1 class="page-title">Manage ${esc(c.company_name)}</h1>
         <p class="page-sub">Your website is live and yours to manage. Update content anytime — changes publish instantly.</p>
       </div>
 
@@ -3121,22 +3222,22 @@ function renderClientPortal(id) {
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-violet">${icon("image")}</div><h3>Gallery</h3><span class="sub">add your best photos</span></div>
             <div class="cp-gallery" id="cpGallery">
-              ${(c.gallery.length ? c.gallery : ["", "", ""]).map((g, i) => g ? `<div class="cp-shot" style="background-image:url('${g}')"></div>` : `<div class="cp-shot empty-shot">${icon("image")}</div>`).join("")}
+              ${(c.gallery.length ? c.gallery : ["", "", ""]).map((g, i) => g ? `<div class="cp-shot" style="background-image:url('${esc(g)}')"></div>` : `<div class="cp-shot empty-shot">${icon("image")}</div>`).join("")}
               <button class="cp-shot add-shot" id="addShot">${icon("plus")}<span>Add image URL</span></button>
             </div>
           </div>
 
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-amber">${icon("megaphone")}</div><h3>Moving / announcement</h3></div>
-            <div class="field"><textarea class="input" id="announceBox" placeholder="e.g. We're moving to a new location from 1 July! New address: ...">${c.announcement || ""}</textarea></div>
+            <div class="field"><textarea class="input" id="announceBox" placeholder="e.g. We're moving to a new location from 1 July! New address: ...">${esc(c.announcement || "")}</textarea></div>
             <button class="btn btn-primary btn-sm" id="saveAnnounce">${icon("check")} Publish announcement</button>
           </div>
 
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-sky">${icon("phone")}</div><h3>Contact details</h3></div>
             <div class="field-row">
-              <div class="field"><label>Phone</label><input class="input" id="cPhone" value="${c.phone || ""}"/></div>
-              <div class="field"><label>Email</label><input class="input" id="cEmail" value="${c.email || ""}"/></div>
+              <div class="field"><label>Phone</label><input class="input" id="cPhone" value="${esc(c.phone || "")}"/></div>
+              <div class="field"><label>Email</label><input class="input" id="cEmail" value="${esc(c.email || "")}"/></div>
             </div>
             <button class="btn btn-primary btn-sm" id="saveContact">${icon("check")} Save contact</button>
           </div>
@@ -3147,7 +3248,7 @@ function renderClientPortal(id) {
             <div class="card-head"><div class="kpi-icon t-grow">${icon("gift")}</div><h3>Refer & earn</h3></div>
             <p class="text-sm muted">Earn <b class="hi">${RM(PRICING.referral.rewardPerActivation)}</b> renewal credit for every business that activates through your link.</p>
             <div class="field mt-14"><label>Your referral link</label>
-              <div class="row gap-8"><input class="input mono text-xs" id="refLink" readonly value="${refLink}"/>
+              <div class="row gap-8"><input class="input mono text-xs" id="refLink" readonly value="${esc(refLink)}"/>
                 <button class="btn btn-ghost" id="copyRef">${icon("copy")}</button></div>
             </div>
             <div class="cp-credit">
@@ -3159,7 +3260,7 @@ function renderClientPortal(id) {
             <div class="divider"></div>
             <div class="text-xs dim">${refs.length ? "Your referrals" : "No referrals yet — share your link!"}</div>
             ${refs.map((r) => `<div class="between" style="padding:8px 0;border-bottom:1px solid var(--line-soft)">
-              <span class="text-sm hi">${r.referred_company_name}</span>
+              <span class="text-sm hi">${esc(r.referred_company_name)}</span>
               <span class="pill ${r.activation_status === "confirmed" ? "pill-grow" : "pill-amber"}">${r.activation_status === "confirmed" ? "+" + RM(r.reward_amount) : "pending"}</span></div>`).join("")}
           </div>
 

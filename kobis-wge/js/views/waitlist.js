@@ -1,7 +1,7 @@
 // Waitlist — Rec 6 controlled onboarding. Invite prospects in batches.
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { fmtDate, timeAgo, toast } from '../lib/ui.js';
+import { fmtDate, timeAgo, toast, esc } from '../lib/ui.js';
 import { CATEGORY_LABEL } from '../lib/scoring.js';
 
 export function renderWaitlist() {
@@ -28,9 +28,9 @@ export function renderWaitlist() {
       <tbody>
         ${wl.map((w, i) => `<tr>
           <td class="num dim">${i + 1}</td>
-          <td><div class="fw-700 hi">${w.company_name}</div><div class="text-xs dim">${w.contact_person} · ${w.email}</div></td>
+          <td><div class="fw-700 hi">${esc(w.company_name)}</div><div class="text-xs dim">${esc(w.contact_person)} · ${esc(w.email)}</div></td>
           <td><span class="pill">${CATEGORY_LABEL[w.business_category] || '—'}</span></td>
-          <td>${w.referral_code ? `<span class="pill pill-violet">${icon('gift')} ${w.referral_code}</span>` : '<span class="text-xs dim">—</span>'}</td>
+          <td>${w.referral_code ? `<span class="pill pill-violet">${icon('gift')} ${esc(w.referral_code)}</span>` : '<span class="text-xs dim">—</span>'}</td>
           <td class="text-sm muted">${timeAgo(w.created_at)}</td>
           <td><button class="btn btn-primary btn-sm" data-invite="${w.id}">${icon('rocket')} Convert to prospect</button></td>
         </tr>`).join('') || `<tr><td colspan="6"><div class="empty">${icon('hourglass')}<div>Waitlist empty.</div></div></td></tr>`}
@@ -48,9 +48,7 @@ function wire() {
       web_presence: 'none', engagement: 'medium', affordability: 'likely',
       referred_by: w.referral_code || '',
     });
-    // remove from waitlist
-    const idx = store.waitlist().findIndex(x => x.id === w.id);
-    if (idx > -1) store.waitlist().splice(idx, 1);
+    store.removeWaitlist(w.id); // remove locally AND remotely
     toast(`${w.company_name} moved into the pipeline`, 'grow');
     location.hash = '#/admin/prospect/' + p.id;
   }));

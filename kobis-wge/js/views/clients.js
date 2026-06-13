@@ -1,7 +1,7 @@
 // Clients & Orders — activated customers, revenue, renewals (RBAC-gated).
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
-import { RM, fmtDate, daysUntil, metrics } from '../lib/ui.js';
+import { RM, fmtDate, daysUntil, metrics, esc } from '../lib/ui.js';
 import { PRICING } from '../lib/pricing.js';
 
 export function renderClients() {
@@ -38,7 +38,7 @@ function rowHtml(c) {
   const addons = [o.ai_chatbot && 'Chatbot', o.news_module && 'News', o.extra_email_count && `${o.extra_email_count}× email`].filter(Boolean);
   const due = daysUntil(c.renewal_due_date);
   return `<tr>
-    <td><div class="fw-700 hi">${c.company_name}</div><div class="text-xs dim">${c.contact_person}</div></td>
+    <td><div class="fw-700 hi">${esc(c.company_name)}</div><div class="text-xs dim">${esc(c.contact_person)}</div></td>
     <td><span class="pill pill-grow">Activation</span></td>
     <td>${addons.length ? addons.map(a => `<span class="pill" style="margin:2px">${a}</span>`).join('') : '<span class="text-xs dim">—</span>'}</td>
     <td class="num fw-700 hi">${RM(c.package_price)}</td>
