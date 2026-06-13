@@ -168,21 +168,36 @@ export function init() { db = load() || seed(); return db; }
 
 // Async boot: hydrate from Supabase when configured, else local/seed.
 // Views stay fully synchronous — only the initial boot awaits.
+const TABLES = ['prospects', 'clients', 'orders', 'referrals', 'credit_wallets', 'waitlist', 'team_members'];
 export async function boot() {
   const local = load();
-  if (remote.isConfigured()) {
-    const snapshot = await remote.hydrateAll();
-    if (snapshot && (snapshot.prospects?.length || snapshot.clients?.length)) {
-      // merge remote tables onto a fresh shell so UI-only fields (role) exist
-      db = { ...seed(), ...snapshot, role: (local && local.role) || 'admin' };
-    } else {
-      // first run against an empty database: seed locally then push up
-      db = local || seed();
-      remote.pushAll(db);
-    }
-  } else {
-    db = local || seed();
+  if (!remote.isConfigured()) { db = local || seed(); return db; }
+
+  const snap = await remote.hydrateAll();
+  if (!snap) { db = local || seed(); return db; } // offline: use local, don't push (avoid dupes)
+
+  const fresh = seed();
+  const dbHasData = TABLES.some(t => snap[t]?.length);
+  if (!dbHasData) {
+    // brand-new database: seed it once and push up
+    db = local || fresh;
+    db.role = (local && local.role) || 'admin';
+    remote.pushAll(db);
+    return db;
   }
+
+  // DB already has data: prefer it, but self-heal any table that's empty in the
+  // DB — backfill from this device's local copy (matching ids), or from a fresh
+  // seed for fixed-id config tables (team_members) — then push the repairs up.
+  db = { role: (local && local.role) || 'admin' };
+  let heal = false;
+  for (const t of TABLES) {
+    if (snap[t]?.length) db[t] = snap[t];
+    else if (local?.[t]?.length) { db[t] = local[t]; heal = true; }
+    else if (t === 'team_members') { db[t] = fresh.team_members; heal = true; }
+    else db[t] = [];
+  }
+  if (heal) remote.pushAll(db);
   return db;
 }
 export function subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); }

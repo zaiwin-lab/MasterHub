@@ -51,9 +51,11 @@ export async function hydrateAll() {
 export async function pushAll(state) {
   if (!isConfigured()) return;
   const { url } = cfg();
-  for (const t of TABLES) {
+  // Push every table in parallel so one slow/large table can't delay the rest
+  // and an early tab-close is far less likely to leave tables unsynced.
+  await Promise.all(TABLES.map(async (t) => {
     const rows = state[t];
-    if (!Array.isArray(rows) || !rows.length) continue;
+    if (!Array.isArray(rows) || !rows.length) return;
     try {
       // Document model: every row is { id, data } — drift-proof against new fields.
       const docs = rows.map(r => ({ id: r.id, data: r, updated_at: new Date().toISOString() }));
@@ -65,7 +67,7 @@ export async function pushAll(state) {
     } catch (e) {
       console.warn(`[KOBIS] Supabase push ${t} failed:`, e.message);
     }
-  }
+  }));
 }
 
 export const SUPABASE_TABLES = TABLES;

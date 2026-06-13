@@ -904,10 +904,10 @@ async function pushAll(state) {
   if (!isConfigured())
     return;
   const { url } = cfg();
-  for (const t of TABLES) {
+  await Promise.all(TABLES.map(async (t) => {
     const rows = state[t];
     if (!Array.isArray(rows) || !rows.length)
-      continue;
+      return;
     try {
       const docs = rows.map((r) => ({ id: r.id, data: r, updated_at: new Date().toISOString() }));
       await fetch(`${url}/rest/v1/${t}?on_conflict=id`, {
@@ -918,7 +918,7 @@ async function pushAll(state) {
     } catch (e) {
       console.warn(`[KOBIS] Supabase push ${t} failed:`, e.message);
     }
-  }
+  }));
 }
 
 // js/lib/store.js
@@ -1251,19 +1251,42 @@ function persist() {
 function emit() {
   listeners.forEach((fn) => fn(db));
 }
+var TABLES2 = ["prospects", "clients", "orders", "referrals", "credit_wallets", "waitlist", "team_members"];
 async function boot() {
   const local = load();
-  if (isConfigured()) {
-    const snapshot = await hydrateAll();
-    if (snapshot && (snapshot.prospects?.length || snapshot.clients?.length)) {
-      db = { ...seed(), ...snapshot, role: local && local.role || "admin" };
-    } else {
-      db = local || seed();
-      pushAll(db);
-    }
-  } else {
+  if (!isConfigured()) {
     db = local || seed();
+    return db;
   }
+  const snap = await hydrateAll();
+  if (!snap) {
+    db = local || seed();
+    return db;
+  }
+  const fresh = seed();
+  const dbHasData = TABLES2.some((t) => snap[t]?.length);
+  if (!dbHasData) {
+    db = local || fresh;
+    db.role = local && local.role || "admin";
+    pushAll(db);
+    return db;
+  }
+  db = { role: local && local.role || "admin" };
+  let heal = false;
+  for (const t of TABLES2) {
+    if (snap[t]?.length)
+      db[t] = snap[t];
+    else if (local?.[t]?.length) {
+      db[t] = local[t];
+      heal = true;
+    } else if (t === "team_members") {
+      db[t] = fresh.team_members;
+      heal = true;
+    } else
+      db[t] = [];
+  }
+  if (heal)
+    pushAll(db);
   return db;
 }
 function subscribe(fn) {
@@ -2887,7 +2910,8 @@ function shell(content, active) {
   window.scrollTo(0, 0);
 }
 function sidebar(active, role2) {
-  const me = team().find((t) => t.role === role2) || team()[0];
+  const team2 = team();
+  const me = team2.find((t) => t.role === role2) || team2[0] || { name: "You", initials: "YO", email: "admin@kobis.my" };
   const groups = NAV.map((g) => {
     const items = g.items.filter((it) => !it.roles || it.roles.includes(role2));
     if (!items.length)

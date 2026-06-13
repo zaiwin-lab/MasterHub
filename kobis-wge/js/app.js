@@ -72,7 +72,8 @@ function shell(content, active) {
 }
 
 function sidebar(active, role) {
-  const me = store.team().find(t => t.role === role) || store.team()[0];
+  const team = store.team();
+  const me = team.find(t => t.role === role) || team[0] || { name: 'You', initials: 'YO', email: 'admin@kobis.my' };
   const groups = NAV.map(g => {
     const items = g.items.filter(it => !it.roles || it.roles.includes(role));
     if (!items.length) return '';
