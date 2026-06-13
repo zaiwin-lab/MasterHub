@@ -422,7 +422,10 @@ function openActivateModal(p) {
     else sel[el.dataset.addon] = el.checked;
     refresh();
   }));
-  m.querySelector('#confirmPay')?.addEventListener('click', () => {
+  // #confirmPay lives inside #actSummary, which is re-rendered by refresh(),
+  // so delegate from the modal root (a direct handler would be wiped each refresh).
+  m.addEventListener('click', (e) => {
+    if (!e.target.closest('#confirmPay')) return;
     const c = store.activateProspect(p.id, sel);
     closeModal();
     toast(`💰 ${p.company_name} activated · ${RM(c.package_price)} confirmed`, 'grow');

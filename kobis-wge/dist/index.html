@@ -2582,7 +2582,9 @@ function openActivateModal(p) {
       sel[el.dataset.addon] = el.checked;
     refresh();
   }));
-  m.querySelector("#confirmPay")?.addEventListener("click", () => {
+  m.addEventListener("click", (e) => {
+    if (!e.target.closest("#confirmPay"))
+      return;
     const c = activateProspect(p.id, sel);
     closeModal();
     toast(`\uD83D\uDCB0 ${p.company_name} activated · ${RM(c.package_price)} confirmed`, "grow");
