@@ -6,6 +6,7 @@
 // MVP demos the automation without external dependencies. Same output shape.
 // ===========================================================================
 import { CATEGORY_LABEL, CATEGORY_TIER } from './scoring.js';
+import { extractPricedItems } from './assets.js';
 
 const TONE = {
   A: { mood: 'warm, appetising, local-favourite', cta: 'Order on WhatsApp', sectionName: 'Menu' },
@@ -49,24 +50,42 @@ export function generateWebsite(p) {
   const catLabel = CATEGORY_LABEL[p.business_category] || 'Business';
   const name = p.company_name || 'Your Business';
   const city = p.city || 'Malaysia';
-  const desc = (p.business_description || '').trim();
   const isFood = tier === 'A';
+
+  // Build materials supplied by the client/team feed the generation.
+  const assets = p.assets || {};
+  const pdfText = assets.pdf?.text || '';
+  const desc = ((p.business_description || '').trim()) || (pdfText ? pdfText.replace(/\s+/g, ' ').slice(0, 360) : '');
 
   const headlines = [
     isFood ? `${name} — ${city}’s New Favourite` : `${name}`,
     isFood ? `Freshly made. Locally loved.` : tier === 'B' ? `${catLabel} who gets results` : `${city}’s trusted ${catLabel.toLowerCase()}`,
   ];
 
-  const services = (SEEDS[p.business_category] || SEEDS.consultant).map((title, i) => ({
-    title,
-    blurb: isFood
-      ? ['House favourite', 'Made fresh daily', 'Customer pick', 'Best seller', 'Seasonal', 'Signature'][i % 6]
-      : ['Tailored to you', 'Fast turnaround', 'Fixed pricing', 'Fully guaranteed', 'No surprises', 'Expert-led'][i % 6],
-    price: isFood ? `RM${[12, 9, 15, 18, 14, 22][i % 6]}` : null,
-  }));
+  // Prefer real priced items pulled from an uploaded menu/brochure PDF.
+  const pdfItems = isFood ? extractPricedItems(pdfText, 6) : extractPricedItems(pdfText, 6);
+  const services = (pdfItems.length >= 3)
+    ? pdfItems.map((it, i) => ({
+        title: it.title,
+        blurb: isFood ? ['House favourite', 'Made fresh daily', 'Customer pick', 'Best seller', 'Seasonal', 'Signature'][i % 6] : 'From our list',
+        price: it.price,
+      }))
+    : (SEEDS[p.business_category] || SEEDS.consultant).map((title, i) => ({
+        title,
+        blurb: isFood
+          ? ['House favourite', 'Made fresh daily', 'Customer pick', 'Best seller', 'Seasonal', 'Signature'][i % 6]
+          : ['Tailored to you', 'Fast turnaround', 'Fixed pricing', 'Fully guaranteed', 'No surprises', 'Expert-led'][i % 6],
+        price: isFood ? `RM${[12, 9, 15, 18, 14, 22][i % 6]}` : null,
+      }));
 
   return {
-    meta: { name, category: p.business_category, catLabel, tier, city, handle: brandHandleFrom(name), generatedAt: new Date().toISOString() },
+    meta: {
+      name, category: p.business_category, catLabel, tier, city, handle: brandHandleFrom(name),
+      generatedAt: new Date().toISOString(),
+      logo: assets.logo || '',                 // uploaded logo
+      references: assets.references || [],      // example website links (design refs)
+      sourcePdf: assets.pdf?.name || '',        // brochure/menu used
+    },
     tagline: isFood ? `${catLabel} • ${city}` : `${catLabel} based in ${city}, Malaysia`,
     mapQuery: `${name}, ${city}, Malaysia`,
     theme: themeFor(tier, p.business_category),
@@ -76,6 +95,7 @@ export function generateWebsite(p) {
       sub: headlines[1],
       primaryCta: t.cta,
       secondaryCta: 'View ' + t.sectionName,
+      image: (assets.images && assets.images[0]) || '',  // uploaded hero photo
     },
     about: {
       title: `About ${name}`,
@@ -85,7 +105,7 @@ export function generateWebsite(p) {
       stats: statsFor(tier, p),
     },
     servicesSection: { name: t.sectionName, items: services },
-    gallery: { plan: GALLERY_PLAN[tier], note: 'Upload 6–12 of your best photos in the dashboard after activation.' },
+    gallery: { plan: GALLERY_PLAN[tier], images: (assets.images || []).slice(0, 10), note: 'Upload 6–12 of your best photos in the dashboard after activation.' },
     contact: {
       whatsappCta: t.cta,
       lines: [

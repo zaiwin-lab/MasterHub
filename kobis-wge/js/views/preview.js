@@ -79,7 +79,7 @@ export function renderPreview(slug) {
     </div>
 
     <header class="site-nav">
-      <div class="site-logo">${s.meta.name}</div>
+      <div class="site-logo">${s.meta.logo ? `<img class="site-logo-img" src="${s.meta.logo}" alt="${s.meta.name}"/>` : ''}<span>${s.meta.name}</span></div>
       <nav class="site-links">
         <a href="#site-about">${tr.about}</a><a href="#site-services">${s.servicesSection.name}</a>
         <a href="#site-gallery">${tr.gallery}</a><a href="#site-contact">${tr.contact}</a>
@@ -99,7 +99,7 @@ export function renderPreview(slug) {
         </div>
         <div class="site-stats">${s.about.stats.map(st => `<div><b>${st.k}</b><span>${st.v}</span></div>`).join('')}</div>
       </div>
-      <div class="site-hero-art"><div class="site-hero-blob"></div></div>
+      <div class="site-hero-art">${s.hero.image ? `<div class="site-hero-photo" style="background-image:url('${s.hero.image}')"></div>` : '<div class="site-hero-blob"></div>'}</div>
     </section>
 
     <section class="site-section" id="site-about">
@@ -123,7 +123,9 @@ export function renderPreview(slug) {
       <div class="site-tag center-tag">${tr.gallery}</div>
       <h2 class="site-h2 center">${tr.aLookInside}</h2>
       <div class="site-gallery">
-        ${s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join('')}
+        ${(s.gallery.images && s.gallery.images.length)
+          ? s.gallery.images.map(src => `<div class="site-shot site-shot-photo" style="background-image:url('${src}')"></div>`).join('')
+          : s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${g}</span></div>`).join('')}
       </div>
     </section>
 
@@ -158,7 +160,7 @@ export function renderPreview(slug) {
     <footer class="site-foot-wrap">
       <div class="site-foot-main">
         <div class="footer-brand">
-          <div class="footer-mark">${s.meta.name[0]}</div>
+          <div class="footer-mark">${s.meta.logo ? `<img src="${s.meta.logo}" alt="${s.meta.name}"/>` : s.meta.name[0]}</div>
           <div>
             <div class="footer-name">${s.meta.name}</div>
             <div class="footer-tagline">${s.tagline || s.meta.catLabel}</div>

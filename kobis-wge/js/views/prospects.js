@@ -7,6 +7,7 @@ import { openModal, closeModal } from '../lib/modal.js';
 import { scoreProspect, band, CATEGORY_LABEL, CATEGORY_TIER, PRESENCE_LABEL, QUALIFY_THRESHOLD } from '../lib/scoring.js';
 import { GEN_STEPS } from '../lib/aigen.js';
 import { quote, whatsappActivation, whatsappOutreach, FOLLOWUP_CADENCE, PRICING } from '../lib/pricing.js';
+import { readImageResized, readPdfText, normalizeUrls } from '../lib/assets.js';
 
 // ============================ LIST =========================================
 let listFilter = 'all', listSort = 'score';
@@ -75,6 +76,8 @@ function rerenderList() { const v = document.getElementById('view'); if (v) { v.
 // ============================ ADD MODAL (live scoring) =====================
 function openAddModal() {
   const draft = { business_category: 'cafe', followers: 5000, web_presence: 'none', engagement: 'high', affordability: 'likely' };
+  // build materials the client/team supplies — fed into generation
+  const assets = { logo: '', images: [], pdf: null, references: [] };
   const m = openModal(addModalHtml(draft));
   const refresh = () => {
     const f = m.querySelector('#addForm');
@@ -86,10 +89,41 @@ function openAddModal() {
     m.querySelector('#scorePreview').innerHTML = scorePreview(draft);
   };
   m.querySelectorAll('select,input[name=followers]').forEach(el => el.addEventListener('input', refresh));
+
+  // ---- asset uploads -----------------------------------------------------
+  const note = (sel, msg) => { const el = m.querySelector(sel); if (el) el.textContent = msg; };
+  m.querySelector('#logoInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    note('#logoNote', 'processing…');
+    try { assets.logo = await readImageResized(file, 400, 0.9); m.querySelector('#logoPrev').innerHTML = `<img src="${assets.logo}" alt="logo"/>`; note('#logoNote', file.name); }
+    catch { note('#logoNote', 'could not read image'); }
+  });
+  m.querySelector('#photosInput').addEventListener('change', async (e) => {
+    const files = [...e.target.files]; if (!files.length) return;
+    note('#photosNote', `processing ${files.length}…`);
+    for (const file of files) {
+      if (assets.images.length >= 10) break;
+      try { const d = await readImageResized(file); assets.images.push(d); } catch {}
+    }
+    m.querySelector('#photosPrev').innerHTML = assets.images.map((d, i) => `<div class="asset-thumb" style="background-image:url('${d}')"><button data-rm="${i}">${icon('x')}</button></div>`).join('');
+    note('#photosNote', `${assets.images.length} photo(s) ready`);
+    m.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => { assets.images.splice(Number(b.dataset.rm), 1); m.querySelector('#photosInput').dispatchEvent(new Event('change')); }));
+  });
+  m.querySelector('#pdfInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    note('#pdfNote', 'reading PDF…');
+    const res = await readPdfText(file);
+    assets.pdf = res;
+    note('#pdfNote', res.text ? `${res.name} · ${res.pages} pages, text captured` : `${res.name} · stored (text not readable)`);
+  });
+
   m.querySelector('#addForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const fd = Object.fromEntries(new FormData(e.target).entries());
     fd.followers = Number(fd.followers) || 0;
+    assets.references = normalizeUrls(fd.reference_urls);
+    delete fd.reference_urls;
+    fd.assets = assets;
     const p = store.addProspect(fd);
     closeModal();
     toast(`Added ${p.company_name} · scored ${p.score}/100`, 'grow');
@@ -119,6 +153,32 @@ function addModalHtml(d) {
         <div class="field"><label>Instagram</label><input class="input" name="instagram_url" placeholder="instagram.com/..."/></div>
         <div class="field"><label>Facebook</label><input class="input" name="facebook_url" placeholder="facebook.com/..."/></div>
       </div>
+
+      <div class="divider"></div>
+      <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Build materials <span style="text-transform:none;letter-spacing:0">— the engine builds the site from these</span></div>
+      <div class="field-row">
+        <div class="field">
+          <label>Logo <span class="hint">(image)</span></label>
+          <div class="asset-row"><label class="asset-btn">${icon('image')} Choose logo<input id="logoInput" type="file" accept="image/*" hidden/></label><div id="logoPrev" class="asset-logo"></div></div>
+          <div id="logoNote" class="hint"></div>
+        </div>
+        <div class="field">
+          <label>Menu / Brochure <span class="hint">(PDF)</span></label>
+          <label class="asset-btn">${icon('preview')} Choose PDF<input id="pdfInput" type="file" accept="application/pdf" hidden/></label>
+          <div id="pdfNote" class="hint"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Photos <span class="hint">(used as the real hero & gallery, up to 10)</span></label>
+        <label class="asset-btn">${icon('image')} Choose photos<input id="photosInput" type="file" accept="image/*" multiple hidden/></label>
+        <div id="photosPrev" class="asset-thumbs"></div>
+        <div id="photosNote" class="hint"></div>
+      </div>
+      <div class="field">
+        <label>Example website links <span class="hint">(one per line — design references)</span></label>
+        <textarea class="input" name="reference_urls" placeholder="competitor1.com&#10;a-style-you-like.com"></textarea>
+      </div>
+
       <div class="divider"></div>
       <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Lead scoring inputs</div>
       <div class="field-row">
@@ -290,7 +350,21 @@ function profileCard(p) {
         `<a class="pill" href="https://${p[k]}" target="_blank">${icon('link')} ${l}</a>`).join('')}
     </div>
     ${p.business_description ? `<div class="divider"></div><div class="text-sm muted">${p.business_description}</div>` : ''}
+    ${materialsBlock(p.assets)}
   </div>`;
+}
+
+function materialsBlock(a) {
+  if (!a) return '';
+  const bits = [];
+  if (a.logo) bits.push(`<span class="pill">${icon('image')} logo</span>`);
+  if (a.images?.length) bits.push(`<span class="pill">${icon('image')} ${a.images.length} photos</span>`);
+  if (a.pdf?.name) bits.push(`<span class="pill">${icon('preview')} ${a.pdf.name}</span>`);
+  if (!bits.length && !a.references?.length) return '';
+  return `<div class="divider"></div>
+    <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Build materials</div>
+    <div class="row gap-8 wrap">${bits.join('')}</div>
+    ${a.references?.length ? `<div class="text-xs dim mt-8">References:</div>${a.references.map(u => `<a class="pill" href="https://${u}" target="_blank" style="margin:3px 3px 0 0">${icon('link')} ${u}</a>`).join('')}` : ''}`;
 }
 
 // ---- detail wiring -------------------------------------------------------
