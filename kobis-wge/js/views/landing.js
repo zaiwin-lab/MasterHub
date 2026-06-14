@@ -25,7 +25,7 @@ export function renderLanding() {
   <section class="lh-hero">
     <div class="lh-hero-inner">
       <span class="pill pill-grow">${icon('bolt')} The website you can see before you buy</span>
-      <h1 class="lh-h1">Build First.<br><span class="grad">Sell Later.</span> Grow Forever.</h1>
+      <h1 class="lh-h1">Build First.<br><span class="grad">Pay Later.</span> Go Smarter.</h1>
       <p class="lh-lead">KOBIS builds a complete, professional website preview for your business — <b>before</b> you pay a cent. Love it? Activate ownership for a one-time <b>${RM(PRICING.activation)}</b>. That's it.</p>
       <div class="lh-cta-row">
         <a class="btn btn-primary" href="#request">${icon('rocket')} Request my free preview</a>
@@ -54,7 +54,7 @@ export function renderLanding() {
       </div>
       <div class="lh-compare-col good">
         <div class="lh-compare-tag">KOBIS engine · zero friction</div>
-        ${['Identify','Build Preview','Send','Activate','Upsell','Renew'].map((s,i,a)=>`<div class="lh-flow-step">${s}${i<a.length-1?'<span class="arr">→</span>':''}</div>`).join('')}
+        ${['Identify','Build Preview','Send','Activate','Grow','Renew'].map((s,i,a)=>`<div class="lh-flow-step">${s}${i<a.length-1?'<span class="arr">→</span>':''}</div>`).join('')}
         <p class="lh-compare-note">You see exactly what you'll own — then decide.</p>
       </div>
     </div>
@@ -99,7 +99,7 @@ export function renderLanding() {
             <div><div class="fw-600 hi">${a.label}</div><div class="text-xs dim">${a.blurb}</div></div>
             <div class="lh-addon-price">${RM(a.price)}${a.unit||''}</div>
           </div>`).join('')}
-        <div class="lh-addon-foot">${icon('spark')} First-payment potential up to <b>${RM(800)}</b> with add-ons.</div>
+        <div class="lh-addon-foot">${icon('spark')} Add only what you need — your website works great on its own.</div>
       </div>
     </div>
   </section>
@@ -136,7 +136,7 @@ export function renderLanding() {
 
   <footer class="lh-foot">
     <div class="row gap-10"><div class="brand-mark" style="width:30px;height:30px;font-size:15px">K</div><b class="hi">KOBIS Berhad</b></div>
-    <div class="text-xs dim">Build First. Sell Later. Grow Forever. · © ${new Date().getFullYear()} KOBIS Website Growth Engine</div>
+    <div class="text-xs dim">Build First. Pay Later. Go Smarter. · © ${new Date().getFullYear()} KOBIS Website Growth Engine</div>
     <a class="text-xs" href="#/admin" style="color:var(--grow)">Engine dashboard →</a>
   </footer>`;
 }
