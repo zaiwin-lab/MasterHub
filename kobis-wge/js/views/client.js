@@ -100,7 +100,7 @@ export function renderClientPortal(id) {
           <div class="card">
             <div class="card-head"><div class="kpi-icon t-amber">${icon('money')}</div><h3>Your plan</h3></div>
             ${[['Activation', RM(o.activation_fee||500)],
-               o.ai_chatbot ? ['AI Chatbot', RM(PRICING.addons.chatbot.price)] : null,
+               o.ai_chatbot ? ['AI Sales Agent', RM(PRICING.addons.chatbot.price)] : null,
                o.news_module ? ['News Module', RM(PRICING.addons.news.price)] : null,
                o.ecommerce ? ['E-commerce Store', RM(PRICING.addons.ecommerce.price)] : null,
                o.extra_email_count ? [`${o.extra_email_count}× Email`, RM(o.extra_email_count*PRICING.addons.email.price)] : null,

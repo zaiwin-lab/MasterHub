@@ -8,8 +8,8 @@ export const PRICING = {
   activation: 500,          // Selected Business Launch Promotion (one-time)
   renewal: 300,             // per year
   addons: {
-    chatbot: { id: 'chatbot', label: 'AI Chatbot Setup', price: 200, recurring: false,
-      blurb: 'Auto-FAQ, lead capture, WhatsApp redirection & business assistant.' },
+    chatbot: { id: 'chatbot', label: 'AI Sales Agent', price: 200, recurring: false,
+      blurb: 'Answers FAQs, captures leads, redirects to WhatsApp & assists customers 24/7.' },
     news: { id: 'news', label: 'News & Updates Module', price: 100, recurring: false,
       blurb: 'Post promotions, events & company announcements.' },
     email: { id: 'email', label: 'Extra Business Email', price: 50, recurring: true, unit: '/year',

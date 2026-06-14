@@ -35,7 +35,7 @@ export function renderClients() {
 
 function rowHtml(c) {
   const o = store.orders().find(x => x.client_id === c.id) || {};
-  const addons = [o.ai_chatbot && 'Chatbot', o.news_module && 'News', o.extra_email_count && `${o.extra_email_count}× email`].filter(Boolean);
+  const addons = [o.ai_chatbot && 'AI Sales Agent', o.news_module && 'News', o.ecommerce && 'E-commerce', o.extra_email_count && `${o.extra_email_count}× email`].filter(Boolean);
   const due = daysUntil(c.renewal_due_date);
   return `<tr>
     <td><div class="fw-700 hi">${esc(c.company_name)}</div><div class="text-xs dim">${esc(c.contact_person)}</div></td>
