@@ -14,6 +14,8 @@ export const PRICING = {
       blurb: 'Post promotions, events & company announcements.' },
     email: { id: 'email', label: 'Extra Business Email', price: 50, recurring: true, unit: '/year',
       blurb: 'Additional branded mailbox e.g. sales@yourbrand.com.' },
+    ecommerce: { id: 'ecommerce', label: 'E-commerce Store', price: 300, recurring: false,
+      blurb: 'Sell products online with built-in payment processing.' },
   },
   referral: { rewardPerActivation: 50, cashRedeemThreshold: 500 }, // Module H
 };
@@ -26,6 +28,7 @@ export function quote(sel = {}) {
   const lines = [{ label: 'Website Activation (Launch Promo)', amount: PRICING.activation }];
   if (sel.chatbot) lines.push({ label: PRICING.addons.chatbot.label, amount: PRICING.addons.chatbot.price });
   if (sel.news) lines.push({ label: PRICING.addons.news.label, amount: PRICING.addons.news.price });
+  if (sel.ecommerce) lines.push({ label: PRICING.addons.ecommerce.label, amount: PRICING.addons.ecommerce.price });
   const emails = Number(sel.emailCount) || 0;
   if (emails > 0) lines.push({ label: `Extra Business Email × ${emails}`, amount: PRICING.addons.email.price * emails });
   const total = lines.reduce((s, l) => s + l.amount, 0);
@@ -50,6 +53,24 @@ export function whatsappActivation({ companyName, demoUrl, sel = {} }) {
 
 Please assist me with activation. Thank you!`;
   return `https://wa.me/${KOBIS_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+
+// Billplz hosted payment link (Phase: online payment, no backend).
+// Owner pastes their Billplz open-collection URL into config (billplzUrl);
+// we prefill amount (in sen), name & email. Returns '' if not configured.
+// NOTE: this collects payment online; AUTO-activation on payment needs a
+// webhook (Phase B). Until then KOBIS confirms in the admin after Billplz
+// notifies of payment.
+export function billplzPayment({ total, companyName, email }) {
+  const base = (typeof window !== 'undefined' && window.KOBIS_CONFIG && window.KOBIS_CONFIG.billplzUrl) || '';
+  if (!base) return '';
+  const sep = base.includes('?') ? '&' : '?';
+  const params = new URLSearchParams({
+    amount: String(Math.round((total || PRICING.activation) * 100)), // Billplz uses sen
+    name: companyName || '',
+    email: email || '',
+  });
+  return `${base}${sep}${params.toString()}`;
 }
 
 // Generic prospect outreach link used by the admin follow-up SOP (Rec 4).

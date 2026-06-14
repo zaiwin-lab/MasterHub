@@ -131,3 +131,4 @@ for (const [s, n, x] of results) console.log(`${s === 'PASS' ? '✅' : '❌'} ${
 console.log(`\n${results.filter(r=>r[0]==='PASS').length}/${results.length} checks passed`);
 if (errors.length) { console.log('\n--- ERRORS ---'); errors.forEach(e => console.log('• ' + e)); process.exit(1); }
 console.log('\nAll green. 🎉');
+process.exit(0); // promo countdown leaves a setInterval pending; exit cleanly

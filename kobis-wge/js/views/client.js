@@ -68,6 +68,9 @@ export function renderClientPortal(id) {
             </div>
             <button class="btn btn-primary btn-sm" id="saveContact">${icon('check')} Save contact</button>
           </div>
+
+          ${promoCard(c)}
+          ${newsCard(c, o)}
         </div>
 
         <div class="stack gap-18">
@@ -99,6 +102,7 @@ export function renderClientPortal(id) {
             ${[['Activation', RM(o.activation_fee||500)],
                o.ai_chatbot ? ['AI Chatbot', RM(PRICING.addons.chatbot.price)] : null,
                o.news_module ? ['News Module', RM(PRICING.addons.news.price)] : null,
+               o.ecommerce ? ['E-commerce Store', RM(PRICING.addons.ecommerce.price)] : null,
                o.extra_email_count ? [`${o.extra_email_count}× Email`, RM(o.extra_email_count*PRICING.addons.email.price)] : null,
                ['Activated', fmtDate(c.activation_date)],
                ['Renews', fmtDate(c.renewal_due_date)]].filter(Boolean)
@@ -112,6 +116,41 @@ export function renderClientPortal(id) {
 
 function stat(ic, tint, label, value) {
   return `<div class="card kpi"><div class="kpi-label"><span class="kpi-icon ${tint}">${icon(ic)}</span> ${label}</div><div class="kpi-value" style="font-size:24px">${value}</div></div>`;
+}
+
+// Promo Module — running promo with a countdown shown on the live site.
+function promoCard(c) {
+  const p = c.promo || { enabled: false, headline: '', sub: '', endsAt: '' };
+  const localDt = p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : '';
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-amber">${icon('fire')}</div><h3>Promo Module</h3><span class="sub">running offer + countdown</span></div>
+    <label class="row gap-8" style="margin-bottom:12px;cursor:pointer"><input type="checkbox" id="promoOn" ${p.enabled ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--grow)"/> <span class="text-sm hi">Show promo banner on my site</span></label>
+    <div class="field"><label>Headline</label><input class="input" id="promoHeadline" maxlength="80" value="${esc(p.headline || '')}" placeholder="e.g. Raya Sale — 20% off everything"/></div>
+    <div class="field"><label>Subtext</label><input class="input" id="promoSub" maxlength="120" value="${esc(p.sub || '')}" placeholder="e.g. Use code RAYA20 at checkout"/></div>
+    <div class="field"><label>Ends at</label><input class="input" id="promoEnds" type="datetime-local" value="${esc(localDt)}"/></div>
+    <button class="btn btn-primary btn-sm" id="savePromo">${icon('check')} Publish promo</button>
+  </div>`;
+}
+
+// News / Blog Module — real posting UI (delivers the RM100 add-on).
+function newsCard(c, o) {
+  if (!o || !o.news_module) {
+    return `<div class="card">
+      <div class="card-head"><div class="kpi-icon t-violet">${icon('megaphone')}</div><h3>News & Blog</h3></div>
+      <p class="text-sm muted">Publish articles for SEO and customer updates. <b class="hi">Add the News Module (${RM(PRICING.addons.news.price)})</b> to unlock — message KOBIS on WhatsApp to enable.</p>
+    </div>`;
+  }
+  const posts = c.news || [];
+  return `<div class="card">
+    <div class="card-head"><div class="kpi-icon t-violet">${icon('megaphone')}</div><h3>News & Blog</h3><span class="sub">${posts.length} post(s)</span></div>
+    <div class="field"><label>Title</label><input class="input" id="newsTitle" maxlength="120" placeholder="Post title"/></div>
+    <div class="field"><label>Body</label><textarea class="input" id="newsBody" maxlength="4000" placeholder="Write your update…"></textarea></div>
+    <button class="btn btn-primary btn-sm" id="addNews">${icon('plus')} Publish post</button>
+    <div class="divider"></div>
+    ${posts.length ? posts.map(n => `<div class="between" style="padding:9px 0;border-bottom:1px solid var(--line-soft)">
+      <div><div class="text-sm fw-600 hi">${esc(n.title)}</div><div class="text-xs dim">${fmtDate(n.created_at)}</div></div>
+      <button class="btn btn-ghost btn-sm" data-delnews="${n.id}">${icon('x')}</button></div>`).join('') : '<div class="text-xs dim">No posts yet.</div>'}
+  </div>`;
 }
 
 function wire(c) {
@@ -133,4 +172,26 @@ function wire(c) {
   document.getElementById('redeemBtn')?.addEventListener('click', () => {
     if (store.redeemCash(c.id)) toast(`${RM(PRICING.referral.cashRedeemThreshold)} cash redemption requested`, 'amber');
   });
+  document.getElementById('savePromo')?.addEventListener('click', () => {
+    const ends = document.getElementById('promoEnds').value;
+    store.updateClient(c.id, { promo: {
+      enabled: document.getElementById('promoOn').checked,
+      headline: document.getElementById('promoHeadline').value.slice(0, 80),
+      sub: document.getElementById('promoSub').value.slice(0, 120),
+      endsAt: ends ? new Date(ends).toISOString() : '',
+    }});
+    toast('Promo published to your site', 'amber');
+  });
+  document.getElementById('addNews')?.addEventListener('click', () => {
+    const title = document.getElementById('newsTitle').value.trim();
+    const body = document.getElementById('newsBody').value.trim();
+    if (!title) { toast('Add a title first', 'rose'); return; }
+    const news = [{ id: 'news_' + Math.random().toString(36).slice(2, 9), title: title.slice(0, 120), body: body.slice(0, 4000), created_at: new Date().toISOString() }, ...(c.news || [])];
+    store.updateClient(c.id, { news });
+    toast('Post published', 'violet');
+  });
+  document.querySelectorAll('[data-delnews]').forEach(b => b.addEventListener('click', () => {
+    store.updateClient(c.id, { news: (c.news || []).filter(n => n.id !== b.dataset.delnews) });
+    toast('Post deleted');
+  }));
 }

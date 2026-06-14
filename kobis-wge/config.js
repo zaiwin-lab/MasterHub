@@ -7,5 +7,9 @@
 // ===========================================================================
 window.KOBIS_CONFIG = {
   supabaseUrl: "https://nrwwzybkzmapjdycedka.supabase.co",
-  supabaseAnonKey: "sb_publishable_w5i8J-6WdW3Uy1g07p111Q_wGRkW624"
+  supabaseAnonKey: "sb_publishable_w5i8J-6WdW3Uy1g07p111Q_wGRkW624",
+  // Billplz online payment — paste your Billplz open-collection URL here once
+  // your merchant account is ready (e.g. "https://www.billplz.com/abcd1234").
+  // Leave blank to keep WhatsApp-only activation.
+  billplzUrl: ""
 };

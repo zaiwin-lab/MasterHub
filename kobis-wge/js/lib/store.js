@@ -270,6 +270,25 @@ export function generateForProspect(id) {
   return p;
 }
 
+// Manual website upload (Path 2): attach a full pre-built HTML site as the
+// prospect's preview, give it a shareable slug, and advance the pipeline.
+export function attachManualSite(id, html) {
+  const p = prospectById(id); if (!p) return;
+  const handle = p.demo_slug || slug(p.company_name);
+  Object.assign(p, {
+    manual_html: html,
+    demo_slug: handle,
+    demo_website_url: `${location.origin}${location.pathname}#/preview/${handle}`,
+    status: p.status === 'identified' ? 'generated' : p.status,
+    preview_expires_at: p.preview_expires_at || daysFromNow(14),
+  });
+  persist();
+  sync('prospects', p);
+  return p;
+}
+
+export const clientByProspect = (pid) => db.clients.find(c => c.prospect_id === pid);
+
 // Record a preview open (link analytics — Rec 3)
 export function recordOpen(slugStr) {
   const p = prospectBySlug(slugStr); if (!p) return;
@@ -285,7 +304,7 @@ export function recordOpen(slugStr) {
 // Activation: create client + order + wallet, award referral (Rec 5 timing)
 export function activateProspect(id, sel) {
   const p = prospectById(id); if (!p) return;
-  const total = 500 + (sel.chatbot ? 200 : 0) + (sel.news ? 100 : 0) + (Number(sel.emailCount) || 0) * 50;
+  const total = 500 + (sel.chatbot ? 200 : 0) + (sel.news ? 100 : 0) + (sel.ecommerce ? 300 : 0) + (Number(sel.emailCount) || 0) * 50;
   const c = {
     id: uid('cli'), prospect_id: p.id, company_name: p.company_name, contact_person: p.contact_person,
     phone: p.phone, email: p.email, activated_website_url: p.demo_website_url, package_price: total,
@@ -295,7 +314,7 @@ export function activateProspect(id, sel) {
   db.clients.unshift(c);
   const order = {
     id: uid('ord'), client_id: c.id, activation_fee: 500, ai_chatbot: !!sel.chatbot,
-    news_module: !!sel.news, extra_email_count: Number(sel.emailCount) || 0,
+    news_module: !!sel.news, ecommerce: !!sel.ecommerce, extra_email_count: Number(sel.emailCount) || 0,
     total_amount: total, payment_status: 'confirmed', created_at: now(),
   };
   db.orders.unshift(order);

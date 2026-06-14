@@ -78,6 +78,7 @@ function openAddModal() {
   const draft = { business_category: 'cafe', followers: 5000, web_presence: 'none', engagement: 'high', affordability: 'likely' };
   // build materials the client/team supplies — fed into generation
   const assets = { logo: '', images: [], pdf: null, references: [] };
+  let manualHtml = '';
   const m = openModal(addModalHtml(draft));
   const refresh = () => {
     const f = m.querySelector('#addForm');
@@ -116,6 +117,12 @@ function openAddModal() {
     assets.pdf = res;
     note('#pdfNote', res.text ? `${res.name} · ${res.pages} pages, text captured` : `${res.name} · stored (text not readable)`);
   });
+  m.querySelector('#htmlInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    note('#htmlNote', 'reading file…');
+    try { manualHtml = await file.text(); note('#htmlNote', `${file.name} · ${(manualHtml.length/1024).toFixed(0)} KB — will be used as the live preview`); }
+    catch { note('#htmlNote', 'could not read file'); }
+  });
 
   m.querySelector('#addForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -125,8 +132,9 @@ function openAddModal() {
     delete fd.reference_urls;
     fd.assets = assets;
     const p = store.addProspect(fd);
+    if (manualHtml) store.attachManualSite(p.id, manualHtml); // Path 2: full uploaded site
     closeModal();
-    toast(`Added ${p.company_name} · scored ${p.score}/100`, 'grow');
+    toast(`Added ${p.company_name}${manualHtml ? ' · site uploaded' : ' · scored ' + p.score + '/100'}`, 'grow');
     location.hash = '#/admin/prospect/' + p.id;
   });
   refresh();
@@ -178,6 +186,11 @@ function addModalHtml(d) {
         <label>Example website links <span class="hint">(one per line — design references)</span></label>
         <textarea class="input" name="reference_urls" placeholder="competitor1.com&#10;a-style-you-like.com"></textarea>
       </div>
+      <div class="field">
+        <label>Upload a finished website <span class="hint">(.html — a contributor-built site; replaces AI generation)</span></label>
+        <label class="asset-btn">${icon('preview')} Choose .html file<input id="htmlInput" type="file" accept=".html,text/html" hidden/></label>
+        <div id="htmlNote" class="hint"></div>
+      </div>
 
       <div class="divider"></div>
       <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Lead scoring inputs</div>
@@ -228,6 +241,7 @@ export function renderProspectDetail(id) {
   const sc = scoreProspect(p); const b = band(p.score);
   const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
   const isClient = ['activated','renewal'].includes(p.status);
+  const hasSite = !!(p.website_spec || p.manual_html);
 
   return `
   <a class="text-sm dim row gap-6" href="#/admin/prospects" style="margin-bottom:16px">${icon('arrowRight')} <span style="transform:rotate(180deg);display:inline-block">${''}</span>← Back to prospects</a>
@@ -244,12 +258,12 @@ export function renderProspectDetail(id) {
       </div>
     </div>
     <div class="row gap-10 wrap">
-      ${p.website_spec
+      ${hasSite
         ? `<a class="btn btn-ghost" href="#/preview/${p.demo_slug}" target="_blank">${icon('eye')} Open preview</a>`
         : ''}
       ${isClient
         ? `<a class="btn btn-primary" href="#/client/${store.clients().find(c=>c.prospect_id===p.id)?.id}">${icon('dashboard')} Client dashboard</a>`
-        : p.website_spec
+        : hasSite
           ? `<button class="btn btn-primary" id="activateBtn">${icon('rocket')} Activate</button>`
           : `<button class="btn btn-violet" id="genBtn">${icon('spark')} Generate website</button>`}
     </div>
@@ -257,7 +271,7 @@ export function renderProspectDetail(id) {
 
   <div class="grid g-3">
     <div class="stack gap-18 span-2">
-      ${p.website_spec ? previewCard(p, expiry) : generatePromptCard(p)}
+      ${hasSite ? previewCard(p, expiry) : generatePromptCard(p)}
       ${sopCard(p)}
     </div>
     <div class="stack gap-18">
@@ -275,6 +289,11 @@ function generatePromptCard(p) {
     <div class="between wrap gap-10">
       <div class="text-sm muted">Reads category, socials & description → hero, about, services, gallery plan & contact.</div>
       <button class="btn btn-violet" id="genBtn2">${icon('bolt')} Generate now</button>
+    </div>
+    <div class="divider"></div>
+    <div class="between wrap gap-10">
+      <div class="text-sm muted">Or have a contributor build it and upload the finished site.</div>
+      <label class="btn btn-ghost">${icon('preview')} Upload .html<input id="detailHtmlInput" type="file" accept=".html,text/html" hidden/></label>
     </div>
   </div>`;
 }
@@ -378,6 +397,11 @@ function wireDetail(p) {
   });
   document.getElementById('markSent')?.addEventListener('click', () => { store.setStatus(p.id, 'sent'); toast('Marked as sent'); });
   document.querySelectorAll('[data-sop]').forEach(b => b.addEventListener('click', () => b.classList.toggle('done')));
+  document.getElementById('detailHtmlInput')?.addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    try { const html = await file.text(); store.attachManualSite(p.id, html); toast('Website uploaded — preview is live', 'violet'); }
+    catch { toast('Could not read file', 'rose'); }
+  });
 }
 
 function runGeneration(p) {
@@ -445,6 +469,7 @@ function activateHtml(p, sel) {
         <div class="text-xs dim" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Add-ons</div>
         <label class="addon-row"><input type="checkbox" data-addon="chatbot"/><div><div class="fw-600 hi">${PRICING.addons.chatbot.label}</div><div class="text-xs dim">${PRICING.addons.chatbot.blurb}</div></div><span class="addon-amt">${RM(PRICING.addons.chatbot.price)}</span></label>
         <label class="addon-row"><input type="checkbox" data-addon="news"/><div><div class="fw-600 hi">${PRICING.addons.news.label}</div><div class="text-xs dim">${PRICING.addons.news.blurb}</div></div><span class="addon-amt">${RM(PRICING.addons.news.price)}</span></label>
+        <label class="addon-row"><input type="checkbox" data-addon="ecommerce"/><div><div class="fw-600 hi">${PRICING.addons.ecommerce.label}</div><div class="text-xs dim">${PRICING.addons.ecommerce.blurb}</div></div><span class="addon-amt">${RM(PRICING.addons.ecommerce.price)}</span></label>
         <div class="addon-row"><div><div class="fw-600 hi">${PRICING.addons.email.label}</div><div class="text-xs dim">${PRICING.addons.email.blurb}</div></div>
           <input class="input" style="width:64px" type="number" min="0" value="0" data-addon="email"/></div>
       </div>

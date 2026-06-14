@@ -6,13 +6,14 @@
 import { icon } from '../lib/icons.js';
 import * as store from '../lib/store.js';
 import { RM, daysUntil, esc } from '../lib/ui.js';
-import { quote, whatsappActivation, PRICING } from '../lib/pricing.js';
+import { quote, whatsappActivation, billplzPayment, PRICING } from '../lib/pricing.js';
 
 // Record each preview open at most once per app session (a store mutation
 // re-renders the active view, so without this guard recordOpen would loop).
 const recorded = new Set();
 let curLang = 'en';
 let curSlug = null;
+let promoTimer = null;
 
 // ---- 4-language chrome dictionary (business copy stays as generated) -------
 // NOTE: Iban (ib) strings are an auto-draft — have a native speaker review per
@@ -50,8 +51,9 @@ function tickerTrack(cat) {
 }
 
 export function renderPreview(slug) {
+  if (promoTimer) { clearInterval(promoTimer); promoTimer = null; }
   const p = store.prospectBySlug(slug);
-  if (!p || !p.website_spec) {
+  if (!p || (!p.website_spec && !p.manual_html)) {
     // Not in memory — fetch just this one record by slug (scale: avoids loading
     // the whole database), then re-render once it arrives.
     if (!recorded.has('fetch:' + slug)) {
@@ -73,10 +75,14 @@ export function renderPreview(slug) {
     setTimeout(() => store.recordOpen(slug), 600);
   }
 
+  // Manual-upload path (Path 2): serve the contributor's full site in a
+  // sandboxed frame, still wrapped in KOBIS preview branding + activation.
+  if (p.manual_html) { setTimeout(() => { wire(p); startPromoTimer(); }, 0); return manualSiteHtml(p); }
+
   const s = p.website_spec, t = s.theme, tr = T[curLang] || T.en, cat = s.meta.category;
   const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(s.mapQuery || (s.meta.name + ', Malaysia'))}&output=embed`;
-  setTimeout(() => wire(p), 0);
+  setTimeout(() => { wire(p); startPromoTimer(); }, 0);
 
   return `
   <div class="site" style="--site-bg:${t.bg};--site-accent:${t.accent};--site-tint:${t.tint};--site-font:${t.font === 'serif' ? 'Georgia, \'Times New Roman\', serif' : '\'Sora\', sans-serif'}">
@@ -88,6 +94,8 @@ export function renderPreview(slug) {
       ${expiry !== null ? `<span class="site-marker-exp">· preview ${expiry > 0 ? 'expires in ' + expiry + ' days' : 'expired'}</span>` : ''}
       <button class="site-marker-cta" data-activate>${tr.activate}</button>
     </div>
+
+    ${promoBar(p)}
 
     <header class="site-nav">
       <div class="site-logo">${s.meta.logo ? `<img class="site-logo-img" src="${esc(s.meta.logo)}" alt="${esc(s.meta.name)}"/>` : ''}<span>${esc(s.meta.name)}</span></div>
@@ -139,6 +147,8 @@ export function renderPreview(slug) {
           : s.gallery.plan.map((g, i) => `<div class="site-shot site-shot-${i % 3}"><span>${esc(g)}</span></div>`).join('')}
       </div>
     </section>
+
+    ${newsSection(p)}
 
     <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
     <div class="ticker-bar ticker-mid">${tickerTrack(cat)}</div>
@@ -194,6 +204,76 @@ export function renderPreview(slug) {
   </div>`;
 }
 
+// ---- promo module (running offer + live countdown) -----------------------
+function activePromo(p) {
+  const client = store.clientByProspect(p.id);
+  if (client?.promo?.enabled && client.promo.headline) return { ...client.promo, kind: 'client' };
+  // default for not-yet-clients: the 50%-off launch activation promo (Phase 3)
+  return { kind: 'activation', headline: '50% OFF Launch Promo — own this website', sub: 'RM1,000 value · activate now for RM500', endsAt: p.preview_expires_at || '' };
+}
+function promoBar(p) {
+  const promo = activePromo(p);
+  return `<div class="promo-bar">
+    <div class="promo-bar-in">
+      <div class="promo-txt"><b>${esc(promo.headline)}</b>${promo.sub ? `<span>${esc(promo.sub)}</span>` : ''}</div>
+      ${promo.endsAt ? `<div class="promo-count" id="promoCount" data-ends="${esc(promo.endsAt)}">…</div>` : ''}
+      <button class="promo-cta" data-activate>${activatePromoLabel(promo)}</button>
+    </div>
+  </div>`;
+}
+function activatePromoLabel(promo) { return promo.kind === 'activation' ? (T[curLang] || T.en).activate : 'Learn more'; }
+
+function startPromoTimer() {
+  const el = document.getElementById('promoCount');
+  if (!el) return;
+  const ends = new Date(el.dataset.ends).getTime();
+  const tick = () => {
+    const d = ends - Date.now();
+    if (isNaN(ends)) { el.textContent = ''; return; }
+    if (d <= 0) { el.textContent = 'Ended'; clearInterval(promoTimer); promoTimer = null; return; }
+    const days = Math.floor(d / 864e5), h = Math.floor(d % 864e5 / 36e5), m = Math.floor(d % 36e5 / 6e4), s = Math.floor(d % 6e4 / 1e3);
+    el.textContent = (days ? days + 'd ' : '') + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  };
+  tick();
+  promoTimer = setInterval(tick, 1000);
+}
+
+// ---- news / blog section (from the activated client's posts) --------------
+function newsSection(p) {
+  const client = store.clientByProspect(p.id);
+  const posts = client?.news || [];
+  if (!posts.length) return '';
+  return `<section class="site-section" id="site-news">
+    <div class="site-tag center-tag">News</div>
+    <h2 class="site-h2 center">Latest updates</h2>
+    <div class="site-news">
+      ${posts.slice(0, 6).map(n => `<article class="site-news-card">
+        <h3>${esc(n.title)}</h3>
+        <div class="site-news-date">${new Date(n.created_at).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+        <p>${esc((n.body || '').slice(0, 220))}${(n.body || '').length > 220 ? '…' : ''}</p>
+      </article>`).join('')}
+    </div>
+  </section>`;
+}
+
+// ---- manual-upload site (Path 2) -----------------------------------------
+function manualSiteHtml(p) {
+  const tr = T[curLang] || T.en, cat = p.business_category;
+  const expiry = p.preview_expires_at ? daysUntil(p.preview_expires_at) : null;
+  return `
+  <div class="site manual-site" style="--site-bg:#0d1116;--site-accent:#00e5a0;--site-tint:#f4f7ff;--site-font:'Sora',sans-serif">
+    <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace once payment received -->
+    <div class="ticker-bar ticker-top">${tickerTrack(cat)}</div>
+    <div class="site-marker">${icon('shield')} Professional Website Preview Prepared by <b>KOBIS Berhad</b>
+      ${expiry !== null ? `<span class="site-marker-exp">· preview ${expiry > 0 ? 'expires in ' + expiry + ' days' : 'expired'}</span>` : ''}
+      <button class="site-marker-cta" data-activate>${tr.activate}</button>
+    </div>
+    ${promoBar(p)}
+    <iframe class="manual-frame" sandbox="allow-scripts allow-forms allow-popups" srcdoc="${esc(p.manual_html)}" title="${esc(p.company_name)} website"></iframe>
+    <button class="site-float" data-activate>${icon('rocket')} ${tr.activate}</button>
+  </div>`;
+}
+
 // ---- interaction ---------------------------------------------------------
 function wire(p) {
   document.querySelectorAll('[data-activate]').forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openActivation(p); }));
@@ -218,6 +298,9 @@ function openActivation(p) {
     const q = quote(sel);
     scrim.querySelector('#waBtn').href = whatsappActivation({ companyName: p.company_name, demoUrl: p.demo_website_url, sel });
     scrim.querySelector('#waTotal').textContent = RM(q.total);
+    const payUrl = billplzPayment({ total: q.total, companyName: p.company_name, email: p.email });
+    const payBtn = scrim.querySelector('#payBtn');
+    if (payUrl) { payBtn.href = payUrl; payBtn.style.display = ''; }
   };
   scrim.querySelector('.modal-x').addEventListener('click', () => scrim.remove());
   scrim.querySelectorAll('[data-addon]').forEach(el => el.addEventListener('change', () => {
@@ -250,6 +333,8 @@ function popupHtml(p, sel) {
             <div><b>${PRICING.addons.chatbot.label}</b><span>${PRICING.addons.chatbot.blurb}</span></div><em>${RM(PRICING.addons.chatbot.price)}</em></label>
           <label class="act-addon"><input type="checkbox" data-addon="news"/>
             <div><b>${PRICING.addons.news.label}</b><span>${PRICING.addons.news.blurb}</span></div><em>${RM(PRICING.addons.news.price)}</em></label>
+          <label class="act-addon"><input type="checkbox" data-addon="ecommerce"/>
+            <div><b>${PRICING.addons.ecommerce.label}</b><span>${PRICING.addons.ecommerce.blurb}</span></div><em>${RM(PRICING.addons.ecommerce.price)}</em></label>
           <label class="act-addon"><span class="act-addon-num"><input class="input" type="number" min="0" value="0" data-addon="email"/></span>
             <div><b>${PRICING.addons.email.label}</b><span>${PRICING.addons.email.blurb}</span></div><em>${RM(PRICING.addons.email.price)}/yr</em></label>
           <div id="pkgSummary"></div>
@@ -258,7 +343,10 @@ function popupHtml(p, sel) {
     </div>
     <div class="act-foot">
       <div class="act-foot-total">Total today <b id="waTotal">${RM(PRICING.activation)}</b></div>
-      <a class="btn btn-wa" id="waBtn" target="_blank" href="#">${icon('whatsapp')} Proceed via WhatsApp</a>
+      <div class="row gap-10">
+        <a class="btn btn-primary" id="payBtn" target="_blank" href="#" style="display:none">${icon('money')} Pay online</a>
+        <a class="btn btn-wa" id="waBtn" target="_blank" href="#">${icon('whatsapp')} Proceed via WhatsApp</a>
+      </div>
     </div>
   </div>`;
 }
