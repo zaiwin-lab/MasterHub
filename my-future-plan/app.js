@@ -323,7 +323,7 @@ function drawPoster() {
   // footer
   ctx.fillStyle = "rgba(255,255,255,0.7)";
   ctx.font = "500 28px Inter, sans-serif";
-  ctx.fillText("Made with My Future Plan · make yours, free", cx, H - 110);
+  ctx.fillText("my-future-plan.netlify.app · make yours, free", cx, H - 110);
 
   return c.toDataURL("image/png");
 }
