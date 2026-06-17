@@ -5,7 +5,7 @@
 const $ = (id) => document.getElementById(id);
 
 const els = {
-  form: $("dream-form"),
+  form: $("plan-form"),
   generateBtn: $("generate-btn"),
   formError: $("form-error"),
   intro: $("intro"),
@@ -45,12 +45,12 @@ let currentName = "";
 let emailUnlocked = false;
 
 const LOADING_LINES = [
-  "Reading your dream…",
+  "Taking it all in…",
   "Listening for what matters most…",
-  "Tracing the ten-year horizon…",
+  "Tracing your ten-year horizon…",
   "Shaping your five-year milestones…",
   "Grounding the year ahead…",
-  "Finding the right words to carry you…",
+  "Finding the words to carry you there…",
 ];
 
 /* ---------- helpers ---------- */
@@ -86,13 +86,13 @@ els.form.addEventListener("submit", async (e) => {
 
   const data = {
     name: $("name").value.trim(),
-    dream: $("dream").value.trim(),
+    future: $("future").value.trim(),
     situation: $("situation").value.trim(),
     area: (els.form.querySelector('input[name="area"]:checked') || {}).value || "",
   };
 
-  if (data.dream.length < 4) {
-    showError(els.formError, "Tell us a little about your dream first.");
+  if (data.future.length < 4) {
+    showError(els.formError, "Tell us where you want to be first.");
     return;
   }
 
@@ -200,7 +200,7 @@ els.emailForm.addEventListener("submit", async (e) => {
       body: new URLSearchParams({
         "form-name": "pathway-emails",
         email,
-        dream: (currentPathway && currentPathway.headline) || "",
+        pathway: (currentPathway && currentPathway.headline) || "",
         "bot-field": "",
       }).toString(),
     }).catch(() => {}); // never block sharing on capture failure

@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Future Plan — Craft your beautiful pathway</title>
-  <meta name="description" content="Tell us your dream. In 30 seconds, AI crafts your Beautiful Pathway across 10, 5, and 1 year — with a quote to carry you forward. Free. No account needed." />
+  <meta name="description" content="Say where you want to be. In 30 seconds, My Future Plan maps your path across 10, 5, and 1 year — sealed with a line to carry you forward. Free. No account needed." />
 
   <!-- Open Graph / social sharing -->
   <meta property="og:title" content="My Future Plan — Craft your beautiful pathway" />
-  <meta property="og:description" content="Tell us your dream. AI crafts your pathway across 10, 5, and 1 year. Free." />
+  <meta property="og:description" content="Say where you want to be. My Future Plan maps your path across 10, 5, and 1 year. Free." />
   <meta property="og:type" content="website" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,7 +20,7 @@
   <!-- Hidden form so Netlify Forms registers it at build time (email capture) -->
   <form name="pathway-emails" data-netlify="true" netlify-honeypot="bot-field" hidden>
     <input type="email" name="email" />
-    <input type="text" name="dream" />
+    <input type="text" name="pathway" />
     <input type="text" name="bot-field" />
   </form>
 
@@ -36,24 +36,25 @@
     <!-- ============ INTRO / FORM ============ -->
     <section id="intro" class="intro">
       <div class="intro-inner">
-        <p class="eyebrow">Your life, mapped with intention</p>
-        <h1>Craft your <em>Beautiful Pathway</em>.</h1>
+        <p class="eyebrow">The plan for the life you actually want</p>
+        <h1>Your future,<br /><em>made&nbsp;real.</em></h1>
         <p class="lede">
-          Tell us your dream. In about thirty seconds, we'll shape it into a
-          living plan — across <strong>ten years</strong>, <strong>five years</strong>,
-          and <strong>the year ahead</strong> — with a quote to carry you forward.
+          Say where you want to be. In thirty seconds, <strong>My Future Plan</strong>
+          turns it into a clear, powerful map — across <strong>ten years</strong>,
+          <strong>five years</strong>, and <strong>the year ahead</strong> — sealed
+          with a line you'll carry with you.
         </p>
 
-        <form id="dream-form" class="dream-form" autocomplete="off">
+        <form id="plan-form" class="plan-form" autocomplete="off">
           <label class="field">
             <span class="field-label">Your name <i>(optional)</i></span>
             <input type="text" id="name" name="name" maxlength="80" placeholder="What should we call you?" />
           </label>
 
           <label class="field">
-            <span class="field-label">What's the dream? <i>required</i></span>
-            <textarea id="dream" name="dream" rows="3" maxlength="2000" required
-              placeholder="e.g. Build a small studio of my own, travel slowly, and make work I'm proud of."></textarea>
+            <span class="field-label">Where do you want to be? <i>required</i></span>
+            <textarea id="future" name="future" rows="3" maxlength="2000" required
+              placeholder="e.g. Running a studio of my own by the sea, healthy, debt-free, and proud of the work I make."></textarea>
           </label>
 
           <label class="field">
@@ -72,10 +73,10 @@
           </fieldset>
 
           <button type="submit" class="btn-primary" id="generate-btn">
-            <span class="btn-text">Craft my pathway</span>
+            <span class="btn-text">Build my future plan</span>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
-          <p class="form-note">Free, no sign-up to create. We only ask for an email if you'd like to save or share.</p>
+          <p class="form-note">Free. No sign-up to build it — we only ask for an email when you choose to save or share.</p>
           <p class="error-msg" id="form-error" role="alert" hidden></p>
         </form>
       </div>
@@ -87,10 +88,29 @@
       </div>
     </section>
 
+    <!-- ============ MANIFESTO STRIP ============ -->
+    <section class="manifesto" aria-label="How it works">
+      <div class="manifesto-inner">
+        <div class="m-item">
+          <span class="m-num">10</span>
+          <p><strong>A decade, in focus.</strong> See the life you're building, not just the week ahead.</p>
+        </div>
+        <div class="m-item">
+          <span class="m-num">5</span>
+          <p><strong>Milestones that matter.</strong> The midpoints that prove you're on your way.</p>
+        </div>
+        <div class="m-item">
+          <span class="m-num">1</span>
+          <p><strong>Start this year.</strong> Concrete moves, and one step to take this week.</p>
+        </div>
+      </div>
+      <p class="manifesto-foot">No account. No noise. Just your future, written down — and a line to carry you there.</p>
+    </section>
+
     <!-- ============ LOADING ============ -->
     <section id="loading" class="loading" hidden>
       <div class="loading-orb" aria-hidden="true"></div>
-      <p class="loading-text" id="loading-text">Reading your dream…</p>
+      <p class="loading-text" id="loading-text">Taking it all in…</p>
     </section>
 
     <!-- ============ RESULT ============ -->

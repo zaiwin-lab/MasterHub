@@ -5,9 +5,9 @@
 
 const MODEL = process.env.MFP_MODEL || "claude-sonnet-4-6";
 
-const SYSTEM_PROMPT = `You are the quiet, wise voice behind "My Future Plan" — a tool that turns a
-person's dream into a beautiful, motivating life pathway across three horizons:
-10 years, 5 years, and 1 year.
+const SYSTEM_PROMPT = `You are the quiet, wise voice behind "My Future Plan" — a tool that turns the
+future a person is reaching for into a beautiful, motivating life pathway across
+three horizons: 10 years, 5 years, and 1 year.
 
 Your writing is warm, vivid, and grounded. You write to one human being, using
 "you". You are specific and concrete, never generic or corporate. You avoid
@@ -32,14 +32,14 @@ no markdown fences. The JSON must match exactly this shape:
 
 Use real, verifiable quotes only. Keep every field tight and meaningful.`;
 
-function buildUserPrompt({ name, dream, situation, area }) {
+function buildUserPrompt({ name, future, situation, area }) {
   const who = name ? `Their name is ${name}.` : "They did not share their name.";
   const focus = area ? `The area of life they care most about right now: ${area}.` : "";
   return `${who}
 ${focus}
 
-Their dream / where they want to be:
-"""${dream}"""
+The future they want — the life they are reaching for:
+"""${future}"""
 
 Where they are today:
 """${situation || "They did not describe their current situation."}"""
@@ -80,14 +80,14 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid request." }) };
   }
 
-  const dream = clamp((payload.dream || "").trim(), 2000);
-  if (dream.length < 4) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "Tell us a little about your dream first." }) };
+  const future = clamp((payload.future || "").trim(), 2000);
+  if (future.length < 4) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Tell us where you want to be first." }) };
   }
 
   const input = {
     name: clamp((payload.name || "").trim(), 80),
-    dream,
+    future,
     situation: clamp((payload.situation || "").trim(), 2000),
     area: clamp((payload.area || "").trim(), 80),
   };
