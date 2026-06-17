@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Future Plan — Craft your beautiful pathway</title>
+  <meta name="description" content="Tell us your dream. In 30 seconds, AI crafts your Beautiful Pathway across 10, 5, and 1 year — with a quote to carry you forward. Free. No account needed." />
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:title" content="My Future Plan — Craft your beautiful pathway" />
+  <meta property="og:description" content="Tell us your dream. AI crafts your pathway across 10, 5, and 1 year. Free." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Hidden form so Netlify Forms registers it at build time (email capture) -->
+  <form name="pathway-emails" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="email" name="email" />
+    <input type="text" name="dream" />
+    <input type="text" name="bot-field" />
+  </form>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"></span>
+      My Future Plan
+    </a>
+    <span class="topbar-note">Free · No account needed</span>
+  </header>
+
+  <main>
+    <!-- ============ INTRO / FORM ============ -->
+    <section id="intro" class="intro">
+      <div class="intro-inner">
+        <p class="eyebrow">Your life, mapped with intention</p>
+        <h1>Craft your <em>Beautiful Pathway</em>.</h1>
+        <p class="lede">
+          Tell us your dream. In about thirty seconds, we'll shape it into a
+          living plan — across <strong>ten years</strong>, <strong>five years</strong>,
+          and <strong>the year ahead</strong> — with a quote to carry you forward.
+        </p>
+
+        <form id="dream-form" class="dream-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Your name <i>(optional)</i></span>
+            <input type="text" id="name" name="name" maxlength="80" placeholder="What should we call you?" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">What's the dream? <i>required</i></span>
+            <textarea id="dream" name="dream" rows="3" maxlength="2000" required
+              placeholder="e.g. Build a small studio of my own, travel slowly, and make work I'm proud of."></textarea>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Where are you today? <i>(optional)</i></span>
+            <textarea id="situation" name="situation" rows="2" maxlength="2000"
+              placeholder="A sentence or two about where you stand right now."></textarea>
+          </label>
+
+          <fieldset class="chips" id="area-chips">
+            <legend>Which part of life matters most right now?</legend>
+            <label class="chip"><input type="radio" name="area" value="Career & craft" /><span>Career &amp; craft</span></label>
+            <label class="chip"><input type="radio" name="area" value="Health & energy" /><span>Health &amp; energy</span></label>
+            <label class="chip"><input type="radio" name="area" value="Relationships" /><span>Relationships</span></label>
+            <label class="chip"><input type="radio" name="area" value="Money & freedom" /><span>Money &amp; freedom</span></label>
+            <label class="chip"><input type="radio" name="area" value="Growth & learning" /><span>Growth &amp; learning</span></label>
+          </fieldset>
+
+          <button type="submit" class="btn-primary" id="generate-btn">
+            <span class="btn-text">Craft my pathway</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+          <p class="form-note">Free, no sign-up to create. We only ask for an email if you'd like to save or share.</p>
+          <p class="error-msg" id="form-error" role="alert" hidden></p>
+        </form>
+      </div>
+
+      <div class="intro-aside" aria-hidden="true">
+        <div class="float-card f1"><span class="float-span">10-Year Horizon</span><span class="float-line"></span><span class="float-line short"></span></div>
+        <div class="float-card f2"><span class="float-span">5-Year Horizon</span><span class="float-line"></span><span class="float-line short"></span></div>
+        <div class="float-card f3"><span class="float-span">1-Year Horizon</span><span class="float-line"></span><span class="float-line short"></span></div>
+      </div>
+    </section>
+
+    <!-- ============ LOADING ============ -->
+    <section id="loading" class="loading" hidden>
+      <div class="loading-orb" aria-hidden="true"></div>
+      <p class="loading-text" id="loading-text">Reading your dream…</p>
+    </section>
+
+    <!-- ============ RESULT ============ -->
+    <section id="result" class="result" hidden>
+      <article class="document" id="document">
+        <header class="doc-head">
+          <p class="doc-kicker">A Beautiful Pathway for</p>
+          <h2 class="doc-title" id="doc-title">—</h2>
+          <p class="doc-essence" id="doc-essence"></p>
+        </header>
+
+        <blockquote class="doc-quote" id="doc-quote">
+          <p class="quote-text" id="quote-text"></p>
+          <cite id="quote-author"></cite>
+        </blockquote>
+
+        <div class="horizons" id="horizons"><!-- injected --></div>
+
+        <div class="doc-step">
+          <p class="step-label">Your first step this week</p>
+          <p class="step-text" id="first-step"></p>
+        </div>
+
+        <p class="doc-affirmation" id="affirmation"></p>
+
+        <footer class="doc-foot">
+          <span class="doc-foot-mark"></span>
+          Made with My Future Plan · myfutureplan
+        </footer>
+      </article>
+
+      <div class="result-actions no-print">
+        <button class="btn-primary" id="share-btn">Save &amp; share my pathway</button>
+        <button class="btn-ghost" id="restart-btn">Start a new one</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ EMAIL GATE MODAL ============ -->
+  <div class="modal-backdrop" id="email-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <h3 id="modal-title">One last thing</h3>
+      <p class="modal-sub">Pop in your email and we'll unlock sharing — a poster to post, and a print-ready keepsake. No spam, no account.</p>
+      <form id="email-form" class="email-form">
+        <input type="email" id="email" name="email" required placeholder="you@example.com" />
+        <button type="submit" class="btn-primary" id="email-submit">
+          <span class="btn-text">Unlock sharing</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+        <p class="error-msg" id="email-error" role="alert" hidden></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ SHARE SHEET ============ -->
+  <div class="modal-backdrop" id="share-modal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="share-title">
+      <button class="modal-close" id="share-close" aria-label="Close">&times;</button>
+      <h3 id="share-title">Take it with you</h3>
+      <p class="modal-sub">Your pathway is yours to keep — and to share.</p>
+      <div class="share-grid">
+        <button class="share-opt" id="dl-card">
+          <span class="share-icon">▦</span>
+          <span class="share-name">Download poster</span>
+          <span class="share-desc">A square image for stories &amp; feeds</span>
+        </button>
+        <button class="share-opt" id="dl-pdf">
+          <span class="share-icon">▤</span>
+          <span class="share-name">Save as PDF</span>
+          <span class="share-desc">A print-ready keepsake document</span>
+        </button>
+        <button class="share-opt" id="copy-link">
+          <span class="share-icon">⌁</span>
+          <span class="share-name">Copy link</span>
+          <span class="share-desc">Send a friend here to make theirs</span>
+        </button>
+        <button class="share-opt" id="native-share">
+          <span class="share-icon">↗</span>
+          <span class="share-name">Share…</span>
+          <span class="share-desc">Use your device's share sheet</span>
+        </button>
+      </div>
+      <canvas id="card-canvas" width="1080" height="1080" hidden></canvas>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
