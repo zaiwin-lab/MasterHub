@@ -434,6 +434,7 @@ input:focus, textarea:focus {
 }
 
 /* ---------- modals ---------- */
+.modal-backdrop[hidden] { display: none !important; }
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(11, 35, 31, 0.5);
