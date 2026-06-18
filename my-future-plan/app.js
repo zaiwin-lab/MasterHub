@@ -173,14 +173,9 @@ els.restartBtn.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-/* ---------- email gate → share ---------- */
+/* ---------- share (no email gate — open straight away) ---------- */
 els.shareBtn.addEventListener("click", () => {
-  if (emailUnlocked) {
-    openModal(els.shareModal);
-  } else {
-    openModal(els.emailModal);
-    setTimeout(() => els.emailInput.focus(), 80);
-  }
+  openModal(els.shareModal);
 });
 
 els.emailForm.addEventListener("submit", async (e) => {
