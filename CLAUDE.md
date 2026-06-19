@@ -37,6 +37,21 @@ _(Derived from Andrej Karpathy's observations on LLM coding pitfalls.)_
 
 **Working if:** fewer unnecessary diff lines, fewer rewrites from overcomplication, and clarifying questions come *before* implementation rather than after mistakes.
 
+## Build Workflow — The Karpathy Method
+**Trigger:** any time the user wants to build an MVP, SaaS, or system. Don't "just prompt" — run this 3-layer pipeline so understanding stays with the human and execution compounds.
+
+> **Core rule:** *Outsource thinking, not your understanding.* The AI is a "robot librarian" with computational power but no context — the human provides goals and direction; the AI executes against precise, verifiable specs.
+
+**Pipeline:** Human Input (understanding & context) → **L3 Environment** → **L1 Spec** → **L2 Verifier** → Output (flawless, compounded execution).
+
+| Layer | What it means | Do this | Skills |
+|-------|---------------|---------|--------|
+| **L3 — Environment** | Permanent, automated "workshop" for the AI | Load this `CLAUDE.md` + project IP/knowledge base before building; capture reusable insight | this file, `/learn`, `/setup-gbrain` |
+| **L1 — Spec** | Agile goals & precise constraints, not high-level plans | Break the build into small, individually verifiable buckets with explicit success criteria | `/spec`, `/office-hours`, `/autoplan` |
+| **L2 — Verifier** | Code critics + external signals grade output before it's final | Run a second-pass critic and real checks (tests/QA/security) before calling anything done | `/review`, `/code-review`, `/qa`, `/cso` |
+
+**Rule:** never ship straight from L1. Output is only "done" after L2 verification passes. Ties directly to Engineering Principle #4 (Goal-Driven Execution).
+
 ## Skills Available
 
 ### gstack (AI Engineering)
