@@ -1,0 +1,365 @@
+<title>Product Library — Build Intelligence</title>
+<style>
+  :root {
+    --paper: #f6f4ee;
+    --card: #fffefb;
+    --ink: #17201f;
+    --ink-soft: #4a5654;
+    --ink-faint: #8a938f;
+    --line: #e3ded3;
+    --line-soft: #eee9df;
+    --gold: #b5791f;
+    --gold-soft: #f0e2c4;
+    --teal: #1c6b64;
+    --good: #2f7d5b;
+    --good-bg: #dcefe3;
+    --warn: #b0791a;
+    --warn-bg: #f5e6c6;
+    --crit: #b04a3f;
+    --crit-bg: #f3dcd6;
+    --shadow: 0 1px 2px rgba(23,32,31,.05), 0 6px 20px rgba(23,32,31,.05);
+    --r: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #101615; --card: #17201f; --ink: #eef1ec; --ink-soft: #a9b3ae;
+      --ink-faint: #6d7772; --line: #26312f; --line-soft: #1e2827;
+      --gold: #d9a746; --gold-soft: #3a2f18; --teal: #4fb3a8;
+      --good: #57c088; --good-bg: #16302433; --warn: #d9a746; --warn-bg: #3a2f1833;
+      --crit: #e08a7d; --crit-bg: #3a201b33;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper:#f6f4ee;--card:#fffefb;--ink:#17201f;--ink-soft:#4a5654;--ink-faint:#8a938f;
+    --line:#e3ded3;--line-soft:#eee9df;--gold:#b5791f;--gold-soft:#f0e2c4;--teal:#1c6b64;
+    --good:#2f7d5b;--good-bg:#dcefe3;--warn:#b0791a;--warn-bg:#f5e6c6;--crit:#b04a3f;--crit-bg:#f3dcd6;
+    --shadow:0 1px 2px rgba(23,32,31,.05),0 6px 20px rgba(23,32,31,.05);
+  }
+  :root[data-theme="dark"] {
+    --paper:#101615;--card:#17201f;--ink:#eef1ec;--ink-soft:#a9b3ae;--ink-faint:#6d7772;
+    --line:#26312f;--line-soft:#1e2827;--gold:#d9a746;--gold-soft:#3a2f18;--teal:#4fb3a8;
+    --good:#57c088;--good-bg:#16302433;--warn:#d9a746;--warn-bg:#3a2f1833;--crit:#e08a7d;--crit-bg:#3a201b33;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 22px 80px; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  header.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 8px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .13em; font-size: 11.5px; font-weight: 600; color: var(--gold); }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; font-size: 30px; line-height: 1.1; margin: 6px 0 4px; text-wrap: balance; letter-spacing: -.01em; }
+  .sub { color: var(--ink-soft); max-width: 60ch; font-size: 14px; }
+  .themebtn { border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); border-radius: 8px; padding: 7px 12px; font-size: 12.5px; cursor: pointer; }
+  .themebtn:hover { border-color: var(--gold); color: var(--ink); }
+
+  /* KPI tiles */
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0 8px; }
+  @media (max-width: 820px){ .kpis { grid-template-columns: repeat(2,1fr); } }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 15px; box-shadow: var(--shadow); }
+  .kpi .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); font-weight: 600; }
+  .kpi .val { font-family: Georgia, serif; font-size: 26px; margin-top: 5px; letter-spacing: -.01em; }
+  .kpi .val small { font-size: 14px; color: var(--ink-soft); font-family: system-ui; }
+
+  h2.sec { font-family: Georgia, serif; font-size: 19px; font-weight: 600; margin: 40px 0 4px; }
+  .sechint { color: var(--ink-soft); font-size: 13px; margin-bottom: 16px; max-width: 72ch; }
+
+  /* Ladder */
+  .ladder { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+  @media (max-width: 900px){ .ladder { grid-template-columns: repeat(2,1fr); } }
+  .rung { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 13px 14px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .rung::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--teal); opacity:.55; }
+  .rung .rl { font-size: 11px; letter-spacing:.08em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+  .rung .rt { font-weight: 600; margin: 3px 0 2px; font-size: 14.5px; }
+  .rung .rd { font-size: 12px; color: var(--ink-soft); min-height: 32px; }
+  .rung .rc { margin-top: 8px; font-size: 12px; color: var(--ink-faint); border-top: 1px solid var(--line-soft); padding-top: 7px; }
+  .rung .rc b { color: var(--ink); font-family: Georgia, serif; font-size: 16px; }
+
+  /* Filters */
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0 14px; }
+  .filters .grp { display: inline-flex; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
+  .chip { border: 0; background: transparent; color: var(--ink-soft); font-size: 12.5px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit; }
+  .chip[aria-pressed="true"] { background: var(--gold); color: #fff; }
+  :root[data-theme="dark"] .chip[aria-pressed="true"], @media(prefers-color-scheme:dark){ .chip[aria-pressed="true"]{ color:#161a12; } }
+  .search { flex: 1; min-width: 160px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 8px 11px; font-size: 13px; font-family: inherit; }
+
+  /* Table */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); background: var(--card); }
+  table { border-collapse: collapse; width: 100%; min-width: 940px; font-size: 13px; }
+  thead th { text-align: left; padding: 11px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); border-bottom: 1px solid var(--line); font-weight: 700; cursor: pointer; white-space: nowrap; user-select: none; }
+  thead th:hover { color: var(--gold); }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--gold) 6%, transparent); }
+  .pname { font-weight: 600; color: var(--ink); }
+  .pname a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+  .pname a:hover { border-color: var(--gold); color: var(--gold); }
+  .pfam { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+  .est { font-size: 10px; color: var(--ink-faint); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; margin-left: 5px; vertical-align: 1px; }
+
+  /* completion bar */
+  .bar { width: 74px; height: 7px; border-radius: 4px; background: var(--line); overflow: hidden; display: inline-block; vertical-align: middle; }
+  .bar > i { display: block; height: 100%; border-radius: 4px; }
+  .pct { display: inline-block; width: 34px; text-align: right; margin-right: 8px; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .v-ship { background: var(--good-bg); color: var(--good); }
+  .v-recycle { background: var(--gold-soft); color: var(--gold); }
+  .v-build { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
+  .v-hold { background: var(--warn-bg); color: var(--warn); }
+  .v-park { background: var(--crit-bg); color: var(--crit); }
+  .rungtag { font-size: 11px; color: var(--ink-soft); font-weight: 600; }
+  .acis { letter-spacing: 1px; color: var(--gold); }
+  .acis .off { color: var(--line); }
+  .mono { font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+
+  /* families */
+  .fams { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  @media (max-width: 900px){ .fams { grid-template-columns: 1fr; } }
+  .fam { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); }
+  .fam h3 { margin: 0 0 3px; font-size: 14.5px; }
+  .fam .flead { font-size: 11.5px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .fam ul { margin: 8px 0 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--ink-soft); }
+  .fam li { padding: 3px 0; border-top: 1px solid var(--line-soft); }
+  .fam li:first-child { border-top: 0; }
+  .fam .fnote { margin-top: 9px; font-size: 11.5px; color: var(--ink-faint); font-style: italic; border-top: 1px dashed var(--line); padding-top: 8px; }
+  .fam .arrow { color: var(--gold); font-weight: 700; }
+
+  footer { margin-top: 44px; font-size: 12px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; }
+  footer b { color: var(--ink-soft); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+  .legend span { font-size: 11.5px; color: var(--ink-soft); }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Zaiwin · KOBIS · MasterHub — Build Intelligence</div>
+      <h1>The Product Library</h1>
+      <p class="sub">Every real build you've shipped, ranked on the value ladder with completion, cost-to-finish, market price and a build verdict. Never-built ideas are excluded. Use it to decide what to <b>ship</b>, <b>recycle</b>, <b>build on demand</b>, or <b>park</b>.</p>
+    </div>
+    <button class="themebtn" id="themebtn">◐ Theme</button>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <h2 class="sec">Product ladder</h2>
+  <p class="sechint">Value rises with commitment. Most of your portfolio sits at L1–L2 (pretty front-ends, thin backends). The leverage is pushing a chosen few to L3/L4 where money and recurring revenue live — and cloning L0–L1 templates cheaply for new clients.</p>
+  <div class="ladder" id="ladder"></div>
+
+  <h2 class="sec">Build catalog</h2>
+  <p class="sechint">Click a column to sort. Filter by verdict, ladder rung, or family. <span class="est">est</span> means completion is estimated from its clone-family, not yet deep-audited.</p>
+  <div class="filters">
+    <div class="grp" id="f-verdict">
+      <button class="chip" aria-pressed="true" data-v="all">All</button>
+      <button class="chip" data-v="Ship">Ship</button>
+      <button class="chip" data-v="Recycle">Recycle</button>
+      <button class="chip" data-v="Build">Build</button>
+      <button class="chip" data-v="Hold">Hold</button>
+      <button class="chip" data-v="Park">Park</button>
+    </div>
+    <input class="search" id="search" placeholder="Search name or family…" />
+  </div>
+  <div class="tablewrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th data-k="name">Project</th>
+          <th data-k="rung">Rung</th>
+          <th data-k="completion">Complete</th>
+          <th data-k="days">Days left</th>
+          <th data-k="token">Token $</th>
+          <th data-k="mv">Market value (RM)</th>
+          <th data-k="acis">ACIS</th>
+          <th data-k="model">Build with</th>
+          <th data-k="verdict">Verdict</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">Clone families — your efficiency engine</h2>
+  <p class="sechint">The DBKU <b>Green Kampung</b> win was a reskin of the SEB <b>Sungai Revive</b> template: same architecture, new content, a fraction of the effort. That's the pattern to industrialise. Build one strong template per family, then sell reskins to each agency/client.</p>
+  <div class="fams" id="fams"></div>
+
+  <footer>
+    <div><b>How to read verdicts.</b> Ship = near done, finish & charge. Recycle = proven template, clone for the next client (highest margin). Build = worth completing, but only against a paying client. Hold = demo only, wait for real demand. Park = low value, don't invest.</div>
+    <div class="legend">
+      <span>💰 Portfolio market value is the sum of mid-point prices.</span>
+      <span>🎯 ACIS = fit to your high-net-worth / Sarawak digital-economy agenda (1–5, editable).</span>
+      <span>♻️ Recycle rows finish fastest — clone, don't rebuild.</span>
+    </div>
+    <div style="margin-top:10px;color:var(--ink-faint)">Data is your working estimate as of this session. Edit the <code>DATA</code> array in this file to keep the library live, or wire it to the Netlify API for auto-sync.</div>
+  </footer>
+</div>
+
+<script>
+// ---- MASTER CATALOG (edit here to keep the library live) ----
+// rung: 0=Lead magnet 1=Demo 2=MVP 3=Product 4=Platform
+// verdict: Ship | Recycle | Build | Hold | Park
+// mvLo/mvHi in RM thousands. token in USD midpoint. days = days to full completion.
+const DATA = [
+  {name:"Syahlan SDC", url:"https://syahlansdc.com/", fam:"SDC Personal Brand", rung:3, completion:70, days:5, token:25, mvLo:3.5, mvHi:5.5, acis:5, model:"Fable · finish", infra:"Netlify Blobs + ToyyibPay (live)", verdict:"Ship", est:false},
+  {name:"Khaaliq SDC", url:"https://khaaliqsdc.uk/", fam:"SDC Personal Brand", rung:2, completion:55, days:3, token:15, mvLo:3, mvHi:5, acis:4, model:"Sonnet · reskin", infra:"Recycle ← Syahlan SDC", verdict:"Recycle", est:true},
+  {name:"SBF BizFund PULSE", url:"https://sbfbizfund2.netlify.app/", fam:"Funding Platform", rung:1, completion:10, days:14, token:75, mvLo:15, mvHi:30, acis:5, model:"Fable · full backend", infra:"GitHub + Next.js + DB", verdict:"Build", est:false},
+  {name:"Green Kampung (DBKU)", url:"https://my-green-kampung-challenge.netlify.app/", fam:"ESG Community", rung:1, completion:5, days:9, token:50, mvLo:8, mvHi:15, acis:5, model:"Fable · backend", infra:"Recycle ← Sungai Revive", verdict:"Build", est:false},
+  {name:"Sungai Revive (SEB)", url:"https://sungai-revive.netlify.app/", fam:"ESG Community", rung:1, completion:8, days:8, token:40, mvLo:5, mvHi:8, acis:5, model:"Fable · template parent", infra:"Netlify — make this the master template", verdict:"Recycle", est:false},
+  {name:"Land POME × KOBIS", url:"https://landpomeswk.netlify.app/", fam:"POME / Enterprise pitch", rung:1, completion:45, days:6, token:30, mvLo:5, mvHi:10, acis:5, model:"Sonnet · forms+docs", infra:"Netlify + form backend", verdict:"Build", est:false},
+  {name:"Shiraz Empire", url:"", fam:"E-commerce Brand", rung:2, completion:50, days:4, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
+  {name:"Hit Barber Astana", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
+  {name:"KAM Motorworld", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
+  {name:"Clik Fragrance", url:"", fam:"E-commerce Brand", rung:2, completion:40, days:7, token:35, mvLo:4, mvHi:7, acis:2, model:"Sonnet + payments", infra:"Netlify + ToyyibPay", verdict:"Build", est:true},
+  {name:"SJF Farm", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
+  {name:"Kuching Catering Co", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
+  {name:"Yat Ricco Wellness", url:"", fam:"E-commerce Brand", rung:2, completion:40, days:5, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Hold", est:true},
+  {name:"MasterHub Client Portal", url:"", fam:"SME Audit / AI", rung:2, completion:40, days:12, token:65, mvLo:10, mvHi:20, acis:5, model:"Fable · flagship", infra:"GitHub + auth + multi-tenant", verdict:"Build", est:true},
+  {name:"SME Survey (Digital Audit)", url:"", fam:"SME Audit / AI", rung:0, completion:55, days:3, token:15, mvLo:2, mvHi:4, acis:4, model:"Sonnet · lead magnet", infra:"Netlify + form → CRM", verdict:"Recycle", est:true},
+  {name:"KBoost (AI Sales)", url:"", fam:"SME Audit / AI", rung:1, completion:30, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"Recycle ← MasterHub portal", verdict:"Hold", est:true},
+  {name:"KB Web Growth", url:"", fam:"SME Audit / AI", rung:1, completion:35, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet", infra:"Netlify", verdict:"Hold", est:true},
+  {name:"Meeting Agent v2", url:"", fam:"Meeting Agent", rung:1, completion:30, days:6, token:35, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"GitHub + API", verdict:"Hold", est:true},
+  {name:"Meeting Clone (KOBIS)", url:"", fam:"Meeting Agent", rung:1, completion:30, days:3, token:15, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← Meeting Agent v2", verdict:"Recycle", est:true},
+  {name:"KOBIS Berhad .com", url:"https://kobisberhad.com/", fam:"KOBIS Corporate", rung:2, completion:55, days:4, token:25, mvLo:4, mvHi:7, acis:5, model:"Sonnet · finish", infra:"GitHub (live CI/CD)", verdict:"Ship", est:true},
+  {name:"KOBIS Berhad v3", url:"", fam:"KOBIS Corporate", rung:1, completion:50, days:2, token:12, mvLo:0, mvHi:0, acis:3, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true},
+  {name:"KOBIS v2", url:"", fam:"KOBIS Corporate", rung:1, completion:45, days:2, token:12, mvLo:0, mvHi:0, acis:2, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true},
+  {name:"KODC Platform", url:"", fam:"Property / Land", rung:1, completion:35, days:6, token:30, mvLo:4, mvHi:8, acis:4, model:"Sonnet + forms", infra:"Netlify + backend", verdict:"Build", est:true},
+  {name:"MVP Property (Kuching)", url:"", fam:"Property / Land", rung:1, completion:35, days:5, token:25, mvLo:3, mvHi:6, acis:3, model:"Sonnet · reskin", infra:"Recycle ← KODC Platform", verdict:"Hold", est:true},
+  {name:"CTAP KOBIS (Training)", url:"", fam:"Training / Diploma", rung:1, completion:40, days:5, token:25, mvLo:3, mvHi:6, acis:4, model:"Sonnet + enrolment", infra:"Netlify + form → CRM", verdict:"Build", est:true},
+  {name:"SPM → Diploma", url:"", fam:"Training / Diploma", rung:1, completion:45, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← CTAP template", verdict:"Recycle", est:true},
+  {name:"KOBIS SPM-to-Diploma", url:"", fam:"Training / Diploma", rung:1, completion:20, days:4, token:18, mvLo:0, mvHi:0, acis:2, model:"— duplicate", infra:"Merge with SPM→Diploma", verdict:"Park", est:true},
+  {name:"Borneo ESG Forum 2026", url:"", fam:"ESG Event", rung:1, completion:50, days:4, token:20, mvLo:4, mvHi:8, acis:5, model:"Sonnet + registration", infra:"Netlify + RSVP + payment", verdict:"Build", est:true},
+  {name:"JoinSeaGo Digital", url:"", fam:"Membership", rung:1, completion:35, days:8, token:45, mvLo:5, mvHi:8, acis:3, model:"Fable · auth+CRM", infra:"GitHub + membership DB", verdict:"Hold", est:true},
+  {name:"UKAS TTC (Campaign)", url:"https://ukasttc.uk/", fam:"Campaign", rung:1, completion:50, days:3, token:18, mvLo:2.5, mvHi:4, acis:3, model:"Sonnet + registration", infra:"Netlify + form", verdict:"Build", est:true},
+  {name:"Charming Sunburst", url:"", fam:"Custom App", rung:1, completion:30, days:12, token:65, mvLo:8, mvHi:15, acis:3, model:"Fable · full build", infra:"GitHub + Next.js (live)", verdict:"Build", est:true},
+  {name:"Run Kitak Run", url:"", fam:"Event / Run", rung:1, completion:35, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · Next.js", infra:"GitHub + registration", verdict:"Hold", est:true},
+  {name:"My Future Plan", url:"", fam:"Campaign", rung:1, completion:30, days:4, token:20, mvLo:2, mvHi:4, acis:2, model:"Sonnet · reskin", infra:"Recycle ← campaign template", verdict:"Hold", est:true},
+  {name:"KhaaliqSDC / SDC network", url:"", fam:"SDC Personal Brand", rung:2, completion:55, days:3, token:15, mvLo:3, mvHi:5, acis:5, model:"Sonnet · reskin", infra:"Recycle ← Syahlan SDC", verdict:"Recycle", est:true}
+];
+
+const RUNGS = [
+  {n:0, l:"L0", t:"Lead magnet", d:"Free audit, survey, brochure. Job: capture a lead."},
+  {n:1, l:"L1", t:"Demo / prototype", d:"Clickable, looks real, no backend yet."},
+  {n:2, l:"L2", t:"Functional MVP", d:"Real forms + backend, one working flow."},
+  {n:3, l:"L3", t:"Working product", d:"Auth + data + payments. Charges money."},
+  {n:4, l:"L4", t:"Platform / SaaS", d:"Multi-tenant, recurring revenue."}
+];
+
+const rungColor = n => ['#8a938f','#1c6b64','#b5791f','#2f7d5b','#7a3ea0'][n];
+const barColor = p => p>=65?'var(--good)':p>=35?'var(--warn)':'var(--crit)';
+const vClass = v => 'v-'+v.toLowerCase();
+const acisStars = n => `<span class="acis">${'★'.repeat(n)}<span class="off">${'★'.repeat(5-n)}</span></span>`;
+const mv = d => d.mvHi ? `${d.mvLo}–${d.mvHi}k` : '—';
+
+// KPIs
+function renderKPIs(){
+  const built = DATA.length;
+  const avg = Math.round(DATA.reduce((s,d)=>s+d.completion,0)/built);
+  const daysLeft = DATA.reduce((s,d)=>s+d.days,0);
+  const mvSum = DATA.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
+  const recycle = DATA.filter(d=>d.verdict==='Recycle').length;
+  const tiles = [
+    {lab:"Real builds", val:built, s:"in the library"},
+    {lab:"Avg completion", val:avg+"%", s:"across all"},
+    {lab:"Days to finish all", val:daysLeft, s:"solo, sequential"},
+    {lab:"Portfolio value", val:"RM "+Math.round(mvSum)+"k", s:"mid-point sum"},
+    {lab:"Recycle-ready", val:recycle, s:"clone, don't rebuild"}
+  ];
+  document.getElementById('kpis').innerHTML = tiles.map(t=>
+    `<div class="kpi"><div class="lab">${t.lab}</div><div class="val num">${t.val} <small>${t.s}</small></div></div>`).join('');
+}
+
+// Ladder
+function renderLadder(){
+  document.getElementById('ladder').innerHTML = RUNGS.map(r=>{
+    const items = DATA.filter(d=>d.rung===r.n);
+    const val = items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
+    return `<div class="rung" style="--teal:${rungColor(r.n)}">
+      <div class="rl">${r.l}</div><div class="rt">${r.t}</div>
+      <div class="rd">${r.d}</div>
+      <div class="rc"><b>${items.length}</b> builds · RM ${Math.round(val)}k</div></div>`;
+  }).join('');
+}
+
+// Table
+let sortK='completion', sortDir=-1, filterV='all', q='';
+function renderTable(){
+  let rows = DATA.filter(d=> (filterV==='all'||d.verdict===filterV) &&
+    (q===''|| (d.name+d.fam).toLowerCase().includes(q)));
+  rows.sort((a,b)=>{
+    let x=a[sortK], y=b[sortK];
+    if(sortK==='name'||sortK==='model'||sortK==='verdict'){ x=(''+x).toLowerCase(); y=(''+y).toLowerCase(); }
+    if(sortK==='mv'){ x=a.mvLo+a.mvHi; y=b.mvLo+b.mvHi; }
+    return (x<y?-1:x>y?1:0)*sortDir;
+  });
+  document.getElementById('tbody').innerHTML = rows.map(d=>{
+    const nm = d.url ? `<a href="${d.url}" target="_blank" rel="noopener">${d.name}</a>` : d.name;
+    return `<tr>
+      <td><div class="pname">${nm}${d.est?'<span class="est">est</span>':''}</div><div class="pfam">${d.fam}</div></td>
+      <td><span class="rungtag" style="color:${rungColor(d.rung)}">L${d.rung}</span></td>
+      <td><span class="pct num">${d.completion}%</span><span class="bar"><i style="width:${d.completion}%;background:${barColor(d.completion)}"></i></span></td>
+      <td class="mono">${d.days}d</td>
+      <td class="mono">$${d.token}</td>
+      <td class="mono">${mv(d)}</td>
+      <td>${acisStars(d.acis)}</td>
+      <td style="font-size:12px;color:var(--ink-soft)">${d.model}<div class="pfam">${d.infra}</div></td>
+      <td><span class="pill ${vClass(d.verdict)}">${d.verdict}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// Families
+function renderFams(){
+  const groups = {};
+  DATA.forEach(d=>{ (groups[d.fam]=groups[d.fam]||[]).push(d); });
+  const notes = {
+    "ESG Community":"Sungai Revive (SEB) is the master template → Green Kampung (DBKU) was the reskin. Sell to every district council & GLC.",
+    "SDC Personal Brand":"One candidate template → reskin per SDC nominee. RM3–5k each, ~3 days.",
+    "E-commerce Brand":"6 brand sites share one storefront skeleton. Add ToyyibPay once, reuse everywhere.",
+    "Training / Diploma":"CTAP / SPM funnels are one enrolment template. Merge the duplicates.",
+    "KOBIS Corporate":"Three versions exist — consolidate into kobisberhad.com, park the rest.",
+    "Meeting Agent":"v2 is the engine; KOBIS clone proves reskin works. Package as a product.",
+    "SME Audit / AI":"Lead-magnet audit → MasterHub portal is the upsell ladder. Highest ACIS.",
+    "Property / Land":"KODC is the parent; MVP Property is the reskin path.",
+    "Funding Platform":"SBF PULSE is bespoke & high-value — build only against the signed client.",
+    "ESG Event":"Registration + payment template, reusable for every KOBIS/Borneo event.",
+    "Campaign":"Lightweight microsites — cheapest reskins in the library.",
+    "Membership":"JoinSeaGo needs real auth; hold until a member org commits.",
+    "POME / Enterprise pitch":"High-ACIS enterprise deal page; add proposal form + data room.",
+    "Custom App":"Charming Sunburst is a true custom Next.js build — price accordingly.",
+    "Event / Run":"Run Kitak Run — registration + payment reskin."
+  };
+  const order = Object.keys(groups).sort((a,b)=> groups[b].length-groups[a].length);
+  document.getElementById('fams').innerHTML = order.map(f=>{
+    const items = groups[f];
+    const val = Math.round(items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0));
+    return `<div class="fam">
+      <div class="flead">${items.length} build${items.length>1?'s':''} · RM ${val}k</div>
+      <h3>${f}</h3>
+      <ul>${items.map(d=>`<li>${d.infra.startsWith('Recycle')?'<span class="arrow">♻ </span>':''}${d.name} <span style="color:var(--ink-faint)">· ${d.completion}%</span></li>`).join('')}</ul>
+      ${notes[f]?`<div class="fnote">${notes[f]}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// interactions
+document.querySelectorAll('#f-verdict .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#f-verdict .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
+  c.setAttribute('aria-pressed','true'); filterV=c.dataset.v==='all'?'all':c.dataset.v; renderTable();
+}));
+document.getElementById('search').addEventListener('input',e=>{ q=e.target.value.toLowerCase().trim(); renderTable(); });
+document.querySelectorAll('#tbl thead th').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k; if(k===sortK) sortDir*=-1; else { sortK=k; sortDir=(k==='name')?1:-1; } renderTable();
+}));
+document.getElementById('themebtn').addEventListener('click',()=>{
+  const r=document.documentElement;
+  const cur=r.getAttribute('data-theme')|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+});
+
+renderKPIs(); renderLadder(); renderTable(); renderFams();
+</script>
