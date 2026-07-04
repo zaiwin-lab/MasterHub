@@ -29,12 +29,16 @@
   .themebtn { border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:8px; padding:7px 12px; font-size:12.5px; cursor:pointer; }
   .themebtn:hover { border-color:var(--gold); color:var(--ink); }
 
-  /* role switch */
-  .roleswitch { display:inline-flex; gap:3px; background:var(--card); border:1px solid var(--line); border-radius:9px; padding:3px; }
-  .roleswitch button { border:0; background:transparent; color:var(--ink-soft); font-size:12.5px; padding:6px 13px; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; }
+  /* role switch — discreet, bottom-left, fades in on hover */
+  .roleswitch { position:fixed; left:12px; bottom:12px; z-index:40; display:inline-flex; gap:2px;
+    background:var(--card); border:1px solid var(--line); border-radius:8px; padding:2px;
+    opacity:.16; transform:scale(.9); transform-origin:bottom left; transition:opacity .25s ease, transform .25s ease; box-shadow:var(--shadow); }
+  .roleswitch:hover, .roleswitch:focus-within { opacity:1; transform:scale(1); }
+  .roleswitch button { border:0; background:transparent; color:var(--ink-faint); font-size:11px; padding:4px 9px; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; }
   .roleswitch button[aria-pressed="true"] { background:var(--gold); color:#fff; }
   @media(prefers-color-scheme:dark){ .roleswitch button[aria-pressed="true"]{color:#161a12;} }
   :root[data-theme="dark"] .roleswitch button[aria-pressed="true"]{color:#161a12;}
+  @media (max-width:600px){ .roleswitch{ opacity:.28; } }
 
   .rolebanner { font-size:12px; padding:7px 13px; border-radius:8px; margin:14px 0 0; display:flex; gap:8px; align-items:center; }
   .rb-owner { background:var(--gold-soft); color:var(--gold); }
@@ -142,11 +146,6 @@
       <p class="sub" id="pagesub"></p>
     </div>
     <div class="toolbar">
-      <div class="roleswitch" id="roleswitch">
-        <button data-role="client" aria-pressed="true">Client</button>
-        <button data-role="team">Team</button>
-        <button data-role="owner">Owner</button>
-      </div>
       <button class="themebtn" id="themebtn">◐</button>
     </div>
   </header>
@@ -193,6 +192,12 @@
   </div>
 
   <footer id="footer"></footer>
+</div>
+
+<div class="roleswitch" id="roleswitch" aria-label="View mode">
+  <button data-role="client" aria-pressed="true">Client</button>
+  <button data-role="team">Team</button>
+  <button data-role="owner">Owner</button>
 </div>
 
 <div class="modal hide" id="modal">
