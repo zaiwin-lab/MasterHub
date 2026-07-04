@@ -1,322 +1,351 @@
-<title>Product Library — Build Intelligence</title>
+<title>KOBIS Digital — Product Library</title>
 <style>
   :root {
-    --paper: #f6f4ee;
-    --card: #fffefb;
-    --ink: #17201f;
-    --ink-soft: #4a5654;
-    --ink-faint: #8a938f;
-    --line: #e3ded3;
-    --line-soft: #eee9df;
-    --gold: #b5791f;
-    --gold-soft: #f0e2c4;
-    --teal: #1c6b64;
-    --good: #2f7d5b;
-    --good-bg: #dcefe3;
-    --warn: #b0791a;
-    --warn-bg: #f5e6c6;
-    --crit: #b04a3f;
-    --crit-bg: #f3dcd6;
-    --shadow: 0 1px 2px rgba(23,32,31,.05), 0 6px 20px rgba(23,32,31,.05);
-    --r: 10px;
+    --paper: #f6f4ee; --card: #fffefb; --ink: #17201f; --ink-soft: #4a5654; --ink-faint: #8a938f;
+    --line: #e3ded3; --line-soft: #eee9df; --gold: #b5791f; --gold-soft: #f0e2c4; --teal: #1c6b64;
+    --good: #2f7d5b; --good-bg: #dcefe3; --warn: #b0791a; --warn-bg: #f5e6c6; --crit: #b04a3f; --crit-bg: #f3dcd6;
+    --shadow: 0 1px 2px rgba(23,32,31,.05), 0 6px 20px rgba(23,32,31,.05); --r: 10px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #101615; --card: #17201f; --ink: #eef1ec; --ink-soft: #a9b3ae;
-      --ink-faint: #6d7772; --line: #26312f; --line-soft: #1e2827;
-      --gold: #d9a746; --gold-soft: #3a2f18; --teal: #4fb3a8;
-      --good: #57c088; --good-bg: #16302433; --warn: #d9a746; --warn-bg: #3a2f1833;
-      --crit: #e08a7d; --crit-bg: #3a201b33;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.35);
+      --paper:#101615;--card:#17201f;--ink:#eef1ec;--ink-soft:#a9b3ae;--ink-faint:#6d7772;--line:#26312f;--line-soft:#1e2827;
+      --gold:#d9a746;--gold-soft:#3a2f18;--teal:#4fb3a8;--good:#57c088;--good-bg:#16302433;--warn:#d9a746;--warn-bg:#3a2f1833;
+      --crit:#e08a7d;--crit-bg:#3a201b33;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);
     }
   }
-  :root[data-theme="light"] {
-    --paper:#f6f4ee;--card:#fffefb;--ink:#17201f;--ink-soft:#4a5654;--ink-faint:#8a938f;
-    --line:#e3ded3;--line-soft:#eee9df;--gold:#b5791f;--gold-soft:#f0e2c4;--teal:#1c6b64;
-    --good:#2f7d5b;--good-bg:#dcefe3;--warn:#b0791a;--warn-bg:#f5e6c6;--crit:#b04a3f;--crit-bg:#f3dcd6;
-    --shadow:0 1px 2px rgba(23,32,31,.05),0 6px 20px rgba(23,32,31,.05);
-  }
-  :root[data-theme="dark"] {
-    --paper:#101615;--card:#17201f;--ink:#eef1ec;--ink-soft:#a9b3ae;--ink-faint:#6d7772;
-    --line:#26312f;--line-soft:#1e2827;--gold:#d9a746;--gold-soft:#3a2f18;--teal:#4fb3a8;
-    --good:#57c088;--good-bg:#16302433;--warn:#d9a746;--warn-bg:#3a2f1833;--crit:#e08a7d;--crit-bg:#3a201b33;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);
-  }
+  :root[data-theme="light"]{--paper:#f6f4ee;--card:#fffefb;--ink:#17201f;--ink-soft:#4a5654;--ink-faint:#8a938f;--line:#e3ded3;--line-soft:#eee9df;--gold:#b5791f;--gold-soft:#f0e2c4;--teal:#1c6b64;--good:#2f7d5b;--good-bg:#dcefe3;--warn:#b0791a;--warn-bg:#f5e6c6;--crit:#b04a3f;--crit-bg:#f3dcd6;--shadow:0 1px 2px rgba(23,32,31,.05),0 6px 20px rgba(23,32,31,.05);}
+  :root[data-theme="dark"]{--paper:#101615;--card:#17201f;--ink:#eef1ec;--ink-soft:#a9b3ae;--ink-faint:#6d7772;--line:#26312f;--line-soft:#1e2827;--gold:#d9a746;--gold-soft:#3a2f18;--teal:#4fb3a8;--good:#57c088;--good-bg:#16302433;--warn:#d9a746;--warn-bg:#3a2f1833;--crit:#e08a7d;--crit-bg:#3a201b33;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}
   * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 22px 80px; }
-  .num { font-variant-numeric: tabular-nums; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1180px; margin:0 auto; padding:28px 22px 80px; }
+  .num { font-variant-numeric:tabular-nums; }
+  .hide { display:none !important; }
 
-  header.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 8px; }
-  .eyebrow { text-transform: uppercase; letter-spacing: .13em; font-size: 11.5px; font-weight: 600; color: var(--gold); }
-  h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; font-size: 30px; line-height: 1.1; margin: 6px 0 4px; text-wrap: balance; letter-spacing: -.01em; }
-  .sub { color: var(--ink-soft); max-width: 60ch; font-size: 14px; }
-  .themebtn { border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); border-radius: 8px; padding: 7px 12px; font-size: 12.5px; cursor: pointer; }
-  .themebtn:hover { border-color: var(--gold); color: var(--ink); }
+  header.top { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; margin-bottom:8px; }
+  .eyebrow { text-transform:uppercase; letter-spacing:.13em; font-size:11.5px; font-weight:600; color:var(--gold); }
+  h1 { font-family:Georgia,"Times New Roman",serif; font-weight:600; font-size:30px; line-height:1.1; margin:6px 0 4px; text-wrap:balance; letter-spacing:-.01em; }
+  .sub { color:var(--ink-soft); max-width:62ch; font-size:14px; }
+  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .themebtn { border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:8px; padding:7px 12px; font-size:12.5px; cursor:pointer; }
+  .themebtn:hover { border-color:var(--gold); color:var(--ink); }
 
-  /* KPI tiles */
-  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0 8px; }
-  @media (max-width: 820px){ .kpis { grid-template-columns: repeat(2,1fr); } }
-  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 15px; box-shadow: var(--shadow); }
-  .kpi .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); font-weight: 600; }
-  .kpi .val { font-family: Georgia, serif; font-size: 26px; margin-top: 5px; letter-spacing: -.01em; }
-  .kpi .val small { font-size: 14px; color: var(--ink-soft); font-family: system-ui; }
+  /* role switch */
+  .roleswitch { display:inline-flex; gap:3px; background:var(--card); border:1px solid var(--line); border-radius:9px; padding:3px; }
+  .roleswitch button { border:0; background:transparent; color:var(--ink-soft); font-size:12.5px; padding:6px 13px; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; }
+  .roleswitch button[aria-pressed="true"] { background:var(--gold); color:#fff; }
+  @media(prefers-color-scheme:dark){ .roleswitch button[aria-pressed="true"]{color:#161a12;} }
+  :root[data-theme="dark"] .roleswitch button[aria-pressed="true"]{color:#161a12;}
 
-  h2.sec { font-family: Georgia, serif; font-size: 19px; font-weight: 600; margin: 40px 0 4px; }
-  .sechint { color: var(--ink-soft); font-size: 13px; margin-bottom: 16px; max-width: 72ch; }
+  .rolebanner { font-size:12px; padding:7px 13px; border-radius:8px; margin:14px 0 0; display:flex; gap:8px; align-items:center; }
+  .rb-owner { background:var(--gold-soft); color:var(--gold); }
+  .rb-team { background:color-mix(in srgb,var(--teal) 15%,transparent); color:var(--teal); }
+  .rb-client { background:var(--good-bg); color:var(--good); }
 
-  /* Ladder */
-  .ladder { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
-  @media (max-width: 900px){ .ladder { grid-template-columns: repeat(2,1fr); } }
-  .rung { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 13px 14px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-  .rung::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--teal); opacity:.55; }
-  .rung .rl { font-size: 11px; letter-spacing:.08em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
-  .rung .rt { font-weight: 600; margin: 3px 0 2px; font-size: 14.5px; }
-  .rung .rd { font-size: 12px; color: var(--ink-soft); min-height: 32px; }
-  .rung .rc { margin-top: 8px; font-size: 12px; color: var(--ink-faint); border-top: 1px solid var(--line-soft); padding-top: 7px; }
-  .rung .rc b { color: var(--ink); font-family: Georgia, serif; font-size: 16px; }
+  .kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:20px 0 8px; }
+  @media (max-width:820px){ .kpis { grid-template-columns:repeat(2,1fr); } }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:14px 15px; box-shadow:var(--shadow); }
+  .kpi .lab { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); font-weight:600; }
+  .kpi .val { font-family:Georgia,serif; font-size:26px; margin-top:5px; letter-spacing:-.01em; }
+  .kpi .val small { font-size:13px; color:var(--ink-soft); font-family:system-ui; }
 
-  /* Filters */
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0 14px; }
-  .filters .grp { display: inline-flex; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
-  .chip { border: 0; background: transparent; color: var(--ink-soft); font-size: 12.5px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: inherit; }
-  .chip[aria-pressed="true"] { background: var(--gold); color: #fff; }
-  :root[data-theme="dark"] .chip[aria-pressed="true"], @media(prefers-color-scheme:dark){ .chip[aria-pressed="true"]{ color:#161a12; } }
-  .search { flex: 1; min-width: 160px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 8px 11px; font-size: 13px; font-family: inherit; }
+  h2.sec { font-family:Georgia,serif; font-size:19px; font-weight:600; margin:40px 0 4px; }
+  .sechint { color:var(--ink-soft); font-size:13px; margin-bottom:16px; max-width:74ch; }
 
-  /* Table */
-  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); background: var(--card); }
-  table { border-collapse: collapse; width: 100%; min-width: 940px; font-size: 13px; }
-  thead th { text-align: left; padding: 11px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); border-bottom: 1px solid var(--line); font-weight: 700; cursor: pointer; white-space: nowrap; user-select: none; }
-  thead th:hover { color: var(--gold); }
-  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
-  tbody tr:last-child td { border-bottom: 0; }
-  tbody tr:hover { background: color-mix(in srgb, var(--gold) 6%, transparent); }
-  .pname { font-weight: 600; color: var(--ink); }
-  .pname a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
-  .pname a:hover { border-color: var(--gold); color: var(--gold); }
-  .pfam { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
-  .est { font-size: 10px; color: var(--ink-faint); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; margin-left: 5px; vertical-align: 1px; }
+  .ladder { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  @media (max-width:900px){ .ladder { grid-template-columns:repeat(2,1fr); } }
+  .rung { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:13px 14px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+  .rung::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--teal); opacity:.55; }
+  .rung .rl { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); font-weight:700; }
+  .rung .rt { font-weight:600; margin:3px 0 2px; font-size:14.5px; }
+  .rung .rd { font-size:12px; color:var(--ink-soft); min-height:32px; }
+  .rung .rc { margin-top:8px; font-size:12px; color:var(--ink-faint); border-top:1px solid var(--line-soft); padding-top:7px; }
+  .rung .rc b { color:var(--ink); font-family:Georgia,serif; font-size:16px; }
 
-  /* completion bar */
-  .bar { width: 74px; height: 7px; border-radius: 4px; background: var(--line); overflow: hidden; display: inline-block; vertical-align: middle; }
-  .bar > i { display: block; height: 100%; border-radius: 4px; }
-  .pct { display: inline-block; width: 34px; text-align: right; margin-right: 8px; }
+  .filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:4px 0 14px; }
+  .grp { display:inline-flex; gap:4px; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:3px; }
+  .chip { border:0; background:transparent; color:var(--ink-soft); font-size:12.5px; padding:5px 10px; border-radius:6px; cursor:pointer; font-family:inherit; }
+  .chip[aria-pressed="true"] { background:var(--gold); color:#fff; }
+  @media(prefers-color-scheme:dark){.chip[aria-pressed="true"]{color:#161a12;}}
+  :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#161a12;}
+  .search { flex:1; min-width:160px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:8px; padding:8px 11px; font-size:13px; font-family:inherit; }
 
-  .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
-  .v-ship { background: var(--good-bg); color: var(--good); }
-  .v-recycle { background: var(--gold-soft); color: var(--gold); }
-  .v-build { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
-  .v-hold { background: var(--warn-bg); color: var(--warn); }
-  .v-park { background: var(--crit-bg); color: var(--crit); }
-  .rungtag { font-size: 11px; color: var(--ink-soft); font-weight: 600; }
-  .acis { letter-spacing: 1px; color: var(--gold); }
-  .acis .off { color: var(--line); }
-  .mono { font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .tablewrap { overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); background:var(--card); }
+  table { border-collapse:collapse; width:100%; min-width:820px; font-size:13px; }
+  thead th { text-align:left; padding:11px 12px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); border-bottom:1px solid var(--line); font-weight:700; cursor:pointer; white-space:nowrap; user-select:none; }
+  thead th:hover { color:var(--gold); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody tr:hover { background:color-mix(in srgb,var(--gold) 6%,transparent); }
+  .pname { font-weight:600; color:var(--ink); }
+  .pname a { color:inherit; text-decoration:none; border-bottom:1px dotted var(--ink-faint); }
+  .pname a:hover { border-color:var(--gold); color:var(--gold); }
+  .pfam { font-size:11px; color:var(--ink-faint); margin-top:1px; }
+  .est { font-size:10px; color:var(--ink-faint); border:1px solid var(--line); border-radius:4px; padding:0 4px; margin-left:5px; vertical-align:1px; }
+  .bar { width:74px; height:7px; border-radius:4px; background:var(--line); overflow:hidden; display:inline-block; vertical-align:middle; }
+  .bar > i { display:block; height:100%; border-radius:4px; }
+  .pct { display:inline-block; width:34px; text-align:right; margin-right:8px; }
+  .pill { display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .v-ship{background:var(--good-bg);color:var(--good);} .v-recycle{background:var(--gold-soft);color:var(--gold);}
+  .v-build{background:color-mix(in srgb,var(--teal) 16%,transparent);color:var(--teal);} .v-hold{background:var(--warn-bg);color:var(--warn);} .v-park{background:var(--crit-bg);color:var(--crit);}
+  .rungtag { font-size:11px; color:var(--ink-soft); font-weight:600; }
+  .acis { letter-spacing:1px; color:var(--gold); } .acis .off { color:var(--line); }
+  .mono { font-variant-numeric:tabular-nums; color:var(--ink-soft); }
 
-  /* families */
-  .fams { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
-  @media (max-width: 900px){ .fams { grid-template-columns: 1fr; } }
-  .fam { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); }
-  .fam h3 { margin: 0 0 3px; font-size: 14.5px; }
-  .fam .flead { font-size: 11.5px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
-  .fam ul { margin: 8px 0 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--ink-soft); }
-  .fam li { padding: 3px 0; border-top: 1px solid var(--line-soft); }
-  .fam li:first-child { border-top: 0; }
-  .fam .fnote { margin-top: 9px; font-size: 11.5px; color: var(--ink-faint); font-style: italic; border-top: 1px dashed var(--line); padding-top: 8px; }
-  .fam .arrow { color: var(--gold); font-weight: 700; }
+  /* client cards */
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:900px){ .cards { grid-template-columns:1fr; } }
+  .pcard { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:9px; position:relative; overflow:hidden; }
+  .pcard::before { content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--gold),var(--teal)); }
+  .pcard .cat { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); font-weight:700; }
+  .pcard h3 { margin:0; font-size:17px; font-family:Georgia,serif; }
+  .pcard p { margin:0; font-size:13.5px; color:var(--ink-soft); flex:1; }
+  .pcard .val { font-size:12.5px; color:var(--ink); background:color-mix(in srgb,var(--teal) 8%,transparent); border-left:2px solid var(--teal); padding:6px 10px; border-radius:4px; }
+  .pcard .foot { display:flex; justify-content:space-between; align-items:center; margin-top:2px; }
+  .status { font-size:11.5px; font-weight:600; padding:3px 10px; border-radius:20px; }
+  .s-live{background:var(--good-bg);color:var(--good);} .s-dev{background:var(--warn-bg);color:var(--warn);} .s-design{background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal);}
+  .pcard .link { font-size:12px; color:var(--gold); text-decoration:none; font-weight:600; }
+  .pcard .link:hover { text-decoration:underline; }
 
-  footer { margin-top: 44px; font-size: 12px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; }
-  footer b { color: var(--ink-soft); }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
-  .legend span { font-size: 11.5px; color: var(--ink-soft); }
+  .fams { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media (max-width:900px){ .fams { grid-template-columns:1fr; } }
+  .fam { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:14px; box-shadow:var(--shadow); }
+  .fam h3 { margin:0 0 3px; font-size:14.5px; }
+  .fam .flead { font-size:11.5px; color:var(--gold); font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+  .fam ul { margin:8px 0 0; padding:0; list-style:none; font-size:12.5px; color:var(--ink-soft); }
+  .fam li { padding:3px 0; border-top:1px solid var(--line-soft); }
+  .fam li:first-child { border-top:0; }
+  .fam .fnote { margin-top:9px; font-size:11.5px; color:var(--ink-faint); font-style:italic; border-top:1px dashed var(--line); padding-top:8px; }
+  .fam .arrow { color:var(--gold); font-weight:700; }
+
+  /* pin modal */
+  .modal { position:fixed; inset:0; background:rgba(10,14,13,.55); display:flex; align-items:center; justify-content:center; z-index:50; }
+  .modal .box { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px; width:300px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .modal h3 { margin:0 0 4px; font-family:Georgia,serif; }
+  .modal p { margin:0 0 14px; font-size:12.5px; color:var(--ink-soft); }
+  .modal input { width:100%; border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:8px; padding:10px; font-size:16px; text-align:center; letter-spacing:4px; font-family:inherit; }
+  .modal .err { color:var(--crit); font-size:12px; margin-top:8px; min-height:16px; }
+  .modal .btns { display:flex; gap:8px; margin-top:12px; }
+  .modal button { flex:1; border:0; border-radius:8px; padding:9px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .modal .go { background:var(--gold); color:#fff; } .modal .cancel { background:var(--line); color:var(--ink); }
+
+  footer { margin-top:44px; font-size:12px; color:var(--ink-faint); border-top:1px solid var(--line); padding-top:16px; }
+  footer b { color:var(--ink-soft); }
+  .legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; }
+  .legend span { font-size:11.5px; color:var(--ink-soft); }
 </style>
 
 <div class="wrap">
   <header class="top">
     <div>
-      <div class="eyebrow">Zaiwin · KOBIS · MasterHub — Build Intelligence</div>
-      <h1>The Product Library</h1>
-      <p class="sub">Every real build you've shipped, ranked on the value ladder with completion, cost-to-finish, market price and a build verdict. Never-built ideas are excluded. Use it to decide what to <b>ship</b>, <b>recycle</b>, <b>build on demand</b>, or <b>park</b>.</p>
+      <div class="eyebrow" id="eyebrow">KOBIS Berhad · Digital Solutions</div>
+      <h1 id="pagetitle">Our Digital Portfolio</h1>
+      <p class="sub" id="pagesub"></p>
     </div>
-    <button class="themebtn" id="themebtn">◐ Theme</button>
+    <div class="toolbar">
+      <div class="roleswitch" id="roleswitch">
+        <button data-role="client" aria-pressed="true">Client</button>
+        <button data-role="team">Team</button>
+        <button data-role="owner">Owner</button>
+      </div>
+      <button class="themebtn" id="themebtn">◐</button>
+    </div>
   </header>
+  <div id="rolebanner"></div>
 
   <section class="kpis" id="kpis"></section>
 
-  <h2 class="sec">Product ladder</h2>
-  <p class="sechint">Value rises with commitment. Most of your portfolio sits at L1–L2 (pretty front-ends, thin backends). The leverage is pushing a chosen few to L3/L4 where money and recurring revenue live — and cloning L0–L1 templates cheaply for new clients.</p>
-  <div class="ladder" id="ladder"></div>
+  <!-- internal sections (owner/team) -->
+  <div id="internal">
+    <h2 class="sec">Product ladder</h2>
+    <p class="sechint">Value rises with commitment: L0 lead magnet → L4 platform. The leverage is pushing a chosen few to L3/L4 (where money lives) and cloning L0–L1 templates cheaply for new clients.</p>
+    <div class="ladder" id="ladder"></div>
 
-  <h2 class="sec">Build catalog</h2>
-  <p class="sechint">Click a column to sort. Filter by verdict, ladder rung, or family. <span class="est">est</span> means completion is estimated from its clone-family, not yet deep-audited.</p>
-  <div class="filters">
-    <div class="grp" id="f-verdict">
-      <button class="chip" aria-pressed="true" data-v="all">All</button>
-      <button class="chip" data-v="Ship">Ship</button>
-      <button class="chip" data-v="Recycle">Recycle</button>
-      <button class="chip" data-v="Build">Build</button>
-      <button class="chip" data-v="Hold">Hold</button>
-      <button class="chip" data-v="Park">Park</button>
+    <h2 class="sec">Build catalog</h2>
+    <p class="sechint" id="cathint">Click a column to sort. Filter by verdict. <span class="est">est</span> = completion estimated from clone-family, not yet deep-audited.</p>
+    <div class="filters">
+      <div class="grp" id="f-verdict">
+        <button class="chip" aria-pressed="true" data-v="all">All</button>
+        <button class="chip" data-v="Ship">Ship</button>
+        <button class="chip" data-v="Recycle">Recycle</button>
+        <button class="chip" data-v="Build">Build</button>
+        <button class="chip" data-v="Hold">Hold</button>
+        <button class="chip" data-v="Park">Park</button>
+      </div>
+      <input class="search" id="search" placeholder="Search name or family…" />
     </div>
-    <input class="search" id="search" placeholder="Search name or family…" />
-  </div>
-  <div class="tablewrap">
-    <table id="tbl">
-      <thead>
-        <tr>
-          <th data-k="name">Project</th>
-          <th data-k="rung">Rung</th>
-          <th data-k="completion">Complete</th>
-          <th data-k="days">Days left</th>
-          <th data-k="token">Token $</th>
-          <th data-k="mv">Market value (RM)</th>
-          <th data-k="acis">ACIS</th>
-          <th data-k="model">Build with</th>
-          <th data-k="verdict">Verdict</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <div class="tablewrap">
+      <table id="tbl">
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">Clone families — efficiency engine</h2>
+    <p class="sechint">The DBKU <b>Green Kampung</b> win was a reskin of the SEB <b>Sungai Revive</b> template: same architecture, new content, a fraction of the effort. Build one master template per family, then sell reskins to each agency/client.</p>
+    <div class="fams" id="fams"></div>
   </div>
 
-  <h2 class="sec">Clone families — your efficiency engine</h2>
-  <p class="sechint">The DBKU <b>Green Kampung</b> win was a reskin of the SEB <b>Sungai Revive</b> template: same architecture, new content, a fraction of the effort. That's the pattern to industrialise. Build one strong template per family, then sell reskins to each agency/client.</p>
-  <div class="fams" id="fams"></div>
+  <!-- client showcase -->
+  <div id="showcase" class="hide">
+    <h2 class="sec">What we're building</h2>
+    <p class="sechint">A selection of live and in-progress digital solutions crafted for Sarawak's businesses, cooperatives, and communities.</p>
+    <div class="cards" id="cards"></div>
+  </div>
 
-  <footer>
-    <div><b>How to read verdicts.</b> Ship = near done, finish & charge. Recycle = proven template, clone for the next client (highest margin). Build = worth completing, but only against a paying client. Hold = demo only, wait for real demand. Park = low value, don't invest.</div>
-    <div class="legend">
-      <span>💰 Portfolio market value is the sum of mid-point prices.</span>
-      <span>🎯 ACIS = fit to your high-net-worth / Sarawak digital-economy agenda (1–5, editable).</span>
-      <span>♻️ Recycle rows finish fastest — clone, don't rebuild.</span>
-    </div>
-    <div style="margin-top:10px;color:var(--ink-faint)">Data is your working estimate as of this session. Edit the <code>DATA</code> array in this file to keep the library live, or wire it to the Netlify API for auto-sync.</div>
-  </footer>
+  <footer id="footer"></footer>
+</div>
+
+<div class="modal hide" id="modal">
+  <div class="box">
+    <h3 id="mtitle">Enter PIN</h3>
+    <p id="mdesc">This view is restricted.</p>
+    <input id="pin" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
+    <div class="err" id="merr"></div>
+    <div class="btns"><button class="cancel" id="mcancel">Cancel</button><button class="go" id="mgo">Unlock</button></div>
+  </div>
 </div>
 
 <script>
-// ---- MASTER CATALOG (edit here to keep the library live) ----
-// rung: 0=Lead magnet 1=Demo 2=MVP 3=Product 4=Platform
-// verdict: Ship | Recycle | Build | Hold | Park
-// mvLo/mvHi in RM thousands. token in USD midpoint. days = days to full completion.
+// ===== ACCESS PINS (change these) =====
+const PINS = { owner: "2468", team: "1357" };
+
+// ===== MASTER CATALOG =====
+// rung 0-4 · verdict Ship|Recycle|Build|Hold|Park · mv in RM thousands · token USD · days to finish
+// clientShow:false hides from client showcase (parked/duplicate). cdesc/cval = client-facing copy. cstatus: live|dev|design
 const DATA = [
-  {name:"Syahlan SDC", url:"https://syahlansdc.com/", fam:"SDC Personal Brand", rung:3, completion:70, days:5, token:25, mvLo:3.5, mvHi:5.5, acis:5, model:"Fable · finish", infra:"Netlify Blobs + ToyyibPay (live)", verdict:"Ship", est:false},
-  {name:"Khaaliq SDC", url:"https://khaaliqsdc.uk/", fam:"SDC Personal Brand", rung:2, completion:55, days:3, token:15, mvLo:3, mvHi:5, acis:4, model:"Sonnet · reskin", infra:"Recycle ← Syahlan SDC", verdict:"Recycle", est:true},
-  {name:"SBF BizFund PULSE", url:"https://sbfbizfund2.netlify.app/", fam:"Funding Platform", rung:1, completion:10, days:14, token:75, mvLo:15, mvHi:30, acis:5, model:"Fable · full backend", infra:"GitHub + Next.js + DB", verdict:"Build", est:false},
-  {name:"Green Kampung (DBKU)", url:"https://my-green-kampung-challenge.netlify.app/", fam:"ESG Community", rung:1, completion:5, days:9, token:50, mvLo:8, mvHi:15, acis:5, model:"Fable · backend", infra:"Recycle ← Sungai Revive", verdict:"Build", est:false},
-  {name:"Sungai Revive (SEB)", url:"https://sungai-revive.netlify.app/", fam:"ESG Community", rung:1, completion:8, days:8, token:40, mvLo:5, mvHi:8, acis:5, model:"Fable · template parent", infra:"Netlify — make this the master template", verdict:"Recycle", est:false},
-  {name:"Land POME × KOBIS", url:"https://landpomeswk.netlify.app/", fam:"POME / Enterprise pitch", rung:1, completion:45, days:6, token:30, mvLo:5, mvHi:10, acis:5, model:"Sonnet · forms+docs", infra:"Netlify + form backend", verdict:"Build", est:false},
-  {name:"Shiraz Empire", url:"", fam:"E-commerce Brand", rung:2, completion:50, days:4, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
-  {name:"Hit Barber Astana", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
-  {name:"KAM Motorworld", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
-  {name:"Clik Fragrance", url:"", fam:"E-commerce Brand", rung:2, completion:40, days:7, token:35, mvLo:4, mvHi:7, acis:2, model:"Sonnet + payments", infra:"Netlify + ToyyibPay", verdict:"Build", est:true},
-  {name:"SJF Farm", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
-  {name:"Kuching Catering Co", url:"", fam:"E-commerce Brand", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true},
-  {name:"Yat Ricco Wellness", url:"", fam:"E-commerce Brand", rung:2, completion:40, days:5, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Hold", est:true},
-  {name:"MasterHub Client Portal", url:"", fam:"SME Audit / AI", rung:2, completion:40, days:12, token:65, mvLo:10, mvHi:20, acis:5, model:"Fable · flagship", infra:"GitHub + auth + multi-tenant", verdict:"Build", est:true},
-  {name:"SME Survey (Digital Audit)", url:"", fam:"SME Audit / AI", rung:0, completion:55, days:3, token:15, mvLo:2, mvHi:4, acis:4, model:"Sonnet · lead magnet", infra:"Netlify + form → CRM", verdict:"Recycle", est:true},
-  {name:"KBoost (AI Sales)", url:"", fam:"SME Audit / AI", rung:1, completion:30, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"Recycle ← MasterHub portal", verdict:"Hold", est:true},
-  {name:"KB Web Growth", url:"", fam:"SME Audit / AI", rung:1, completion:35, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet", infra:"Netlify", verdict:"Hold", est:true},
-  {name:"Meeting Agent v2", url:"", fam:"Meeting Agent", rung:1, completion:30, days:6, token:35, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"GitHub + API", verdict:"Hold", est:true},
-  {name:"Meeting Clone (KOBIS)", url:"", fam:"Meeting Agent", rung:1, completion:30, days:3, token:15, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← Meeting Agent v2", verdict:"Recycle", est:true},
-  {name:"KOBIS Berhad .com", url:"https://kobisberhad.com/", fam:"KOBIS Corporate", rung:2, completion:55, days:4, token:25, mvLo:4, mvHi:7, acis:5, model:"Sonnet · finish", infra:"GitHub (live CI/CD)", verdict:"Ship", est:true},
-  {name:"KOBIS Berhad v3", url:"", fam:"KOBIS Corporate", rung:1, completion:50, days:2, token:12, mvLo:0, mvHi:0, acis:3, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true},
-  {name:"KOBIS v2", url:"", fam:"KOBIS Corporate", rung:1, completion:45, days:2, token:12, mvLo:0, mvHi:0, acis:2, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true},
-  {name:"KODC Platform", url:"", fam:"Property / Land", rung:1, completion:35, days:6, token:30, mvLo:4, mvHi:8, acis:4, model:"Sonnet + forms", infra:"Netlify + backend", verdict:"Build", est:true},
-  {name:"MVP Property (Kuching)", url:"", fam:"Property / Land", rung:1, completion:35, days:5, token:25, mvLo:3, mvHi:6, acis:3, model:"Sonnet · reskin", infra:"Recycle ← KODC Platform", verdict:"Hold", est:true},
-  {name:"CTAP KOBIS (Training)", url:"", fam:"Training / Diploma", rung:1, completion:40, days:5, token:25, mvLo:3, mvHi:6, acis:4, model:"Sonnet + enrolment", infra:"Netlify + form → CRM", verdict:"Build", est:true},
-  {name:"SPM → Diploma", url:"", fam:"Training / Diploma", rung:1, completion:45, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← CTAP template", verdict:"Recycle", est:true},
-  {name:"KOBIS SPM-to-Diploma", url:"", fam:"Training / Diploma", rung:1, completion:20, days:4, token:18, mvLo:0, mvHi:0, acis:2, model:"— duplicate", infra:"Merge with SPM→Diploma", verdict:"Park", est:true},
-  {name:"Borneo ESG Forum 2026", url:"", fam:"ESG Event", rung:1, completion:50, days:4, token:20, mvLo:4, mvHi:8, acis:5, model:"Sonnet + registration", infra:"Netlify + RSVP + payment", verdict:"Build", est:true},
-  {name:"JoinSeaGo Digital", url:"", fam:"Membership", rung:1, completion:35, days:8, token:45, mvLo:5, mvHi:8, acis:3, model:"Fable · auth+CRM", infra:"GitHub + membership DB", verdict:"Hold", est:true},
-  {name:"UKAS TTC (Campaign)", url:"https://ukasttc.uk/", fam:"Campaign", rung:1, completion:50, days:3, token:18, mvLo:2.5, mvHi:4, acis:3, model:"Sonnet + registration", infra:"Netlify + form", verdict:"Build", est:true},
-  {name:"Charming Sunburst", url:"", fam:"Custom App", rung:1, completion:30, days:12, token:65, mvLo:8, mvHi:15, acis:3, model:"Fable · full build", infra:"GitHub + Next.js (live)", verdict:"Build", est:true},
-  {name:"Run Kitak Run", url:"", fam:"Event / Run", rung:1, completion:35, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · Next.js", infra:"GitHub + registration", verdict:"Hold", est:true},
-  {name:"My Future Plan", url:"", fam:"Campaign", rung:1, completion:30, days:4, token:20, mvLo:2, mvHi:4, acis:2, model:"Sonnet · reskin", infra:"Recycle ← campaign template", verdict:"Hold", est:true},
-  {name:"KhaaliqSDC / SDC network", url:"", fam:"SDC Personal Brand", rung:2, completion:55, days:3, token:15, mvLo:3, mvHi:5, acis:5, model:"Sonnet · reskin", infra:"Recycle ← Syahlan SDC", verdict:"Recycle", est:true}
+  {name:"Syahlan SDC", url:"https://syahlansdc.com/", fam:"SDC Personal Brand", cat:"Digital Presence", rung:3, completion:70, days:5, token:25, mvLo:3.5, mvHi:5.5, acis:5, model:"Fable · finish", infra:"Netlify Blobs + ToyyibPay (live)", verdict:"Ship", est:false, clientShow:true, cstatus:"live", cdesc:"A complete digital campaign platform for a Sarawak Digital Champion candidate — multilingual, with an AI-assisted onboarding flow and live lead dashboard.", cval:"Turns website visitors into verified leads automatically."},
+  {name:"Khaaliq SDC", url:"https://khaaliqsdc.uk/", fam:"SDC Personal Brand", cat:"Digital Presence", rung:2, completion:55, days:3, token:15, mvLo:3, mvHi:5, acis:4, model:"Sonnet · reskin", infra:"Recycle ← Syahlan SDC", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A personal digital-champion site with multilingual reach and built-in enquiry capture.", cval:"A professional online presence, launched in days."},
+  {name:"SBF BizFund PULSE", url:"https://sbfbizfund2.netlify.app/", fam:"Funding Platform", cat:"Enterprise Platform", rung:1, completion:10, days:14, token:75, mvLo:15, mvHi:30, acis:5, model:"Fable · full backend", infra:"GitHub + Next.js + DB", verdict:"Build", est:false, clientShow:true, cstatus:"design", cdesc:"A transparency platform for a business-funding programme — live training schedules, one-tap registration, and real-time secretariat & provider consoles.", cval:"Replaces slow PDF workflows with a single transparent system."},
+  {name:"Green Kampung (DBKU)", url:"https://my-green-kampung-challenge.netlify.app/", fam:"ESG Community", cat:"ESG & Community", rung:1, completion:5, days:9, token:50, mvLo:8, mvHi:15, acis:5, model:"Fable · backend", infra:"Recycle ← Sungai Revive", verdict:"Build", est:false, clientShow:true, cstatus:"design", cdesc:"A community ESG platform engaging 54 neighbourhoods across Kuching Utara with green challenges, a live leaderboard, and SDG-aligned impact tracking.", cval:"Mobilises whole communities around measurable ESG goals."},
+  {name:"Sungai Revive (SEB)", url:"https://sungai-revive.netlify.app/", fam:"ESG Community", cat:"ESG & Community", rung:1, completion:8, days:8, token:40, mvLo:5, mvHi:8, acis:5, model:"Fable · template parent", infra:"Netlify — master template", verdict:"Recycle", est:false, clientShow:true, cstatus:"design", cdesc:"A river-revitalisation movement platform — volunteer recruitment, a River Heroes toolkit, and a science-backed impact dashboard.", cval:"A ready-made engine for any environmental campaign."},
+  {name:"Land POME × KOBIS", url:"https://landpomeswk.netlify.app/", fam:"POME / Enterprise pitch", cat:"Enterprise Platform", rung:1, completion:45, days:6, token:30, mvLo:5, mvHi:10, acis:5, model:"Sonnet · forms+docs", infra:"Netlify + form backend", verdict:"Build", est:false, clientShow:true, cstatus:"dev", cdesc:"An executive deal-room presenting a palm-oil-effluent sustainability partnership, with a confidential proposal request flow.", cval:"Positions a complex enterprise opportunity with clarity and credibility."},
+  {name:"Shiraz Empire", url:"", fam:"E-commerce Brand", cat:"E-commerce", rung:2, completion:50, days:4, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A bold e-commerce storefront with a full product showcase and ordering experience.", cval:"A branded online store ready to take orders."},
+  {name:"Hit Barber Astana", url:"", fam:"E-commerce Brand", cat:"Booking & Services", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A sharp brand and booking site for a modern barbershop chain, with a service catalogue.", cval:"Fills the chair with online bookings."},
+  {name:"KAM Motorworld", url:"", fam:"E-commerce Brand", cat:"E-commerce", rung:2, completion:45, days:5, token:30, mvLo:3.5, mvHi:5.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"An automotive parts and service platform with a premium product showcase.", cval:"Puts the full catalogue in front of every customer."},
+  {name:"Clik Fragrance", url:"", fam:"E-commerce Brand", cat:"E-commerce", rung:2, completion:40, days:7, token:35, mvLo:4, mvHi:7, acis:2, model:"Sonnet + payments", infra:"Netlify + ToyyibPay", verdict:"Build", est:true, clientShow:true, cstatus:"dev", cdesc:"A premium fragrance storefront with mood-based product discovery and checkout.", cval:"An elegant shopping experience that converts."},
+  {name:"SJF Farm", url:"", fam:"E-commerce Brand", cat:"Agriculture", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A modern agritech site showcasing sustainable farming and produce.", cval:"Brings a modern face to agricultural business."},
+  {name:"Kuching Catering Co", url:"", fam:"E-commerce Brand", cat:"Food & Beverage", rung:2, completion:45, days:4, token:22, mvLo:3, mvHi:4.5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A catering catalogue and ordering platform for events and functions.", cval:"Makes catering orders effortless."},
+  {name:"Yat Ricco Wellness", url:"", fam:"E-commerce Brand", cat:"Health & Wellness", rung:2, completion:40, days:5, token:25, mvLo:3, mvHi:5, acis:2, model:"Sonnet · reskin", infra:"Recycle ← brand template", verdict:"Hold", est:true, clientShow:true, cstatus:"dev", cdesc:"A clean health-and-wellness brand site made simple.", cval:"A calming, trustworthy digital presence."},
+  {name:"MasterHub Client Portal", url:"", fam:"SME Audit / AI", cat:"AI & Automation", rung:2, completion:40, days:12, token:65, mvLo:10, mvHi:20, acis:5, model:"Fable · flagship", infra:"GitHub + auth + multi-tenant", verdict:"Build", est:true, clientShow:true, cstatus:"dev", cdesc:"An AI-powered business diagnostic and client portal — assess a business's digital health and manage the whole engagement in one place.", cval:"An AI consultant that scales your service delivery."},
+  {name:"SME Survey (Digital Audit)", url:"", fam:"SME Audit / AI", cat:"AI & Automation", rung:0, completion:55, days:3, token:15, mvLo:2, mvHi:4, acis:4, model:"Sonnet · lead magnet", infra:"Netlify + form → CRM", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A free digital-readiness audit for Sarawak SMEs that delivers instant, tailored recommendations.", cval:"A free tool that generates qualified leads."},
+  {name:"KBoost (AI Sales)", url:"", fam:"SME Audit / AI", cat:"AI & Automation", rung:1, completion:30, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"Recycle ← MasterHub portal", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"An AI sales assistant — a tireless sales team with zero salary cost.", cval:"Qualifies and nurtures leads around the clock."},
+  {name:"KB Web Growth", url:"", fam:"SME Audit / AI", cat:"AI & Automation", rung:1, completion:35, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet", infra:"Netlify", verdict:"Hold", est:true, clientShow:false, cstatus:"design", cdesc:"", cval:""},
+  {name:"Meeting Agent v2", url:"", fam:"Meeting Agent", cat:"AI & Automation", rung:1, completion:30, days:6, token:35, mvLo:3, mvHi:6, acis:3, model:"Fable · agent", infra:"GitHub + API", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"An AI meeting companion — clone yourself and never miss a meeting.", cval:"Captures every meeting so nothing slips."},
+  {name:"Meeting Clone (KOBIS)", url:"", fam:"Meeting Agent", cat:"AI & Automation", rung:1, completion:30, days:3, token:15, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← Meeting Agent v2", verdict:"Recycle", est:true, clientShow:false, cstatus:"design", cdesc:"", cval:""},
+  {name:"KOBIS Berhad .com", url:"https://kobisberhad.com/", fam:"KOBIS Corporate", cat:"Corporate", rung:2, completion:55, days:4, token:25, mvLo:4, mvHi:7, acis:5, model:"Sonnet · finish", infra:"GitHub (live CI/CD)", verdict:"Ship", est:true, clientShow:true, cstatus:"live", cdesc:"The corporate home of KOBIS Berhad — talent development, cooperatives, and community impact across Sarawak.", cval:"A credible corporate anchor for the group."},
+  {name:"KOBIS Berhad v3", url:"", fam:"KOBIS Corporate", cat:"Corporate", rung:1, completion:50, days:2, token:12, mvLo:0, mvHi:0, acis:3, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true, clientShow:false, cstatus:"design", cdesc:"", cval:""},
+  {name:"KOBIS v2", url:"", fam:"KOBIS Corporate", cat:"Corporate", rung:1, completion:45, days:2, token:12, mvLo:0, mvHi:0, acis:2, model:"— iteration", infra:"Fold into .com", verdict:"Park", est:true, clientShow:false, cstatus:"design", cdesc:"", cval:""},
+  {name:"KODC Platform", url:"", fam:"Property / Land", cat:"Property", rung:1, completion:35, days:6, token:30, mvLo:4, mvHi:8, acis:4, model:"Sonnet + forms", infra:"Netlify + backend", verdict:"Build", est:true, clientShow:true, cstatus:"design", cdesc:"A property platform guiding buyers from land ownership to their dream home.", cval:"A clear path from listing to lead."},
+  {name:"MVP Property (Kuching)", url:"", fam:"Property / Land", cat:"Property", rung:1, completion:35, days:5, token:25, mvLo:3, mvHi:6, acis:3, model:"Sonnet · reskin", infra:"Recycle ← KODC Platform", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"A focused apartment-finder experience for Kuching.", cval:"Helps buyers find the right home fast."},
+  {name:"CTAP KOBIS (Training)", url:"", fam:"Training / Diploma", cat:"Education", rung:1, completion:40, days:5, token:25, mvLo:3, mvHi:6, acis:4, model:"Sonnet + enrolment", infra:"Netlify + form → CRM", verdict:"Build", est:true, clientShow:true, cstatus:"dev", cdesc:"A workforce-certification programme site — government-certified diplomas at a fraction of the usual cost.", cval:"Turns training interest into enrolments."},
+  {name:"SPM → Diploma", url:"", fam:"Training / Diploma", cat:"Education", rung:1, completion:45, days:4, token:20, mvLo:2.5, mvHi:5, acis:3, model:"Sonnet · reskin", infra:"Recycle ← CTAP template", verdict:"Recycle", est:true, clientShow:true, cstatus:"dev", cdesc:"A fast-track pathway site from SPM to a recognised diploma.", cval:"Guides students to their next step."},
+  {name:"KOBIS SPM-to-Diploma", url:"", fam:"Training / Diploma", cat:"Education", rung:1, completion:20, days:4, token:18, mvLo:0, mvHi:0, acis:2, model:"— duplicate", infra:"Merge with SPM→Diploma", verdict:"Park", est:true, clientShow:false, cstatus:"design", cdesc:"", cval:""},
+  {name:"Borneo ESG Forum 2026", url:"", fam:"ESG Event", cat:"Events", rung:1, completion:50, days:4, token:20, mvLo:4, mvHi:8, acis:5, model:"Sonnet + registration", infra:"Netlify + RSVP + payment", verdict:"Build", est:true, clientShow:true, cstatus:"dev", cdesc:"The official site for the Borneo ESG Forum 2026 — programme, speakers, and delegate registration.", cval:"Drives event registrations and sponsor visibility."},
+  {name:"JoinSeaGo Digital", url:"", fam:"Membership", cat:"Membership", rung:1, completion:35, days:8, token:45, mvLo:5, mvHi:8, acis:3, model:"Fable · auth+CRM", infra:"GitHub + membership DB", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"A membership platform giving associations the digital presence their members deserve.", cval:"Modern membership management in one place."},
+  {name:"UKAS TTC (Campaign)", url:"https://ukasttc.uk/", fam:"Campaign", cat:"Campaign", rung:1, completion:50, days:3, token:18, mvLo:2.5, mvHi:4, acis:3, model:"Sonnet + registration", infra:"Netlify + form", verdict:"Build", est:true, clientShow:true, cstatus:"dev", cdesc:"A high-energy TikTok-style challenge campaign microsite with prize registration.", cval:"Maximises campaign reach and sign-ups."},
+  {name:"Charming Sunburst", url:"", fam:"Custom App", cat:"Custom Application", rung:1, completion:30, days:12, token:65, mvLo:8, mvHi:15, acis:3, model:"Fable · full build", infra:"GitHub + Next.js (live)", verdict:"Build", est:true, clientShow:true, cstatus:"design", cdesc:"A bespoke web application built to a client's specific workflow.", cval:"Software shaped exactly to the business."},
+  {name:"Run Kitak Run", url:"", fam:"Event / Run", cat:"Events", rung:1, completion:35, days:5, token:30, mvLo:3, mvHi:6, acis:3, model:"Fable · Next.js", infra:"GitHub + registration", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"An event site for a community run — registration, route, and results.", cval:"Everything runners need in one place."},
+  {name:"My Future Plan", url:"", fam:"Campaign", cat:"Campaign", rung:1, completion:30, days:4, token:20, mvLo:2, mvHi:4, acis:2, model:"Sonnet · reskin", infra:"Recycle ← campaign template", verdict:"Hold", est:true, clientShow:true, cstatus:"design", cdesc:"An aspirational campaign microsite — your future, made real.", cval:"Inspires action with a clear call."}
 ];
 
 const RUNGS = [
-  {n:0, l:"L0", t:"Lead magnet", d:"Free audit, survey, brochure. Job: capture a lead."},
-  {n:1, l:"L1", t:"Demo / prototype", d:"Clickable, looks real, no backend yet."},
-  {n:2, l:"L2", t:"Functional MVP", d:"Real forms + backend, one working flow."},
-  {n:3, l:"L3", t:"Working product", d:"Auth + data + payments. Charges money."},
-  {n:4, l:"L4", t:"Platform / SaaS", d:"Multi-tenant, recurring revenue."}
+  {n:0,l:"L0",t:"Lead magnet",d:"Free audit, survey, brochure. Job: capture a lead."},
+  {n:1,l:"L1",t:"Demo / prototype",d:"Clickable, looks real, no backend yet."},
+  {n:2,l:"L2",t:"Functional MVP",d:"Real forms + backend, one working flow."},
+  {n:3,l:"L3",t:"Working product",d:"Auth + data + payments. Charges money."},
+  {n:4,l:"L4",t:"Platform / SaaS",d:"Multi-tenant, recurring revenue."}
 ];
 
+let ROLE = "client";
 const rungColor = n => ['#8a938f','#1c6b64','#b5791f','#2f7d5b','#7a3ea0'][n];
 const barColor = p => p>=65?'var(--good)':p>=35?'var(--warn)':'var(--crit)';
 const vClass = v => 'v-'+v.toLowerCase();
 const acisStars = n => `<span class="acis">${'★'.repeat(n)}<span class="off">${'★'.repeat(5-n)}</span></span>`;
 const mv = d => d.mvHi ? `${d.mvLo}–${d.mvHi}k` : '—';
+const statusLabel = {live:['s-live','● Live'], dev:['s-dev','In Development'], design:['s-design','In Design']};
 
-// KPIs
+const COPY = {
+  owner: {eyebrow:"Zaiwin · KOBIS · MasterHub — Build Intelligence", title:"The Product Library", sub:"Full owner view: completion, build days, token cost, market value, and build verdicts. Never-built ideas excluded.", banner:['rb-owner','🔑 Owner view — everything is visible, including internal build cost and time.']},
+  team: {eyebrow:"KOBIS Digital — Team Workspace", title:"Product Library", sub:"Team view: completion, market value, and verdicts. Internal build-time and token cost are hidden.", banner:['rb-team','👥 Team view — build-time and token cost are hidden.']},
+  client: {eyebrow:"KOBIS Berhad · Digital Solutions", title:"Our Digital Portfolio", sub:"A showcase of the live and in-progress digital solutions we're crafting for Sarawak's businesses and communities.", banner:['rb-client','✨ Client showcase — a curated look at what we build.']}
+};
+
+// KPIs per role
 function renderKPIs(){
-  const built = DATA.length;
-  const avg = Math.round(DATA.reduce((s,d)=>s+d.completion,0)/built);
-  const daysLeft = DATA.reduce((s,d)=>s+d.days,0);
-  const mvSum = DATA.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
-  const recycle = DATA.filter(d=>d.verdict==='Recycle').length;
-  const tiles = [
-    {lab:"Real builds", val:built, s:"in the library"},
-    {lab:"Avg completion", val:avg+"%", s:"across all"},
-    {lab:"Days to finish all", val:daysLeft, s:"solo, sequential"},
-    {lab:"Portfolio value", val:"RM "+Math.round(mvSum)+"k", s:"mid-point sum"},
-    {lab:"Recycle-ready", val:recycle, s:"clone, don't rebuild"}
-  ];
-  document.getElementById('kpis').innerHTML = tiles.map(t=>
-    `<div class="kpi"><div class="lab">${t.lab}</div><div class="val num">${t.val} <small>${t.s}</small></div></div>`).join('');
+  const el = document.getElementById('kpis');
+  if(ROLE==='client'){
+    const shown = DATA.filter(d=>d.clientShow);
+    const live = shown.filter(d=>d.cstatus==='live').length;
+    const cats = new Set(shown.map(d=>d.cat)).size;
+    el.innerHTML = [
+      {lab:"Solutions", val:shown.length, s:"in our portfolio"},
+      {lab:"Live now", val:live, s:"in production"},
+      {lab:"Categories", val:cats, s:"industries served"},
+      {lab:"Languages", val:"4", s:"BM · EN · 中 · Iban"},
+      {lab:"Built for", val:"Sarawak", s:"business & community"}
+    ].map(t=>`<div class="kpi"><div class="lab">${t.lab}</div><div class="val num">${t.val} <small>${t.s}</small></div></div>`).join('');
+    return;
+  }
+  const built=DATA.length, avg=Math.round(DATA.reduce((s,d)=>s+d.completion,0)/built);
+  const daysLeft=DATA.reduce((s,d)=>s+d.days,0);
+  const mvSum=DATA.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
+  const recycle=DATA.filter(d=>d.verdict==='Recycle').length;
+  let tiles=[{lab:"Real builds",val:built,s:"in the library"},{lab:"Avg completion",val:avg+"%",s:"across all"}];
+  if(ROLE==='owner') tiles.push({lab:"Days to finish all",val:daysLeft,s:"solo, sequential"});
+  tiles.push({lab:"Portfolio value",val:"RM "+Math.round(mvSum)+"k",s:"mid-point sum"});
+  tiles.push({lab:"Recycle-ready",val:recycle,s:"clone, don't rebuild"});
+  el.innerHTML = tiles.map(t=>`<div class="kpi"><div class="lab">${t.lab}</div><div class="val num">${t.val} <small>${t.s}</small></div></div>`).join('');
 }
 
-// Ladder
 function renderLadder(){
   document.getElementById('ladder').innerHTML = RUNGS.map(r=>{
-    const items = DATA.filter(d=>d.rung===r.n);
-    const val = items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
-    return `<div class="rung" style="--teal:${rungColor(r.n)}">
-      <div class="rl">${r.l}</div><div class="rt">${r.t}</div>
-      <div class="rd">${r.d}</div>
-      <div class="rc"><b>${items.length}</b> builds · RM ${Math.round(val)}k</div></div>`;
+    const items=DATA.filter(d=>d.rung===r.n);
+    const val=items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0);
+    const valStr = ROLE==='owner'||ROLE==='team' ? ` · RM ${Math.round(val)}k` : '';
+    return `<div class="rung" style="--teal:${rungColor(r.n)}"><div class="rl">${r.l}</div><div class="rt">${r.t}</div><div class="rd">${r.d}</div><div class="rc"><b>${items.length}</b> builds${valStr}</div></div>`;
   }).join('');
 }
 
-// Table
+// Table columns per role
+function columns(){
+  const base=[{k:'name',t:'Project'},{k:'rung',t:'Rung'},{k:'completion',t:'Complete'}];
+  if(ROLE==='owner') base.push({k:'days',t:'Days left'},{k:'token',t:'Token $'});
+  base.push({k:'mv',t:'Market value (RM)'},{k:'acis',t:'ACIS'});
+  if(ROLE==='owner') base.push({k:'model',t:'Build with'});
+  base.push({k:'verdict',t:'Verdict'});
+  return base;
+}
 let sortK='completion', sortDir=-1, filterV='all', q='';
 function renderTable(){
-  let rows = DATA.filter(d=> (filterV==='all'||d.verdict===filterV) &&
-    (q===''|| (d.name+d.fam).toLowerCase().includes(q)));
-  rows.sort((a,b)=>{
-    let x=a[sortK], y=b[sortK];
-    if(sortK==='name'||sortK==='model'||sortK==='verdict'){ x=(''+x).toLowerCase(); y=(''+y).toLowerCase(); }
-    if(sortK==='mv'){ x=a.mvLo+a.mvHi; y=b.mvLo+b.mvHi; }
-    return (x<y?-1:x>y?1:0)*sortDir;
-  });
-  document.getElementById('tbody').innerHTML = rows.map(d=>{
-    const nm = d.url ? `<a href="${d.url}" target="_blank" rel="noopener">${d.name}</a>` : d.name;
-    return `<tr>
-      <td><div class="pname">${nm}${d.est?'<span class="est">est</span>':''}</div><div class="pfam">${d.fam}</div></td>
-      <td><span class="rungtag" style="color:${rungColor(d.rung)}">L${d.rung}</span></td>
-      <td><span class="pct num">${d.completion}%</span><span class="bar"><i style="width:${d.completion}%;background:${barColor(d.completion)}"></i></span></td>
-      <td class="mono">${d.days}d</td>
-      <td class="mono">$${d.token}</td>
-      <td class="mono">${mv(d)}</td>
-      <td>${acisStars(d.acis)}</td>
-      <td style="font-size:12px;color:var(--ink-soft)">${d.model}<div class="pfam">${d.infra}</div></td>
-      <td><span class="pill ${vClass(d.verdict)}">${d.verdict}</span></td>
-    </tr>`;
-  }).join('');
+  const cols=columns();
+  document.getElementById('thead').innerHTML = cols.map(c=>`<th data-k="${c.k}">${c.t}</th>`).join('');
+  document.querySelectorAll('#thead th').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.k; if(k===sortK) sortDir*=-1; else{sortK=k; sortDir=(k==='name')?1:-1;} renderTable();
+  }));
+  let rows=DATA.filter(d=>(filterV==='all'||d.verdict===filterV)&&(q===''||(d.name+d.fam).toLowerCase().includes(q)));
+  rows.sort((a,b)=>{let x=a[sortK],y=b[sortK];
+    if(['name','model','verdict'].includes(sortK)){x=(''+x).toLowerCase();y=(''+y).toLowerCase();}
+    if(sortK==='mv'){x=a.mvLo+a.mvHi;y=b.mvLo+b.mvHi;}
+    return (x<y?-1:x>y?1:0)*sortDir;});
+  const cell=(d,k)=>{
+    switch(k){
+      case 'name': {const nm=d.url?`<a href="${d.url}" target="_blank" rel="noopener">${d.name}</a>`:d.name; return `<div class="pname">${nm}${d.est?'<span class="est">est</span>':''}</div><div class="pfam">${d.fam}</div>`;}
+      case 'rung': return `<span class="rungtag" style="color:${rungColor(d.rung)}">L${d.rung}</span>`;
+      case 'completion': return `<span class="pct num">${d.completion}%</span><span class="bar"><i style="width:${d.completion}%;background:${barColor(d.completion)}"></i></span>`;
+      case 'days': return `<span class="mono">${d.days}d</span>`;
+      case 'token': return `<span class="mono">$${d.token}</span>`;
+      case 'mv': return `<span class="mono">${mv(d)}</span>`;
+      case 'acis': return acisStars(d.acis);
+      case 'model': return `<span style="font-size:12px;color:var(--ink-soft)">${d.model}</span><div class="pfam">${d.infra}</div>`;
+      case 'verdict': return `<span class="pill ${vClass(d.verdict)}">${d.verdict}</span>`;
+    }
+  };
+  document.getElementById('tbody').innerHTML = rows.map(d=>`<tr>${cols.map(c=>`<td>${cell(d,c.k)}</td>`).join('')}</tr>`).join('');
 }
 
-// Families
 function renderFams(){
-  const groups = {};
-  DATA.forEach(d=>{ (groups[d.fam]=groups[d.fam]||[]).push(d); });
-  const notes = {
+  const groups={}; DATA.forEach(d=>{(groups[d.fam]=groups[d.fam]||[]).push(d);});
+  const notes={
     "ESG Community":"Sungai Revive (SEB) is the master template → Green Kampung (DBKU) was the reskin. Sell to every district council & GLC.",
     "SDC Personal Brand":"One candidate template → reskin per SDC nominee. RM3–5k each, ~3 days.",
     "E-commerce Brand":"6 brand sites share one storefront skeleton. Add ToyyibPay once, reuse everywhere.",
@@ -333,33 +362,89 @@ function renderFams(){
     "Custom App":"Charming Sunburst is a true custom Next.js build — price accordingly.",
     "Event / Run":"Run Kitak Run — registration + payment reskin."
   };
-  const order = Object.keys(groups).sort((a,b)=> groups[b].length-groups[a].length);
+  const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length);
   document.getElementById('fams').innerHTML = order.map(f=>{
-    const items = groups[f];
-    const val = Math.round(items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0));
-    return `<div class="fam">
-      <div class="flead">${items.length} build${items.length>1?'s':''} · RM ${val}k</div>
-      <h3>${f}</h3>
+    const items=groups[f]; const val=Math.round(items.reduce((s,d)=>s+(d.mvLo+d.mvHi)/2,0));
+    return `<div class="fam"><div class="flead">${items.length} build${items.length>1?'s':''} · RM ${val}k</div><h3>${f}</h3>
       <ul>${items.map(d=>`<li>${d.infra.startsWith('Recycle')?'<span class="arrow">♻ </span>':''}${d.name} <span style="color:var(--ink-faint)">· ${d.completion}%</span></li>`).join('')}</ul>
-      ${notes[f]?`<div class="fnote">${notes[f]}</div>`:''}
-    </div>`;
+      ${notes[f]?`<div class="fnote">${notes[f]}</div>`:''}</div>`;
   }).join('');
 }
 
-// interactions
+function renderCards(){
+  const shown=DATA.filter(d=>d.clientShow);
+  const order={live:0,dev:1,design:2};
+  shown.sort((a,b)=>order[a.cstatus]-order[b.cstatus]);
+  document.getElementById('cards').innerHTML = shown.map(d=>{
+    const [cls,lab]=statusLabel[d.cstatus];
+    const link=d.url?`<a class="link" href="${d.url}" target="_blank" rel="noopener">View →</a>`:'<span></span>';
+    return `<div class="pcard"><div class="cat">${d.cat}</div><h3>${d.name}</h3>
+      <p>${d.cdesc}</p><div class="val">${d.cval}</div>
+      <div class="foot"><span class="status ${cls}">${lab}</span>${link}</div></div>`;
+  }).join('');
+}
+
+function renderFooter(){
+  const el=document.getElementById('footer');
+  if(ROLE==='client'){
+    el.innerHTML = `<div><b>KOBIS Berhad</b> — digital solutions for Sarawak's businesses, cooperatives, and communities. Recognised among the Top 50 Cooperatives in Sarawak.</div><div class="legend"><span>Multilingual by default: Bahasa Malaysia · English · 中文 · Iban.</span><span>From landing pages to full AI platforms.</span></div>`;
+    return;
+  }
+  el.innerHTML = `<div><b>How to read verdicts.</b> Ship = near done, finish & charge. Recycle = proven template, clone for the next client. Build = worth completing against a paying client. Hold = demo only, wait for demand. Park = low value, fold or drop.</div>
+    <div class="legend"><span>🎯 ACIS = fit to the high-net-worth / Sarawak digital-economy agenda (1–5, editable).</span><span>♻️ Recycle rows finish fastest.</span></div>
+    <div style="margin-top:10px;color:var(--ink-faint)">Edit the <code>DATA</code> array in this file to keep the library live. PINs are set in <code>PINS</code> at the top of the script.</div>`;
+}
+
+function applyRole(){
+  const c=COPY[ROLE];
+  document.getElementById('eyebrow').textContent=c.eyebrow;
+  document.getElementById('pagetitle').textContent=c.title;
+  document.getElementById('pagesub').textContent=c.sub;
+  const rb=document.getElementById('rolebanner');
+  rb.className='rolebanner '+c.banner[0]; rb.textContent=c.banner[1];
+  document.querySelectorAll('#roleswitch button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.role===ROLE));
+  const isClient=ROLE==='client';
+  document.getElementById('internal').classList.toggle('hide', isClient);
+  document.getElementById('showcase').classList.toggle('hide', !isClient);
+  renderKPIs(); renderFooter();
+  if(isClient){ renderCards(); } else { renderLadder(); renderTable(); renderFams(); }
+}
+
+// role switching + PIN gate
+let pendingRole=null;
+document.querySelectorAll('#roleswitch button').forEach(b=>b.addEventListener('click',()=>{
+  const r=b.dataset.role;
+  if(r==='client'){ ROLE='client'; applyRole(); return; }
+  if(sessionStorage.getItem('unlocked_'+r)==='1'){ ROLE=r; applyRole(); return; }
+  pendingRole=r; openModal(r);
+}));
+function openModal(r){
+  document.getElementById('mtitle').textContent = r==='owner'?'Owner access':'Team access';
+  document.getElementById('mdesc').textContent = r==='owner'?'Full view including internal cost & time.':'Team view — internal cost & time stay hidden.';
+  document.getElementById('merr').textContent=''; document.getElementById('pin').value='';
+  document.getElementById('modal').classList.remove('hide'); document.getElementById('pin').focus();
+}
+function closeModal(){ document.getElementById('modal').classList.add('hide'); pendingRole=null;
+  document.querySelectorAll('#roleswitch button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.role===ROLE)); }
+document.getElementById('mcancel').addEventListener('click',closeModal);
+document.getElementById('mgo').addEventListener('click',tryPin);
+document.getElementById('pin').addEventListener('keydown',e=>{ if(e.key==='Enter') tryPin(); if(e.key==='Escape') closeModal(); });
+function tryPin(){
+  const v=document.getElementById('pin').value.trim();
+  if(v===PINS[pendingRole]){ sessionStorage.setItem('unlocked_'+pendingRole,'1'); ROLE=pendingRole; document.getElementById('modal').classList.add('hide'); applyRole(); }
+  else { document.getElementById('merr').textContent='Wrong PIN. Try again.'; document.getElementById('pin').value=''; document.getElementById('pin').focus(); }
+}
+
+// verdict filter + search
 document.querySelectorAll('#f-verdict .chip').forEach(c=>c.addEventListener('click',()=>{
   document.querySelectorAll('#f-verdict .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
   c.setAttribute('aria-pressed','true'); filterV=c.dataset.v==='all'?'all':c.dataset.v; renderTable();
 }));
 document.getElementById('search').addEventListener('input',e=>{ q=e.target.value.toLowerCase().trim(); renderTable(); });
-document.querySelectorAll('#tbl thead th').forEach(th=>th.addEventListener('click',()=>{
-  const k=th.dataset.k; if(k===sortK) sortDir*=-1; else { sortK=k; sortDir=(k==='name')?1:-1; } renderTable();
-}));
 document.getElementById('themebtn').addEventListener('click',()=>{
-  const r=document.documentElement;
-  const cur=r.getAttribute('data-theme')|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  const r=document.documentElement, cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   r.setAttribute('data-theme', cur==='dark'?'light':'dark');
 });
 
-renderKPIs(); renderLadder(); renderTable(); renderFams();
+applyRole();
 </script>
