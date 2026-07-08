@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-navy-100 bg-white shadow-soft;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-navy-800 px-6 py-3
+           text-sm font-semibold text-white transition hover:bg-navy-700
+           focus:outline-none focus:ring-4 focus:ring-navy-200
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-navy-200
+           bg-white px-6 py-3 text-sm font-semibold text-navy-800 transition
+           hover:border-navy-300 hover:bg-navy-50
+           focus:outline-none focus:ring-4 focus:ring-navy-100
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink/80;
+  }
+
+  .field-input {
+    @apply w-full rounded-lg border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-ink
+           placeholder:text-ink/35 transition
+           focus:border-navy-400 focus:outline-none focus:ring-4 focus:ring-navy-100;
+  }
+
+  .section-tag {
+    @apply inline-flex items-center gap-2 rounded-full border border-gold-100 bg-gold-50
+           px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold-700;
+  }
+}
+
+/* Print: show only the assessment report. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  #assessment {
+    padding: 0 !important;
+  }
+  .print-report {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
