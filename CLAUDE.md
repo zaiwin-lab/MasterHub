@@ -26,6 +26,21 @@ Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude
 | `/learn` | Save learning to GBrain memory |
 | `/setup-gbrain` | Set up GBrain knowledge base |
 
+### Design Skills (committed to this repo)
+These skills live in `.claude/skills/` and load automatically every session — no install needed.
+
+| Skill | Purpose |
+|-------|---------|
+| `/impeccable` | Frontend design: craft, audit, critique, polish, animate, etc. (23 commands) |
+| `ui-ux-pro-max` | UI/UX design intelligence — 67 styles, 161 palettes, 21 framework stacks (auto-activates) |
+
+### gstack install (not committed — ~1.6 GB)
+gstack is too large to commit. Install it into the session with one command:
+```bash
+bash .claude/scripts/install-gstack.sh
+```
+See `gstack/README.md`. Re-run at the start of any session where you need gstack.
+
 ### marketing (Marketing Skills)
 | Skill | Purpose |
 |-------|---------|
