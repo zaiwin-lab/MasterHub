@@ -15,7 +15,9 @@ export default function Step1Org({ value, onChange, showErrors }: Props) {
       <div>
         <h2 className="text-xl font-bold text-navy-900">Organisation Details</h2>
         <p className="mt-1 text-sm text-ink/55">
-          Identify the applicant association and the programme under review.
+          Only the association is required. Provider and programme title are
+          optional — leave them blank and they can be completed later from the
+          uploaded links and files.
         </p>
       </div>
 
@@ -44,33 +46,29 @@ export default function Step1Org({ value, onChange, showErrors }: Props) {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className="field-label" htmlFor="provider">
-            Training Provider Name <span className="text-teal-600">*</span>
+            Training Provider Name{' '}
+            <span className="text-xs font-normal text-ink/40">(optional)</span>
           </label>
           <input
             id="provider"
-            className={`field-input ${err('provider') ? '!border-red-400' : ''}`}
+            className="field-input"
             placeholder="e.g. ABC Training Academy Sdn Bhd"
             value={value.provider}
             onChange={(e) => onChange({ provider: e.target.value })}
           />
-          {err('provider') && (
-            <p className="mt-1 text-xs font-medium text-red-600">Provider name is required.</p>
-          )}
         </div>
         <div>
           <label className="field-label" htmlFor="title">
-            Programme / Training Title <span className="text-teal-600">*</span>
+            Programme / Training Title{' '}
+            <span className="text-xs font-normal text-ink/40">(optional)</span>
           </label>
           <input
             id="title"
-            className={`field-input ${err('title') ? '!border-red-400' : ''}`}
+            className="field-input"
             placeholder="e.g. Digital Marketing for SMEs"
             value={value.title}
             onChange={(e) => onChange({ title: e.target.value })}
           />
-          {err('title') && (
-            <p className="mt-1 text-xs font-medium text-red-600">Programme title is required.</p>
-          )}
         </div>
       </div>
     </div>

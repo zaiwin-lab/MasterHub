@@ -28,8 +28,9 @@ export default function AssessmentWizard() {
   const [scores, setScores] = useState<Scores>(initialScores);
   const [showErrors, setShowErrors] = useState(false);
 
-  const step1Valid =
-    org.ngo.trim() !== '' && org.provider.trim() !== '' && org.title.trim() !== '';
+  // Only the association is mandatory; everything else can be completed later
+  // (e.g. auto-filled by AI from the uploaded links & files).
+  const step1Valid = org.ngo.trim() !== '';
 
   const scrollToWizard = () =>
     document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
