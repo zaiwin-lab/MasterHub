@@ -2,6 +2,7 @@ import {
   CalendarCheck,
   Scale,
   ShieldCheck,
+  Sprout,
   Target,
   TrendingUp,
   Users,
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react';
 import { FRAMEWORK_CARDS } from '../lib/constants';
 
-const ICONS = [Target, Users, ShieldCheck, Wallet, CalendarCheck, TrendingUp, Scale];
+const ICONS = [Target, Users, ShieldCheck, Wallet, CalendarCheck, TrendingUp, Scale, Sprout];
 
 export default function Framework() {
   return (
@@ -24,7 +25,7 @@ export default function Framework() {
             BizFund2 Evaluation Framework
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-ink/55">
-            Seven dimensions the Committee applies to every programme and
+            Eight dimensions the Committee applies to every programme and
             training submission.
           </p>
         </div>

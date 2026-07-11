@@ -48,7 +48,7 @@ export interface Criterion {
   clarify: string;
 }
 
-/** Seven committee scoring criteria, each rated 1–5. */
+/** Eight committee scoring criteria, each rated 1–5. */
 export const CRITERIA: Criterion[] = [
   {
     key: 'relevance',
@@ -99,6 +99,13 @@ export const CRITERIA: Criterion[] = [
     strength: 'Low risk profile with sound governance arrangements.',
     clarify: 'Address outstanding risk or governance concerns.',
   },
+  {
+    key: 'sustainability',
+    label: 'Sustainability & continuity',
+    hint: 'Lasting value and a credible path to continue beyond the programme.',
+    strength: 'Programme shows strong potential for lasting, continued impact.',
+    clarify: 'Set out how benefits will be sustained beyond the programme period.',
+  },
 ];
 
 export const SCORE_LABELS: Record<number, string> = {
@@ -109,14 +116,6 @@ export const SCORE_LABELS: Record<number, string> = {
   5: 'Excellent',
 };
 
-/** Simulated upload slots for Step 3. */
-export const UPLOAD_SLOTS = [
-  { key: 'proposal', label: 'Proposal document' },
-  { key: 'budget', label: 'Budget / quotation' },
-  { key: 'trainer', label: 'Trainer profile' },
-  { key: 'poster', label: 'Poster / supporting document' },
-];
-
 export const FRAMEWORK_CARDS = [
   { title: 'Strategic Relevance', body: 'Alignment with BizFund2 objectives and SBF strategic priorities.' },
   { title: 'Member Benefit', body: 'Tangible value for Sarawak businesses and participating NGO members.' },
@@ -125,4 +124,5 @@ export const FRAMEWORK_CARDS = [
   { title: 'Implementation Readiness', body: 'Confirmed schedule, venue, logistics and a realistic delivery plan.' },
   { title: 'Measurable Impact', body: 'Clear outcomes that can be tracked for participants and the sector.' },
   { title: 'Governance & Risk', body: 'Sound controls, accountability and manageable delivery risk.' },
+  { title: 'Sustainability & Continuity', body: 'Lasting value and a credible path to continue impact beyond the programme.' },
 ];

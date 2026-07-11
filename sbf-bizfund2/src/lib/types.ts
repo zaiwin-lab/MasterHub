@@ -17,8 +17,8 @@ export interface ProgrammeInfo {
 
 export interface Materials {
   links: string;
-  /** Simulated uploads: slot key → selected file name. */
-  files: Record<string, string>;
+  /** Names of files attached via the single multi-file upload box. */
+  files: string[];
   notes: string;
 }
 
@@ -37,4 +37,4 @@ export const initialProgramme: ProgrammeInfo = {
   objective: '',
 };
 
-export const initialMaterials: Materials = { links: '', files: {}, notes: '' };
+export const initialMaterials: Materials = { links: '', files: [], notes: '' };
