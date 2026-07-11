@@ -40,89 +40,14 @@ export const TRAINING_CATEGORIES = [
   'Other',
 ];
 
-export interface Criterion {
-  key: string;
-  label: string;
-  hint: string;
-  strength: string;
-  clarify: string;
-}
-
-/** Eight committee scoring criteria, each rated 1–5. */
-export const CRITERIA: Criterion[] = [
-  {
-    key: 'relevance',
-    label: 'Relevance to BizFund2 objectives',
-    hint: 'How directly the programme supports BizFund2 goals.',
-    strength: 'Programme aligns strongly with BizFund2 objectives.',
-    clarify: 'Clarify how the programme supports BizFund2 objectives.',
-  },
-  {
-    key: 'benefit',
-    label: 'Benefit to Sarawak business / NGO members',
-    hint: 'Practical value delivered to member businesses.',
-    strength: 'Clear, practical benefit to Sarawak business and NGO members.',
-    clarify: 'Strengthen the case for direct member benefit.',
-  },
-  {
-    key: 'provider',
-    label: 'Training provider credibility',
-    hint: 'Track record, trainer profile and delivery capability.',
-    strength: 'Training provider demonstrates credible track record and capability.',
-    clarify: 'Request further evidence of provider track record and trainer credentials.',
-  },
-  {
-    key: 'budget',
-    label: 'Budget reasonableness',
-    hint: 'Value for money against scope and participant numbers.',
-    strength: 'Budget is reasonable and well-matched to programme scope.',
-    clarify: 'Review budget items against scope and participant numbers.',
-  },
-  {
-    key: 'readiness',
-    label: 'Implementation readiness',
-    hint: 'Dates, venue, logistics and delivery plan in place.',
-    strength: 'Implementation plan is well-prepared with clear logistics.',
-    clarify: 'Confirm dates, venue and delivery logistics before proceeding.',
-  },
-  {
-    key: 'impact',
-    label: 'Expected impact',
-    hint: 'Measurable outcomes for participants and the sector.',
-    strength: 'Expected outcomes are meaningful and measurable.',
-    clarify: 'Define clearer, measurable outcomes for participants.',
-  },
-  {
-    key: 'risk',
-    label: 'Risk & governance',
-    hint: 'Higher score = lower concern and sound governance.',
-    strength: 'Low risk profile with sound governance arrangements.',
-    clarify: 'Address outstanding risk or governance concerns.',
-  },
-  {
-    key: 'sustainability',
-    label: 'Sustainability & continuity',
-    hint: 'Lasting value and a credible path to continue beyond the programme.',
-    strength: 'Programme shows strong potential for lasting, continued impact.',
-    clarify: 'Set out how benefits will be sustained beyond the programme period.',
-  },
-];
-
-export const SCORE_LABELS: Record<number, string> = {
-  1: 'Poor',
-  2: 'Weak',
-  3: 'Fair',
-  4: 'Good',
-  5: 'Excellent',
-};
-
-export const FRAMEWORK_CARDS = [
-  { title: 'Strategic Relevance', body: 'Alignment with BizFund2 objectives and SBF strategic priorities.' },
-  { title: 'Member Benefit', body: 'Tangible value for Sarawak businesses and participating NGO members.' },
-  { title: 'Provider Capability', body: 'Trainer credentials, delivery track record and organisational capacity.' },
-  { title: 'Budget Reasonableness', body: 'Cost structure that is fair, justified and proportionate to scope.' },
-  { title: 'Implementation Readiness', body: 'Confirmed schedule, venue, logistics and a realistic delivery plan.' },
-  { title: 'Measurable Impact', body: 'Clear outcomes that can be tracked for participants and the sector.' },
-  { title: 'Governance & Risk', body: 'Sound controls, accountability and manageable delivery risk.' },
-  { title: 'Sustainability & Continuity', body: 'Lasting value and a credible path to continue impact beyond the programme.' },
-];
+/** Eight committee scoring criteria, in display order. Text lives in the i18n dictionary. */
+export const CRITERION_KEYS = [
+  'relevance',
+  'benefit',
+  'provider',
+  'budget',
+  'readiness',
+  'impact',
+  'risk',
+  'sustainability',
+] as const;

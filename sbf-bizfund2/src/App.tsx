@@ -5,6 +5,8 @@ import Framework from './components/Framework';
 import ReportPreview from './components/ReportPreview';
 import About from './components/About';
 import Footer from './components/Footer';
+import WhatsAppBubble from './components/WhatsAppBubble';
+import DigitalStaff from './components/DigitalStaff';
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
         <About />
       </main>
       <Footer />
+      <WhatsAppBubble />
+      <DigitalStaff />
     </>
   );
 }

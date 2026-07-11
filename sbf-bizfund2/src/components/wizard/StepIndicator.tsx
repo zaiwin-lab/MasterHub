@@ -1,8 +1,9 @@
 import { Check } from 'lucide-react';
-
-const STEPS = ['Organisation', 'Programme', 'Materials', 'Scoring', 'Summary'];
+import { useI18n } from '../../lib/i18n/context';
 
 export default function StepIndicator({ current }: { current: number }) {
+  const { t } = useI18n();
+  const STEPS = t.steps;
   return (
     <ol className="no-print mx-auto flex max-w-2xl items-center">
       {STEPS.map((label, i) => {

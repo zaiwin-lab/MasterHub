@@ -8,11 +8,12 @@ import {
   Users,
   Wallet,
 } from 'lucide-react';
-import { FRAMEWORK_CARDS } from '../lib/constants';
+import { useI18n } from '../lib/i18n/context';
 
 const ICONS = [Target, Users, ShieldCheck, Wallet, CalendarCheck, TrendingUp, Scale, Sprout];
 
 export default function Framework() {
+  const { t } = useI18n();
   return (
     <section
       id="framework"
@@ -20,18 +21,15 @@ export default function Framework() {
     >
       <div className="mx-auto max-w-6xl px-5">
         <div className="text-center">
-          <span className="section-tag">Framework</span>
+          <span className="section-tag">{t.framework.tag}</span>
           <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-navy-900 sm:text-3xl">
-            BizFund2 Evaluation Framework
+            {t.framework.title}
           </h2>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-ink/55">
-            Eight dimensions the Committee applies to every programme and
-            training submission.
-          </p>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-ink/55">{t.framework.subtitle}</p>
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FRAMEWORK_CARDS.map((card, i) => {
+          {t.framework.cards.map((card, i) => {
             const Icon = ICONS[i];
             return (
               <div key={card.title} className="card p-5">

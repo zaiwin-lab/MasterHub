@@ -1,6 +1,7 @@
 import { AlertTriangle, CheckCircle2, Printer, RotateCcw } from 'lucide-react';
-import { CRITERIA, SCORE_LABELS } from '../../lib/constants';
-import { buildReport, remarksFor } from '../../lib/scoring';
+import { CRITERION_KEYS } from '../../lib/constants';
+import { buildReport, fillRemarks } from '../../lib/scoring';
+import { useI18n } from '../../lib/i18n/context';
 import type { OrgDetails, ProgrammeInfo, Scores } from '../../lib/types';
 
 interface Props {
@@ -29,19 +30,32 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export default function ResultSummary({ org, programme, scores, onRestart }: Props) {
+  const { t } = useI18n();
   const report = buildReport(scores);
-  const remarks = remarksFor(report.band, org.title, org.ngo);
   const band = BAND_STYLES[report.band];
+
+  const remarks = fillRemarks(
+    t.remarks[report.band],
+    org.title || t.result.fallbackProgramme,
+    org.ngo || t.result.fallbackNgo,
+  );
+
+  const strengths = report.strengthKeys.length
+    ? report.strengthKeys.map((k) => t.criteria[k].strength)
+    : [t.result.noStrengths];
+  const clarifications = report.clarifyKeys.length
+    ? report.clarifyKeys.map((k) => t.criteria[k].clarify)
+    : [t.result.noClarify];
 
   return (
     <div className="print-report space-y-6">
       {/* Report header */}
       <div className="border-b border-navy-100 pb-5 text-center">
         <p className="text-[11px] font-semibold uppercase tracking-widest text-gold-600">
-          SBF BizFund2 · Committee Assessment Report
+          {t.result.kicker}
         </p>
         <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-navy-900">
-          {org.title || 'Programme Assessment'}
+          {org.title || t.result.fallbackTitle}
         </h2>
         <p className="mt-1 text-sm text-ink/55">{org.ngo}</p>
       </div>
@@ -53,44 +67,49 @@ export default function ResultSummary({ org, programme, scores, onRestart }: Pro
             {report.percent}%
           </p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-ink/45">
-            Overall Assessment Score
+            {t.result.overallScore}
           </p>
         </div>
         <div
           className={`inline-flex items-center gap-2.5 rounded-xl border px-5 py-3.5 ${band.wrap}`}
         >
           <span className={`h-2.5 w-2.5 rounded-full ${band.dot}`} />
-          <span className={`text-base font-bold ${band.text}`}>{report.bandLabel}</span>
+          <span className={`text-base font-bold ${band.text}`}>{t.bands[report.band]}</span>
         </div>
       </div>
 
       {/* Submission details */}
       <dl className="rounded-xl border border-navy-100 bg-navy-50/40 px-5 py-2">
-        <Row label="NGO / Association" value={org.ngo} />
-        <Row label="Training Provider" value={org.provider} />
-        <Row label="Programme Title" value={org.title} />
-        <Row label="Category" value={programme.category} />
-        <Row label="Target Participants" value={programme.target} />
+        <Row label={t.result.ngo} value={org.ngo} />
+        <Row label={t.result.provider} value={org.provider} />
+        <Row label={t.result.title} value={org.title} />
+        <Row label={t.result.category} value={programme.category} />
+        <Row label={t.result.target} value={programme.target} />
         <Row
-          label="Expected Participants"
-          value={programme.expected && `${programme.expected} pax`}
+          label={t.result.expected}
+          value={programme.expected ? `${programme.expected} ${t.result.pax}` : ''}
         />
-        <Row label="Location & Date" value={[programme.location, programme.date].filter(Boolean).join(' · ')} />
-        <Row label="Duration" value={programme.duration} />
-        <Row label="Requested Amount" value={programme.budget && `RM ${programme.budget}`} />
+        <Row
+          label={t.result.locationDate}
+          value={[programme.location, programme.date].filter(Boolean).join(' · ')}
+        />
+        <Row label={t.result.duration} value={programme.duration} />
+        <Row label={t.result.requested} value={programme.budget ? `RM ${programme.budget}` : ''} />
       </dl>
 
       {/* Criterion scores */}
       <div className="rounded-xl border border-navy-100 px-5 py-4">
         <h3 className="text-sm font-bold uppercase tracking-wide text-ink/50">
-          Criterion Scores
+          {t.result.criterionScores}
         </h3>
         <ul className="mt-3 space-y-2">
-          {CRITERIA.map((c) => {
-            const s = scores[c.key];
+          {CRITERION_KEYS.map((key) => {
+            const s = scores[key];
             return (
-              <li key={c.key} className="flex items-center gap-3">
-                <span className="w-64 flex-none truncate text-sm text-ink/75">{c.label}</span>
+              <li key={key} className="flex items-center gap-3">
+                <span className="w-64 flex-none truncate text-sm text-ink/75">
+                  {t.criteria[key].label}
+                </span>
                 <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-navy-100">
                   <span
                     className="block h-full rounded-full bg-navy-600"
@@ -98,7 +117,8 @@ export default function ResultSummary({ org, programme, scores, onRestart }: Pro
                   />
                 </span>
                 <span className="w-20 flex-none text-right text-sm font-bold text-navy-800">
-                  {s}/5 <span className="text-[10px] font-medium text-ink/40">{SCORE_LABELS[s]}</span>
+                  {s}/5{' '}
+                  <span className="text-[10px] font-medium text-ink/40">{t.scoreLabels[s]}</span>
                 </span>
               </li>
             );
@@ -110,10 +130,10 @@ export default function ResultSummary({ org, programme, scores, onRestart }: Pro
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-teal-100 bg-teal-50/50 px-5 py-4">
           <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-teal-700">
-            <CheckCircle2 size={15} /> Key Strengths
+            <CheckCircle2 size={15} /> {t.result.keyStrengths}
           </h3>
           <ul className="mt-3 space-y-2">
-            {report.strengths.map((s, i) => (
+            {strengths.map((s, i) => (
               <li key={i} className="flex gap-2 text-sm text-ink/75">
                 <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-teal-500" />
                 {s}
@@ -123,10 +143,10 @@ export default function ResultSummary({ org, programme, scores, onRestart }: Pro
         </div>
         <div className="rounded-xl border border-gold-100 bg-gold-50/60 px-5 py-4">
           <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-gold-700">
-            <AlertTriangle size={15} /> Items Requiring Clarification
+            <AlertTriangle size={15} /> {t.result.itemsClarification}
           </h3>
           <ul className="mt-3 space-y-2">
-            {report.clarifications.map((s, i) => (
+            {clarifications.map((s, i) => (
               <li key={i} className="flex gap-2 text-sm text-ink/75">
                 <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-gold-500" />
                 {s}
@@ -139,31 +159,28 @@ export default function ResultSummary({ org, programme, scores, onRestart }: Pro
       {/* Remarks & next action */}
       <div className="rounded-xl border border-navy-100 px-5 py-4">
         <h3 className="text-sm font-bold uppercase tracking-wide text-ink/50">
-          Committee Remarks
+          {t.result.committeeRemarks}
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-ink/75">{remarks}</p>
       </div>
       <div className={`rounded-xl border px-5 py-4 ${band.wrap}`}>
         <h3 className={`text-sm font-bold uppercase tracking-wide ${band.text}`}>
-          Suggested Next Action
+          {t.result.suggestedNextAction}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink/80">{report.nextAction}</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink/80">{t.nextActions[report.band]}</p>
       </div>
 
-      <p className="text-center text-[11px] text-ink/35">
-        Generated by the SBF BizFund2 Proposal Assessment &amp; Evaluation System ·
-        Complimentary platform by KOBIS Berhad
-      </p>
+      <p className="text-center text-[11px] text-ink/35">{t.result.generatedBy}</p>
 
       {/* Actions */}
       <div className="no-print flex flex-col justify-center gap-3 pt-1 sm:flex-row">
         <button type="button" onClick={() => window.print()} className="btn-primary">
           <Printer size={16} />
-          Print / Download Report
+          {t.result.print}
         </button>
         <button type="button" onClick={onRestart} className="btn-secondary">
           <RotateCcw size={15} />
-          Start New Assessment
+          {t.result.restart}
         </button>
       </div>
     </div>

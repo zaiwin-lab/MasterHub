@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { FileText, UploadCloud, X } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/context';
 import type { Materials } from '../../lib/types';
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function Step3Materials({ value, onChange }: Props) {
+  const { t } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -25,22 +27,18 @@ export default function Step3Materials({ value, onChange }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-navy-900">Proposal Materials</h2>
-        <p className="mt-1 text-sm text-ink/55">
-          Attach the submission package and any supporting references.
-        </p>
+        <h2 className="text-xl font-bold text-navy-900">{t.step3.title}</h2>
+        <p className="mt-1 text-sm text-ink/55">{t.step3.desc}</p>
       </div>
 
       <div>
         <label className="field-label" htmlFor="links">
-          Reference links
+          {t.step3.linksLabel}
         </label>
         <textarea
           id="links"
           className="field-input min-h-[110px] resize-y font-mono text-xs leading-relaxed"
-          placeholder={
-            'Paste proposal links, Google Drive links, Canva links, YouTube links, WhatsApp notes or other references…'
-          }
+          placeholder={t.step3.linksPlaceholder}
           value={value.links}
           onChange={(e) => onChange({ links: e.target.value })}
         />
@@ -48,7 +46,7 @@ export default function Step3Materials({ value, onChange }: Props) {
 
       {/* Single "magic box" — accepts any file type, multiple files */}
       <div>
-        <label className="field-label">Upload documents</label>
+        <label className="field-label">{t.step3.uploadLabel}</label>
         <div
           role="button"
           tabIndex={0}
@@ -79,13 +77,8 @@ export default function Step3Materials({ value, onChange }: Props) {
           <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-navy-800 text-white">
             <UploadCloud size={22} />
           </span>
-          <p className="mt-3 text-sm font-semibold text-navy-900">
-            Drag &amp; drop files here, or click to browse
-          </p>
-          <p className="mt-1 text-xs text-ink/50">
-            One box for everything — proposal, budget, trainer profile, poster, images.
-            Any file type, attach as many as you need.
-          </p>
+          <p className="mt-3 text-sm font-semibold text-navy-900">{t.step3.dropTitle}</p>
+          <p className="mt-1 text-xs text-ink/50">{t.step3.dropHint}</p>
           <input
             ref={inputRef}
             type="file"
@@ -127,12 +120,12 @@ export default function Step3Materials({ value, onChange }: Props) {
 
       <div>
         <label className="field-label" htmlFor="notes">
-          Additional notes
+          {t.step3.notesLabel}
         </label>
         <textarea
           id="notes"
           className="field-input min-h-[72px] resize-y"
-          placeholder="Anything else the Committee should be aware of."
+          placeholder={t.step3.notesPlaceholder}
           value={value.notes}
           onChange={(e) => onChange({ notes: e.target.value })}
         />

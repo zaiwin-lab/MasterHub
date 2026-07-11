@@ -1,4 +1,5 @@
 import { NGOS } from '../../lib/constants';
+import { useI18n } from '../../lib/i18n/context';
 import type { OrgDetails } from '../../lib/types';
 
 interface Props {
@@ -8,64 +9,61 @@ interface Props {
 }
 
 export default function Step1Org({ value, onChange, showErrors }: Props) {
-  const err = (field: keyof OrgDetails) => showErrors && !value[field].trim();
+  const { t } = useI18n();
+  const ngoErr = showErrors && !value.ngo.trim();
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-navy-900">Organisation Details</h2>
-        <p className="mt-1 text-sm text-ink/55">
-          Only the association is required. Provider and programme title are
-          optional — leave them blank and they can be completed later from the
-          uploaded links and files.
-        </p>
+        <h2 className="text-xl font-bold text-navy-900">{t.step1.title}</h2>
+        <p className="mt-1 text-sm text-ink/55">{t.step1.desc}</p>
       </div>
 
       <div>
         <label className="field-label" htmlFor="ngo">
-          Select Your NGO / Association <span className="text-teal-600">*</span>
+          {t.step1.ngoLabel} <span className="text-teal-600">*</span>
         </label>
         <select
           id="ngo"
-          className={`field-input ${err('ngo') ? '!border-red-400' : ''}`}
+          className={`field-input ${ngoErr ? '!border-red-400' : ''}`}
           value={value.ngo}
           onChange={(e) => onChange({ ngo: e.target.value })}
         >
-          <option value="">Choose an association…</option>
+          <option value="">{t.step1.ngoPlaceholder}</option>
           {NGOS.map((n) => (
             <option key={n} value={n}>
               {n}
             </option>
           ))}
         </select>
-        {err('ngo') && (
-          <p className="mt-1 text-xs font-medium text-red-600">Please select an association.</p>
+        {ngoErr && (
+          <p className="mt-1 text-xs font-medium text-red-600">{t.step1.ngoError}</p>
         )}
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className="field-label" htmlFor="provider">
-            Training Provider Name{' '}
-            <span className="text-xs font-normal text-ink/40">(optional)</span>
+            {t.step1.providerLabel}{' '}
+            <span className="text-xs font-normal text-ink/40">{t.step1.optional}</span>
           </label>
           <input
             id="provider"
             className="field-input"
-            placeholder="e.g. ABC Training Academy Sdn Bhd"
+            placeholder={t.step1.providerPlaceholder}
             value={value.provider}
             onChange={(e) => onChange({ provider: e.target.value })}
           />
         </div>
         <div>
           <label className="field-label" htmlFor="title">
-            Programme / Training Title{' '}
-            <span className="text-xs font-normal text-ink/40">(optional)</span>
+            {t.step1.titleLabel}{' '}
+            <span className="text-xs font-normal text-ink/40">{t.step1.optional}</span>
           </label>
           <input
             id="title"
             className="field-input"
-            placeholder="e.g. Digital Marketing for SMEs"
+            placeholder={t.step1.titlePlaceholder}
             value={value.title}
             onChange={(e) => onChange({ title: e.target.value })}
           />

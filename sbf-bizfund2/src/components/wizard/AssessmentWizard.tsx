@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { CRITERIA } from '../../lib/constants';
+import { CRITERION_KEYS } from '../../lib/constants';
+import { useI18n } from '../../lib/i18n/context';
 import {
   initialMaterials,
   initialOrg,
@@ -18,9 +19,10 @@ import Step4Scoring from './Step4Scoring';
 import ResultSummary from './ResultSummary';
 
 const initialScores = (): Scores =>
-  Object.fromEntries(CRITERIA.map((c) => [c.key, 3]));
+  Object.fromEntries(CRITERION_KEYS.map((k) => [k, 3]));
 
 export default function AssessmentWizard() {
+  const { t } = useI18n();
   const [step, setStep] = useState(1);
   const [org, setOrg] = useState<OrgDetails>(initialOrg);
   const [programme, setProgramme] = useState<ProgrammeInfo>(initialProgramme);
@@ -62,23 +64,20 @@ export default function AssessmentWizard() {
 
   const nextLabel =
     step === 1
-      ? 'Proceed to Proposal Assessment'
+      ? t.wizard.proceed
       : step === 4
-        ? 'Generate Result Summary'
-        : 'Continue';
+        ? t.wizard.generate
+        : t.wizard.continue;
 
   return (
     <section id="assessment" className="scroll-mt-20 bg-white py-14">
       <div className="mx-auto max-w-3xl px-5">
         <div className="no-print mb-8 text-center">
-          <span className="section-tag">Assessment</span>
+          <span className="section-tag">{t.wizard.tag}</span>
           <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-navy-900 sm:text-3xl">
-            Programme Assessment Flow
+            {t.wizard.heading}
           </h2>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-ink/55">
-            Five short steps from organisation details to an executive-ready
-            recommendation summary.
-          </p>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-ink/55">{t.wizard.subtitle}</p>
         </div>
 
         <StepIndicator current={step} />
@@ -128,7 +127,7 @@ export default function AssessmentWizard() {
               className="btn-secondary disabled:invisible"
             >
               <ArrowLeft size={15} />
-              Back
+              {t.wizard.back}
             </button>
             <button type="button" onClick={next} className="btn-primary">
               {nextLabel}

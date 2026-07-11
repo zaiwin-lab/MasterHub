@@ -1,5 +1,6 @@
-import { CRITERIA, SCORE_LABELS } from '../../lib/constants';
+import { CRITERION_KEYS } from '../../lib/constants';
 import { bandFor, percentFor } from '../../lib/scoring';
+import { useI18n } from '../../lib/i18n/context';
 import type { Scores } from '../../lib/types';
 
 interface Props {
@@ -15,32 +16,32 @@ const BAND_TEXT: Record<string, string> = {
 };
 
 export default function Step4Scoring({ scores, onChange }: Props) {
+  const { t } = useI18n();
   const percent = percentFor(scores);
-  const { band, label } = bandFor(percent);
+  const band = bandFor(percent);
 
   return (
     <div className="space-y-5">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <h2 className="text-xl font-bold text-navy-900">Committee Assessment</h2>
-          <p className="mt-1 text-sm text-ink/55">
-            Rate each criterion from 1 (Poor) to 5 (Excellent).
-          </p>
+          <h2 className="text-xl font-bold text-navy-900">{t.step4.title}</h2>
+          <p className="mt-1 text-sm text-ink/55">{t.step4.desc}</p>
         </div>
         <div className="rounded-xl border border-navy-100 bg-navy-50/60 px-4 py-2.5 text-right">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-ink/45">
-            Overall score
+            {t.step4.overall}
           </p>
           <p className="text-2xl font-extrabold leading-tight text-navy-900">{percent}%</p>
-          <p className={`text-xs font-bold ${BAND_TEXT[band]}`}>{label}</p>
+          <p className={`text-xs font-bold ${BAND_TEXT[band]}`}>{t.bands[band]}</p>
         </div>
       </div>
 
       <ul className="space-y-3">
-        {CRITERIA.map((c) => {
-          const current = scores[c.key];
+        {CRITERION_KEYS.map((key) => {
+          const c = t.criteria[key];
+          const current = scores[key];
           return (
-            <li key={c.key} className="rounded-xl border border-navy-100 bg-white px-4 py-3.5">
+            <li key={key} className="rounded-xl border border-navy-100 bg-white px-4 py-3.5">
               <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-ink/85">{c.label}</p>
@@ -57,8 +58,8 @@ export default function Step4Scoring({ scores, onChange }: Props) {
                       type="button"
                       role="radio"
                       aria-checked={current === n}
-                      title={SCORE_LABELS[n]}
-                      onClick={() => onChange(c.key, n)}
+                      title={t.scoreLabels[n]}
+                      onClick={() => onChange(key, n)}
                       className={[
                         'h-9 w-9 rounded-lg border text-sm font-bold transition',
                         current === n
@@ -72,7 +73,7 @@ export default function Step4Scoring({ scores, onChange }: Props) {
                 </div>
               </div>
               <p className="mt-1.5 text-right text-[11px] font-medium text-ink/40 sm:mt-1">
-                {SCORE_LABELS[current]}
+                {t.scoreLabels[current]}
               </p>
             </li>
           );
