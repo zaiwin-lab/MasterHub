@@ -10,7 +10,7 @@ const en: Dict = {
     start: 'Start Assessment',
   },
   hero: {
-    badge: 'Complimentary platform by KOBIS Berhad',
+    badge: 'Exclusive Demonstration Prototype for SBF',
     titleA: 'Structured Programme Assessment for',
     titleB: 'BizFund2 Submissions',
     subtitle:
@@ -178,7 +178,7 @@ const en: Dict = {
   },
   footer: {
     line1: 'Prepared for Sarawak Business Federation',
-    line2: 'Complimentary proposal assessment system by KOBIS Berhad',
+    line2: 'Innovated by KOBIS AI Prodigy Team',
   },
   result: {
     kicker: 'SBF BizFund2 · Committee Assessment Report',
@@ -266,7 +266,7 @@ const ms: Dict = {
     start: 'Mula Penilaian',
   },
   hero: {
-    badge: 'Platform percuma oleh KOBIS Berhad',
+    badge: 'Prototaip Demonstrasi Eksklusif untuk SBF',
     titleA: 'Penilaian Program Berstruktur untuk',
     titleB: 'Permohonan BizFund2',
     subtitle:
@@ -434,7 +434,7 @@ const ms: Dict = {
   },
   footer: {
     line1: 'Disediakan untuk Sarawak Business Federation',
-    line2: 'Sistem penilaian cadangan percuma oleh KOBIS Berhad',
+    line2: 'Innovated by KOBIS AI Prodigy Team',
   },
   result: {
     kicker: 'SBF BizFund2 · Laporan Penilaian Jawatankuasa',
@@ -522,7 +522,7 @@ const zh: Dict = {
     start: '开始评估',
   },
   hero: {
-    badge: 'KOBIS Berhad 提供的免费平台',
+    badge: 'SBF 专属演示原型',
     titleA: '结构化项目评估',
     titleB: 'BizFund2 提案',
     subtitle:
@@ -686,7 +686,7 @@ const zh: Dict = {
   },
   footer: {
     line1: '为 Sarawak Business Federation 准备',
-    line2: 'KOBIS Berhad 提供的免费提案评估系统',
+    line2: 'Innovated by KOBIS AI Prodigy Team',
   },
   result: {
     kicker: 'SBF BizFund2 · 委员会评估报告',
@@ -772,7 +772,7 @@ const ib: Dict = {
     start: 'Berengkah Menilai',
   },
   hero: {
-    badge: 'Platform percuma ari KOBIS Berhad',
+    badge: 'Prototaip Demonstrasi Eksklusif ke SBF',
     titleA: 'Penilai Program Berstruktur ke',
     titleB: 'Peminta BizFund2',
     subtitle:
@@ -940,7 +940,7 @@ const ib: Dict = {
   },
   footer: {
     line1: 'Disedia ke Sarawak Business Federation',
-    line2: 'Sistem penilai cadangan percuma ari KOBIS Berhad',
+    line2: 'Innovated by KOBIS AI Prodigy Team',
   },
   result: {
     kicker: 'SBF BizFund2 · Laporan Penilai Jawatankuasa',
