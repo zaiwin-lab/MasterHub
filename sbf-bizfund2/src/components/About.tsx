@@ -6,7 +6,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="no-print scroll-mt-20 border-t border-navy-100 bg-navy-50/40 py-14"
+      className="panel-cream no-print scroll-mt-20 border-t border-navy-100 py-16"
     >
       <div className="mx-auto max-w-3xl px-5 text-center">
         <span className="section-tag mx-auto">

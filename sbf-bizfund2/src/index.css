@@ -3,12 +3,46 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white font-sans text-ink antialiased;
+  @apply bg-cream-50 font-sans text-ink antialiased;
+}
+
+/* ---- Panels & texture (multi-colour section rhythm) ---- */
+
+/* Dark navy panel with a warm gold glow + subtle grid/checker texture. */
+.panel-dark {
+  background-color: #0a1727;
+  background-image:
+    radial-gradient(120% 90% at 85% -20%, rgba(201, 162, 39, 0.14), transparent 55%),
+    radial-gradient(90% 70% at 0% 110%, rgba(20, 158, 128, 0.1), transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: auto, auto, 46px 46px, 46px 46px;
+  background-position: center, center, center, center;
+}
+
+/* Warm cream panel for the bright sections. */
+.panel-cream {
+  background-color: #faf6ec;
+  background-image:
+    linear-gradient(rgba(18, 42, 64, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 42, 64, 0.03) 1px, transparent 1px);
+  background-size: 46px 46px, 46px 46px;
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-navy-100 bg-white shadow-soft;
+    @apply rounded-2xl border border-navy-100 bg-white shadow-card;
+  }
+
+  /* Translucent card for use on dark panels. */
+  .card-dark {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm;
+  }
+
+  /* Section tag on dark panels. */
+  .section-tag-dark {
+    @apply inline-flex items-center gap-2 rounded-full border border-gold-400/30 bg-gold-400/10
+           px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold-300;
   }
 
   .btn-primary {

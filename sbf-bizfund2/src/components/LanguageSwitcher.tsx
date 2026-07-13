@@ -4,7 +4,7 @@ import { LANGS } from '../lib/i18n/types';
 export default function LanguageSwitcher() {
   const { lang, setLang } = useI18n();
   return (
-    <div className="flex items-center gap-0.5 rounded-full border border-navy-200 bg-white p-0.5">
+    <div className="flex items-center gap-0.5 rounded-full border border-white/20 bg-white/10 p-0.5">
       {LANGS.map((l) => {
         const active = l.code === lang;
         return (
@@ -17,8 +17,8 @@ export default function LanguageSwitcher() {
             className={[
               'rounded-full px-2.5 py-1 text-xs font-bold transition',
               active
-                ? 'bg-navy-800 text-white'
-                : 'text-ink/55 hover:bg-navy-50 hover:text-navy-800',
+                ? 'bg-gold-500 text-navy-950'
+                : 'text-white/60 hover:bg-white/10 hover:text-white',
             ].join(' ')}
           >
             {l.short}

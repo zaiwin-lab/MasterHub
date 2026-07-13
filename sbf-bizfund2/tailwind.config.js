@@ -16,6 +16,13 @@ export default {
           700: '#204665',
           800: '#1b3a54',
           900: '#122a40',
+          950: '#0a1727',
+        },
+        // Warm sand/cream panels to break up the plain white.
+        cream: {
+          50: '#faf6ec',
+          100: '#f4edda',
+          200: '#e9dcbe',
         },
         teal: {
           50: '#effaf7',
@@ -27,6 +34,8 @@ export default {
         gold: {
           50: '#fbf7ea',
           100: '#f5ecd0',
+          200: '#eedfab',
+          300: '#e4cd7d',
           400: '#d9b95c',
           500: '#c9a227',
           600: '#a5851f',

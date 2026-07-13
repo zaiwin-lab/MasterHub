@@ -70,7 +70,7 @@ export default function AssessmentWizard() {
         : t.wizard.continue;
 
   return (
-    <section id="assessment" className="scroll-mt-20 bg-white py-14">
+    <section id="assessment" className="panel-cream scroll-mt-20 py-16">
       <div className="mx-auto max-w-3xl px-5">
         <div className="no-print mb-8 text-center">
           <span className="section-tag">{t.wizard.tag}</span>

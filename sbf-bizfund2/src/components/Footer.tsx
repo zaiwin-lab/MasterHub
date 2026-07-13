@@ -5,7 +5,7 @@ export default function Footer() {
   // Render the credit line with "KOBIS" linked to the company site.
   const [before, after] = t.footer.line2.split('KOBIS');
   return (
-    <footer className="no-print border-t border-navy-100 bg-navy-900 py-8">
+    <footer className="panel-dark no-print border-t border-white/10 py-10">
       <div className="mx-auto max-w-6xl px-5 text-center">
         <p className="text-sm font-semibold text-white/90">{t.footer.line1}</p>
         <p className="mt-1 text-xs text-white/50">
