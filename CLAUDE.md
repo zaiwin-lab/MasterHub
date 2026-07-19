@@ -57,5 +57,5 @@ When user request matches a skill, invoke it via the Skill tool.
 
 ## Deliverables SOP
 1. Deploy = manual zip drag-and-drop to Netlify. Never automate deploys via API/MCP.
-2. **Always send the deploy zip (and any file the user needs) as a clickable chat attachment (SendUserFile)** — files left only in the session folder are not clickable for the user.
+2. **Always deliver BOTH: (a) the file as a clickable chat attachment (SendUserFile), and (b) its full folder path written as a clickable file reference in the message** — the attachment is for drag-and-drop, the path lets the user open the location (e.g. to rename the file). A file left only in the folder, or a path never written out, is an incomplete delivery.
 3. Zip the contents of `dist/` (with `_redirects`), name it `<project>-<version>-site.zip`.
