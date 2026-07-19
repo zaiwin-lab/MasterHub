@@ -54,3 +54,8 @@ When user request matches a skill, invoke it via the Skill tool.
 1. Always load master-hub + one project repo
 2. Never mix clients
 3. Use GBrain (`/learn`) to save insights across sessions
+
+## Deliverables SOP
+1. Deploy = manual zip drag-and-drop to Netlify. Never automate deploys via API/MCP.
+2. **Always send the deploy zip (and any file the user needs) as a clickable chat attachment (SendUserFile)** — files left only in the session folder are not clickable for the user.
+3. Zip the contents of `dist/` (with `_redirects`), name it `<project>-<version>-site.zip`.
