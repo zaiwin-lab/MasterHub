@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZK30 MFDB Command Centre - Executive Calendar</title>
+  <link rel="stylesheet" href="acis-modules.css">
+  <style>
+    .chat-icon.listening {
+      background: #e5484d !important;
+      color: #fff !important;
+      border-color: #b42318 !important;
+      animation: micPulse 1.1s ease-in-out infinite;
+    }
+    @keyframes micPulse {
+      0% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.55); }
+      70% { box-shadow: 0 0 0 12px rgba(229, 72, 77, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+    }
+    .voice-state.live { color: #e5484d; font-weight: 700; }
+    .event-actions { display: flex; gap: 6px; margin-top: 6px; }
+    .event-actions button {
+      font: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 3px 8px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.85);
+      color: #1f2937;
+    }
+    .event-actions button.del { color: #b42318; }
+    .event-actions button.del:hover { background: #b42318; color: #fff; }
+    .event-actions button.edit:hover { background: #1769aa; color: #fff; }
+    .mini-event .mini-actions { display: flex; gap: 6px; margin-top: 4px; }
+    .mini-event .mini-actions button {
+      font: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+      border-radius: 5px; padding: 2px 7px; border: 1px solid rgba(0,0,0,0.18); background: #fff;
+    }
+    .mini-event .mini-actions button.del { color: #b42318; }
+  </style>
+</head>
+<body class="calendar-month-app module-calendar">
+  <header class="calendar-topbar">
+    <div class="calendar-brand">
+      <a class='back-link' href='/'>ZK30</a>
+      <div>
+        <div class="brand-mark">ZK30 MFDB Command Centre</div>
+        <div class="product-kicker">Executive Intelligence Operating System</div>
+        <h1 id="monthTitle">July 2026</h1>
+        <p class="subtitle">Executive Time & Strategic Milestones.</p>
+        <div class="muted" id="syncBadge" style="margin-top:4px;font-weight:700;font-size:12px;">Checking sync...</div>
+      </div>
+    </div>
+    <nav class="nav calendar-module-nav" aria-label="ZK30 MFDB module navigation">
+      <a href='/'>Overview</a>
+      <a href='/acis-dashboard'>LEXA</a>
+      <a href='/sp3b-dashboard'>SP3B</a>
+      <a href='/mvp-dashboard'>MVP</a>
+      <a aria-current='page' href='/executive-calendar'>Calendar</a>
+      <a href='/partnership-dashboard'>Partnerships</a>
+      <a href='/executive-kpi'>KPI</a>
+    </nav>
+    <div class="calendar-controls">
+      <button class="icon-button" id="prevMonth" type="button" aria-label="Previous month">&lt;</button>
+      <button class="button secondary" id="todayBtn" type="button">Today</button>
+      <button class="icon-button" id="nextMonth" type="button" aria-label="Next month">&gt;</button>
+      <a class="button" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener">Open Google Calendar</a>
+    </div>
+  </header>
+
+  <section class="enterprise-hero calendar-hero-compact">
+    <div class="enterprise-hero-inner">
+      <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Protect executive time, strategic milestones, meetings and follow-up discipline.</strong></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">23 and 24 July carry the next conversion points: MFICORD, ANGKASA, SBF and UKAS. Then 27 July DBKU, 4 August MTCP and 16 August ICL Launch.</p></div>
+      <div class="hero-kpi"><div><strong>8</strong><span>Milestones</span></div></div>
+    </div>
+  </section>
+
+  <main class="calendar-workspace">
+    <section class="month-board" aria-label="Monthly calendar">
+      <div class="month-weekdays">
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+      </div>
+      <div class="month-grid" id="monthGrid"></div>
+    </section>
+
+    <aside class="day-agenda" aria-label="Daily timetable">
+      <div class="agenda-head">
+        <div>
+          <span class="muted">Selected day</span>
+          <h2 id="selectedDayTitle">Tuesday, 21 July</h2>
+        </div>
+        <a class="button secondary small" id="selectedGoogleLink" href="https://calendar.google.com/calendar/u/0/r/eventedit" target="_blank" rel="noopener">Add</a>
+      </div>
+
+      <section class="agenda-block">
+        <h3>Daily timetable</h3>
+        <div class="time-rail" id="timeRail"></div>
+      </section>
+
+      <section class="agenda-block">
+        <h3>Next executive milestones</h3>
+        <div class="mini-stack" id="upcomingList"></div>
+      </section>
+    </aside>
+  </main>
+
+  <form class="chat-dock" id="quickForm" aria-label="Quick calendar input">
+    <button class="chat-icon" id="voiceBtn" type="button" aria-label="Voice input">Mic</button>
+    <input id="quickInput" autocomplete="off" placeholder="Tell ACIS: meeting, date, time, purpose...">
+    <a class="chat-link" id="googleLink" href="https://calendar.google.com/calendar/u/0/r/eventedit" target="_blank" rel="noopener">Google</a>
+    <button class="chat-send" type="submit">Send</button>
+    <span class="voice-state" id="voiceState">Ready</span>
+  </form>
+
+  <script>
+    const monthGrid = document.getElementById("monthGrid");
+    const monthTitle = document.getElementById("monthTitle");
+    const selectedDayTitle = document.getElementById("selectedDayTitle");
+    const timeRail = document.getElementById("timeRail");
+    const upcomingList = document.getElementById("upcomingList");
+    const quickInput = document.getElementById("quickInput");
+    const googleLink = document.getElementById("googleLink");
+    const selectedGoogleLink = document.getElementById("selectedGoogleLink");
+    const voiceState = document.getElementById("voiceState");
+    const storageKey = "zk30-calendar-chat-v4";
+    const todayIso = "2026-07-21";
+
+    const baseEvents = [
+      {
+        id: "consolidated",
+        date: "2026-07-21",
+        time: "09:00",
+        title: "Consolidated Master Update (Sat-Tue)",
+        notes: "Review LEXA -> SP3B -> MVP -> Strategic Partnership flow: MFICORD, SBF, DBKU, MARA report, CIDB, SNDB, UKAS, KOHOS, KAHAL and MTCP.",
+        type: "focus"
+      },
+      {
+        id: "mficord",
+        date: "2026-07-23",
+        time: "09:00",
+        title: "MFICORD",
+        notes: "Amazon USA Project and AgroTech Heroes 2.0. Attending: Wan, Mizi (Rampangi), Syafiq (Army Penrissen), Khairudin (KAHAL). AMCORP unable to attend (travel); RECODA awaiting confirmation.",
+        type: "priority"
+      },
+      {
+        id: "angkasa",
+        date: "2026-07-23",
+        time: "16:00",
+        title: "ANGKASA",
+        notes: "Executive relationship and cooperative movement discussion; BA100, School Cooperative and Rice Project.",
+        type: "partner"
+      },
+      {
+        id: "sbf",
+        date: "2026-07-24",
+        time: "10:00",
+        title: "SBF pricing negotiation",
+        notes: "Revised quotation using man-hour costing model before final pricing discussion; internal discussion with Azizul completed.",
+        type: "priority"
+      },
+      {
+        id: "ukas-high-tea",
+        date: "2026-07-24",
+        time: "14:00",
+        title: "UKAS High Tea",
+        notes: "14:00-16:00. Sponsor engagement with Sarawak Energy Berhad, Bintulu Port and Affin Bank; warm-up WhatsApp sent to Awang Putra; send thank-you messages.",
+        type: "partner"
+      },
+      {
+        id: "dbku",
+        date: "2026-07-27",
+        time: "15:00",
+        title: "DBKU meeting",
+        notes: "Monday 3:00 PM with Ramli (Zaiwin, Ramli, Zuli). Present iCATS RKR report and discuss My Green Kampung pilot.",
+        type: "priority"
+      },
+      {
+        id: "mtcp",
+        date: "2026-08-04",
+        time: "10:00",
+        title: "MTCP Permanent Secretary",
+        notes: "Permanent Secretary meeting with Mohd Shidi and Yusfida; Hari Sarawak appreciation.",
+        type: "priority"
+      },
+      {
+        id: "cidb",
+        date: "2026-09-01",
+        time: "09:00",
+        title: "CIDB Skill Techpreneur preparation",
+        notes: "Prepare Executive SP3B and formal meeting request for reopened Skill Techpreneur discussion.",
+        type: "programme"
+      },
+      {
+        id: "icl-launch",
+        date: "2026-08-16",
+        time: "09:00",
+        title: "ICL Premier Launch",
+        notes: "Premier of Sarawak launch gimmick; prepare implementation after proposal feedback.",
+        type: "priority"
+      },
+      {
+        id: "icats",
+        date: "2026-07-17",
+        time: "14:00",
+        title: "iCATS proposal collaboration",
+        notes: "Continue strengthening proposal quality and joint initiative direction.",
+        type: "partner"
+      },
+      {
+        id: "oilgas",
+        date: "2026-07-18",
+        time: "11:00",
+        title: "Oil & Gas AI strategy follow-up",
+        notes: "Await proposed collaboration package and prepare AI transformation framing.",
+        type: "partner"
+      }
+    ];
+
+    let viewDate = new Date(2026, 6, 1);
+    let selectedDate = todayIso;
+    let recognition;
+
+    const hiddenKey = "zk30-calendar-hidden-v1";
+
+    function storedEvents() {
+      return JSON.parse(localStorage.getItem(storageKey) || "[]");
+    }
+
+    function saveStoredEvents(list) {
+      localStorage.setItem(storageKey, JSON.stringify(list.slice(0, 100)));
+      if (typeof calSyncPush === "function") calSyncPush();
+    }
+
+    function hiddenIds() {
+      return JSON.parse(localStorage.getItem(hiddenKey) || "[]");
+    }
+
+    function hideBaseEvent(id) {
+      const list = hiddenIds();
+      if (!list.includes(id)) list.push(id);
+      localStorage.setItem(hiddenKey, JSON.stringify(list));
+      if (typeof calSyncPush === "function") calSyncPush();
+    }
+
+    function allEvents() {
+      const hidden = hiddenIds();
+      const map = new Map();
+      baseEvents.filter(e => !hidden.includes(e.id)).forEach(e => map.set(e.id, e));
+      storedEvents().forEach(e => map.set(e.id, e));
+      return [...map.values()].sort((a, b) => `${a.date}T${a.time || "09:00"}`.localeCompare(`${b.date}T${b.time || "09:00"}`));
+    }
+
+    function upsertStoredEvent(ev) {
+      const list = storedEvents().filter(e => e.id !== ev.id);
+      list.unshift(ev);
+      saveStoredEvents(list);
+    }
+
+    function deleteEvent(id) {
+      const ev = allEvents().find(e => e.id === id);
+      if (!ev) return;
+      if (!confirm(`Remove "${ev.title}" on ${ev.date}?`)) return;
+      saveStoredEvents(storedEvents().filter(e => e.id !== id));
+      if (baseEvents.some(e => e.id === id)) hideBaseEvent(id);
+      renderMonth();
+      renderDay();
+    }
+
+    function editEvent(id) {
+      const ev = allEvents().find(e => e.id === id);
+      if (!ev) return;
+      const title = prompt("Title", ev.title);
+      if (title === null) return;
+      const date = prompt("Date (YYYY-MM-DD)", ev.date);
+      if (date === null || !/^\d{4}-\d{2}-\d{2}$/.test(date)) { if (date !== null) alert("Please use format YYYY-MM-DD."); return; }
+      const time = prompt("Time (HH:MM, 24-hour)", ev.time || "09:00");
+      if (time === null) return;
+      const notes = prompt("Notes", ev.notes || "");
+      if (notes === null) return;
+      upsertStoredEvent({ id: ev.id, date, time: time.trim() || "09:00", title: title.trim() || "Executive calendar item", notes, type: ev.type || "draft" });
+      selectedDate = date;
+      viewDate = new Date(dateFromIso(date).getFullYear(), dateFromIso(date).getMonth(), 1);
+      renderMonth();
+      renderDay();
+    }
+
+    function isoDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function dateFromIso(value) {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function renderMonth() {
+      const year = viewDate.getFullYear();
+      const month = viewDate.getMonth();
+      monthTitle.textContent = viewDate.toLocaleDateString("en-MY", { month: "long", year: "numeric" });
+      const start = new Date(year, month, 1);
+      start.setDate(start.getDate() - start.getDay());
+      const monthEvents = allEvents();
+
+      monthGrid.innerHTML = Array.from({ length: 42 }, (_, index) => {
+        const current = new Date(start);
+        current.setDate(start.getDate() + index);
+        const iso = isoDate(current);
+        const isCurrentMonth = current.getMonth() === month;
+        const isSelected = iso === selectedDate;
+        const dayEvents = monthEvents.filter(event => event.date === iso).slice(0, 3);
+        return `
+          <button class="day-cell ${isCurrentMonth ? "" : "is-muted"} ${isSelected ? "is-selected" : ""}" type="button" data-date="${iso}">
+            <span class="day-number">${current.getDate()}</span>
+            <span class="day-events">
+              ${dayEvents.map(event => `<span class="event-chip ${event.type || "draft"}">${escapeHtml(event.time || "")} ${escapeHtml(event.title)}</span>`).join("")}
+            </span>
+          </button>
+        `;
+      }).join("");
+
+      monthGrid.querySelectorAll(".day-cell").forEach(cell => {
+        cell.addEventListener("click", () => {
+          selectedDate = cell.dataset.date;
+          quickInput.placeholder = `Add note for ${formatShort(selectedDate)}...`;
+          renderMonth();
+          renderDay();
+        });
+      });
+    }
+
+    function renderDay() {
+      const selected = dateFromIso(selectedDate);
+      selectedDayTitle.textContent = selected.toLocaleDateString("en-MY", { weekday: "long", day: "numeric", month: "long" });
+      const dayEvents = allEvents().filter(event => event.date === selectedDate);
+      const rows = ["08:00", "09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00"];
+      timeRail.innerHTML = rows.map(time => {
+        const atTime = dayEvents.filter(event => (event.time || "").slice(0, 2) === time.slice(0, 2));
+        return `
+          <div class="time-row">
+            <span class="time-label">${time}</span>
+            <div class="time-slot">
+              ${atTime.length ? atTime.map(event => `
+                <article class="agenda-event ${event.type || "draft"}">
+                  <strong>${escapeHtml(event.title)}</strong>
+                  <span>${escapeHtml(event.notes || "Executive calendar item")}</span>
+                  <div class="event-actions">
+                    <button type="button" class="edit" data-edit="${escapeHtml(event.id)}">Edit</button>
+                    <button type="button" class="del" data-del="${escapeHtml(event.id)}">Remove</button>
+                  </div>
+                </article>
+              `).join("") : `<span class="empty-slot">Available</span>`}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const eventForGoogle = dayEvents[0] || { date: selectedDate, time: "09:00", title: "Executive meeting", notes: "" };
+      selectedGoogleLink.href = googleUrl(eventForGoogle);
+      googleLink.href = googleUrl(eventForGoogle);
+
+      upcomingList.innerHTML = allEvents()
+        .filter(event => event.date >= todayIso)
+        .slice(0, 8)
+        .map(event => `
+          <div class="mini-event">
+            <span class="mini-jump" role="button" tabindex="0" data-date="${event.date}">
+              <span>${formatShort(event.date)} ${escapeHtml(event.time || "")}</span>
+              <strong>${escapeHtml(event.title)}</strong>
+            </span>
+            <div class="mini-actions">
+              <button type="button" class="edit" data-edit="${escapeHtml(event.id)}">Edit</button>
+              <button type="button" class="del" data-del="${escapeHtml(event.id)}">Remove</button>
+            </div>
+          </div>
+        `).join("");
+
+      upcomingList.querySelectorAll(".mini-jump").forEach(item => {
+        item.addEventListener("click", () => {
+          selectedDate = item.dataset.date;
+          viewDate = new Date(dateFromIso(selectedDate).getFullYear(), dateFromIso(selectedDate).getMonth(), 1);
+          renderMonth();
+          renderDay();
+        });
+      });
+    }
+
+    function parseQuickInput(text) {
+      const fallbackDate = selectedDate;
+      const dateMatch = text.match(/(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|july|aug|august|sep|sept|september|oct|nov|dec)[a-z]*\s*(20\d{2})?/i);
+      const months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, july: 6, aug: 7, august: 7, sep: 8, sept: 8, september: 8, oct: 9, nov: 10, dec: 11 };
+      let date = fallbackDate;
+      if (dateMatch) {
+        const year = Number(dateMatch[3] || viewDate.getFullYear());
+        date = isoDate(new Date(year, months[dateMatch[2].toLowerCase()], Number(dateMatch[1])));
+      }
+
+      let time = "09:00";
+      const timeMatch = text.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+      if (timeMatch) {
+        let hour = Number(timeMatch[1]);
+        const minute = timeMatch[2] || "00";
+        if (/pm/i.test(timeMatch[3]) && hour < 12) hour += 12;
+        if (/am/i.test(timeMatch[3]) && hour === 12) hour = 0;
+        time = `${String(hour).padStart(2, "0")}:${minute}`;
+      }
+
+      const title = text
+        .replace(/on\s+\d{1,2}\s+\w+\s*(20\d{2})?/i, "")
+        .replace(/at\s+\d{1,2}(:\d{2})?\s*(am|pm)/i, "")
+        .split(/[.;\n]/)[0]
+        .trim()
+        .slice(0, 82) || "Executive calendar item";
+
+      return { id: `draft-${Date.now()}`, date, time, title, notes: text, type: "draft" };
+    }
+
+    function submitQuickInput(event) {
+      event.preventDefault();
+      const text = quickInput.value.trim();
+      if (!text) return;
+      const item = parseQuickInput(text);
+      const drafts = [item, ...storedEvents()].slice(0, 30);
+      saveStoredEvents(drafts);
+      selectedDate = item.date;
+      viewDate = new Date(dateFromIso(item.date).getFullYear(), dateFromIso(item.date).getMonth(), 1);
+      quickInput.value = "";
+      renderMonth();
+      renderDay();
+      googleLink.href = googleUrl(item);
+      googleLink.focus();
+    }
+
+    function googleUrl(event) {
+      const start = new Date(`${event.date}T${event.time || "09:00"}:00+08:00`);
+      const end = new Date(start.getTime() + 60 * 60000);
+      const params = new URLSearchParams({
+        text: event.title,
+        dates: `${googleDate(start)}/${googleDate(end)}`,
+        details: event.notes || "",
+        ctz: "Asia/Kuala_Lumpur"
+      });
+      return `https://calendar.google.com/calendar/u/0/r/eventedit?${params.toString()}`;
+    }
+
+    function googleDate(date) {
+      return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+    }
+
+    function formatShort(iso) {
+      return dateFromIso(iso).toLocaleDateString("en-MY", { day: "numeric", month: "short" });
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    const voiceBtn = document.getElementById("voiceBtn");
+    let listening = false;
+    let manualStop = false;
+    let baseText = "";
+
+    function setVoiceState(text, live) {
+      voiceState.textContent = text;
+      voiceState.classList.toggle("live", !!live);
+    }
+
+    function setupVoice() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setVoiceState("Voice not supported on this browser", false);
+        voiceBtn.disabled = true;
+        return;
+      }
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "en-MY";
+
+      recognition.onstart = () => {
+        listening = true;
+        voiceBtn.classList.add("listening");
+        voiceBtn.textContent = "Stop";
+        setVoiceState("Listening... tap Stop when done", true);
+      };
+      recognition.onresult = event => {
+        let finalText = "";
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript;
+          else interim += transcript;
+        }
+        if (finalText) baseText = `${baseText} ${finalText}`.trim();
+        quickInput.value = `${baseText} ${interim}`.trim();
+      };
+      recognition.onerror = event => {
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          setVoiceState("Microphone blocked - allow mic access", false);
+          manualStop = true;
+        }
+      };
+      recognition.onend = () => {
+        if (!manualStop && listening) {
+          try { recognition.start(); return; } catch (e) {}
+        }
+        listening = false;
+        voiceBtn.classList.remove("listening");
+        voiceBtn.textContent = "Mic";
+        if (!voiceState.textContent.includes("blocked")) setVoiceState("Ready", false);
+      };
+    }
+
+    function toggleVoice() {
+      if (!recognition) return;
+      if (listening) {
+        manualStop = true;
+        listening = false;
+        recognition.stop();
+        voiceBtn.classList.remove("listening");
+        voiceBtn.textContent = "Mic";
+        setVoiceState("Ready", false);
+        quickInput.focus();
+        return;
+      }
+      baseText = quickInput.value.trim();
+      manualStop = false;
+      try { recognition.start(); } catch (e) {}
+    }
+
+    document.getElementById("quickForm").addEventListener("submit", event => {
+      if (listening) { manualStop = true; listening = false; try { recognition.stop(); } catch (e) {} }
+      submitQuickInput(event);
+    });
+    voiceBtn.addEventListener("click", toggleVoice);
+
+    timeRail.addEventListener("click", event => {
+      const editBtn = event.target.closest("[data-edit]");
+      const delBtn = event.target.closest("[data-del]");
+      if (editBtn) editEvent(editBtn.getAttribute("data-edit"));
+      else if (delBtn) deleteEvent(delBtn.getAttribute("data-del"));
+    });
+    upcomingList.addEventListener("click", event => {
+      const editBtn = event.target.closest("[data-edit]");
+      const delBtn = event.target.closest("[data-del]");
+      if (editBtn) editEvent(editBtn.getAttribute("data-edit"));
+      else if (delBtn) deleteEvent(delBtn.getAttribute("data-del"));
+    });
+    document.getElementById("todayBtn").addEventListener("click", () => {
+      selectedDate = todayIso;
+      viewDate = new Date(2026, 6, 1);
+      renderMonth();
+      renderDay();
+    });
+    document.getElementById("prevMonth").addEventListener("click", () => {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+      renderMonth();
+    });
+    document.getElementById("nextMonth").addEventListener("click", () => {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+      renderMonth();
+    });
+
+    setupVoice();
+    renderMonth();
+    renderDay();
+
+    // ---- Cross-device sync (Netlify Blobs via /api/data) ----
+    // Syncs your added / edited / removed events across all devices.
+    // Built-in milestones live in the code, so only your changes travel.
+    const SYNC_URL = "/api/data?key=calendar";
+    const SYNC_HEADERS = { "content-type": "application/json", "x-zk": "zk30-sync-9f3a2c" };
+    const syncBadge = document.getElementById("syncBadge");
+    let syncMode = false;
+    let pushTimer = null;
+
+    function setSyncBadge(state) {
+      if (!syncBadge) return;
+      if (state === "synced") { syncBadge.textContent = "● Synced across your devices"; syncBadge.style.color = "#177245"; }
+      else if (state === "saving") { syncBadge.textContent = "● Saving to cloud..."; syncBadge.style.color = "#946200"; }
+      else { syncBadge.textContent = "● This device only (cloud sync not connected)"; syncBadge.style.color = "#64707d"; }
+    }
+
+    function currentCalPayload() {
+      return { events: storedEvents(), hidden: hiddenIds() };
+    }
+
+    async function calSyncPushNow() {
+      if (!syncMode) return;
+      setSyncBadge("saving");
+      try {
+        await fetch(SYNC_URL, { method: "POST", headers: SYNC_HEADERS, body: JSON.stringify({ data: currentCalPayload() }) });
+        setSyncBadge("synced");
+      } catch (e) { setSyncBadge("synced"); }
+    }
+
+    function calSyncPush() {
+      if (!syncMode) return;
+      clearTimeout(pushTimer);
+      pushTimer = setTimeout(calSyncPushNow, 700);
+    }
+
+    async function calSyncPull() {
+      try {
+        const res = await fetch(SYNC_URL, { headers: SYNC_HEADERS });
+        if (!res.ok) { setSyncBadge("local"); return; }
+        const json = await res.json();
+        syncMode = true;
+        const data = json.data;
+        if (data && (Array.isArray(data.events) || Array.isArray(data.hidden))) {
+          localStorage.setItem(storageKey, JSON.stringify(data.events || []));
+          localStorage.setItem(hiddenKey, JSON.stringify(data.hidden || []));
+          renderMonth();
+          renderDay();
+          setSyncBadge("synced");
+        } else {
+          await calSyncPushNow();
+        }
+      } catch (e) {
+        setSyncBadge("local");
+      }
+    }
+
+    calSyncPull();
+  </script>
+</body>
+</html>

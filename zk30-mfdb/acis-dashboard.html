@@ -1,0 +1,2225 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZK30 MFDB Command Centre - LEXA Dashboard</title>
+  <style>
+    :root {
+      --ink: #18202a;
+      --muted: #64707d;
+      --line: #d9e0e7;
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --blue: #1769aa;
+      --green: #177245;
+      --yellow: #946200;
+      --red: #b42318;
+      --teal: #007c89;
+      --violet: #6941c6;
+      --slate: #45515f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    h2,
+    h3 {
+      letter-spacing: 0;
+    }
+
+    .subtitle,
+    .muted {
+      color: var(--muted);
+    }
+
+    .subtitle {
+      margin: 0;
+    }
+
+    .module-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .module-nav a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 11px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .module-nav a[aria-current="page"] {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 18px 24px 34px;
+    }
+
+    .morning {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .panel,
+    .metric,
+    .lexa-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .panel {
+      overflow: hidden;
+    }
+
+    .panel-pad {
+      padding: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+    }
+
+    .panel-head h2,
+    .panel-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .daily-question {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .top-five {
+      display: grid;
+      gap: 10px;
+    }
+
+    .lexa-card {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .rank {
+      color: #fff;
+      background: var(--blue);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      min-height: 70px;
+      font-weight: 700;
+    }
+
+    .lexa-card h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .one-action {
+      margin-top: 8px;
+      padding: 9px;
+      border-left: 3px solid var(--green);
+      background: #f3faf6;
+      font-weight: 700;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      min-height: 24px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+
+    .score {
+      text-align: right;
+      min-width: 80px;
+      font-weight: 700;
+    }
+
+    .toolbar,
+    .metrics,
+    .workspace,
+    .form-grid,
+    .review-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .toolbar {
+      grid-template-columns: minmax(220px, 1fr) repeat(4, minmax(120px, 160px)) auto auto;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .metrics {
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      padding: 12px;
+      min-height: 86px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 6px;
+    }
+
+    .workspace {
+      grid-template-columns: minmax(0, 1fr) 390px;
+      align-items: start;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      min-height: 38px;
+      padding: 8px 10px;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    button {
+      border: 1px solid #0f4f78;
+      border-radius: 6px;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+      min-height: 38px;
+      padding: 8px 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--blue);
+    }
+
+    button.danger {
+      border-color: #8a1f17;
+      background: var(--red);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1420px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      background: #fbfcfe;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    tr:hover td {
+      background: #f9fbfd;
+    }
+
+    .title-cell {
+      font-weight: 700;
+      min-width: 190px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--slate);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      min-height: 24px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+
+    .priority-5 { background: var(--red); }
+    .priority-4 { background: var(--yellow); }
+    .priority-3 { background: var(--blue); }
+    .priority-2 { background: var(--teal); }
+    .priority-1 { background: var(--muted); }
+    .status-Active { background: var(--blue); }
+    .status-WaitingReply { background: var(--yellow); }
+    .status-MeetingDue { background: var(--violet); }
+    .status-ProposalDue { background: var(--teal); }
+    .status-Running { background: var(--green); }
+    .status-Monitoring { background: var(--slate); }
+    .status-Reviewed { background: var(--green); }
+
+    .side {
+      display: grid;
+      gap: 12px;
+    }
+
+    .side section {
+      padding: 12px;
+    }
+
+    .side h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      background: #fff;
+    }
+
+    .form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 12px;
+    }
+
+    .review-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .review-grid div {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      background: #fff;
+    }
+
+    .brain-cio { border-left: 4px solid var(--violet); }
+    .brain-cfo { border-left: 4px solid var(--blue); }
+    .brain-cto { border-left: 4px solid var(--green); }
+    .brain-coo { border-left: 4px solid #c85a14; }
+    .brain-cso { border-left: 4px solid var(--red); }
+    .brain-cro { border-left: 4px solid #222; }
+    .brain-cmo { border-left: 4px solid #d8a000; }
+
+    .span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 1120px) {
+      .toolbar,
+      .morning,
+      .workspace,
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .morning,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header,
+      main {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .toolbar,
+      .metrics,
+      .form-grid,
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lexa-card {
+        grid-template-columns: 1fr;
+      }
+
+      .score {
+        text-align: left;
+      }
+    }
+    .row-actions {
+      white-space: nowrap;
+    }
+
+    .mini-btn {
+      min-height: 30px;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+      margin: 0 3px 3px 0;
+    }
+
+    .mini-btn.edit {
+      background: var(--blue);
+      border-color: #0f4f78;
+    }
+
+    .mini-btn.del {
+      background: #fff;
+      color: var(--red);
+      border-color: #d9b6b2;
+    }
+
+    .mini-btn.del:hover {
+      background: var(--red);
+      color: #fff;
+    }
+  </style>
+  <link rel="stylesheet" href="acis-modules.css">
+</head>
+<body class="module-lexa">
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-row">
+        <div>
+          <div class="brand-mark">ZK30 MFDB Command Centre</div>
+          <div class="product-kicker">Executive Intelligence Operating System</div>
+          <h1>LEXA Dashboard</h1>
+          <p class="subtitle">Relationship Intelligence for Strategic Growth.</p>
+          <div class="muted" id="syncBadge" style="margin-top:4px;font-weight:700;font-size:12px;">Checking sync...</div>
+        </div>
+        <nav class="nav" aria-label="ZK30 MFDB module navigation">
+          <a href='/'>Overview</a>
+          <a aria-current='page' href='/acis-dashboard'>LEXA</a>
+          <a href='/sp3b-dashboard'>SP3B</a>
+          <a href='/mvp-dashboard'>MVP</a>
+          <a href='/executive-calendar'>Calendar</a>
+          <a href='/partnership-dashboard'>Partnerships</a>
+          <a href='/executive-kpi'>KPI</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <section class="enterprise-hero">
+    <div class="enterprise-hero-inner">
+      <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Track relationship warmth, opportunity movement and executive follow-up discipline.</strong></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">SBF, Tourism, Oil & Gas AI strategy, iCATS and CIDB now define the highest-priority relationship movements.</p></div>
+      <div class="hero-kpi"><div><strong>18</strong><span>Warm Pipeline</span></div></div>
+    </div>
+  </section>
+
+  <main>
+    <section class="morning">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Morning Focus</h2>
+          <div class="muted" id="todayStamp"></div>
+        </div>
+        <div class="panel-pad">
+          <p class="daily-question">Chairman, which ten LEXAs deserve attention today, why, and what one action should happen before noon?</p>
+          <div id="topFive" class="top-five"></div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <section class="panel">
+          <h3>Today Buckets</h3>
+          <ul id="todayBuckets" class="list"></ul>
+        </section>
+        <section class="panel">
+          <h3>Weekly Progress</h3>
+          <ul id="activitySummary" class="list"></ul>
+        </section>
+        <section class="panel">
+          <h3>Today's Top 10 Priority Board</h3>
+          <ul id="priorityBoard" class="list"></ul>
+        </section>
+        <section class="panel">
+          <h3>AZUGAI7 Review Lens</h3>
+          <div class="review-grid">
+            <div class="brain-cio"><strong>CIO</strong><br><span class="muted">Investment value</span></div>
+            <div class="brain-cfo"><strong>CFO</strong><br><span class="muted">Financial sustainability</span></div>
+            <div class="brain-cto"><strong>CTO</strong><br><span class="muted">AI, data, platform</span></div>
+            <div class="brain-coo"><strong>COO</strong><br><span class="muted">Execution readiness</span></div>
+            <div class="brain-cso"><strong>CSO</strong><br><span class="muted">Ecosystem strategy</span></div>
+            <div class="brain-cro"><strong>CRO</strong><br><span class="muted">Risk and governance</span></div>
+            <div class="brain-cmo"><strong>CMO</strong><br><span class="muted">Trust and persuasion</span></div>
+          </div>
+        </section>
+        <section class="panel">
+          <h3>Founder Decision Queue</h3>
+          <ul id="decisionQueue" class="list"></ul>
+        </section>
+        <section class="panel">
+          <h3>Communication Audit</h3>
+          <ul id="communicationAudit" class="list"></ul>
+        </section>
+        <section class="panel">
+          <h3>Proposal Builder</h3>
+          <ul id="proposalBuilder" class="list"></ul>
+        </section>
+      </aside>
+    </section>
+
+    <section class="toolbar" aria-label="Dashboard filters">
+      <div>
+        <label for="search">Search</label>
+        <input id="search" type="search" placeholder="LEXA, person, action, project">
+      </div>
+      <div>
+        <label for="clusterFilter">Cluster</label>
+        <select id="clusterFilter"></select>
+      </div>
+      <div>
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter"></select>
+      </div>
+      <div>
+        <label for="priorityFilter">Priority</label>
+        <select id="priorityFilter"></select>
+      </div>
+      <div>
+        <label for="azugaiFilter">AZUGAI7</label>
+        <select id="azugaiFilter"></select>
+      </div>
+      <button id="exportBtn" class="secondary" type="button">Export CSV</button>
+      <button id="resetBtn" class="danger" type="button">Reset EID</button>
+    </section>
+
+    <section class="metrics" aria-label="ACIS metrics">
+      <div class="metric"><span>Total LEXAs</span><strong id="metricTotal">0</strong></div>
+      <div class="metric"><span>Top Priority</span><strong id="metricTopPriority">0</strong></div>
+      <div class="metric"><span>Calls</span><strong id="metricCalls">0</strong></div>
+      <div class="metric"><span>Emails</span><strong id="metricEmails">0</strong></div>
+      <div class="metric"><span>Proposals</span><strong id="metricProposals">0</strong></div>
+      <div class="metric"><span>AZUGAI7</span><strong id="metricAzugai">0</strong></div>
+    </section>
+
+    <section class="workspace">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Executive Intelligence Database</h2>
+          <div class="muted" id="visibleCount">0 shown</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Organisation</th>
+                <th>Cluster</th>
+                <th>Key Persons</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Next Action</th>
+                <th>Outcome</th>
+                <th>Opportunity</th>
+                <th>Decision</th>
+                <th>Score</th>
+                <th>AZUGAI7</th>
+                <th>Next Follow-up</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lexaRows"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="empty" hidden>No matching LEXAs.</div>
+      </div>
+
+      <aside class="side">
+        <section class="panel">
+          <h3 id="formTitle">Add LEXA</h3>
+          <form id="lexaForm" class="form-grid">
+            <div>
+              <label for="organisation">Organisation</label>
+              <input id="organisation" required placeholder="Partner or project">
+            </div>
+            <div>
+              <label for="cluster">Cluster</label>
+              <input id="cluster" required placeholder="Government, Corporate, NGO">
+            </div>
+            <div>
+              <label for="priority">Priority</label>
+              <select id="priority">
+                <option value="5">5 - Critical</option>
+                <option value="4">4 - High</option>
+                <option value="3">3 - Normal</option>
+                <option value="2">2 - Watch</option>
+                <option value="1">1 - Low</option>
+              </select>
+            </div>
+            <div>
+              <label for="status">Status</label>
+              <select id="status">
+                <option>Active</option>
+                <option>Waiting Reply</option>
+                <option>Meeting Due</option>
+                <option>Proposal Due</option>
+                <option>Running</option>
+                <option>Monitoring</option>
+              </select>
+            </div>
+            <div class="span-2">
+              <label for="keyPersons">Key Persons</label>
+              <input id="keyPersons" placeholder="Names separated by comma">
+            </div>
+            <div class="span-2">
+              <label for="nextAction">Next Action</label>
+              <textarea id="nextAction" required placeholder="One or more actions"></textarea>
+            </div>
+            <div class="span-2">
+              <label for="expectedOutcome">Expected Outcome</label>
+              <input id="expectedOutcome" placeholder="Meeting, pilot, proposal, revenue">
+            </div>
+            <div>
+              <label for="opportunity">Opportunity Potential</label>
+              <select id="opportunity">
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+            <div>
+              <label for="followUp">Next Follow-up</label>
+              <input id="followUp" type="date">
+            </div>
+            <div class="span-2">
+              <label for="azugaiReview">AZUGAI7 Review</label>
+              <input id="azugaiReview" placeholder="CSO, COO, CTO, CFO">
+            </div>
+            <div class="span-2 actions">
+              <button type="submit" id="submitBtn">Add LEXA</button>
+              <button class="secondary" id="clearBtn" type="button">Clear</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h3>Waiting Reply</h3>
+          <ul id="waitingList" class="list"></ul>
+        </section>
+
+        <section class="panel">
+          <h3>Upcoming Events</h3>
+          <ul id="eventList" class="list"></ul>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "acis-eid-v10-sat-tue-consolidated";
+    const statuses = ["All", "Active", "Waiting Reply", "Meeting Due", "Proposal Due", "Running", "Monitoring", "Reviewed"];
+    const priorities = ["All", "5", "4", "3", "2", "1"];
+    const azugaiOptions = ["All", "CIO", "CFO", "CTO", "COO", "CSO", "CRO", "CMO"];
+    const scoreDimensions = [
+      "Strategic Fit",
+      "Commercial Potential",
+      "Financial Viability",
+      "AI Readiness",
+      "ESG Alignment",
+      "Implementation Readiness",
+      "Risk Profile",
+      "Partnership Potential",
+      "Scalability",
+      "Long-Term Impact"
+    ];
+    const standardDeliverables = [
+      "Executive Summary",
+      "AZUGAI7 Executive Review",
+      "Opportunity Scorecard",
+      "SWOT Analysis",
+      "Strategic Recommendations",
+      "100-Day Action Plan",
+      "3-Year Roadmap",
+      "Partnership Structure",
+      "Commercialisation Model",
+      "Founder Recommendation"
+    ];
+    const activitySummary = {
+      period: "Consolidated Master Update - Saturday to Tuesday",
+      score: "LEXA -> SP3B -> MVP -> Strategic Partnership execution flow",
+      meetings: "23 July: MFICORD 09:00-10:00 (Wan, Mizi, Syafiq, Khairudin; Amazon USA Project + AgroTech Heroes 2.0), ANGKASA 16:00-17:00. 24 July: SBF pricing negotiation 10:00-12:00, UKAS High Tea 14:00-16:00. 27 July: DBKU 15:00 (iCATS RKR report + My Green Kampung pilot). 4 August: MTCP Permanent Secretary. 16 August: ICL Premier Launch.",
+      touchpoints: "UKAS sponsors locked (Sarawak Energy Berhad, Bintulu Port, Affin Bank); MARA Miri programme completed and validated; KOHOS positioned as KOBIS signature product for 10-cooperative rollout; KAHAL Datuk Kasim Land (RM7.8M) opened; over ten new LEXA relationships created across government, GLC and cooperative clusters.",
+      sp3bCompleted: "Completed: ICL Launch Proposal, DBKU Proposal, KIM Berhad KOHOS Proposal, Green Kampung Challenge. Ready: MARA Executive Report, Programme Report, Industry Report, Digital Impact Report.",
+      sp3bQueue: "Upcoming: CIDB Skill Techpreneur, SNDB Proposal, SBF Revised Quotation, KAHAL Land Proposal, Pustaka Courtesy Letter.",
+      conversionNote: "Momentum strongest in government, GLC, cooperative and institutional engagement. Focus now: disciplined execution - complete follow-ups, submit SP3Bs, validate MVP deployments, and convert warm LEXA relationships into long-term strategic partnerships."
+    };
+    const priorityBoard = [
+      ["Priority 1", "MFICORD: confirm final attendance and finalise presentation for 23 July 09:00 meeting on Amazon USA Project and AgroTech Heroes 2.0."],
+      ["Priority 2", "SBF: finalise revised quotation using man-hour costing model before 24 July 10:00 pricing negotiation."],
+      ["Priority 3", "DBKU: present iCATS RKR report and discuss My Green Kampung pilot at Monday 27 July 15:00 meeting with Ramli."],
+      ["Priority 4", "MARA Sarawak: prepare executive completion report - Programme Report, Industry Report and Digital Impact Report."],
+      ["Priority 5", "CIDB: send executive email to Shikin and prepare Skill Techpreneur proposal for reopened opportunity."],
+      ["Priority 6", "SNDB: prepare Executive SP3B for Amazon Global Marketplace, Sago, Nipah and young entrepreneur development."],
+      ["Priority 7", "UKAS: deliver 24 July High Tea and send sponsor appreciation to SEB, Bintulu Port and Affin Bank."],
+      ["Priority 8", "KOHOS Expansion: open LEXA for target cooperatives and drive the 10-cooperative KOBIS rollout."],
+      ["Priority 9", "KAHAL: call Khairudin, meet Datuk Kasim and prepare SP3B for the RM7.8M Datuk Kasim Land."],
+      ["Priority 10", "MTCP: prepare for 4 August Permanent Secretary meeting and Hari Sarawak appreciation."]
+    ];
+    const seedLexas = [
+      {
+        id: "LEXA-001",
+        organisation: "MFICORD",
+        cluster: "Government",
+        keyPersons: "Wan, Mizi (Rampangi), Syafiq (Army Penrissen), Khairudin (KAHAL), Sharifah, Demi",
+        status: "Meeting Due",
+        nextAction: "Confirm final attendance and finalise presentation for 23 July 09:00 meeting on Amazon USA Project and AgroTech Heroes 2.0.",
+        expectedOutcome: "MFICORD executive meeting delivers Amazon USA and AgroTech Heroes 2.0 direction with confirmed stakeholders.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 1,
+        lastEngagement: "Thursday meeting confirmed for 23 July 09:00 AM. Demi and Sharifah informed; Khairudin confirmed to represent KAHAL; RECODA awaiting confirmation; AMCORP unable to attend due to travel.",
+        nextFollowUp: "2026-07-23",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO, CMO"
+      },
+      {
+        id: "LEXA-002",
+        organisation: "DBKU",
+        cluster: "Government",
+        keyPersons: "Abang Ramli, Zuli (iCATS Inspire)",
+        status: "Meeting Due",
+        nextAction: "Present iCATS RKR report and discuss My Green Kampung pilot at Monday 27 July 15:00 meeting with Ramli.",
+        expectedOutcome: "DBKU meeting advances My Green Kampung pilot implementation.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 3,
+        lastEngagement: "Proposal submitted and executive WhatsApp completed; fine-tuning continues; iCATS preparing RKR report, expected before Monday 3:00 PM meeting (Zaiwin, Ramli, Zuli).",
+        nextFollowUp: "2026-07-27",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO, CFO"
+      },
+      {
+        id: "LEXA-003",
+        organisation: "SBF",
+        cluster: "Association",
+        keyPersons: "Illyo, Azizul",
+        status: "Meeting Due",
+        nextAction: "Finalise revised quotation using man-hour costing model for 24 July 10:00 AM pricing negotiation.",
+        expectedOutcome: "SBF pricing negotiation advances into commercial agreement.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 2,
+        lastEngagement: "24 July 10:00 AM meeting confirmed for pricing negotiation and man-hour costing; internal discussion completed with Azizul; revised quotation required.",
+        nextFollowUp: "2026-07-24",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CFO, CMO"
+      },
+      {
+        id: "LEXA-004",
+        organisation: "STIDC",
+        cluster: "Government",
+        keyPersons: "GM",
+        status: "Proposal Due",
+        nextAction: "Prepare GM email; frame Bamboo ESG and Industry Digitalisation opportunity; complete STIDC SP3B.",
+        expectedOutcome: "GM engagement opened with Bamboo ESG and digitalisation proposal direction.",
+        priority: 5,
+        opportunity: "High",
+        lastEngagement: "Discussion with Azizi completed; green light received to proceed.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO"
+      },
+      {
+        id: "LEXA-005",
+        organisation: "SEB",
+        cluster: "Corporate",
+        keyPersons: "",
+        status: "Running",
+        nextAction: "Grow SEB Makbol and SEB TikTok Challenge relationship into long-term partnership.",
+        expectedOutcome: "SEB relationship progresses from sponsor/programme support into long-term partnership.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "SEB Makbol and SEB TikTok Challenge active; SEB happy with UKAS poster and bunting; objective is long-term partnership.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CTO, CMO"
+      },
+      {
+        id: "LEXA-006",
+        organisation: "CelcomDigi",
+        cluster: "Corporate",
+        keyPersons: "Azip",
+        status: "Waiting Reply",
+        nextAction: "Send thank you WhatsApp.",
+        expectedOutcome: "Vendor registration relationship kept warm.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Vendor registration started",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, CMO"
+      },
+      {
+        id: "LEXA-007",
+        organisation: "Affin Bank",
+        cluster: "Corporate",
+        keyPersons: "",
+        status: "Running",
+        nextAction: "Send Yayasan Inovasi Malaysia update next week; explore additional collaborations beyond UKAS sponsorship.",
+        expectedOutcome: "Affin Bank relationship expands beyond sponsorship into future collaboration.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Official UKAS sponsor confirmed; completed reply email, appreciation, invitation, poster and roll-up bunting featuring all four sponsors.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, CRO"
+      },
+      {
+        id: "LEXA-008",
+        organisation: "UKAS",
+        cluster: "Government",
+        keyPersons: "Awang Putra, Cheg Guben, TikTok Malaysia",
+        status: "Running",
+        nextAction: "Deliver UKAS High Tea 24 July 14:00-16:00; send sponsor appreciation messages and continue engagement.",
+        expectedOutcome: "Sponsor confidence maintained with SEB, Bintulu Port and Affin Bank; UKAS relationship strengthened.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 7,
+        lastEngagement: "UKAS High Tea confirmed 24 July 14:00-16:00; warm-up WhatsApp sent to Awang Putra; sponsors secured: Sarawak Energy Berhad, Bintulu Port and Affin Bank.",
+        nextFollowUp: "2026-07-24",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CFO, CMO"
+      },
+      {
+        id: "LEXA-009",
+        organisation: "SNDB",
+        cluster: "Government",
+        keyPersons: "Dr Haji Zaidel, Dr. Azhar",
+        status: "Proposal Due",
+        nextAction: "Prepare Executive SP3B covering Amazon Global Marketplace, Sago, Nipah and Young Entrepreneur Development.",
+        expectedOutcome: "SNDB moves into formal strategic partnership discussion around marketplace access, Sago, Nipah and entrepreneur development.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 6,
+        lastEngagement: "SNDB active; direction now includes Amazon Global Marketplace, Sago, Nipah and Young Entrepreneur Development.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-010",
+        organisation: "SEDC Energy",
+        cluster: "Corporate",
+        keyPersons: "Khairudin Contact, Farouk",
+        status: "Waiting Reply",
+        nextAction: "Prepare SEDC Energy SP3B queue; develop Hydrogen and POME opportunity angle.",
+        expectedOutcome: "Energy proposal angle framed for executive discussion.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Contact through Khairudin; Hydrogen and POME opportunities identified.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CTO, CSO"
+      },
+      {
+        id: "LEXA-011",
+        organisation: "SEA",
+        cluster: "Association",
+        keyPersons: "Nizam",
+        status: "Proposal Due",
+        nextAction: "Prepare Executive SP3B; develop portal concept; connect SEA direction with MARA Miri collaboration.",
+        expectedOutcome: "SEA portal concept and SP3B ready for executive discussion.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Nizam actively engaged; MARA Miri collaboration confirmed; portal concept under discussion.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, CTO, CSO"
+      },
+      {
+        id: "LEXA-012",
+        organisation: "iCATS",
+        cluster: "Education",
+        keyPersons: "Ruly, Zulie",
+        status: "Active",
+        nextAction: "Support DBKU RKR report with Zuli and continue improving joint proposal quality.",
+        expectedOutcome: "Joint proposal quality improves and future initiatives become clearer.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Collaboration strengthened; iCATS Inspire (Zuli) preparing DBKU RKR report; future joint initiatives under discussion.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-013",
+        organisation: "AZAM",
+        cluster: "Government",
+        keyPersons: "",
+        status: "Proposal Due",
+        nextAction: "Plan AI / PCDS2030 programme after board appointment confirmation.",
+        expectedOutcome: "AI / PCDS2030 programme concept ready for board-level direction.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Board appointment confirmed; AI / PCDS2030 programme under planning.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO, COO"
+      },
+      {
+        id: "LEXA-014",
+        organisation: "TEGAS",
+        cluster: "Ecosystem",
+        keyPersons: "",
+        status: "Proposal Due",
+        nextAction: "Develop Second Chance Programme.",
+        expectedOutcome: "Programme proposal ready.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO, COO"
+      },
+      {
+        id: "LEXA-015",
+        organisation: "SDEC",
+        cluster: "Ecosystem",
+        keyPersons: "",
+        status: "Proposal Due",
+        nextAction: "Develop AI Talent Programme.",
+        expectedOutcome: "AI Talent Programme proposal ready.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CTO, CSO, CMO"
+      },
+      {
+        id: "LEXA-016",
+        organisation: "KPWK Sarawak",
+        cluster: "Government",
+        keyPersons: "Aishah",
+        status: "Proposal Due",
+        nextAction: "Support Aishah on GISS NGO proposal preparation; complete 3 NGO proposals this week and 10 this month.",
+        expectedOutcome: "GISS NGO pipeline produces 3 proposals this week and 10 this month.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "NGO proposal pipeline activated; WhatsApp group established; Aishah leading proposal preparation.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CFO, CSO"
+      },
+      {
+        id: "LEXA-017",
+        organisation: "MASA",
+        cluster: "Association",
+        keyPersons: "President",
+        status: "Active",
+        nextAction: "Message President; continue contributing.",
+        expectedOutcome: "Relationship nurtured.",
+        priority: 2,
+        opportunity: "Medium",
+        lastEngagement: "",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-018",
+        organisation: "SCOPE",
+        cluster: "Corporate",
+        keyPersons: "CEO",
+        status: "Meeting Due",
+        nextAction: "Arrange CEO meeting.",
+        expectedOutcome: "CEO meeting scheduled.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO"
+      },
+      {
+        id: "LEXA-019",
+        organisation: "RECODA",
+        cluster: "Government",
+        keyPersons: "Datuk Seri Q, Mizi, Nam Alloy",
+        status: "Active",
+        nextAction: "Continue RECODA follow-up on Sawai, Rampangi and Army Penrissen; confirm attendance route via 23 July MFICORD.",
+        expectedOutcome: "Proposal package advances for Sawai, Rampangi and Army Penrissen.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Follow-up ongoing; Datuk Q reminded; active projects: Sawai, Rampangi, Army Penrissen; RECODA awaiting confirmation for 23 July MFICORD meeting.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, COO, CSO"
+      },
+      {
+        id: "LEXA-022",
+        organisation: "KIM Berhad",
+        cluster: "Cooperative",
+        keyPersons: "President, Dr. Alha",
+        status: "Submitted",
+        nextAction: "Submit invoice to Yayasan Inovasi Malaysia for RM10,000 pending payment; track KOHOS and Green Kampung proposals; progress Dr. Alha collaboration.",
+        expectedOutcome: "KIM proposals progress and RM10,000 payment is processed through YIM invoice submission.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "KOHOS proposal and Green Kampung Challenge submitted; RM10,000 payment pending (YIM invoice required); Dr. Alha collaboration progressing.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, COO, CSO"
+      },
+      {
+        id: "LEXA-021",
+        organisation: "MARA Miri VDP",
+        cluster: "Government",
+        keyPersons: "Nizam, Aslizal",
+        status: "Programme Completed",
+        nextAction: "Prepare MARA Sarawak executive completion report: Programme Report, Industry Report and Digital Impact Report.",
+        expectedOutcome: "MARA Sarawak receives completion report and opens route to scale KBT Attendify across MARA Sarawak.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 4,
+        lastEngagement: "Programme completed successfully; validated by participants, MARA officers and stakeholders; industry report well received; RM10,000 payment pending; Aslizal awaiting programme report.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CMO"
+      },
+      {
+        id: "LEXA-041",
+        organisation: "ANGKASA",
+        cluster: "Cooperative",
+        keyPersons: "",
+        status: "Meeting Due",
+        nextAction: "Attend 23 July 16:00 meeting; clarify next step for BA100, School Cooperative and Rice Project.",
+        expectedOutcome: "One project pathway prioritised.",
+        priority: 3,
+        opportunity: "High",
+        lastEngagement: "Executive relationship and cooperative movement meeting scheduled 23 July 16:00. Projects: BA100, School Cooperative, Rice Project.",
+        nextFollowUp: "2026-07-23",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, COO, CSO"
+      },
+      {
+        id: "LEXA-023",
+        organisation: "MINTRED",
+        cluster: "Government",
+        keyPersons: "Zarif",
+        status: "Active",
+        nextAction: "Maintain warm follow-up with Zarif; identify the strongest government-aligned programme angle.",
+        expectedOutcome: "MINTRED relationship warmed into a defined programme conversation.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Executive meeting / courtesy engagement completed with Zarif; initial engagement continues.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO, CRO"
+      },
+      {
+        id: "LEXA-027",
+        organisation: "Milin Kassim",
+        cluster: "Industry Partner",
+        keyPersons: "Milin Kassim",
+        status: "Reviewed",
+        nextAction: "Move completed children's book collaboration proposal and publishing collaboration framework into business development follow-up.",
+        expectedOutcome: "Publishing collaboration advances into business development.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Completed: Children's Book Collaboration Proposal, Publishing Collaboration Framework, and NotebookLM version.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CSO, CMO"
+      },
+      {
+        id: "LEXA-030",
+        organisation: "Pustaka",
+        cluster: "Government",
+        keyPersons: "Wan Mazli",
+        status: "Active",
+        nextAction: "Prepare and send courtesy visit letter requested by Wan Mazli.",
+        expectedOutcome: "Courtesy visit confirmed and relationship formalised.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Meeting completed with Wan Mazli; courtesy visit letter requested.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO, COO"
+      },
+      {
+        id: "LEXA-031",
+        organisation: "Koperasi Bau",
+        cluster: "Construction",
+        keyPersons: "Tuan Judah, Wan Mazli",
+        status: "Active",
+        nextAction: "Progress Tuan Judah partnership; structure housing development, property portal and cooperative land platform from Bau and Lundu assets.",
+        expectedOutcome: "Cooperative Land Development MVP scope and partnership structure clarified.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Meeting completed with Tuan Judah; assets identified include 100+ member lots (60x60), 20-30 additional sites, Bau and Lundu; linked to EGM Asia decision.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, COO, CSO, CRO"
+      },
+      {
+        id: "LEXA-032",
+        organisation: "EGM Holding",
+        cluster: "Construction",
+        keyPersons: "Faizal",
+        status: "Meeting Due",
+        nextAction: "Complete RM50,000 proposal under preparation and confirm pending meeting with Faizal.",
+        expectedOutcome: "EGM Holding meeting secured and RM50,000 proposal delivered.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Meeting pending; RM50,000 proposal under preparation; housing/property collaboration continues; contact Faizal.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, CTO, COO, CSO"
+      },
+      {
+        id: "LEXA-034",
+        organisation: "AMCORP",
+        cluster: "Corporate",
+        keyPersons: "IR. Kaharuddin, Khairudin, Demi, Sharifah",
+        status: "Waiting Reply",
+        nextAction: "Coordinate through Khairudin (approved to represent) while AMCORP travels; progress Datuk Kasim land response.",
+        expectedOutcome: "AMCORP collaboration maintained via Khairudin; Datuk Kasim land advanced.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "AMCORP travelling and unable to attend 23 July MFICORD; approved Khairudin to represent; positive response to Datuk Kasim land.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, CSO, CMO"
+      },
+      {
+        id: "LEXA-035",
+        organisation: "Kenyalang Catering",
+        cluster: "Catering",
+        keyPersons: "Nettie, Haji Faizal",
+        status: "Running",
+        nextAction: "Follow up Haji Faizal; continue launch preparation with Nettie.",
+        expectedOutcome: "Catering launch preparation moves into operational readiness.",
+        priority: 4,
+        opportunity: "Medium",
+        lastEngagement: "Catering cluster progress: Kenyalang Catering to Nettie to Haji Faizal to launch preparation.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, COO, CMO"
+      },
+      {
+        id: "LEXA-036",
+        organisation: "UNIMAS",
+        cluster: "University",
+        keyPersons: "Prof. Halikul",
+        status: "Waiting Reply",
+        nextAction: "Await Prof. Halikul report; continue MOU, Innovation Centre and Engineering collaboration.",
+        expectedOutcome: "MOU and university collaboration pathway clarified.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Waiting report from Prof. Halikul; MOU discussion, Innovation Centre, Engineering collaboration and potential part-time lecturer under discussion.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CTO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-037",
+        organisation: "UNIMAS - Prof. Linda",
+        cluster: "University",
+        keyPersons: "Prof. Linda",
+        status: "Active",
+        nextAction: "Continue innovation collaboration with Prof. Linda and map possible programme or research output.",
+        expectedOutcome: "Innovation collaboration pathway defined.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Innovation collaboration ongoing.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CTO, CSO, CMO"
+      },
+      {
+        id: "LEXA-038",
+        organisation: "ICL - Institute of Contemporary Leadership",
+        cluster: "Education",
+        keyPersons: "Prof. Dayang Afizah, President",
+        status: "Waiting Reply",
+        nextAction: "Await Prof. Dayang Afizah feedback on Executive Launch Gimmick Proposal; prepare 16 August Premier Launch implementation.",
+        expectedOutcome: "ICL Premier Launch implementation pathway confirmed and Industry Advisor role strengthened.",
+        priority: 5,
+        opportunity: "High",
+        lastEngagement: "Industry Advisor role active; Executive Launch Gimmick Proposal WhatsApped to Prof. Dayang Afizah, awaiting response; supporting Premier Launch on 16 August.",
+        nextFollowUp: "2026-08-16",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CTO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-039",
+        organisation: "CENTEXS",
+        cluster: "Ecosystem",
+        keyPersons: "",
+        status: "Active",
+        nextAction: "Develop concepts for Central Kitchen Hub and Gedong Initiative.",
+        expectedOutcome: "CENTEXS concept note ready for executive discussion.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Concept development started for Central Kitchen Hub and Gedong Initiative.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-040",
+        organisation: "CelcomDigi Vendor",
+        cluster: "Corporate",
+        keyPersons: "Azip",
+        status: "Running",
+        nextAction: "Continue vendor onboarding with Azip and track vendor registration progress.",
+        expectedOutcome: "Vendor onboarding advances to next approval stage.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Vendor registration initiated; Azip engaged; vendor onboarding continues.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, COO, CMO"
+      },
+      {
+        id: "LEXA-042",
+        organisation: "School Development",
+        cluster: "Community",
+        keyPersons: "SDO, Pejabat Agama, Ustaz Amadi",
+        status: "Active",
+        nextAction: "Frame school kitchen / repair works scope with SDO, Pejabat Agama, and Ustaz Amadi.",
+        expectedOutcome: "School development scope and proposal route clarified.",
+        priority: 4,
+        opportunity: "Medium",
+        lastEngagement: "Meeting completed with SDO, Pejabat Agama, and Ustaz Amadi; school kitchen / repair works discussed.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, COO, CSO, CRO, CMO"
+      },
+      {
+        id: "LEXA-051",
+        organisation: "Tourism",
+        cluster: "Tourism",
+        keyPersons: "Ministry of Tourism, Amir Hamzah",
+        status: "Active",
+        nextAction: "Keep Ministry of Tourism engagement warm; align Kenyalang Tourism ecosystem with digital initiatives.",
+        expectedOutcome: "Strategic collaboration and Kenyalang Tourism ecosystem pathway clarified.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Kenyalang Tourism ecosystem remains a strategic opportunity; continue executive engagement with Ministry of Tourism.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-052",
+        organisation: "CIDB",
+        cluster: "Government",
+        keyPersons: "Shikin",
+        status: "Proposal Due",
+        nextAction: "Send executive email to Shikin and prepare Skill Techpreneur proposal for reopened CIDB opportunity.",
+        expectedOutcome: "CIDB Skill Techpreneur discussion reopens into formal SP3B and meeting.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 5,
+        lastEngagement: "Opportunity reopened via Shikin; next actions are executive email and Skill Techpreneur proposal.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-053",
+        organisation: "Oil & Gas AI Strategy",
+        cluster: "Corporate",
+        keyPersons: "Plumbing company partner",
+        status: "Waiting Reply",
+        nextAction: "Follow up on proposed collaboration package for AI strategy support to growing Oil & Gas company.",
+        expectedOutcome: "AI transformation, digital solutions and long-term strategic partnership opportunity clarified.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "New strategic partnership formed during Miri programme; invited to support AI strategy for a growing Oil & Gas company.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CTO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-054",
+        organisation: "Bintulu Port",
+        cluster: "Corporate",
+        keyPersons: "Datuk Roslan",
+        status: "Relationship Building",
+        nextAction: "Follow up directly with Datuk Roslan; continue sponsor relationship after UKAS.",
+        expectedOutcome: "Bintulu Port remains warm for future programme sponsorship and partnership.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Official UKAS High Tea sponsor; staff contacted; direct follow-up with Datuk Roslan pending.",
+        nextFollowUp: "2026-07-24",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, CSO, CMO"
+      },
+      {
+        id: "LEXA-055",
+        organisation: "KOHOS Cooperative Expansion",
+        cluster: "Cooperative",
+        keyPersons: "KIM Berhad, Koperasi Pusaka, Koperasi Masjid Al-Baid, Koperasi Baitulmal, KOPAKASA, Koperasi Bau",
+        status: "New Opportunity",
+        nextAction: "Open LEXA records for target cooperatives and prepare 10-cooperative KOHOS rollout strategy.",
+        expectedOutcome: "KOHOS becomes a KOBIS signature digital product scaled to 10 cooperatives.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 8,
+        lastEngagement: "KOHOS designated a KOBIS signature digital product; priority pipeline includes six named cooperatives.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CTO, COO, CSO, CMO"
+      },
+      {
+        id: "LEXA-056",
+        organisation: "KAHAL",
+        cluster: "Construction",
+        keyPersons: "Khairudin, Datuk Kasim",
+        status: "Proposal Due",
+        nextAction: "Call Khairudin, confirm additional information, arrange meeting with Datuk Kasim and prepare SP3B for Datuk Kasim Land.",
+        expectedOutcome: "Datuk Kasim Land (RM7.8 million) partnership advances to proposal and meeting.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 9,
+        lastEngagement: "Datuk Kasim Land project valued at RM7.8 million; interest expressed; Khairudin confirmed to represent KAHAL at 23 July MFICORD.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, CFO, COO, CSO"
+      },
+      {
+        id: "LEXA-057",
+        organisation: "Rampangi",
+        cluster: "Government",
+        keyPersons: "Mizi",
+        status: "Active",
+        nextAction: "Continue Rampangi discussion with Mizi during 23 July MFICORD meeting.",
+        expectedOutcome: "Rampangi agro project pathway clarified.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Discussion continues with Mizi; carried into the MFICORD meeting agenda.",
+        nextFollowUp: "2026-07-23",
+        drive: "",
+        gmail: "",
+        azugai: "CIO, COO, CSO"
+      },
+      {
+        id: "LEXA-058",
+        organisation: "Army Penrissen",
+        cluster: "Government",
+        keyPersons: "Syafiq",
+        status: "Active",
+        nextAction: "Continue engagement following completed communication.",
+        expectedOutcome: "Army Penrissen agro opportunity kept warm.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Communication completed; Syafiq to represent at 23 July MFICORD; continue engagement.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "COO, CSO"
+      },
+      {
+        id: "LEXA-059",
+        organisation: "EGM Asia",
+        cluster: "Corporate",
+        keyPersons: "",
+        status: "Waiting Reply",
+        nextAction: "Await EGM Asia decision; if approved, proceed with Koperasi Bau.",
+        expectedOutcome: "EGM Asia decision unlocks Koperasi Bau progression.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Awaiting decision; approval would trigger Koperasi Bau collaboration.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CFO, COO, CSO"
+      },
+      {
+        id: "LEXA-060",
+        organisation: "YWS",
+        cluster: "Government",
+        keyPersons: "Datuk Seri Karim",
+        status: "Active",
+        nextAction: "Explore collaboration following completed meeting with Datuk Seri Karim.",
+        expectedOutcome: "YWS collaboration direction defined.",
+        priority: 4,
+        opportunity: "High",
+        lastEngagement: "Meeting completed with Datuk Seri Karim; explore collaboration.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-061",
+        organisation: "OKSHE",
+        cluster: "Government",
+        keyPersons: "Datuk Sabariah",
+        status: "New Opportunity",
+        nextAction: "Open LEXA engagement with Datuk Sabariah for new collaboration.",
+        expectedOutcome: "OKSHE collaboration opportunity opened.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New collaboration opened with Datuk Sabariah.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-062",
+        organisation: "Syed Ashraf",
+        cluster: "Industry Partner",
+        keyPersons: "Syed Ashraf",
+        status: "Active",
+        nextAction: "Create WhatsApp working group following completed phone discussion.",
+        expectedOutcome: "Working group established for collaboration.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Phone discussion completed; next step is a WhatsApp working group.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-063",
+        organisation: "MTCP",
+        cluster: "Government",
+        keyPersons: "Mohd Shidi, Yusfida",
+        status: "Meeting Due",
+        nextAction: "Prepare for 4 August Permanent Secretary meeting; deliver Hari Sarawak appreciation.",
+        expectedOutcome: "MTCP Permanent Secretary meeting advances strategic engagement.",
+        priority: 5,
+        opportunity: "High",
+        currentRank: 10,
+        lastEngagement: "Permanent Secretary meeting set for 4 August (Mohd Shidi, Yusfida); Hari Sarawak appreciation planned.",
+        nextFollowUp: "2026-08-04",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO, CMO"
+      },
+      {
+        id: "LEXA-064",
+        organisation: "JWKS",
+        cluster: "Government",
+        keyPersons: "Netti",
+        status: "New Opportunity",
+        nextAction: "Develop new opportunity with coordinator Netti.",
+        expectedOutcome: "JWKS opportunity scoped.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New opportunity; coordinator Netti engaged.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO"
+      },
+      {
+        id: "LEXA-065",
+        organisation: "RATC",
+        cluster: "Association",
+        keyPersons: "",
+        status: "Meeting Due",
+        nextAction: "Attend scheduled Zoom meeting on Thursday afternoon.",
+        expectedOutcome: "RATC collaboration direction clarified.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Zoom meeting scheduled for Thursday afternoon.",
+        nextFollowUp: "2026-07-23",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-066",
+        organisation: "MySED",
+        cluster: "Government",
+        keyPersons: "Melanie",
+        status: "New Opportunity",
+        nextAction: "Arrange courtesy visit with Melanie.",
+        expectedOutcome: "MySED courtesy visit scheduled.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New LEXA; contact Melanie; arrange courtesy visit.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-067",
+        organisation: "MEITD",
+        cluster: "Government",
+        keyPersons: "Donald",
+        status: "New Opportunity",
+        nextAction: "Develop relationship with Donald.",
+        expectedOutcome: "MEITD relationship established.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New LEXA; relationship development with Donald.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-068",
+        organisation: "Resident Office Kuching",
+        cluster: "Government",
+        keyPersons: "",
+        status: "New Opportunity",
+        nextAction: "Plan Hari Sarawak courtesy visit.",
+        expectedOutcome: "Resident Office engagement opened.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New LEXA; Hari Sarawak engagement; courtesy visit planned.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-069",
+        organisation: "Samarahan Municipal Council",
+        cluster: "Government",
+        keyPersons: "",
+        status: "New Opportunity",
+        nextAction: "Plan courtesy visit and build relationship.",
+        expectedOutcome: "Samarahan Municipal Council relationship opened.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "New LEXA; relationship building; courtesy visit planned.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, CMO"
+      },
+      {
+        id: "LEXA-070",
+        organisation: "DOA",
+        cluster: "Government",
+        keyPersons: "Petrus",
+        status: "Waiting Reply",
+        nextAction: "Await response following communication to Petrus.",
+        expectedOutcome: "DOA engagement confirmed.",
+        priority: 3,
+        opportunity: "Medium",
+        lastEngagement: "Communication sent to Petrus; awaiting response.",
+        nextFollowUp: "",
+        drive: "",
+        gmail: "",
+        azugai: "CSO, COO"
+      }
+    ];
+
+    let lexas = loadLexas();
+
+    const elements = {
+      search: document.getElementById("search"),
+      clusterFilter: document.getElementById("clusterFilter"),
+      statusFilter: document.getElementById("statusFilter"),
+      priorityFilter: document.getElementById("priorityFilter"),
+      azugaiFilter: document.getElementById("azugaiFilter"),
+      rows: document.getElementById("lexaRows"),
+      empty: document.getElementById("emptyState"),
+      visibleCount: document.getElementById("visibleCount"),
+      topFive: document.getElementById("topFive"),
+      todayBuckets: document.getElementById("todayBuckets"),
+      activitySummary: document.getElementById("activitySummary"),
+      priorityBoard: document.getElementById("priorityBoard"),
+      decisionQueue: document.getElementById("decisionQueue"),
+      communicationAudit: document.getElementById("communicationAudit"),
+      proposalBuilder: document.getElementById("proposalBuilder"),
+      waitingList: document.getElementById("waitingList"),
+      eventList: document.getElementById("eventList"),
+      form: document.getElementById("lexaForm")
+    };
+
+    function loadLexas() {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : seedLexas;
+    }
+
+    function saveLexas() {
+      localStorage.setItem(storageKey, JSON.stringify(lexas));
+      if (typeof syncPush === "function") syncPush();
+    }
+
+    function populateSelect(select, values) {
+      select.innerHTML = values.map(value => `<option>${value}</option>`).join("");
+    }
+
+    function refreshFilters() {
+      const clusters = ["All", ...new Set(lexas.map(lexa => lexa.cluster).filter(Boolean).sort())];
+      populateSelect(elements.clusterFilter, clusters);
+      populateSelect(elements.statusFilter, statuses);
+      populateSelect(elements.priorityFilter, priorities);
+      populateSelect(elements.azugaiFilter, azugaiOptions);
+    }
+
+    function normalizeStatus(status) {
+      return String(status || "").replace(/\s/g, "");
+    }
+
+    function lexaScore(lexa) {
+      let score = Number(lexa.priority || 0) * 10;
+      if (lexa.currentRank) score += Math.max(0, 200 - Number(lexa.currentRank) * 10);
+      const text = `${lexa.status} ${lexa.nextAction} ${lexa.expectedOutcome} ${lexa.lastEngagement}`.toLowerCase();
+      if (text.includes("meeting")) score += 10;
+      if (text.includes("proposal") || text.includes("sp3b")) score += 9;
+      if (text.includes("call") || text.includes("whatsapp")) score += 7;
+      if (text.includes("email")) score += 5;
+      if (text.includes("sponsor") || text.includes("rm") || text.includes("revenue")) score += 8;
+      if (text.includes("breakthrough") || text.includes("completed") || text.includes("submitted")) score += 6;
+      if (lexa.opportunity === "High") score += 8;
+      if (lexa.nextFollowUp) {
+        const days = daysUntil(lexa.nextFollowUp);
+        if (days <= 0) score += 12;
+        else if (days <= 3) score += 9;
+        else if (days <= 7) score += 5;
+      }
+      return score;
+    }
+
+    function daysUntil(value) {
+      const today = startOfDay(new Date());
+      const target = startOfDay(new Date(value));
+      return Math.ceil((target - today) / 86400000);
+    }
+
+    function startOfDay(date) {
+      const copy = new Date(date);
+      copy.setHours(0, 0, 0, 0);
+      return copy;
+    }
+
+    function getFilteredLexas() {
+      const query = elements.search.value.trim().toLowerCase();
+      return lexas.filter(lexa => {
+        const text = Object.values(lexa).join(" ").toLowerCase();
+        return (!query || text.includes(query))
+          && (elements.clusterFilter.value === "All" || lexa.cluster === elements.clusterFilter.value)
+          && (elements.statusFilter.value === "All" || lexa.status === elements.statusFilter.value)
+          && (elements.priorityFilter.value === "All" || String(lexa.priority) === elements.priorityFilter.value)
+          && (elements.azugaiFilter.value === "All" || String(lexa.azugai || "").includes(elements.azugaiFilter.value));
+      });
+    }
+
+    function getTopFive() {
+      return [...lexas]
+        .sort((a, b) => {
+          if (a.currentRank && b.currentRank) return Number(a.currentRank) - Number(b.currentRank);
+          if (a.currentRank) return -1;
+          if (b.currentRank) return 1;
+          if (a.queueRank && b.queueRank) return Number(a.queueRank) - Number(b.queueRank);
+          if (a.queueRank) return -1;
+          if (b.queueRank) return 1;
+          return lexaScore(b) - lexaScore(a);
+        })
+        .slice(0, 10);
+    }
+
+    function renderTopFive() {
+      const top = getTopFive();
+      elements.topFive.innerHTML = top.map((lexa, index) => `
+        <article class="lexa-card">
+          <div class="rank">#${index + 1}<br>${escapeHtml(lexa.id.replace("LEXA-", "L"))}</div>
+          <div>
+            <h3>${escapeHtml(lexa.organisation)}</h3>
+            <div class="muted">${escapeHtml(lexa.cluster)} | ${escapeHtml(lexa.status)} | ${priorityLabel(lexa.priority)}</div>
+            <div>${escapeHtml(focusReason(lexa))}</div>
+            <div class="one-action">${escapeHtml(oneAction(lexa))}</div>
+            <div class="card-meta">
+              <span class="chip">${escapeHtml(founderDecision(lexa))}</span>
+              <span class="chip">Score ${opportunityScore(lexa)}/10</span>
+              <span class="chip">${escapeHtml(activeBrains(lexa).join(" + "))}</span>
+            </div>
+            <div class="muted">${escapeHtml(evidenceNeeded(lexa))}</div>
+          </div>
+          <div class="score">${lexaScore(lexa)} pts</div>
+        </article>
+      `).join("");
+    }
+
+    function focusReason(lexa) {
+      const reasons = [];
+      if (Number(lexa.priority) >= 5) reasons.push("critical priority");
+      if (lexa.opportunity === "High") reasons.push("high opportunity");
+      if (/meeting/i.test(`${lexa.status} ${lexa.nextAction}`)) reasons.push("meeting movement");
+      if (/proposal|sp3b/i.test(lexa.nextAction)) reasons.push("proposal due");
+      if (/sponsor|rm/i.test(lexa.lastEngagement || "")) reasons.push("sponsor value");
+      return `Why: ${reasons.slice(0, 3).join(", ") || "relationship needs movement"}.`;
+    }
+
+    function activeBrains(lexa) {
+      const listed = String(lexa.azugai || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+      if (listed.length) return listed;
+      return inferBrains(lexa);
+    }
+
+    function inferBrains(lexa) {
+      const text = `${lexa.organisation} ${lexa.cluster} ${lexa.nextAction} ${lexa.expectedOutcome} ${lexa.lastEngagement}`.toLowerCase();
+      const brains = new Set(["CSO"]);
+      if (/investment|fund|bank|rm|revenue|commercial|buyer|energy|aqua|agro|rice/i.test(text)) brains.add("CIO");
+      if (/budget|cash|payment|sponsor|finance|bank|vendor|rm/i.test(text)) brains.add("CFO");
+      if (/ai|portal|web|dashboard|digital|platform|iot|traceability/i.test(text)) brains.add("CTO");
+      if (/programme|execution|materials|outreach|finale|registration|coordinate/i.test(text)) brains.add("COO");
+      if (/risk|legal|compliance|government|ministry|bank/i.test(text)) brains.add("CRO");
+      if (/proposal|profile|message|whatsapp|email|invite|community|brand/i.test(text)) brains.add("CMO");
+      return [...brains];
+    }
+
+    function opportunityScore(lexa) {
+      let score = 5;
+      if (Number(lexa.priority) >= 5) score += 2;
+      else if (Number(lexa.priority) >= 4) score += 1;
+      if (lexa.opportunity === "High") score += 1;
+      if (/government|bank|corporate|recoda|sponsor|rm|pilot|project|programme/i.test(`${lexa.cluster} ${lexa.lastEngagement} ${lexa.expectedOutcome}`)) score += 1;
+      if (/proposal|sp3b|meeting|vendor|materials/i.test(lexa.nextAction)) score += 1;
+      if (/monitor|waiting/i.test(lexa.status)) score -= 1;
+      return Math.max(1, Math.min(10, score));
+    }
+
+    function founderDecision(lexa) {
+      const score = opportunityScore(lexa);
+      const text = `${lexa.status} ${lexa.nextAction} ${lexa.expectedOutcome}`.toLowerCase();
+      if (score >= 9 && /meeting|running|programme|pilot|project/i.test(text)) return "Option A: Proceed";
+      if (score >= 7) return "Option B: Proceed with Conditions";
+      if (score >= 5) return "Option C: Hold";
+      return "Option D: Decline";
+    }
+
+    function evidenceNeeded(lexa) {
+      const text = `${lexa.nextAction} ${lexa.expectedOutcome} ${lexa.lastEngagement}`.toLowerCase();
+      if (/proposal|sp3b|investment|project|aqua|agro|energy|rice/i.test(text)) {
+        return "Evidence needed: partner role, funding logic, risk notes, execution owner.";
+      }
+      if (/vendor|registration|bank|sponsor/i.test(text)) {
+        return "Evidence needed: registration status, decision owner, follow-up proof.";
+      }
+      if (/meeting|call|whatsapp|email/i.test(text)) {
+        return "Evidence needed: clear ask, safe-to-say-yes message, next meeting objective.";
+      }
+      return "Evidence needed: confirmed status, proposed next step, owner.";
+    }
+
+    function oneAction(lexa) {
+      const first = String(lexa.nextAction || "").split(";").map(item => item.trim()).filter(Boolean)[0];
+      return `Before noon: ${first || "confirm the next executive action"}`;
+    }
+
+    function renderBuckets() {
+      const calls = lexas.filter(lexa => /call/i.test(lexa.nextAction));
+      const emails = lexas.filter(lexa => /email/i.test(lexa.nextAction));
+      const proposals = lexas.filter(lexa => /proposal|sp3b|profile|materials/i.test(lexa.nextAction));
+      const meetings = lexas.filter(lexa => /meeting|visit|finale|programme/i.test(`${lexa.status} ${lexa.nextAction} ${lexa.lastEngagement}`));
+      const waiting = lexas.filter(lexa => /waiting|monitor/i.test(lexa.status));
+      const azugai = lexas.filter(lexa => Number(lexa.priority) >= 4 || lexa.opportunity === "High");
+      const buckets = [
+        ["Meetings", meetings.length],
+        ["Calls", calls.length],
+        ["Emails", emails.length],
+        ["Waiting reply", waiting.length],
+        ["Proposal due", proposals.length],
+        ["AZUGAI7 review required", azugai.length]
+      ];
+      elements.todayBuckets.innerHTML = buckets.map(([label, count]) => `
+        <li><strong>${label}</strong><div class="muted">${count} item${count === 1 ? "" : "s"}</div></li>
+      `).join("");
+    }
+
+    function renderActivitySummary() {
+      const items = [
+        ["ACIS health", activitySummary.score],
+        ["Executive meetings", activitySummary.meetings],
+        ["Relationship touchpoints", activitySummary.touchpoints],
+        ["SP3B completed", activitySummary.sp3bCompleted],
+        ["SP3B queue", activitySummary.sp3bQueue],
+        ["Executive reflection", activitySummary.conversionNote]
+      ];
+      elements.activitySummary.innerHTML = items.map(([label, value]) => `
+        <li><strong>${escapeHtml(label)}</strong><div class="muted">${escapeHtml(value)}</div></li>
+      `).join("");
+    }
+
+    function renderPriorityBoard() {
+      elements.priorityBoard.innerHTML = priorityBoard.map(([label, value]) => `
+        <li><strong>${escapeHtml(label)}</strong><div class="muted">${escapeHtml(value)}</div></li>
+      `).join("");
+    }
+
+    function renderDecisionQueue() {
+      const items = getTopFive().map(lexa => `
+        <li>
+          <strong>${escapeHtml(lexa.organisation)}</strong>
+          <div class="muted">${escapeHtml(founderDecision(lexa))} | score ${opportunityScore(lexa)}/10</div>
+          <div class="muted">${escapeHtml(activeBrains(lexa).join(", "))}</div>
+        </li>
+      `);
+      elements.decisionQueue.innerHTML = items.join("");
+    }
+
+    function renderCommunicationAudit() {
+      const top = getTopFive()[0];
+      const target = top ? top.organisation : "today's top LEXA";
+      const rules = [
+        `Position KOBIS as ecosystem integrator for ${target}, not a low-level vendor.`,
+        "Separate confirmed, proposed, under discussion, and subject-to-agreement items.",
+        "Sell outcomes, governance, confidence, ESG value, and practical phased execution.",
+        "Make the next WhatsApp, email, proposal, or call safe for the stakeholder to say yes.",
+        "Current Proposal Factory order: AMCORP first, DBKU second, SNDB third; STIDC, SEDC Energy, SEA, and GISS stay in the next queue."
+      ];
+      elements.communicationAudit.innerHTML = rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("");
+    }
+
+    function renderProposalBuilder() {
+      const serious = lexas
+        .filter(lexa => Number(lexa.priority) >= 4 || /proposal|sp3b|investment|project|programme/i.test(lexa.nextAction))
+        .length;
+      const readiness = [
+        `${serious} serious opportunities need board-level treatment.`,
+        `${scoreDimensions.length}-dimension scorecard ready: strategic fit, commercial, finance, AI, ESG, risk, scalability and impact.`,
+        `${standardDeliverables.length} standard deliverables: summary, AZUGAI7 review, SWOT, 100-day plan, 3-year roadmap, commercial model, Founder recommendation.`,
+        "For RM1M-RM100M proposals: prepare Volume 1 investment memo and Volume 2 due-diligence annex."
+      ];
+      elements.proposalBuilder.innerHTML = readiness.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+
+    function renderTable() {
+      const filtered = getFilteredLexas();
+      elements.rows.innerHTML = filtered.map(lexa => `
+        <tr>
+          <td>${escapeHtml(lexa.id)}</td>
+          <td class="title-cell">${escapeHtml(lexa.organisation)}<div class="muted">${escapeHtml(lexa.lastEngagement || "")}</div></td>
+          <td>${escapeHtml(lexa.cluster)}</td>
+          <td>${escapeHtml(lexa.keyPersons || "-")}</td>
+          <td><span class="pill priority-${lexa.priority}">${priorityLabel(lexa.priority)}</span></td>
+          <td><span class="pill status-${normalizeStatus(lexa.status)}">${escapeHtml(lexa.status)}</span></td>
+          <td>${escapeHtml(lexa.nextAction || "-")}</td>
+          <td>${escapeHtml(lexa.expectedOutcome || "-")}</td>
+          <td>${escapeHtml(lexa.opportunity || "-")}</td>
+          <td>${escapeHtml(founderDecision(lexa))}</td>
+          <td>${opportunityScore(lexa)}/10</td>
+          <td>${escapeHtml(lexa.azugai || "-")}</td>
+          <td>${escapeHtml(lexa.nextFollowUp || "-")}</td>
+          <td class="row-actions">
+            <button type="button" class="mini-btn edit" data-edit="${escapeHtml(lexa.id)}">Fix</button>
+            <button type="button" class="mini-btn del" data-del="${escapeHtml(lexa.id)}">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+      elements.empty.hidden = filtered.length > 0;
+      elements.visibleCount.textContent = `${filtered.length} shown`;
+    }
+
+    function renderMetrics() {
+      document.getElementById("metricTotal").textContent = lexas.length;
+      document.getElementById("metricTopPriority").textContent = lexas.filter(lexa => Number(lexa.priority) >= 5).length;
+      document.getElementById("metricCalls").textContent = lexas.filter(lexa => /call/i.test(lexa.nextAction)).length;
+      document.getElementById("metricEmails").textContent = lexas.filter(lexa => /email/i.test(lexa.nextAction)).length;
+      document.getElementById("metricProposals").textContent = lexas.filter(lexa => /proposal|sp3b|profile|materials/i.test(lexa.nextAction)).length;
+      document.getElementById("metricAzugai").textContent = lexas.filter(lexa => Number(lexa.priority) >= 4 || opportunityScore(lexa) >= 8).length;
+    }
+
+    function renderSideLists() {
+      const waiting = lexas.filter(lexa => /waiting|monitor/i.test(lexa.status)).slice(0, 6);
+      const events = lexas
+        .filter(lexa => lexa.nextFollowUp || /14-16 July|24 July|Wednesday|4PM/i.test(`${lexa.nextAction} ${lexa.lastEngagement}`))
+        .slice(0, 6);
+      elements.waitingList.innerHTML = waiting.length ? waiting.map(lexa => `
+        <li><strong>${escapeHtml(lexa.organisation)}</strong><div class="muted">${escapeHtml(oneAction(lexa).replace("Before noon: ", ""))}</div></li>
+      `).join("") : `<li class="muted">No waiting items recorded.</li>`;
+      elements.eventList.innerHTML = events.length ? events.map(lexa => `
+        <li><strong>${escapeHtml(lexa.organisation)}</strong><div class="muted">${escapeHtml(lexa.nextFollowUp || lexa.nextAction)}</div></li>
+      `).join("") : `<li class="muted">No upcoming events recorded.</li>`;
+    }
+
+    function priorityLabel(priority) {
+      const labels = {
+        5: "5 Critical",
+        4: "4 High",
+        3: "3 Normal",
+        2: "2 Watch",
+        1: "1 Low"
+      };
+      return labels[priority] || `${priority}`;
+    }
+
+    function nextId() {
+      const max = lexas.reduce((highest, lexa) => {
+        const number = Number(String(lexa.id).replace("LEXA-", ""));
+        return Number.isFinite(number) ? Math.max(highest, number) : highest;
+      }, 0);
+      return `LEXA-${String(max + 1).padStart(3, "0")}`;
+    }
+
+    function exportCsv() {
+      const header = "ID,Organisation,Cluster,Key Persons,Priority,Status,Next Action,Expected Outcome,Opportunity,Founder Decision,Score,Last Engagement,Next Follow-up,Drive,Gmail,AZUGAI7,Evidence Needed";
+      const csv = [header, ...lexas.map(lexaToCsvRow)].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `acis-eid-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function lexaToCsvRow(lexa) {
+      return [
+        lexa.id,
+        lexa.organisation,
+        lexa.cluster,
+        lexa.keyPersons,
+        priorityLabel(lexa.priority),
+        lexa.status,
+        lexa.nextAction,
+        lexa.expectedOutcome,
+        lexa.opportunity,
+        founderDecision(lexa),
+        `${opportunityScore(lexa)}/10`,
+        lexa.lastEngagement,
+        lexa.nextFollowUp,
+        lexa.drive,
+        lexa.gmail,
+        lexa.azugai,
+        evidenceNeeded(lexa)
+      ].map(value => `"${String(value || "").replace(/"/g, '""')}"`).join(",");
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function render() {
+      refreshFilters();
+      renderTopFive();
+      renderBuckets();
+      renderActivitySummary();
+      renderPriorityBoard();
+      renderDecisionQueue();
+      renderCommunicationAudit();
+      renderProposalBuilder();
+      renderTable();
+      renderMetrics();
+      renderSideLists();
+    }
+
+    let editingId = null;
+
+    function setStatusSelect(value) {
+      const sel = document.getElementById("status");
+      const has = [...sel.options].some(o => o.value === value || o.text === value);
+      if (!has && value) sel.add(new Option(value, value));
+      sel.value = value;
+    }
+
+    function exitEditMode() {
+      editingId = null;
+      document.getElementById("formTitle").textContent = "Add LEXA";
+      document.getElementById("submitBtn").textContent = "Add LEXA";
+      elements.form.reset();
+    }
+
+    function startEdit(id) {
+      const lexa = lexas.find(l => l.id === id);
+      if (!lexa) return;
+      editingId = id;
+      document.getElementById("organisation").value = lexa.organisation || "";
+      document.getElementById("cluster").value = lexa.cluster || "";
+      document.getElementById("keyPersons").value = lexa.keyPersons || "";
+      setStatusSelect(lexa.status || "Active");
+      document.getElementById("nextAction").value = lexa.nextAction || "";
+      document.getElementById("expectedOutcome").value = lexa.expectedOutcome || "";
+      document.getElementById("priority").value = String(lexa.priority || 3);
+      document.getElementById("opportunity").value = lexa.opportunity || "Medium";
+      document.getElementById("followUp").value = lexa.nextFollowUp || "";
+      document.getElementById("azugaiReview").value = lexa.azugai || "";
+      document.getElementById("formTitle").textContent = `Fix ${lexa.id} - ${lexa.organisation}`;
+      document.getElementById("submitBtn").textContent = "Update LEXA";
+      elements.form.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.getElementById("organisation").focus();
+    }
+
+    function deleteLexa(id) {
+      const lexa = lexas.find(l => l.id === id);
+      if (!lexa) return;
+      if (!confirm(`Delete ${lexa.id} - ${lexa.organisation}? This cannot be undone.`)) return;
+      lexas = lexas.filter(l => l.id !== id);
+      if (editingId === id) exitEditMode();
+      saveLexas();
+      render();
+    }
+
+    elements.form.addEventListener("submit", event => {
+      event.preventDefault();
+      const values = {
+        organisation: document.getElementById("organisation").value.trim(),
+        cluster: document.getElementById("cluster").value.trim(),
+        keyPersons: document.getElementById("keyPersons").value.trim(),
+        status: document.getElementById("status").value,
+        nextAction: document.getElementById("nextAction").value.trim(),
+        expectedOutcome: document.getElementById("expectedOutcome").value.trim(),
+        priority: Number(document.getElementById("priority").value),
+        opportunity: document.getElementById("opportunity").value,
+        nextFollowUp: document.getElementById("followUp").value,
+        azugai: document.getElementById("azugaiReview").value.trim()
+      };
+      if (editingId) {
+        const existing = lexas.find(l => l.id === editingId);
+        if (existing) Object.assign(existing, values);
+        exitEditMode();
+      } else {
+        lexas.unshift({ id: nextId(), lastEngagement: "", drive: "", gmail: "", ...values });
+        elements.form.reset();
+      }
+      saveLexas();
+      render();
+    });
+
+    elements.rows.addEventListener("click", event => {
+      const editBtn = event.target.closest("[data-edit]");
+      const delBtn = event.target.closest("[data-del]");
+      if (editBtn) startEdit(editBtn.getAttribute("data-edit"));
+      else if (delBtn) deleteLexa(delBtn.getAttribute("data-del"));
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", exitEditMode);
+    document.getElementById("exportBtn").addEventListener("click", exportCsv);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("Reset the LEXA database back to the latest published data? Your local edits on this browser will be cleared.")) return;
+      lexas = JSON.parse(JSON.stringify(seedLexas));
+      exitEditMode();
+      saveLexas();
+      render();
+    });
+    [elements.search, elements.clusterFilter, elements.statusFilter, elements.priorityFilter, elements.azugaiFilter]
+      .forEach(element => element.addEventListener("input", renderTable));
+
+    document.getElementById("todayStamp").textContent = new Date().toLocaleDateString(undefined, {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+    render();
+
+    // ---- Cross-device sync (Netlify Blobs via /api/data) ----
+    // Progressive enhancement: if the backend is present, all devices share
+    // one dataset. If not, the dashboard runs exactly as before (this browser).
+    const SYNC_URL = "/api/data?key=lexa";
+    const SYNC_HEADERS = { "content-type": "application/json", "x-zk": "zk30-sync-9f3a2c" };
+    const syncBadge = document.getElementById("syncBadge");
+    let syncMode = false;
+    let pushTimer = null;
+
+    function setSyncBadge(state) {
+      if (!syncBadge) return;
+      if (state === "synced") { syncBadge.textContent = "● Synced across your devices"; syncBadge.style.color = "#177245"; }
+      else if (state === "saving") { syncBadge.textContent = "● Saving to cloud..."; syncBadge.style.color = "#946200"; }
+      else { syncBadge.textContent = "● This device only (cloud sync not connected)"; syncBadge.style.color = "#64707d"; }
+    }
+
+    async function syncPushNow() {
+      if (!syncMode) return;
+      setSyncBadge("saving");
+      try {
+        await fetch(SYNC_URL, { method: "POST", headers: SYNC_HEADERS, body: JSON.stringify({ data: lexas }) });
+        setSyncBadge("synced");
+      } catch (e) { setSyncBadge("synced"); }
+    }
+
+    function syncPush() {
+      if (!syncMode) return;
+      clearTimeout(pushTimer);
+      pushTimer = setTimeout(syncPushNow, 700);
+    }
+
+    async function syncPull() {
+      try {
+        const res = await fetch(SYNC_URL, { headers: SYNC_HEADERS });
+        if (!res.ok) { setSyncBadge("local"); return; }
+        const json = await res.json();
+        syncMode = true;
+        if (Array.isArray(json.data) && json.data.length) {
+          lexas = json.data;
+          localStorage.setItem(storageKey, JSON.stringify(lexas));
+          render();
+          setSyncBadge("synced");
+        } else {
+          // Server empty: seed it once from this device's data.
+          await syncPushNow();
+        }
+      } catch (e) {
+        setSyncBadge("local");
+      }
+    }
+
+    syncPull();
+  </script>
+</body>
+</html>
+

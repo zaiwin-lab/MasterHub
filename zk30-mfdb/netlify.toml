@@ -1,0 +1,23 @@
+# ZK30 MFDB Command Centre - Netlify configuration
+# Static site + one serverless function backed by Netlify Blobs
+# for cross-device data sync.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# API route -> data function (declared first so the SPA fallback below
+# can never shadow it).
+[[redirects]]
+  from = "/api/data"
+  to = "/.netlify/functions/data"
+  status = 200
+
+# Friendly clean-URL fallback so unknown routes land on the Overview.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
