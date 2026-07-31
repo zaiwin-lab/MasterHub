@@ -38,6 +38,13 @@ Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude
 | `/pricing` | Pricing strategy |
 | `/content-strategy` | Content planning |
 
+### recruiting (MVP-Socmed-Outreach)
+Lives in the `MVP-Socmed-Outreach` repo — load that project to use it.
+
+| Skill | Purpose |
+|-------|---------|
+| `/scout` | Source & triage hires from public LinkedIn profiles |
+
 ## Skill Routing
 When user request matches a skill, invoke it via the Skill tool.
 
@@ -49,6 +56,7 @@ When user request matches a skill, invoke it via the Skill tool.
 - Conversion → `/cro`
 - Security → `/cso`
 - Deploy/ship → `/ship`
+- Hiring/sourcing/candidate screening → `/scout`
 
 ## Session Rules
 1. Always load master-hub + one project repo
