@@ -14,13 +14,27 @@ is **not touched by any step here**.
 Steps 2–6 are scripted. With both credentials in the environment:
 
 ```bash
-export CLOUDFLARE_API_TOKEN=...   # Zone:Read, DNS:Edit, Email Routing:Edit
+export CLOUDFLARE_API_TOKEN=...
 export BREVO_API_KEY=xkeysib-...
 
 ./setup-mail.py --dry-run   # show the plan, write nothing
 ./setup-mail.py             # do it
 ./check-email-dns.sh        # verify
 ```
+
+Cloudflare token scope — **Create Custom Token**, not a global key:
+
+| Scope | Permission | Resource |
+|---|---|---|
+| Zone | Zone → **Read** | Specific zone → `kobisbhd.com` |
+| Zone | DNS → **Edit** | Specific zone → `kobisbhd.com` |
+| Zone | Email Routing Rules → **Edit** | Specific zone → `kobisbhd.com` |
+| Account | Email Routing Addresses → **Edit** | the KOBIS account *(optional)* |
+
+The account-level row is only needed to add a new forwarding destination.
+`zaiwin@gmail.com` is already verified, so without it the script warns and
+carries on. Restricting the zone resource to `kobisbhd.com` means the token
+cannot touch `kobisberhad.com` or any other zone.
 
 It enables Email Routing, writes the MX records, adds the destination and
 the four rules, registers the domain in Brevo, writes the ownership code /
