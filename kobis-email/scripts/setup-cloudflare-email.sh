@@ -33,6 +33,22 @@ cf() {
   curl "${args[@]}"
 }
 
+# Like cf(), but aborts if the API reports failure. Use for every write —
+# a bare cf() call piped to /dev/null will silently swallow an auth error
+# and let the script report success it never achieved.
+cfw() {
+  local out; out=$(cf "$@")
+  if ! printf '%s' "$out" | node -e '
+    let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+      let j; try { j=JSON.parse(s) } catch(e) { process.exit(1) }
+      process.exit(j.success === true ? 0 : 1);
+    })'; then
+    echo "FAILED: $1 $2" >&2
+    printf '%s\n' "$out" | head -c 400 >&2; echo >&2
+    return 1
+  fi
+}
+
 # jq is not guaranteed to be present; use node for JSON parsing.
 jget() { node -e '
   let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
@@ -71,8 +87,16 @@ ENABLED=$(printf '%s' "$ROUTING" | jget "result.enabled" || echo "")
 if [[ "$ENABLED" == "true" ]]; then
   echo "already enabled — skipping"
 else
-  cf POST "/zones/$ZONE_ID/email/routing/enable" '{}' >/dev/null
-  echo "enabled"
+  if cfw POST "/zones/$ZONE_ID/email/routing/enable" '{}'; then
+    echo "enabled"
+  else
+    echo
+    echo "  Could not enable Email Routing with this token." >&2
+    echo "  Rules and DNS may still be writable, but WITHOUT the MX records" >&2
+    echo "  that enabling adds, mail to @$ZONE_NAME will keep bouncing." >&2
+    echo "  Enable it once in the dashboard, then re-run this script." >&2
+    exit 1
+  fi
 fi
 
 step "Registering destination address $DESTINATION"
@@ -80,8 +104,8 @@ EXISTING=$(cf GET "/accounts/$ACCOUNT_ID/email/routing/addresses?per_page=50")
 if printf '%s' "$EXISTING" | grep -q "\"$DESTINATION\""; then
   echo "already registered"
 else
-  cf POST "/accounts/$ACCOUNT_ID/email/routing/addresses" \
-     "{\"email\":\"$DESTINATION\"}" >/dev/null
+  cfw POST "/accounts/$ACCOUNT_ID/email/routing/addresses" \
+      "{\"email\":\"$DESTINATION\"}" || exit 1
   echo "created"
 fi
 
@@ -110,7 +134,7 @@ for name in "${ADDRESSES[@]}"; do
     echo "  $addr — rule exists, skipping"
     continue
   fi
-  cf POST "/zones/$ZONE_ID/email/routing/rules" "$(cat <<JSON
+  cfw POST "/zones/$ZONE_ID/email/routing/rules" "$(cat <<JSON
 {
   "name": "$name",
   "enabled": true,
@@ -118,7 +142,7 @@ for name in "${ADDRESSES[@]}"; do
   "actions":  [{"type":"forward","value":["$DESTINATION"]}]
 }
 JSON
-)" >/dev/null
+)" || exit 1
   echo "  $addr -> $DESTINATION"
 done
 

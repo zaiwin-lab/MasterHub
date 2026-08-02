@@ -112,6 +112,17 @@ the internet sees, not what a control panel claims.
 
 DNS changes need a few minutes to propagate; Brevo verification can take longer.
 
+## Why the split: Cloudflare receives, Brevo sends
+
+Cloudflare Email Routing is **inbound only** — it forwards mail to a verified
+destination, it does not send on your behalf. Cloudflare's separate Email
+Sending product is explicitly **transactional only** (signups, password resets,
+receipts); marketing and bulk campaigns are not permitted on it.
+
+So the CIDB outreach must go through Brevo. That is what makes the merged SPF
+record above load-bearing: the domain has two independent mail systems attached
+to it, and a single SPF record has to authorise both.
+
 ## Before the CIDB campaign
 
 Do not send 300 emails from a domain registered today — that is the single
