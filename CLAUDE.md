@@ -3,7 +3,41 @@
 ## Core Identity
 This is the master hub. Load this alongside every project session.
 
+## Session Bootstrap (do this first)
+`.claude/hooks/session-start.sh` installs gstack + marketing into `~/.claude/skills/`.
+It only fires automatically when **this repo is the project root**. In Claude Code on
+the web with more than one repo loaded, the project root is the *parent* directory, so
+`MasterHub/.claude/settings.json` is never read and the hook never runs — gstack and the
+marketing skills are silently absent.
+
+So at the start of any session, if `/browse` or `/office-hours` are not in the skill list:
+
+```bash
+bash MasterHub/.claude/hooks/session-start.sh
+```
+
+It is idempotent (~40s on a cold container, instant if already installed). Add `--force`
+to re-clone from upstream. `impeccable` is committed in this repo and loads natively —
+it never needs the hook.
+
 ## Skills Available
+
+### impeccable (UX/UI) — vendored in this repo
+`.claude/skills/impeccable/` — frontend design, UX review, and visual polish.
+Loads natively from the repo; no install step.
+
+Invoke as `/impeccable <sub-command> <target>`:
+
+| Sub-commands | Purpose |
+|--------------|---------|
+| `craft` · `shape` | Build new UI / restructure information architecture |
+| `audit` · `critique` | UX + visual critique, anti-pattern detection |
+| `animate` · `bolder` · `colorize` · `delight` · `layout` · `overdrive` · `quieter` · `typeset` | Turn the visual dial — motion, colour, type, layout, intensity |
+| `adapt` · `clarify` · `distill` | Responsive/theming, UX copy, cut cognitive load |
+| `harden` · `onboard` · `optimize` · `polish` | Accessibility & edge cases, first-run, performance, final pass |
+| `init` · `document` · `extract` · `live` | Set up PRODUCT.md/DESIGN.md, document, pull out tokens, live browser iteration |
+
+### gstack (AI Engineering)
 
 ### gstack (AI Engineering)
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools directly.
