@@ -9,6 +9,37 @@ is **not touched by any step here**.
 
 ---
 
+## 0. Automated path
+
+Steps 2–6 are scripted. With both credentials in the environment:
+
+```bash
+export CLOUDFLARE_API_TOKEN=...   # Zone:Read, DNS:Edit, Email Routing:Edit
+export BREVO_API_KEY=xkeysib-...
+
+./setup-mail.py --dry-run   # show the plan, write nothing
+./setup-mail.py             # do it
+./check-email-dns.sh        # verify
+```
+
+It enables Email Routing, writes the MX records, adds the destination and
+the four rules, registers the domain in Brevo, writes the ownership code /
+DKIM / DMARC into Cloudflare using whatever selector Brevo returns, merges
+SPF into a single record, and polls Brevo to verify. Re-running is safe —
+every step checks for the existing object first and nothing is deleted.
+
+**The Brevo API key alone is not enough.** Every remaining write is a
+Cloudflare DNS change; Brevo's API can only tell you *which* records are
+wanted. Without a Cloudflare token the script stops at the zone lookup.
+
+Two things stay manual either way: clicking Cloudflare's destination
+confirmation link in Gmail (step 2), and Gmail send-as (step 7).
+
+The rest of this document is the same work done by hand, and the reference
+for why each step is ordered the way it is.
+
+---
+
 ## 1. Verified current state
 
 Checked live via DNS-over-HTTPS:
@@ -20,7 +51,7 @@ Checked live via DNS-over-HTTPS:
 | CNAME `www` | `kobisbhd.netlify.app` | site is up ✅ |
 | **MX** | **none** | inbound mail is dead ❌ |
 | **TXT `@`** | **none** | no SPF, no Brevo ownership code ❌ |
-| **TXT `brevo._domainkey`** | **none** | Brevo cannot sign as this domain ❌ |
+| **TXT `mail._domainkey`** | **none** | Brevo cannot sign as this domain ❌ |
 | **TXT `_dmarc`** | **none** | no alignment policy ❌ |
 
 This confirms the two failures:
@@ -57,25 +88,31 @@ Then send a test to each of the four addresses and confirm all four land in
 
 ---
 
-## 3. Merge SPF into a single record ⚠️
+## 3. Keep SPF to a single record ⚠️
 
-**This is the step that silently ruins deliverability.** Cloudflare adds:
+Cloudflare adds:
 
 ```
 v=spf1 include:_spf.mx.cloudflare.net ~all
 ```
 
-Brevo will later ask for `include:spf.brevo.com`. A domain may publish
-**exactly one** SPF record — two TXT records both starting `v=spf1` is a
-`permerror`, and receivers treat a permerror as *no* SPF at all. Every CIDB
-outreach mail then lands in spam, and nothing in either dashboard reports a
-problem.
+Brevo's default setup does **not** need an SPF include — it sends with its
+own Return-Path, so SPF aligns on Brevo's domain and DKIM does the work for
+`kobisbhd.com`. Only add `include:spf.brevo.com` if you later configure a
+custom Return-Path.
 
-Do not add a second record. **Edit the existing one** to:
+If you do add it — or if any other tool asks for an include — **edit the
+existing record**, never add a second one:
 
 ```
 v=spf1 include:_spf.mx.cloudflare.net include:spf.brevo.com ~all
 ```
+
+A domain may publish **exactly one** SPF record. Two TXT records both
+starting `v=spf1` is a `permerror`, and receivers treat a permerror as *no*
+SPF at all. Every CIDB outreach mail then lands in spam, and neither
+dashboard reports a problem. `setup-mail.py` merges rather than appends for
+exactly this reason.
 
 Keep `~all` (softfail) during warm-up; move to `-all` only after a clean
 send history.
@@ -93,15 +130,20 @@ KOBIS runbook, they are per-domain:
 
 | Type | Name in Cloudflare | Value |
 |---|---|---|
-| TXT | `brevo-code` | the `brevo-code:…` string Brevo shows |
-| TXT | `brevo._domainkey` | the `k=rsa; p=…` public key Brevo shows |
+| TXT | `@` (the root) | the `brevo-code:…` string Brevo shows |
+| TXT | `mail._domainkey` | the `k=rsa; p=…` public key Brevo shows |
 | TXT | `_dmarc` | start at `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com` |
+
+**Use the selector Brevo actually shows you.** Current accounts get
+`mail._domainkey`; older ones get `brevo._domainkey`. Don't assume — read it
+off the screen. `setup-mail.py` takes it from the API response, and
+`check-email-dns.sh` probes both.
 
 Cloudflare gotchas:
 
-- Cloudflare **auto-appends the zone**. Enter `brevo._domainkey`, not
-  `brevo._domainkey.kobisbhd.com` — the latter silently becomes
-  `brevo._domainkey.kobisbhd.com.kobisbhd.com` and never verifies.
+- Cloudflare **auto-appends the zone**. Enter `mail._domainkey`, not
+  `mail._domainkey.kobisbhd.com` — the latter silently becomes
+  `mail._domainkey.kobisbhd.com.kobisbhd.com` and never verifies.
 - The DKIM key is long and Cloudflare's field trims nothing. Paste as one
   line, no added spaces or line breaks inside `p=`.
 - Leave DMARC at `p=none` until Brevo reports authenticated sends. Setting
@@ -186,7 +228,8 @@ Set it as the default reply address for outreach threads.
 ```
 
 All eight checks pass = DNS side is complete. It flags the double-SPF case
-explicitly, since that is the failure mode neither dashboard surfaces.
+explicitly, since that is the failure mode neither dashboard surfaces, and
+it probes both DKIM selectors so it works whichever one Brevo issued.
 
 ---
 

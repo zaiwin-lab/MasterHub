@@ -63,13 +63,16 @@ if [ "$SPF_COUNT" -gt 1 ]; then
 elif [ -z "$SPF" ]; then
   report no "SPF" "missing"
 else
-  MISSING=""
-  echo "$SPF" | grep -qi '_spf.mx.cloudflare.net' || MISSING="$MISSING include:_spf.mx.cloudflare.net"
-  echo "$SPF" | grep -qi 'spf.brevo.com'         || MISSING="$MISSING include:spf.brevo.com"
-  if [ -z "$MISSING" ]; then
-    report ok "SPF" "single record, both includes present"
+  if echo "$SPF" | grep -qi '_spf.mx.cloudflare.net'; then
+    # include:spf.brevo.com is only required for a custom Return-Path;
+    # Brevo's default sending aligns on its own domain. Report, don't fail.
+    if echo "$SPF" | grep -qi 'spf.brevo.com'; then
+      report ok "SPF" "single record, Cloudflare + Brevo includes"
+    else
+      report ok "SPF" "single record, Cloudflare include (no Brevo include — fine by default)"
+    fi
   else
-    report no "SPF" "missing:$MISSING"
+    report no "SPF" "single record but missing include:_spf.mx.cloudflare.net"
   fi
 fi
 
@@ -80,12 +83,20 @@ else
   report no "Brevo verification code" "no brevo-code TXT on root"
 fi
 
-# 5. DKIM — Brevo signs with the brevo._domainkey selector.
-DKIM=$(query "brevo._domainkey.$DOMAIN" TXT)
-if echo "$DKIM" | grep -qi 'p='; then
-  report ok "DKIM (brevo selector)" "public key published"
+# 5. DKIM — the selector Brevo hands out varies by account (`mail._domainkey`
+#    on current accounts, `brevo._domainkey` on older ones), so probe both
+#    rather than assume one.
+DKIM_SEL=""
+for sel in mail brevo; do
+  if query "$sel._domainkey.$DOMAIN" TXT | grep -qi 'p='; then
+    DKIM_SEL="$sel"
+    break
+  fi
+done
+if [ -n "$DKIM_SEL" ]; then
+  report ok "DKIM" "public key at $DKIM_SEL._domainkey"
 else
-  report no "DKIM (brevo selector)" "missing — domain not authenticated"
+  report no "DKIM" "no key at mail._domainkey or brevo._domainkey"
 fi
 
 # 6. DMARC — start at p=none, tighten only after Brevo reports clean.
