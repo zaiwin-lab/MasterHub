@@ -1,4 +1,25 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(buzz)",
+      "Bash(buzz *)",
+      "Bash(buzz:*)",
+      "PowerShell(buzz)",
+      "PowerShell(buzz *)",
+
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(cat *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
