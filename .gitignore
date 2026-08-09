@@ -1,3 +1,11 @@
 .gstack/
 .netlify/
 .claude/worktrees/
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
