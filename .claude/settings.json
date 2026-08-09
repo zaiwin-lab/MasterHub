@@ -6,6 +6,12 @@
       "Bash(buzz:*)",
       "PowerShell(buzz)",
       "PowerShell(buzz *)",
+      "PowerShell(buzz:*)",
+
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch(domain:kaptswk.communities.buzz.xyz)",
 
       "Bash(ls *)",
       "Bash(pwd)",
@@ -15,6 +21,10 @@
       "Bash(git diff *)"
     ],
     "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
       "Bash(rm -rf *)",
       "Bash(git push --force *)",
       "Bash(git reset --hard *)"
