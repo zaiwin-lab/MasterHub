@@ -1,0 +1,806 @@
+<title>Sarawak OTA Distribution Portal — Solution Blueprint</title>
+
+<style>
+  :root {
+    --ground: #EDF0EF;
+    --surface: #F7F9F8;
+    --surface-2: #E3E8E6;
+    --ink: #111A19;
+    --ink-soft: #33403E;
+    --muted: #6B7B78;
+    --line: #CBD5D2;
+    --line-soft: #DDE4E2;
+    --accent: #0F5D5B;
+    --accent-ink: #0F5D5B;
+    --accent-soft: #DCE9E7;
+    --hot: #C8451E;
+    --hot-ink: #A63817;
+    --hot-soft: #F5E2DB;
+
+    --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Source Serif 4", Georgia, serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0B1211;
+      --surface: #131C1B;
+      --surface-2: #1C2726;
+      --ink: #E4EAE8;
+      --ink-soft: #BCC8C5;
+      --muted: #8DA09C;
+      --line: #2A3735;
+      --line-soft: #1F2B29;
+      --accent: #4FBFB3;
+      --accent-ink: #6FD0C5;
+      --accent-soft: #123330;
+      --hot: #E86A42;
+      --hot-ink: #F08A67;
+      --hot-soft: #331A11;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0B1211;
+    --surface: #131C1B;
+    --surface-2: #1C2726;
+    --ink: #E4EAE8;
+    --ink-soft: #BCC8C5;
+    --muted: #8DA09C;
+    --line: #2A3735;
+    --line-soft: #1F2B29;
+    --accent: #4FBFB3;
+    --accent-ink: #6FD0C5;
+    --accent-soft: #123330;
+    --hot: #E86A42;
+    --hot-ink: #F08A67;
+    --hot-soft: #331A11;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 1.25rem 6rem;
+  }
+
+  .doc {
+    display: grid;
+    grid-template-columns: 1fr min(66ch, 100%) 1fr;
+    row-gap: 1.15rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .doc > * { grid-column: 2; min-width: 0; }
+  .doc > .wide {
+    grid-column: 1 / -1;
+    width: min(1040px, 100%);
+    margin-inline: auto;
+  }
+
+  /* ---- masthead ---- */
+
+  .masthead {
+    padding: 4.5rem 0 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 1.25rem;
+  }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin: 0 0 1.1rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+    line-height: 1.08;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 0.9rem;
+  }
+  .standfirst {
+    font-size: 1.16rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 1.75rem;
+    text-wrap: pretty;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    font-family: var(--sans);
+    font-size: 0.775rem;
+    color: var(--muted);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .meta b {
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  /* ---- sections ---- */
+
+  section { display: contents; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.75rem 0 0.35rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-soft);
+  }
+  h2 {
+    font-size: clamp(1.5rem, 3.4vw, 1.85rem);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0 0 0.55rem;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 650;
+    letter-spacing: -0.005em;
+    margin: 1.5rem 0 0;
+    color: var(--ink);
+  }
+  p { margin: 0; text-wrap: pretty; }
+  a { color: var(--accent-ink); text-underline-offset: 2px; }
+
+  ul.bullets {
+    margin: 0.15rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--ink-soft);
+  }
+  ul.bullets li { margin-bottom: 0.3rem; }
+
+  strong { font-weight: 650; color: var(--ink); }
+
+  /* ---- quote ---- */
+
+  blockquote {
+    margin: 0.5rem 0;
+    padding: 0.1rem 0 0.1rem 1.35rem;
+    border-left: 2px solid var(--line);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  blockquote p + p { margin-top: 0.6rem; }
+
+  /* ---- callouts ---- */
+
+  .callout {
+    background: var(--hot-soft);
+    border-left: 2px solid var(--hot);
+    padding: 1.15rem 1.35rem;
+    border-radius: 2px;
+  }
+  .callout .label {
+    font-family: var(--sans);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hot-ink);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .callout p { font-size: 0.97rem; color: var(--ink-soft); }
+  .callout p + p { margin-top: 0.65rem; }
+  .callout strong { color: var(--hot-ink); }
+
+  .thesis {
+    background: var(--accent-soft);
+    border-left: 2px solid var(--accent);
+    padding: 1.35rem 1.5rem;
+    border-radius: 2px;
+    font-size: 1.09rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .thesis .label {
+    font-family: var(--sans);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ---- diagram ---- */
+
+  figure { margin: 1.25rem 0 0.5rem; }
+  .scroller { overflow-x: auto; padding-bottom: 0.35rem; }
+  .diagram {
+    display: block;
+    min-width: 700px;
+    width: 100%;
+    height: auto;
+  }
+  figcaption {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.85rem;
+    text-align: center;
+  }
+  .d-label { font-family: var(--sans); font-size: 12.5px; fill: var(--ink-soft); }
+  .d-note  { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--muted); font-weight: 600; }
+  .d-hub   { font-family: var(--sans); font-size: 13px; font-weight: 650; fill: var(--ink); letter-spacing: 0.02em; }
+  .d-hub-sub { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); }
+  .flow { fill: none; stroke-width: 1.25; }
+  .flow-in  { stroke: var(--line); }
+  .flow-out { stroke: var(--accent); opacity: 0.85; }
+  .node { fill: var(--surface); stroke: var(--line); }
+  .hub-box { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+  .dot-in  { fill: var(--muted); }
+  .dot-out { fill: var(--accent); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .flow {
+      stroke-dasharray: 420;
+      stroke-dashoffset: 420;
+      animation: draw 1.4s cubic-bezier(0.33, 0.9, 0.35, 1) forwards;
+    }
+    .flow-out { animation-delay: 0.5s; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* ---- tables ---- */
+
+  .tbl { overflow-x: auto; margin: 1.1rem 0 0.4rem; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 520px;
+    font-family: var(--sans);
+    font-size: 0.845rem;
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.6rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.62rem 0.9rem 0.62rem 0;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+  thead th {
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+  }
+  tbody th {
+    font-weight: 600;
+    color: var(--ink);
+    padding-right: 1.4rem;
+  }
+  td { color: var(--ink-soft); }
+  td:last-child, th:last-child { padding-right: 0; }
+  .pick { color: var(--accent-ink); font-weight: 650; }
+  .pick-col { background: var(--accent-soft); }
+  .pick-col:first-of-type { border-top-left-radius: 3px; }
+  code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--surface-2);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  /* ---- phases ---- */
+
+  .phases {
+    display: grid;
+    gap: 0;
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--line);
+  }
+  .phase {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 0 1.75rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .phase-id {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent-ink);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .phase-id span {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 0.3rem;
+  }
+  .phase-body h3 { margin-top: 0; font-size: 1.02rem; }
+  .phase-body p { font-size: 0.96rem; color: var(--ink-soft); margin-top: 0.4rem; }
+  .exit {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    color: var(--accent-ink);
+    margin-top: 0.7rem;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--accent);
+  }
+  @media (max-width: 640px) {
+    .phase { grid-template-columns: 1fr; gap: 0.55rem; }
+  }
+
+  /* ---- next steps ---- */
+
+  ol.steps {
+    counter-reset: s;
+    list-style: none;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+  ol.steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 1.9rem 1fr;
+    gap: 0.6rem;
+    font-size: 0.99rem;
+    color: var(--ink-soft);
+  }
+  ol.steps li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent-ink);
+    padding-top: 0.22rem;
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  footer p + p { margin-top: 0.5rem; }
+
+  :where(a, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+</style>
+
+<div class="doc">
+
+  <header class="masthead">
+    <p class="kicker">Solution Blueprint · Concept</p>
+    <h1>One portal, many listings: putting Sarawak’s tourism operators into global distribution</h1>
+    <p class="standfirst">The Cakrasoft ad shows the end state of a certified connectivity business. This is the route that gets there — starting with revenue in month two rather than certification in month eighteen.</p>
+    <ul class="meta">
+      <li><b>Product direction</b> Zaiwin Kassim, KOBIS AI Prodigy Team</li>
+      <li><b>Operator channel</b> Sarawak Entrepreneur Association</li>
+      <li><b>August 2026</b></li>
+    </ul>
+  </header>
+
+  <section>
+    <p class="eyebrow">The ask</p>
+    <h2>What was requested</h2>
+    <blockquote>
+      <p>“One web portal that can become manager to the OTA — one web portal with the robot that can register a lot of listings, helping many businesses in Sarawak, then start doing the listings for them.”</p>
+    </blockquote>
+    <p>That product is buildable, and it is the right ambition. But the path to it is not the path it looks like from the ad. Three constraints shape every decision below.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Constraints</p>
+    <h2>Read this before scoping anything</h2>
+
+    <div class="callout">
+      <span class="label">Constraint 01 — Hard legal limit</span>
+      <p><strong>The robot cannot register OTA accounts.</strong> Booking.com, Agoda, Expedia, Airbnb and Traveloka all prohibit automated account creation. Onboarding requires a verified legal entity, bank and payout details, a tax identity, and a contract signed by the owner.</p>
+      <p>A headless browser driving an extranet form is a terms-of-service breach that ends in banned accounts — and the account it burns belongs to the client, not to KOBIS. The robot never creates accounts. It prepares, validates and syncs content into accounts the operator legally owns.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label">Constraint 02 — Timeline</span>
+      <p><strong>Direct connectivity is a 6–18 month certification, not an integration.</strong> The legitimate route into Booking.com is its Connectivity Partner Programme: apply, build against the Content, Rates &amp; Availability and Reservations APIs, pass certification, commit to a minimum connected-property count, carry a support SLA. Expedia, Agoda YCS and Traveloka each run their own equivalent; Airbnb’s API is effectively closed to new partners for this use case.</p>
+      <p>So don’t build connectivity. Rent it.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label">Constraint 03 — Market</span>
+      <p><strong>Sarawak’s underserved supply is not hotels.</strong> Kuching’s hotels are already on Booking.com and Agoda — they have revenue managers and channel managers. What is missing from global distribution is the experience layer: Bako and Semenggoh day trips, Batang Ai longhouse stays, Mulu and Niah caving, Miri diving, Rajang and Baram river trips, craft and food experiences, licensed guiding and 4WD charter.</p>
+      <p>Those sell on Klook, GetYourGuide, Viator, Airbnb Experiences and Traveloka Xperience — a different distribution stack from hotel inventory, with far lower barriers.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Recommendation</p>
+    <h2>The shape of the answer</h2>
+    <div class="thesis">
+      <span class="label">Build this</span>
+      Build a managed distribution portal for Sarawak <em>experience</em> operators. Rent channel connectivity from an aggregator. Point the AI at listing production and compliance — the work that actually blocks these operators — not at form-filling.
+    </div>
+  </section>
+
+  <figure class="wide">
+    <div class="scroller">
+      <svg class="diagram" viewBox="0 0 940 420" role="img" aria-labelledby="dgm-title dgm-desc">
+        <title id="dgm-title">Sarawak distribution delta</title>
+        <desc id="dgm-desc">Six categories of Sarawak tourism supply converge into a single portal, which fans out to six online travel agency channels.</desc>
+
+        <text class="d-note" x="6" y="16">Sarawak supply · WhatsApp-only today</text>
+        <text class="d-note" x="934" y="16" text-anchor="end">Global demand</text>
+
+        <g class="d-label" text-anchor="end">
+          <text x="228" y="76">Bako &amp; Semenggoh day trips</text>
+          <text x="228" y="133">Batang Ai longhouse stays</text>
+          <text x="228" y="190">Mulu &amp; Niah caving</text>
+          <text x="228" y="247">Kuching food &amp; craft</text>
+          <text x="228" y="304">Miri diving, Baram river</text>
+          <text x="228" y="361">Transfers &amp; 4WD charter</text>
+        </g>
+
+        <g class="dot-in">
+          <circle cx="243" cy="72" r="3"/>
+          <circle cx="243" cy="129" r="3"/>
+          <circle cx="243" cy="186" r="3"/>
+          <circle cx="243" cy="243" r="3"/>
+          <circle cx="243" cy="300" r="3"/>
+          <circle cx="243" cy="357" r="3"/>
+        </g>
+
+        <g class="flow flow-in">
+          <path d="M 249 72  C 320 72,  330 214, 384 214"/>
+          <path d="M 249 129 C 320 129, 330 214, 384 214"/>
+          <path d="M 249 186 C 320 186, 330 214, 384 214"/>
+          <path d="M 249 243 C 320 243, 330 214, 384 214"/>
+          <path d="M 249 300 C 320 300, 330 214, 384 214"/>
+          <path d="M 249 357 C 320 357, 330 214, 384 214"/>
+        </g>
+
+        <rect class="hub-box" x="384" y="158" width="176" height="112" rx="4"/>
+        <text class="d-hub" x="472" y="192" text-anchor="middle">SARAWAK PORTAL</text>
+        <g class="d-hub-sub" text-anchor="middle">
+          <text x="472" y="213">intake · AI listing</text>
+          <text x="472" y="228">production · compliance</text>
+          <text x="472" y="243">approval · sync</text>
+        </g>
+
+        <g class="flow flow-out">
+          <path d="M 560 214 C 614 214, 624 72,  695 72"/>
+          <path d="M 560 214 C 614 214, 624 129, 695 129"/>
+          <path d="M 560 214 C 614 214, 624 186, 695 186"/>
+          <path d="M 560 214 C 614 214, 624 243, 695 243"/>
+          <path d="M 560 214 C 614 214, 624 300, 695 300"/>
+          <path d="M 560 214 C 614 214, 624 357, 695 357"/>
+        </g>
+
+        <g class="dot-out">
+          <circle cx="701" cy="72" r="3"/>
+          <circle cx="701" cy="129" r="3"/>
+          <circle cx="701" cy="186" r="3"/>
+          <circle cx="701" cy="243" r="3"/>
+          <circle cx="701" cy="300" r="3"/>
+          <circle cx="701" cy="357" r="3"/>
+        </g>
+
+        <g class="d-label">
+          <text x="716" y="76">Klook</text>
+          <text x="716" y="133">GetYourGuide</text>
+          <text x="716" y="190">Viator</text>
+          <text x="716" y="247">Airbnb Experiences</text>
+          <text x="716" y="304">Expedia</text>
+          <text x="716" y="361">Traveloka Xperience</text>
+        </g>
+
+        <text class="d-note" x="472" y="300" text-anchor="middle">one integration · Bókun + Klook API</text>
+      </svg>
+    </div>
+    <figcaption>Many tributaries, one trunk, many mouths. The portal is the trunk — it never owns the connectivity, only the inventory and the quality of what flows through.</figcaption>
+  </figure>
+
+  <section>
+    <p class="eyebrow">Beachhead</p>
+    <h2>Why experiences before accommodation</h2>
+    <p>Two candidate entry points. One wins on every axis that matters in the first year.</p>
+    <div class="tbl wide">
+      <table>
+        <caption>Entry-point comparison</caption>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Accommodation — the ad’s model</th>
+            <th scope="col" class="pick-col">Tours &amp; activities — recommended</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Channels</th>
+            <td>Booking, Agoda, Expedia, Traveloka, Tiket</td>
+            <td class="pick-col">Klook, GetYourGuide, Viator, Airbnb Experiences, Traveloka Xperience</td>
+          </tr>
+          <tr>
+            <th scope="row">Connectivity route</th>
+            <td>Certified channel manager, or rent via Channex.io</td>
+            <td class="pick-col">Bókun reaches Viator, GYG, Expedia and Airbnb Experiences from one integration</td>
+          </tr>
+          <tr>
+            <th scope="row">Barrier to first listing</th>
+            <td>High — legal entity, inventory sync, overbooking exposure</td>
+            <td class="pick-col">Low — self-serve supplier onboarding on most channels</td>
+          </tr>
+          <tr>
+            <th scope="row">Time to first live listing</th>
+            <td>3–6 months</td>
+            <td class="pick-col"><span class="pick">2–4 weeks</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Sarawak supply gap</th>
+            <td>Small — hotels are already distributed</td>
+            <td class="pick-col"><span class="pick">Large</span> — most operators sell only via WhatsApp and walk-in</td>
+          </tr>
+          <tr>
+            <th scope="row">Overbooking blast radius</th>
+            <td>Severe — guaranteed room, legal exposure</td>
+            <td class="pick-col">Contained — capacity per departure</td>
+          </tr>
+          <tr>
+            <th scope="row">Typical channel commission</th>
+            <td>15–18%</td>
+            <td class="pick-col">20–30%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Accommodation is not abandoned — it is Phase 2, gated on the portal, the ops muscle and the operator roster already existing.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Connectivity</p>
+    <h2>Rent the plumbing, own the layer above it</h2>
+    <p>The defensible asset is not the API plumbing. It is the operator relationships, the listing quality, and the Sarawak inventory itself. This single decision converts an eighteen-month certification project into a six-week integration.</p>
+    <div class="tbl wide">
+      <table>
+        <caption>Connectivity sourcing</caption>
+        <thead>
+          <tr>
+            <th scope="col">Layer</th>
+            <th scope="col">Choice</th>
+            <th scope="col">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Tours &amp; activities</th>
+            <td><span class="pick">Bókun</span> (Tripadvisor)</td>
+            <td>One integration reaches Viator, GetYourGuide, Expedia and Airbnb Experiences; full REST API; low base cost</td>
+          </tr>
+          <tr>
+            <th scope="row">High-value direct</th>
+            <td><span class="pick">Klook Merchant API</span></td>
+            <td>Klook dominates Malaysian and Greater China inbound — worth integrating directly, not just through an aggregator</td>
+          </tr>
+          <tr>
+            <th scope="row">Accommodation (Phase 2)</th>
+            <td><span class="pick">Channex.io</span></td>
+            <td>API-first channel manager built to be embedded — you own the interface, they hold the certifications</td>
+          </tr>
+          <tr>
+            <th scope="row">Keep warm</th>
+            <td>Rezdy, Checkfront, TicketingHub; HotelRunner or Beds24 for lodging</td>
+            <td>Fallbacks if commercial terms sour — reason enough to abstract channel logic behind an internal adapter from day one</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">The robot</p>
+    <h2>What the AI actually does</h2>
+    <p>Not a form-filler — a listing production and compliance agent. This is where AI earns its place, because it removes the real blocker: Sarawak micro-operators have superb products and no way to produce distribution-grade content in five languages.</p>
+
+    <h3>Intake</h3>
+    <p>Photos and voice notes over WhatsApp, or uploaded through the portal, in Bahasa Malaysia, English, Iban or Chinese. No forms to get started.</p>
+
+    <h3>Content generation</h3>
+    <p>Claude produces — against a per-channel JSON schema, so field limits are never exceeded — title, short and long description, highlights, inclusions and exclusions, itinerary with durations, geocoded meeting point, what to bring, accessibility notes, age and fitness requirements, cancellation policy.</p>
+
+    <h3>Translation</h3>
+    <p>English, Bahasa Malaysia, 简体中文, 日本語 and 한국어 — the languages that actually drive Sarawak inbound.</p>
+
+    <h3>Photo quality control</h3>
+    <p>Resolution and aspect-ratio checks, per-channel hero-image rules, auto-crop to each channel’s spec, EXIF strip, generated alt text. Rejected photos come back with a plain-language reason.</p>
+
+    <h3>Pricing intelligence</h3>
+    <p>The operator states their net take-home; the robot grosses up per channel so a 25% Klook commission and an 18% Booking commission both land on the same net. Rate-parity conflicts are flagged before they breach a contract.</p>
+
+    <h3>Compliance vault</h3>
+    <p>MOTAC tourism operator licence, tourist guide licences, insurance certificates, SST registration, vessel permits — collected once, reused across every channel, with expiry reminders. For most operators this alone justifies the subscription.</p>
+
+    <h3>Readiness scorecard</h3>
+    <p>One percentage per channel with the exact blocking items listed. Nothing is pushed until it scores green.</p>
+
+    <h3>Post-launch monitoring</h3>
+    <p>Content drift, availability gaps, calendar sync, review-reply drafting, and booking alerts pushed to the operator’s WhatsApp.</p>
+
+    <p style="margin-top:1.4rem"><strong>A human approves every push.</strong> The robot drafts; KOBIS ops ships.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Architecture</p>
+    <h2>How it is built</h2>
+    <p>Next.js 15 with TypeScript and Tailwind on Netlify, matching the stack already used across this hub. Supabase for Postgres, Auth, Storage and Row Level Security — the isolation boundary between operators. Inngest or Trigger.dev for sync jobs, retries with backoff and per-channel rate limiting. Claude API with structured outputs bound to per-channel schemas. WhatsApp Business Cloud API for notifications, because it is the only channel these operators reliably read.</p>
+
+    <div class="tbl wide">
+      <table>
+        <caption>Core data model</caption>
+        <thead>
+          <tr><th scope="col">Table</th><th scope="col">Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>orgs</code></th><td>Operator legal entity, MOTAC licence number, payout details</td></tr>
+          <tr><th scope="row"><code>products</code></th><td>Internal canonical product — the single source of truth</td></tr>
+          <tr><th scope="row"><code>product_variants</code></th><td>Private charter vs join-in, adult and child, guide language</td></tr>
+          <tr><th scope="row"><code>rate_plans</code> · <code>availability</code></th><td>Net rates, capacity per departure, blackout dates</td></tr>
+          <tr><th scope="row"><code>media</code></th><td>Originals plus per-channel derivatives</td></tr>
+          <tr><th scope="row"><code>documents</code></th><td>Licences, insurance, permits, with expiry dates</td></tr>
+          <tr><th scope="row"><code>channel_accounts</code></th><td>Encrypted per-operator channel credentials, held in Supabase Vault</td></tr>
+          <tr><th scope="row"><code class="pick">channel_listings</code></th><td><span class="pick">The mapping table.</span> One product to N channel listings, each with field overrides, status, last sync and last error. Every hard problem — partial failure, per-channel divergence, resync, delisting — lives here</td></tr>
+          <tr><th scope="row"><code>sync_jobs</code></th><td>Queue, retries, per-channel rate limits</td></tr>
+          <tr><th scope="row"><code>bookings</code> · <code>payouts</code></th><td>Reservation ledger and commission reconciliation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.4rem">
+      <span class="label">Security posture</span>
+      <p>Never store OTA passwords — API keys and OAuth tokens only, encrypted at rest. Listings are always created under the <strong>operator’s</strong> legal entity, with KOBIS added as an authorised user. Never under a KOBIS account: that inverts the liability and leaves operators unable to leave, which they will eventually resent.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Sequence</p>
+    <h2>Four phases, each gated on the last</h2>
+    <div class="phases wide">
+
+      <div class="phase">
+        <div class="phase-id">PHASE 0<span>Weeks 1–4</span></div>
+        <div class="phase-body">
+          <h3>Prove it by hand</h3>
+          <p>Ten operators recruited through SEA. No portal at all. Intake in a shared sheet; listings created manually by KOBIS staff as authorised agents on the operators’ own Klook, GetYourGuide and Viator accounts.</p>
+          <p class="exit">Exit: real bookings from at least three operators. If this fails, no amount of software fixes it.</p>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-id">PHASE 1<span>Months 2–4</span></div>
+        <div class="phase-body">
+          <h3>Portal and robot</h3>
+          <p>Next.js and Supabase. Onboarding wizard, AI content generation, translation, media pipeline, document vault, readiness scorecard, ops approval console. A single integration — Bókun — fanning out to Viator, GetYourGuide, Expedia and Airbnb Experiences.</p>
+          <p class="exit">Exit: 40 operators live, and a listing produced in under 30 minutes of human time.</p>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-id">PHASE 2<span>Months 5–9</span></div>
+        <div class="phase-body">
+          <h3>Direct channels and accommodation</h3>
+          <p>Klook Merchant API direct. Channex.io for homestays and boutique lodging — the ad’s model, now that the roster and the ops discipline exist. Booking engine, WhatsApp notifications, payments, commission reconciliation.</p>
+          <p class="exit">Exit: 120 operators, and positive unit economics per operator.</p>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-id">PHASE 3<span>Month 10+</span></div>
+        <div class="phase-body">
+          <h3>The Sarawak marketplace</h3>
+          <p>A consumer-facing storefront with unified availability and a package builder — Bako, then Semenggoh, then a longhouse night, sold as one basket. This is the position no OTA can replicate, because no OTA holds the whole Sarawak inventory in one place. Only here does building your own connectivity certifications start to make sense.</p>
+          <p class="exit">Exit: this is the destination, not a gate.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Economics</p>
+    <h2>How it makes money</h2>
+    <p>Most Sarawak micro-operators will not pay RM300 a month for software. Price for that reality rather than against it.</p>
+    <div class="tbl wide">
+      <table>
+        <caption>Revenue model</caption>
+        <thead>
+          <tr><th scope="col">Line</th><th scope="col">Model</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Onboarding</th><td>RM299 one-time — content production, translation, compliance vault setup</td></tr>
+          <tr><th scope="row">Subscription</th><td>RM49–99 per month, tiered by product count</td></tr>
+          <tr><th scope="row"><span class="pick">Distribution override</span></th><td><span class="pick">5–10% of OTA-originated booking value — the real engine</span></td></tr>
+          <tr><th scope="row">Grant-funded cohorts</th><td>SME Digitalisation Grant matching, MDEC, SDEC, Sarawak Tourism Board and MOTAC digitalisation programmes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The override is what makes this work. It aligns KOBIS with operator success, survives operators who cannot afford a subscription, and scales with inventory rather than headcount. Phase 0 and Phase 1 cohorts are strong grant candidates — digitalising Sarawak tourism SMEs sits squarely inside the state’s digital economy agenda, and SEA is the recruitment channel.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Risk</p>
+    <h2>What kills this, and what stops it</h2>
+    <div class="tbl wide">
+      <table>
+        <caption>Risk register</caption>
+        <thead>
+          <tr><th scope="col">Risk</th><th scope="col">Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Overbooking — the business-killer</th><td>Near-real-time availability sync, pessimistic locking, conservative capacity buffers through Phase 1</td></tr>
+          <tr><th scope="row">Rate parity breach</th><td>Differing rates across channels can void OTA contracts; the robot flags divergence before push, from a single net-rate source of truth</td></tr>
+          <tr><th scope="row">Account ownership resentment</th><td>Listings always under the operator’s entity; KOBIS is an authorised user, and offboarding hands over cleanly</td></tr>
+          <tr><th scope="row">Operator misrepresentation</th><td>Unlicensed guides and overstated capacity become KOBIS’s reputational problem — the compliance vault is mandatory and the scorecard blocks the push</td></tr>
+          <tr><th scope="row">Aggregator dependency</th><td>Abstract channel logic behind an internal adapter interface from day one; keep Rezdy and Checkfront warm</td></tr>
+          <tr><th scope="row">Chasing the ad’s model too early</th><td>Accommodation is explicitly Phase 2, gated on Phase 1 exit criteria</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Next</p>
+    <h2>Four decisions to make now</h2>
+    <ol class="steps">
+      <li>Confirm the beachhead — tours and activities first, accommodation deferred to Phase 2.</li>
+      <li>Open the Bókun account and validate its API against one real Sarawak product <em>before</em> writing any portal code.</li>
+      <li>Recruit the Phase 0 ten through SEA, weighted toward Kuching day trips and Batang Ai longhouses, which have the clearest inbound demand.</li>
+      <li>Verify every commission percentage and grant figure in this document against current channel contracts and programme terms before any of it reaches a funding submission.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Every percentage, timeline and grant amount here is a planning estimate for internal scoping, not a quoted figure. Channel commission bands and partner programme terms change and must be confirmed directly with each channel.</p>
+    <p>KOBIS Digital Launch Hub · <code>sarawak-ota-portal/SOLUTION.md</code></p>
+  </footer>
+
+</div>
