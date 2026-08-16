@@ -21,9 +21,9 @@ explaining a method to a person with nothing to attach it to. This build sells t
 first — the shift, the speed, the leak — and reveals the method on the Snapshot as the
 explanation of what just happened to them. "You have just been through MVP³."
 
-**The instrument version is unchanged (`2026.1`).** Both front doors write comparable
-responses, so the cohort stays poolable for the benchmark work later. Do not fork the
-question set — fork the framing only.
+**Both front doors run the same instrument (`2026.2`)**, so responses pool into one
+comparable cohort for the benchmark work later. Any change to the question set must be
+applied to `../app` in the same commit — fork the framing, never the instrument.
 
 ## Design system
 
