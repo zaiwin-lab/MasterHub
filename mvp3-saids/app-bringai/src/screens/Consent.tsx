@@ -18,10 +18,10 @@ export function Consent({
     setConsents({ ...consents, [k]: v, timestampIso: new Date().toISOString() });
 
   return (
-    <main className="shell" style={{ paddingBlock: '2.5rem' }}>
-      <span className="eyebrow">{t(UI.brand, lang)}</span>
-      <h1 style={{ fontSize: '1.7rem' }}>{t(UI.consentTitle, lang)}</h1>
-      <p style={{ marginTop: '.9rem', color: 'var(--ink-soft)', maxWidth: '48ch' }}>{t(UI.consentBody, lang)}</p>
+    <main className="shell shell-narrow" style={{ paddingBlock: '2.5rem' }}>
+      <span className="badge">{t(UI.brand, lang)}</span>
+      <h1 style={{ fontSize: '1.75rem', marginTop: '1rem' }}>{t(UI.consentTitle, lang)}</h1>
+      <p style={{ marginTop: '.9rem', color: 'var(--soft-d)', maxWidth: '48ch' }}>{t(UI.consentBody, lang)}</p>
 
       <div style={{ marginTop: '1.6rem' }}>
         <label className="check">
@@ -65,8 +65,8 @@ export function RespondentPick({
     { key: 'founder', label: t(UI.founder, lang), note: t(UI.founderNote, lang) },
   ];
   return (
-    <main className="shell" style={{ paddingBlock: '2.5rem' }}>
-      <span className="eyebrow">{t(UI.brand, lang)}</span>
+    <main className="shell shell-narrow" style={{ paddingBlock: '2.5rem' }}>
+      <span className="badge">{t(UI.brand, lang)}</span>
       <h1 className="qtext" style={{ marginTop: '.6rem' }}>
         {t(UI.whoAreYou, lang)}
       </h1>
@@ -76,7 +76,7 @@ export function RespondentPick({
             <span className="k">{i + 1}</span>
             <span>
               <span style={{ display: 'block' }}>{r.label}</span>
-              <span style={{ display: 'block', fontSize: '.82rem', color: 'var(--ink-mute)' }}>{r.note}</span>
+              <span style={{ display: 'block', fontSize: '.82rem', color: 'var(--mute-d)' }}>{r.note}</span>
             </span>
           </button>
         ))}

@@ -17,7 +17,10 @@ export function Review({
   onBack: () => void;
 }) {
   const qs = questionsFor(respondentType);
-  const answered = qs.filter((q) => answers[q.id] !== undefined).length;
+  const answered = qs.filter((q) => {
+    const a = answers[q.id];
+    return Array.isArray(a) ? a.length > 0 : a !== undefined;
+  }).length;
 
   return (
     <main className="shell" style={{ paddingBlock: '3rem' }}>

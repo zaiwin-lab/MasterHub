@@ -31,10 +31,10 @@ export default function MagicBox({
   };
 
   return (
-    <main className="shell" style={{ paddingBlock: '2.2rem' }}>
-      <span className="eyebrow">{t(UI.brand, lang)}</span>
-      <h1 style={{ fontSize: '1.6rem', marginTop: '.5rem' }}>{t(UI.mbTitle, lang)}</h1>
-      <p style={{ marginTop: '.7rem', color: 'var(--ink-soft)', maxWidth: '48ch' }}>{t(UI.mbBody, lang)}</p>
+    <main className="shell shell-narrow" style={{ paddingBlock: '2.2rem', paddingBottom: '6rem' }}>
+      <span className="badge">{t(UI.brand, lang)}</span>
+      <h1 style={{ fontSize: '1.7rem', marginTop: '1rem' }}>{t(UI.mbTitle, lang)}</h1>
+      <p style={{ marginTop: '.7rem', color: 'var(--soft-d)', maxWidth: '48ch' }}>{t(UI.mbBody, lang)}</p>
 
       <Field label={t(UI.mbTitle, lang)}>
         <textarea
@@ -52,7 +52,7 @@ export default function MagicBox({
 
       {assets.length > 0 && (
         <>
-          <p style={{ marginTop: '1.3rem', fontSize: '.8rem', color: 'var(--ink-mute)' }} className="mono">
+          <p style={{ marginTop: '1.3rem', fontSize: '.8rem', color: 'var(--mute-d)' }} className="mono">
             {fill(t(UI.mbFound, lang), { n: assets.length })}
           </p>
           <div className="assets">
@@ -70,7 +70,7 @@ export default function MagicBox({
         </>
       )}
 
-      <div style={{ borderTop: '1px solid var(--rule)', marginTop: '1.8rem', paddingTop: '1.2rem' }}>
+      <div style={{ borderTop: '1px solid var(--rule-d)', marginTop: '1.8rem', paddingTop: '1.2rem' }}>
         <Field label={t(UI.ctxDescription, lang)} hint={t(UI.optional, lang)}>
           <textarea
             value={context.description}

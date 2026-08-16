@@ -59,6 +59,25 @@ function mapScore(v: string | null, table: Record<string, number>): number | nul
   if (v === null) return null;
   return v in table ? table[v] : null;
 }
+/**
+ * Scores a multi-select. `mean` averages the chosen options; `worst` takes the
+ * lowest, which is right where naming more problems means a worse position —
+ * two bottlenecks is not the average of two bottlenecks, it is both of them.
+ * A sentinel ("not sure") is a string, not an array, and returns null.
+ */
+function multiScore(
+  answers: Answers,
+  id: string,
+  table: Record<string, number>,
+  mode: 'mean' | 'worst',
+): number | null {
+  const v = answers[id];
+  if (!Array.isArray(v) || v.length === 0) return null;
+  const vals = v.map((x) => table[x]).filter((n): n is number => typeof n === 'number');
+  if (!vals.length) return null;
+  return mode === 'mean' ? vals.reduce((a, b) => a + b, 0) / vals.length : Math.min(...vals);
+}
+
 /** Mean of the signals that exist. Returns null when none do. */
 function mean(parts: (number | null)[]): number | null {
   const got = parts.filter((p): p is number => p !== null);
@@ -205,19 +224,19 @@ function buildDimensions(inp: Inputs, leakRatio: number | null): DimensionScore[
   const raw: Record<string, number | null> = {
     offer_clarity: mean([
       scale(answers, 'offer_clarity'),
-      mapScore(pick(answers, 'differentiation'), DIFFERENTIATION_SCORE),
+      multiScore(answers, 'differentiation', DIFFERENTIATION_SCORE, 'mean'),
       mapScore(pick(answers, 'offer_written'), OFFER_WRITTEN_SCORE),
     ]),
     demand_signal: mean([sourceDiversity, mapScore(pick(answers, 'leads_per_month'), LEADS_SCORE)]),
     discoverability: discoverabilityScore(inp),
     delivery_capacity: mean([
-      mapScore(pick(answers, 'bottleneck'), BOTTLENECK_SCORE),
+      multiScore(answers, 'bottleneck', BOTTLENECK_SCORE, 'worst'),
       mapScore(pick(answers, 'response_time'), RESPONSE_SCORE),
     ]),
     process_readiness: mean([
       mapScore(pick(answers, 'repetitive_hours'), REPETITION_SCORE),
       mapScore(pick(answers, 'quote_days'), QUOTE_SCORE),
-      pick(answers, 'ai_blocker') === 'data' ? 30 : null,
+      picks(answers, 'ai_blocker').includes('data') ? 30 : null,
     ]),
     decision_velocity: mean([
       mapScore(pick(answers, 'decision_authority') ?? pick(answers, 'decision_authority_exec'), AUTHORITY_SCORE),
@@ -232,7 +251,7 @@ function buildDimensions(inp: Inputs, leakRatio: number | null): DimensionScore[
         : clamp(100 - leakRatio * 250),
     ai_leverage: mean([
       mapScore(pick(answers, 'ai_usage'), AI_USAGE_SCORE),
-      mapScore(pick(answers, 'ai_blocker'), AI_BLOCKER_SCORE),
+      multiScore(answers, 'ai_blocker', AI_BLOCKER_SCORE, 'worst'),
     ]),
     asset_depth: assetDepth,
   };
@@ -256,8 +275,11 @@ function evidenceFor(key: string, { answers }: Inputs, assets: DetectedAsset[]):
       break;
     }
     case 'delivery_capacity': {
-      const b = pick(answers, 'bottleneck');
-      if (b) out.push([`Self-reported bottleneck: ${b.replace(/_/g, ' ')}`, `Halangan dilaporkan sendiri: ${b.replace(/_/g, ' ')}`]);
+      const b = picks(answers, 'bottleneck');
+      if (b.length) {
+        const list = b.map((x) => x.replace(/_/g, ' ')).join(', ');
+        out.push([`Self-reported bottleneck: ${list}`, `Halangan dilaporkan sendiri: ${list}`]);
+      }
       break;
     }
     case 'ai_leverage': {
@@ -319,14 +341,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
   const leaks: Leak[] = [
     {
       code: 'L1',
-      name: ['Response Lag', 'Kelewatan Membalas'],
+      name: ['Response Lag', 'Kelewatan Membalas', '回复迟缓', 'Kelewa Nyaut'],
       amount: l1,
       kind: 'loss',
       why: [
         'Enquiries that wait get answered by somebody else first.',
         'Pertanyaan yang menunggu akan dijawab oleh orang lain dahulu.',
       ],
-      fix: ['An AI first-responder on WhatsApp', 'Pembalas pertama AI di WhatsApp'],
+      fix: ['An AI first-responder on WhatsApp', 'Pembalas pertama AI di WhatsApp', 'WhatsApp 上的 AI 首响应', 'Pembalas keterubah AI ba WhatsApp'],
       workings:
         l1 !== null && leads !== null && deal !== null && missRate !== null && pipeline !== null
           ? [
@@ -345,14 +367,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
     },
     {
       code: 'L2',
-      name: ['Manual Repetition', 'Kerja Berulang Manual'],
+      name: ['Manual Repetition', 'Kerja Berulang Manual', '重复的人工', 'Pengawa Belalauka Diri'],
       amount: l2,
       kind: 'loss',
       why: [
         'Hours a week spent moving information a machine should move.',
         'Berjam-jam seminggu memindahkan maklumat yang sepatutnya dipindahkan mesin.',
       ],
-      fix: ['Workflow automation across the repeat steps', 'Automasi aliran kerja merentas langkah berulang'],
+      fix: ['Workflow automation across the repeat steps', 'Automasi aliran kerja merentas langkah berulang', '把重复步骤自动化', 'Automasi ba langkah ti belalauka diri'],
       workings:
         l2 !== null && repHours !== null
           ? [
@@ -363,14 +385,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
     },
     {
       code: 'L3',
-      name: ['Invisible Offer', 'Tawaran Tidak Kelihatan'],
+      name: ['Invisible Offer', 'Tawaran Tidak Kelihatan', '看不见的产品', 'Tawar Ti Enda Dipeda'],
       amount: l3,
       kind: 'opportunity',
       why: [
         'Demand that is already searching, and cannot find you.',
         'Permintaan yang sudah mencari, tetapi tidak menjumpai anda.',
       ],
-      fix: ['A discoverable digital presence', 'Kehadiran digital yang boleh dijumpai'],
+      fix: ['A discoverable digital presence', 'Kehadiran digital yang boleh dijumpai', '让人搜得到的数字门面', 'Pengawa digital ti ulih ditemu'],
       workings:
         l3 !== null && pipeline !== null && discoverability !== null
           ? [
@@ -381,14 +403,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
     },
     {
       code: 'L4',
-      name: ['Quote Drag', 'Kelewatan Sebut Harga'],
+      name: ['Quote Drag', 'Kelewatan Sebut Harga', '报价拖延', 'Kelewa Sebut Rega'],
       amount: l4,
       kind: 'loss',
       why: [
         "Urgency cools while the proposal is being written.",
         'Rasa mendesak reda semasa cadangan sedang disiapkan.',
       ],
-      fix: ['An instant quote and proposal engine', 'Enjin sebut harga dan cadangan segera'],
+      fix: ['An instant quote and proposal engine', 'Enjin sebut harga dan cadangan segera', '即时报价与提案引擎', 'Enjin sebut rega enggau cadangan tekala nya'],
       workings:
         l4 !== null && pipeline !== null && decay !== null
           ? [
@@ -399,14 +421,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
     },
     {
       code: 'L5',
-      name: ['One-Head Dependency', 'Kebergantungan Satu Kepala'],
+      name: ['One-Head Dependency', 'Kebergantungan Satu Kepala', '一人依赖', 'Begantung Ba Siti Pala'],
       amount: l5,
       kind: 'loss',
       why: [
         'Work only you can do is work the business cannot scale.',
         'Kerja yang hanya anda boleh buat ialah kerja yang perniagaan tidak boleh kembangkan.',
       ],
-      fix: ['A knowledge base and assisted SOPs', 'Pangkalan pengetahuan dan SOP berbantu'],
+      fix: ['A knowledge base and assisted SOPs', 'Pangkalan pengetahuan dan SOP berbantu', '知识库与 AI 辅助的作业流程', 'Pangkalan penemu enggau SOP bebantu'],
       workings:
         l5 !== null && ownerHours !== null
           ? [
@@ -417,14 +439,14 @@ function computeLeaks(answers: Answers, discoverability: number | null): LeakRes
     },
     {
       code: 'L6',
-      name: ['Untapped Asset', 'Aset Belum Digunakan'],
+      name: ['Untapped Asset', 'Aset Belum Digunakan', '闲置的资产', 'Aset Ti Apin Dikena'],
       amount: null,
       kind: 'qualitative',
       why: [
         'Data, know-how or an audience you already own and do not sell.',
         'Data, kepakaran atau khalayak yang anda sudah miliki tetapi tidak dijual.',
       ],
-      fix: ['Your MVP³ candidate, below', 'Calon MVP³ anda, di bawah'],
+      fix: ['Your MVP³ candidate, below', 'Calon MVP³ anda, di bawah', '你的 MVP³ 机会，见下方', 'Calon MVP³ nuan, ba baruh'],
       workings: null,
     },
   ];
@@ -452,41 +474,57 @@ const BANDS = [
   {
     min: 80,
     key: 'market_ready',
-    label: ['Market-Ready', 'Sedia Pasaran'] as L,
+    label: ['Market-Ready', 'Sedia Pasaran', '已可上市', 'Sedia Ngagai Pasar'] as L,
     note: [
       "You're close. The gap is execution speed, not capability.",
       'Anda hampir sampai. Jurangnya ialah kelajuan pelaksanaan, bukan keupayaan.',
+      '你已经很接近了。差距在执行速度，不在能力。',
+      'Nuan udah semak. Jurang nya ba pengelensat ngereja, ukai ba pengelandik.',
     ] as L,
   },
   {
     min: 65,
     key: 'compounding',
-    label: ['Compounding', 'Berkembang'] as L,
-    note: ['The engine works. It is running below what it could.', 'Enjin berfungsi. Ia berjalan di bawah keupayaannya.'] as L,
+    label: ['Compounding', 'Berkembang', '正在复利', 'Benung Beganda'] as L,
+    note: [
+      'The engine works. It is running below what it could.',
+      'Enjin berfungsi. Ia berjalan di bawah keupayaannya.',
+      '引擎是好的，只是没跑到它该有的水平。',
+      'Enjin bekereja. Tang iya bejalai baruh ari ti patut.',
+    ] as L,
   },
   {
     min: 50,
     key: 'building',
-    label: ['Building', 'Sedang Membina'] as L,
+    label: ['Building', 'Sedang Membina', '打基础中', 'Benung Ngaga'] as L,
     note: [
       'Real foundations, real leaks. This is the best moment to move.',
       'Asas sebenar, kebocoran sebenar. Inilah masa terbaik untuk bergerak.',
+      '底子是真的，漏点也是真的。现在正是动手的最好时机。',
+      'Pun ti amat, pengechuchur ti amat. Tu maya ti pemadu manah kena bejalai.',
     ] as L,
   },
   {
     min: 32,
     key: 'stirring',
-    label: ['Stirring', 'Mula Bergerak'] as L,
+    label: ['Stirring', 'Mula Bergerak', '刚要动起来', 'Baru Bejalai'] as L,
     note: [
       'The potential is clear and mostly untouched.',
       'Potensinya jelas dan sebahagian besarnya belum disentuh.',
+      '潜力很清楚，而且大部分还没被碰过。',
+      'Pengelandik nya terang lalu mayuh agi apin ditinggang.',
     ] as L,
   },
   {
     min: 0,
     key: 'dormant',
-    label: ['Dormant', 'Tidur'] as L,
-    note: ['Almost everything here is still upside.', 'Hampir semua di sini masih ruang untuk naik.'] as L,
+    label: ['Dormant', 'Tidur', '尚在沉睡', 'Agi Tinduk'] as L,
+    note: [
+      'Almost everything here is still upside.',
+      'Hampir semua di sini masih ruang untuk naik.',
+      '这里几乎所有东西都还是上升空间。',
+      'Mimit aja utai ditu ti ukai agi ruang kena niki.',
+    ] as L,
   },
 ];
 
@@ -494,68 +532,68 @@ const BANDS = [
 
 const CANDIDATES: Record<string, { name: L; what: L; window: L }> = {
   packaged_knowledge: {
-    name: ['Packaged knowledge', 'Pengetahuan berpakej'],
+    name: ['Packaged knowledge', 'Pengetahuan berpakej', '把专业打包成产品', 'Penemu Bepakej'],
     what: [
       'The expertise sitting in one person’s head is your most sellable asset and the one you currently give away free. Turned into a paid product — an assisted diagnostic, a short training programme, a subscription advisory — it earns without consuming more of your time.',
       'Kepakaran dalam kepala seseorang ialah aset paling boleh dijual dan yang kini anda berikan percuma. Dijadikan produk berbayar — diagnostik berbantu, program latihan pendek, khidmat nasihat langganan — ia menjana pendapatan tanpa menggunakan lebih banyak masa anda.',
     ],
-    window: ['21–30 days', '21–30 hari'],
+    window: ['21–30 days', '21–30 hari', '21–30 天', '21–30 hari'],
   },
   reactivation_engine: {
-    name: ['Reactivation engine', 'Enjin pengaktifan semula'],
+    name: ['Reactivation engine', 'Enjin pengaktifan semula', '老客户唤醒引擎', 'Enjin Ngidupka Baru'],
     what: [
       'You already hold years of customer records. A repeatable offer sent to people who have bought before converts several times better than chasing strangers, and costs a fraction as much.',
       'Anda sudah memiliki rekod pelanggan bertahun-tahun. Tawaran berulang kepada mereka yang pernah membeli menukar beberapa kali lebih baik daripada mengejar orang baharu, dengan kos yang jauh lebih rendah.',
     ],
-    window: ['14–21 days', '14–21 hari'],
+    window: ['14–21 days', '14–21 hari', '14–21 天', '14–21 hari'],
   },
   productised_service: {
-    name: ['Productised service', 'Perkhidmatan berpakej'],
+    name: ['Productised service', 'Perkhidmatan berpakej', '服务产品化', 'Pengawa Bepakej'],
     what: [
       'You work in a way that is genuinely better than the norm. Sold as a named, fixed-scope, fixed-price package rather than as custom work, it prices on outcome instead of hours and stops every job starting from zero.',
       'Cara anda bekerja lebih baik daripada kebiasaan. Dijual sebagai pakej bernama dengan skop dan harga tetap dan bukan kerja tempahan, ia dinilai berdasarkan hasil dan bukan jam, dan setiap kerja tidak lagi bermula dari kosong.',
     ],
-    window: ['21–30 days', '21–30 hari'],
+    window: ['21–30 days', '21–30 hari', '21–30 天', '21–30 hari'],
   },
   audience_to_offer: {
-    name: ['Audience-to-offer', 'Khalayak kepada tawaran'],
+    name: ['Audience-to-offer', 'Khalayak kepada tawaran', '把关注变成生意', 'Ari Penitih Ngagai Tawar'],
     what: [
       'You already own attention — a following, a list, a library of material. What is missing is a clear path from that attention to something someone can buy today.',
       'Anda sudah memiliki perhatian — pengikut, senarai, atau bahan sedia ada. Yang tiada ialah laluan jelas daripada perhatian itu kepada sesuatu yang boleh dibeli hari ini.',
     ],
-    window: ['14–21 days', '14–21 hari'],
+    window: ['14–21 days', '14–21 hari', '14–21 天', '14–21 hari'],
   },
   capacity_as_a_service: {
-    name: ['Capacity-as-a-service', 'Kapasiti sebagai perkhidmatan'],
+    name: ['Capacity-as-a-service', 'Kapasiti sebagai perkhidmatan', '闲置产能变服务', 'Kapasiti Nyadi Pengawa'],
     what: [
       'Equipment or space with spare hours is a fixed cost you are already paying. Sold as bookable capacity, those idle hours become a second revenue line with no new investment.',
       'Peralatan atau ruang yang masih ada kapasiti ialah kos tetap yang sudah anda bayar. Dijual sebagai kapasiti boleh ditempah, jam terbiar itu menjadi sumber pendapatan kedua tanpa pelaburan baharu.',
     ],
-    window: ['21–30 days', '21–30 hari'],
+    window: ['21–30 days', '21–30 hari', '21–30 天', '21–30 hari'],
   },
   second_you: {
-    name: ['The second you', 'Diri anda yang kedua'],
+    name: ['The second you', 'Diri anda yang kedua', '第二个你', 'Diri Nuan Ti Kedua'],
     what: [
       'Everything waits for you, and that ceiling is the business. An assisted layer that answers, quotes and briefs in your voice takes the routine half of your week back without handing over judgement.',
       'Semuanya menunggu anda, dan siling itulah perniagaan ini. Lapisan berbantu yang menjawab, memberi sebut harga dan menyediakan taklimat dalam suara anda mengembalikan separuh rutin minggu anda tanpa menyerahkan pertimbangan.',
     ],
-    window: ['30 days', '30 hari'],
+    window: ['30 days', '30 hari', '30 天', '30 hari'],
   },
   findable_storefront: {
-    name: ['Findable storefront', 'Etalase yang boleh dijumpai'],
+    name: ['Findable storefront', 'Etalase yang boleh dijumpai', '搜得到的门面', 'Kedai Ti Ulih Ditemu'],
     what: [
       'People nearby are already searching for exactly what you sell, and the search does not return you. A properly claimed listing and a page that answers the buying question is the cheapest revenue in this report.',
       'Orang berdekatan sudah mencari apa yang anda jual, dan carian itu tidak memaparkan anda. Penyenaraian yang dituntut dengan betul dan halaman yang menjawab soalan pembelian ialah hasil termurah dalam laporan ini.',
     ],
-    window: ['7–14 days', '7–14 hari'],
+    window: ['7–14 days', '7–14 hari', '7–14 天', '7–14 hari'],
   },
   first_responder: {
-    name: ['First responder', 'Pembalas pertama'],
+    name: ['First responder', 'Pembalas pertama', '首响应助手', 'Pembalas Keterubah'],
     what: [
       'An always-on front door that answers every enquiry in under a minute, qualifies it, and hands you only the ones worth your time. It is the single change that moves the most money in the shortest time.',
       'Pintu depan sentiasa terbuka yang menjawab setiap pertanyaan dalam masa seminit, menapisnya, dan menyerahkan kepada anda hanya yang berbaloi. Ia perubahan tunggal yang menggerakkan paling banyak wang dalam masa terpendek.',
     ],
-    window: ['14 days', '14 hari'],
+    window: ['14 days', '14 hari', '14 天', '14 hari'],
   },
 };
 
@@ -563,7 +601,7 @@ function chooseCandidate(answers: Answers): string {
   const dormant = picks(answers, 'dormant_assets');
   const aiUsage = pick(answers, 'ai_usage');
   const leads = pick(answers, 'leads_per_month');
-  const bottleneck = pick(answers, 'bottleneck');
+  const bottleneck = picks(answers, 'bottleneck');
   const ownerHours = pick(answers, 'owner_only_hours');
   const industry = pick(answers, 'industry');
   const presence = picks(answers, 'digital_presence');
@@ -577,7 +615,7 @@ function chooseCandidate(answers: Answers): string {
   if (dormant.includes('process')) return 'productised_service';
   if (dormant.includes('audience') || dormant.includes('content')) return 'audience_to_offer';
   if (dormant.includes('equipment')) return 'capacity_as_a_service';
-  if (bottleneck === 'owner' && heavyOwner) return 'second_you';
+  if (bottleneck.includes('owner') && heavyOwner) return 'second_you';
   if ((industry === 'fnb' || industry === 'retail') && !presence.includes('gbp')) return 'findable_storefront';
   return 'first_responder';
 }
@@ -650,7 +688,7 @@ function firstSeven(answers: Answers, topLeak: Leak | undefined): { action: L; w
 function nextMoves(candidateName: L, topLeak: Leak | undefined): { horizon: L; action: L }[] {
   return [
     {
-      horizon: ['Next 30 days', '30 hari akan datang'],
+      horizon: ['Next 30 days', '30 hari akan datang', '接下来 30 天', '30 hari ti datai'],
       action: topLeak
         ? [
             `Stop the ${topLeak.name[0]} leak first — it is the largest single number in this report, and the fix is the fastest to build.`,
@@ -662,7 +700,7 @@ function nextMoves(candidateName: L, topLeak: Leak | undefined): { horizon: L; a
           ],
     },
     {
-      horizon: ['Next 90 days', '90 hari akan datang'],
+      horizon: ['Next 90 days', '90 hari akan datang', '接下来 90 天', '90 hari ti datai'],
       action: [
         `Take "${candidateName[0]}" to market as a real, priced offer — not a plan for one.`,
         `Bawa "${candidateName[1]}" ke pasaran sebagai tawaran sebenar berharga — bukan sekadar rancangan.`,
@@ -704,6 +742,7 @@ export function buildSnapshot(
     const v = answers[q.id];
     if (v === undefined) return false;
     if (v === NOT_SURE || v === DECLINED) return false;
+    if (Array.isArray(v) && v.length === 0) return false;
     return true;
   }).length;
   const coverage = answerable ? answered / answerable : 0;

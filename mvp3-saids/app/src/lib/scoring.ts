@@ -59,6 +59,25 @@ function mapScore(v: string | null, table: Record<string, number>): number | nul
   if (v === null) return null;
   return v in table ? table[v] : null;
 }
+/**
+ * Scores a multi-select. `mean` averages the chosen options; `worst` takes the
+ * lowest, which is right where naming more problems means a worse position —
+ * two bottlenecks is not the average of two bottlenecks, it is both of them.
+ * A sentinel ("not sure") is a string, not an array, and returns null.
+ */
+function multiScore(
+  answers: Answers,
+  id: string,
+  table: Record<string, number>,
+  mode: 'mean' | 'worst',
+): number | null {
+  const v = answers[id];
+  if (!Array.isArray(v) || v.length === 0) return null;
+  const vals = v.map((x) => table[x]).filter((n): n is number => typeof n === 'number');
+  if (!vals.length) return null;
+  return mode === 'mean' ? vals.reduce((a, b) => a + b, 0) / vals.length : Math.min(...vals);
+}
+
 /** Mean of the signals that exist. Returns null when none do. */
 function mean(parts: (number | null)[]): number | null {
   const got = parts.filter((p): p is number => p !== null);
@@ -205,19 +224,19 @@ function buildDimensions(inp: Inputs, leakRatio: number | null): DimensionScore[
   const raw: Record<string, number | null> = {
     offer_clarity: mean([
       scale(answers, 'offer_clarity'),
-      mapScore(pick(answers, 'differentiation'), DIFFERENTIATION_SCORE),
+      multiScore(answers, 'differentiation', DIFFERENTIATION_SCORE, 'mean'),
       mapScore(pick(answers, 'offer_written'), OFFER_WRITTEN_SCORE),
     ]),
     demand_signal: mean([sourceDiversity, mapScore(pick(answers, 'leads_per_month'), LEADS_SCORE)]),
     discoverability: discoverabilityScore(inp),
     delivery_capacity: mean([
-      mapScore(pick(answers, 'bottleneck'), BOTTLENECK_SCORE),
+      multiScore(answers, 'bottleneck', BOTTLENECK_SCORE, 'worst'),
       mapScore(pick(answers, 'response_time'), RESPONSE_SCORE),
     ]),
     process_readiness: mean([
       mapScore(pick(answers, 'repetitive_hours'), REPETITION_SCORE),
       mapScore(pick(answers, 'quote_days'), QUOTE_SCORE),
-      pick(answers, 'ai_blocker') === 'data' ? 30 : null,
+      picks(answers, 'ai_blocker').includes('data') ? 30 : null,
     ]),
     decision_velocity: mean([
       mapScore(pick(answers, 'decision_authority') ?? pick(answers, 'decision_authority_exec'), AUTHORITY_SCORE),
@@ -232,7 +251,7 @@ function buildDimensions(inp: Inputs, leakRatio: number | null): DimensionScore[
         : clamp(100 - leakRatio * 250),
     ai_leverage: mean([
       mapScore(pick(answers, 'ai_usage'), AI_USAGE_SCORE),
-      mapScore(pick(answers, 'ai_blocker'), AI_BLOCKER_SCORE),
+      multiScore(answers, 'ai_blocker', AI_BLOCKER_SCORE, 'worst'),
     ]),
     asset_depth: assetDepth,
   };
@@ -256,8 +275,11 @@ function evidenceFor(key: string, { answers }: Inputs, assets: DetectedAsset[]):
       break;
     }
     case 'delivery_capacity': {
-      const b = pick(answers, 'bottleneck');
-      if (b) out.push([`Self-reported bottleneck: ${b.replace(/_/g, ' ')}`, `Halangan dilaporkan sendiri: ${b.replace(/_/g, ' ')}`]);
+      const b = picks(answers, 'bottleneck');
+      if (b.length) {
+        const list = b.map((x) => x.replace(/_/g, ' ')).join(', ');
+        out.push([`Self-reported bottleneck: ${list}`, `Halangan dilaporkan sendiri: ${list}`]);
+      }
       break;
     }
     case 'ai_leverage': {
@@ -563,7 +585,7 @@ function chooseCandidate(answers: Answers): string {
   const dormant = picks(answers, 'dormant_assets');
   const aiUsage = pick(answers, 'ai_usage');
   const leads = pick(answers, 'leads_per_month');
-  const bottleneck = pick(answers, 'bottleneck');
+  const bottleneck = picks(answers, 'bottleneck');
   const ownerHours = pick(answers, 'owner_only_hours');
   const industry = pick(answers, 'industry');
   const presence = picks(answers, 'digital_presence');
@@ -577,7 +599,7 @@ function chooseCandidate(answers: Answers): string {
   if (dormant.includes('process')) return 'productised_service';
   if (dormant.includes('audience') || dormant.includes('content')) return 'audience_to_offer';
   if (dormant.includes('equipment')) return 'capacity_as_a_service';
-  if (bottleneck === 'owner' && heavyOwner) return 'second_you';
+  if (bottleneck.includes('owner') && heavyOwner) return 'second_you';
   if ((industry === 'fnb' || industry === 'retail') && !presence.includes('gbp')) return 'findable_storefront';
   return 'first_responder';
 }
@@ -704,6 +726,7 @@ export function buildSnapshot(
     const v = answers[q.id];
     if (v === undefined) return false;
     if (v === NOT_SURE || v === DECLINED) return false;
+    if (Array.isArray(v) && v.length === 0) return false;
     return true;
   }).length;
   const coverage = answerable ? answered / answerable : 0;

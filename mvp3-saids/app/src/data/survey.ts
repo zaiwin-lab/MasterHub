@@ -2,7 +2,7 @@ import type { L, Option, Question, SectionId } from '../types';
 
 /** Instrument version. Bump on any change to question wording, options or order —
  *  the cohort is only comparable within a version. */
-export const INSTRUMENT_VERSION = '2026.1';
+export const INSTRUMENT_VERSION = '2026.2';
 export const CONSENT_VERSION = '1.0';
 
 export const SECTIONS: { id: SectionId; name: L }[] = [
@@ -45,7 +45,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'headcount',
     section: 'profile',
-    type: 'segmented',
+    type: 'slider',
     text: [
       'How many people work in the business, including you?',
       'Berapa ramai bekerja dalam perniagaan ini, termasuk anda?',
@@ -61,7 +61,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'revenue_band',
     section: 'profile',
-    type: 'segmented',
+    type: 'slider',
     allowDecline: true,
     text: [
       'Roughly what does the business turn over in a year?',
@@ -99,12 +99,14 @@ export const QUESTIONS: Question[] = [
   {
     id: 'differentiation',
     section: 'offer',
-    type: 'single',
+    type: 'multi',
+    maxSelect: 2,
     allowNotSure: true,
     text: [
       'Why do customers choose you over the alternative?',
       'Mengapa pelanggan memilih anda berbanding yang lain?',
     ],
+    help: ['Pick the two that matter most.', 'Pilih dua yang paling penting.'],
     options: [
       opt('price', "We're cheaper", 'Kami lebih murah'),
       opt('speed', "We're faster", 'Kami lebih pantas'),
@@ -153,7 +155,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'leads_per_month',
     section: 'demand',
-    type: 'segmented',
+    type: 'slider',
     allowNotSure: true,
     text: [
       'How many new enquiries reach you in a typical month?',
@@ -170,7 +172,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'avg_deal_value',
     section: 'demand',
-    type: 'segmented',
+    type: 'slider',
     allowDecline: true,
     text: ["What's a typical sale or job worth?", 'Berapakah nilai jualan atau kerja biasa?'],
     note: [
@@ -206,7 +208,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'repetitive_hours',
     section: 'operations',
-    type: 'segmented',
+    type: 'slider',
     showFor: ['owner', 'executive'],
     text: [
       'Across your team, how many hours a week go into repetitive work?',
@@ -227,8 +229,10 @@ export const QUESTIONS: Question[] = [
   {
     id: 'bottleneck',
     section: 'operations',
-    type: 'single',
+    type: 'multi',
+    maxSelect: 2,
     text: ['When things slow down, where does it usually jam?', 'Bila kerja perlahan, di mana biasanya tersekat?'],
+    help: ['Pick the two worst.', 'Pilih dua yang paling teruk.'],
     options: [
       opt('sales', 'Getting enquiries in', 'Mendapatkan pertanyaan masuk'),
       opt('response', 'Replying fast enough', 'Membalas dengan cukup cepat'),
@@ -260,7 +264,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'owner_only_hours',
     section: 'operations',
-    type: 'segmented',
+    type: 'slider',
     showFor: ['owner'],
     text: [
       'How many hours a week go to work that only you can do?',
@@ -327,12 +331,14 @@ export const QUESTIONS: Question[] = [
   {
     id: 'ai_blocker',
     section: 'ai',
-    type: 'single',
+    type: 'multi',
+    maxSelect: 2,
     allowNotSure: true,
     text: [
       "What's actually stopping you from doing more with it?",
       'Apa sebenarnya yang menghalang anda daripada berbuat lebih?',
     ],
+    help: ['Pick up to two.', 'Pilih sehingga dua.'],
     options: [
       opt('dont_know_where', "I don't know where it would even apply", 'Saya tidak tahu di mana ia boleh digunakan'),
       opt('no_time', 'No time to work it out', 'Tiada masa untuk memikirkannya'),

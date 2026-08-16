@@ -40,7 +40,10 @@ const emptyContext: BusinessContext = { description: '', customers: '', proud: '
 
 function detectLang(): Lang {
   if (typeof navigator === 'undefined') return 'en';
-  return /^ms|^id/i.test(navigator.language) ? 'bm' : 'en';
+  const l = navigator.language;
+  if (/^zh/i.test(l)) return 'zh';
+  if (/^ms|^id/i.test(l)) return 'bm';
+  return 'en';
 }
 
 export const initialState = (): State => ({

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { AnswerValue, Lang, Question } from '../types';
 import { DECLINED, NOT_SURE } from '../types';
 import { LANGS, UI, fill, t } from '../i18n/dict';
@@ -14,13 +14,18 @@ export function Chrome({
   withTicker?: boolean;
 }) {
   return (
-    <header className={`chrome ${withTicker ? "" : "no-ticker"}`}>
+    <header className={`chrome ${withTicker ? '' : 'no-ticker'}`}>
       <div className="shell chrome-in">
         <div className="wordmark">
-          <i />
-          {t(UI.brand, lang)}
-          <span>{t(UI.brandShort, lang)}</span>
+          <span className="tile" aria-hidden="true">
+            AI
+          </span>
+          <span className="txt">
+            <span className="nm">{t(UI.brand, lang)}</span>
+            <span className="sb">{t(UI.brandShort, lang)}</span>
+          </span>
         </div>
+        {/* Four-language toggle — EN / BM / 中 / IB */}
         <div className="langs" role="group" aria-label="Language">
           {LANGS.map((l) => (
             <button key={l.code} aria-pressed={lang === l.code} onClick={() => setLang(l.code)}>
@@ -36,9 +41,9 @@ export function Chrome({
 export function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="shell foot">
-      <span>
-        {t(UI.footerCredit, lang).replace('KOBIS Berhad', '')}
-        <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">
+      <span className="kobis-bar">
+        {t(UI.footerCredit, lang)}{' '}
+        <a className="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">
           KOBIS Berhad
         </a>
       </span>
@@ -79,6 +84,54 @@ export function QuestionControl({
         <div className="scaleends">
           <span>{t(q.scale.minLabel, lang)}</span>
           <span>{t(q.scale.maxLabel, lang)}</span>
+        </div>
+        <Escapes q={q} value={value} onChange={onChange} lang={lang} />
+      </div>
+    );
+  }
+
+  if (q.type === 'slider' && q.options) {
+    const opts = q.options;
+    const idx = typeof value === 'string' ? opts.findIndex((o) => o.value === value) : -1;
+    const set = (n: number) => onChange(opts[n].value);
+    // Unanswered rests at the midpoint with the readout dimmed, so the control
+    // never implies an answer the respondent has not actually given.
+    const pos = idx >= 0 ? idx : Math.floor((opts.length - 1) / 2);
+    const pct = opts.length > 1 ? (pos / (opts.length - 1)) * 100 : 0;
+
+    return (
+      <div className="qbody">
+        <div className="slider" style={{ '--pos': `${pct}%` } as CSSProperties}>
+          <div className={`slider-readout ${idx < 0 ? 'idle' : ''}`}>
+            {idx >= 0 ? t(opts[pos].label, lang) : t(UI.slideToSet, lang)}
+          </div>
+          <div className="slider-track">
+            <span className="fill" />
+            <span className="thumb" />
+            <input
+              type="range"
+              min={0}
+              max={opts.length - 1}
+              step={1}
+              value={pos}
+              onChange={(e) => set(Number(e.target.value))}
+              aria-label={t(q.text, lang)}
+              aria-valuetext={idx >= 0 ? t(opts[pos].label, lang) : t(UI.slideToSet, lang)}
+            />
+          </div>
+          <div className="slider-ticks">
+            {opts.map((o, n) => (
+              <button
+                key={o.value}
+                type="button"
+                className={n === idx ? 'on' : ''}
+                aria-pressed={n === idx}
+                onClick={() => set(n)}
+              >
+                {t(o.label, lang)}
+              </button>
+            ))}
+          </div>
         </div>
         <Escapes q={q} value={value} onChange={onChange} lang={lang} />
       </div>
@@ -128,8 +181,12 @@ export function QuestionControl({
           })}
         </div>
         {q.maxSelect && (
-          <p className="qnote">{fill(t(UI.selectUpTo, lang), { n: q.maxSelect })}</p>
+          <p className="qnote">
+            {fill(t(UI.selectUpTo, lang), { n: q.maxSelect })}
+            {arr.length > 0 && ` — ${arr.length}/${cap}`}
+          </p>
         )}
+        <Escapes q={q} value={value} onChange={onChange} lang={lang} />
       </div>
     );
   }

@@ -3,6 +3,7 @@ import { useScan } from './state/store';
 import { buildSnapshot } from './lib/scoring';
 import { Chrome, Footer } from './components/ui';
 import Ticker from './components/Ticker';
+import Bubbles from './components/Bubbles';
 import Intro from './screens/Intro';
 import { Consent, RespondentPick } from './screens/Consent';
 import Survey from './screens/Survey';
@@ -14,7 +15,8 @@ export default function App() {
   const { state, patch, setAnswer, saved, resume, reset } = useScan();
 
   useEffect(() => {
-    document.documentElement.lang = state.lang === 'bm' ? 'ms' : 'en';
+    document.documentElement.lang =
+      state.lang === 'bm' ? 'ms' : state.lang === 'zh' ? 'zh' : state.lang === 'ib' ? 'iba' : 'en';
   }, [state.lang]);
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function App() {
           answers={state.answers}
           consents={state.consents}
         />
+        <Bubbles lang={state.lang} />
       </>
     );
   }
@@ -122,6 +125,7 @@ export default function App() {
       {state.screen === 'processing' && <Processing lang={state.lang} onDone={generate} />}
 
       {state.screen !== 'survey' && <Footer lang={state.lang} />}
+      <Bubbles lang={state.lang} />
     </>
   );
 }

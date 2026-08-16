@@ -91,6 +91,7 @@ export const UI = {
   notSure: ['Not sure', 'Tidak pasti'] as L,
   decline: ['Prefer not to say', 'Tidak mahu nyatakan'] as L,
   selectUpTo: ['Choose up to {n}', 'Pilih sehingga {n}'] as L,
+  slideToSet: ['Slide to set', 'Luncurkan untuk tetapkan'] as L,
   autosaved: ['Saved on this device', 'Disimpan pada peranti ini'] as L,
 
   // Magic box
@@ -244,8 +245,8 @@ export const UI = {
   emailInvalid: ['That email does not look right.', 'E-mel itu kelihatan tidak betul.'] as L,
 
   footerCredit: [
-    'This Digital Experience is Part of the KOBIS Berhad Innovation Ecosystem',
-    'Pengalaman Digital Ini Sebahagian daripada Ekosistem Inovasi KOBIS Berhad',
+    'This Digital Experience is Part of the Innovation Ecosystem by',
+    'Pengalaman Digital Ini Sebahagian daripada Ekosistem Inovasi oleh',
   ] as L,
 };
 

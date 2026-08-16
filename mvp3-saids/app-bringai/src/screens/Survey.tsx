@@ -26,8 +26,11 @@ export default function Survey({
   const qs = questionsFor(respondentType);
   const q = qs[Math.min(index, qs.length - 1)];
   const section = SECTIONS.find((s) => s.id === q.section);
-  const answered = answers[q.id] !== undefined;
+  const raw = answers[q.id];
+  const answered = Array.isArray(raw) ? raw.length > 0 : raw !== undefined;
   const isMulti = q.type === 'multi';
+  // Multi-select and sliders both stay put — the respondent may still be adjusting.
+  const holds = isMulti || q.type === 'select' || q.type === 'slider';
 
   const advance = () => {
     if (index + 1 >= qs.length) onDone();
@@ -42,7 +45,7 @@ export default function Survey({
   // Single-choice questions advance on their own; multi-select waits for Next.
   const handle = (v: AnswerValue) => {
     setAnswer(q.id, v);
-    if (!isMulti && q.type !== 'select') window.setTimeout(advance, 170);
+    if (!holds) window.setTimeout(advance, 170);
   };
 
   // Number keys select, Enter advances. Keyboard completion end to end.
@@ -58,6 +61,8 @@ export default function Survey({
       if (!n || Number.isNaN(n)) return;
       if (q.type === 'scale' && q.scale && n >= q.scale.min && n <= q.scale.max) {
         handle(n);
+      } else if (q.type === 'slider' && q.options && n <= q.options.length) {
+        setAnswer(q.id, q.options[n - 1].value);
       } else if (q.options && n <= q.options.length) {
         const v = q.options[n - 1].value;
         if (isMulti) {
@@ -73,14 +78,19 @@ export default function Survey({
   });
 
   const pct = ((index + (answered ? 1 : 0)) / qs.length) * 100;
+  const answeredCount = qs.filter((x) => {
+    const a = answers[x.id];
+    return Array.isArray(a) ? a.length > 0 : a !== undefined;
+  }).length;
 
   return (
     <>
       <div className="progress" role="progressbar" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
         <i style={{ width: `${pct}%` }} />
       </div>
-      <main className="shell">
+      <main className="shell shell-narrow">
         <div className="qwrap">
+          <div className="qcard">
           <div className="qmeta">
             <span className="sec">{t(section?.name, lang)}</span>
             <span className="mono">
@@ -91,9 +101,10 @@ export default function Survey({
           {q.help && <p className="qhelp">{t(q.help, lang)}</p>}
           <QuestionControl q={q} lang={lang} value={answers[q.id]} onChange={handle} />
           {q.note && <p className="qnote">{t(q.note, lang)}</p>}
+          </div>
         </div>
       </main>
-      <div className="shell">
+      <div className="shell shell-narrow">
         <div className="actionbar">
           <button className="btn btn-ghost" onClick={back}>
             ← {t(UI.back, lang)}
@@ -104,9 +115,9 @@ export default function Survey({
           </button>
         </div>
       </div>
-      <p className="shell" style={{ fontSize: '.72rem', color: 'var(--ink-mute)', paddingBottom: '1.5rem' }}>
+      <p className="shell shell-narrow" style={{ fontSize: '.78rem', color: 'var(--mute-d)', paddingBottom: '5.5rem' }}>
         {fill(t(UI.reviewAnswered, lang), {
-          a: qs.filter((x) => answers[x.id] !== undefined).length,
+          a: answeredCount,
           b: qs.length,
         })}
       </p>

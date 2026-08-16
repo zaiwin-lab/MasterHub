@@ -1,12 +1,13 @@
-/** Every user-facing string is a tuple ordered [en, bm]. Adding zh/ib later means
- *  widening this tuple and the dictionaries — no component code changes. */
-export type L = readonly [string, string];
+/** Every user-facing string is a tuple ordered [en, bm, zh, ib] — the KOBIS house
+ *  four-language pattern. A missing cell falls back to English rather than
+ *  rendering blank, so a partial translation degrades instead of breaking. */
+export type L = readonly [string, string, string?, string?];
 
-export type Lang = 'en' | 'bm';
+export type Lang = 'en' | 'bm' | 'zh' | 'ib';
 
 export type RespondentType = 'owner' | 'executive' | 'founder';
 
-export type QuestionType = 'single' | 'multi' | 'scale' | 'segmented' | 'select';
+export type QuestionType = 'single' | 'multi' | 'scale' | 'segmented' | 'select' | 'slider';
 
 export type SectionId =
   | 'profile'

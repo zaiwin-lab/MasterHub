@@ -17,14 +17,17 @@ export function Review({
   onBack: () => void;
 }) {
   const qs = questionsFor(respondentType);
-  const answered = qs.filter((q) => answers[q.id] !== undefined).length;
+  const answered = qs.filter((q) => {
+    const a = answers[q.id];
+    return Array.isArray(a) ? a.length > 0 : a !== undefined;
+  }).length;
 
   return (
-    <main className="shell" style={{ paddingBlock: '3rem' }}>
-      <span className="eyebrow">{t(UI.brand, lang)}</span>
-      <h1 style={{ fontSize: '1.9rem', marginTop: '.6rem' }}>{t(UI.reviewTitle, lang)}</h1>
-      <p style={{ marginTop: '.9rem', color: 'var(--ink-soft)', maxWidth: '46ch' }}>{t(UI.reviewBody, lang)}</p>
-      <p className="mono" style={{ marginTop: '1.4rem', fontSize: '.82rem', color: 'var(--ink-mute)' }}>
+    <main className="shell shell-narrow" style={{ paddingBlock: '3rem', paddingBottom: '6rem' }}>
+      <span className="badge">{t(UI.brand, lang)}</span>
+      <h1 style={{ fontSize: '1.95rem', marginTop: '1rem' }}>{t(UI.reviewTitle, lang)}</h1>
+      <p style={{ marginTop: '.9rem', color: 'var(--soft-d)', maxWidth: '46ch' }}>{t(UI.reviewBody, lang)}</p>
+      <p className="mono" style={{ marginTop: '1.4rem', fontSize: '.82rem', color: 'var(--mute-d)' }}>
         {fill(t(UI.reviewAnswered, lang), { a: answered, b: qs.length })}
       </p>
       <div className="actionbar" style={{ marginTop: '1.8rem' }}>

@@ -1084,3 +1084,201 @@ select.native {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ── Slider — the ordinal band questions. A native range input carries keyboard,
+   touch and screen-reader behaviour; everything visible is painted over it.   */
+
+.slider {
+  --pos: 50%;
+  display: grid;
+  gap: 1.15rem;
+}
+.slider-readout {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.7rem, 6.5vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--brand);
+  line-height: 1.05;
+  min-height: 1.1em;
+  transition: color 0.2s var(--ease);
+}
+.slider-readout.idle {
+  color: var(--ink-mute);
+  font-size: clamp(1rem, 3.4vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.slider-track {
+  position: relative;
+  height: 46px;
+  display: flex;
+  align-items: center;
+}
+.slider-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--line);
+}
+.slider-track .fill {
+  position: absolute;
+  left: 0;
+  width: var(--pos);
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand-deep), var(--cyan-deep));
+  transition: width 0.22s var(--ease);
+  pointer-events: none;
+}
+.slider-track .thumb {
+  position: absolute;
+  left: var(--pos);
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 5px oklch(0.5 0.145 250 / 0.16);
+  transition:
+    left 0.22s var(--ease),
+    box-shadow 0.2s var(--ease);
+  pointer-events: none;
+}
+.slider-track input:focus-visible ~ .thumb,
+.slider-track input:active ~ .thumb {
+  box-shadow: 0 0 0 9px oklch(0.5 0.145 250 / 0.16);
+}
+.slider-track input[type='range'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.slider-track input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 44px;
+  height: 44px;
+}
+.slider-track input[type='range']::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+}
+.slider-ticks {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.3rem;
+}
+.slider-ticks button {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 0.5rem 0.15rem 0;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  color: var(--ink-mute);
+  text-align: center;
+  min-height: 40px;
+  transition:
+    color 0.16s var(--ease),
+    border-color 0.16s var(--ease);
+}
+.slider-ticks button:hover {
+  color: var(--ink-soft);
+}
+.slider-ticks button.on {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* ── KOBIS credit — quiet at rest, a warm sweep passing behind the wordmark on
+   hover. The glow sits behind the text, so the name stays solid throughout.  */
+
+.kobis-bar {
+  color: var(--ink-mute);
+}
+.snap .kobis-bar {
+  color: var(--void-mute);
+}
+.kobis-link {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  padding-inline: 0.15em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.35s var(--ease);
+}
+.snap .kobis-link {
+  color: var(--void-soft);
+}
+.kobis-link::before {
+  content: '';
+  position: absolute;
+  inset: -0.5em -1em;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, oklch(0.84 0.14 85 / 0.6), oklch(0.84 0.14 85 / 0) 72%);
+  opacity: 0;
+  transform: translateX(-65%);
+  pointer-events: none;
+}
+.kobis-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.42s var(--ease);
+}
+.kobis-link:hover,
+.kobis-link:focus-visible {
+  color: var(--ink);
+}
+.snap .kobis-link:hover,
+.snap .kobis-link:focus-visible {
+  color: var(--void-ink);
+}
+.kobis-link:hover::after,
+.kobis-link:focus-visible::after {
+  transform: scaleX(1);
+}
+.kobis-link:hover::before,
+.kobis-link:focus-visible::before {
+  animation: kobis-sweep 0.95s var(--ease) forwards;
+}
+@keyframes kobis-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-65%);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(65%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kobis-link:hover::before,
+  .kobis-link:focus-visible::before {
+    animation: none;
+    opacity: 0;
+  }
+}

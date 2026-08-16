@@ -307,9 +307,9 @@ export default function SnapshotView({
           <span className="mono">
             {snap.scan_id} · instrument {snap.instrument_version} · scoring {snap.scoring_version}
           </span>
-          <span>
-            {t(UI.footerCredit, lang).replace('KOBIS Berhad', '')}
-            <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">
+          <span className="kobis-bar">
+            {t(UI.footerCredit, lang)}{' '}
+            <a className="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">
               KOBIS Berhad
             </a>
           </span>

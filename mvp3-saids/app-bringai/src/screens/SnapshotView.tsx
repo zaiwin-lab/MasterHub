@@ -74,10 +74,10 @@ export default function SnapshotView({
 
   return (
     <div className="snap">
-      <main className="shell shell-wide">
+      <main className="shell">
         {/* ── Score ─────────────────────────────────────────────── */}
         <section className="scorehead">
-          <span className="eyebrow">{t(UI.scoreKicker, lang)}</span>
+          <span className="badge">{t(UI.scoreKicker, lang)}</span>
           <div className="bigscore">{index}</div>
           <div className="bandlabel">{t(snap.band_label, lang)}</div>
           <p className="bandnote">{t(snap.band_note, lang)}</p>
@@ -281,7 +281,7 @@ export default function SnapshotView({
             </ul>
             {snap.limitations.length > 0 && (
               <>
-                <p style={{ marginTop: '1rem', color: 'var(--void-ink)', fontWeight: 600 }}>
+                <p style={{ marginTop: '1rem', color: 'var(--ink-d)', fontWeight: 600 }}>
                   {t(UI.limitationsTitle, lang)}
                 </p>
                 <ul>

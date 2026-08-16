@@ -6,7 +6,7 @@ export type Lang = 'en' | 'bm';
 
 export type RespondentType = 'owner' | 'executive' | 'founder';
 
-export type QuestionType = 'single' | 'multi' | 'scale' | 'segmented' | 'select';
+export type QuestionType = 'single' | 'multi' | 'scale' | 'segmented' | 'select' | 'slider';
 
 export type SectionId =
   | 'profile'
