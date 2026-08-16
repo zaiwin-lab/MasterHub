@@ -6,3 +6,6 @@
 mvp3-saids/app/node_modules
 mvp3-saids/app/dist
 mvp3-saids/app/tsconfig.tsbuildinfo
+mvp3-saids/app-bringai/node_modules
+mvp3-saids/app-bringai/dist
+mvp3-saids/app-bringai/tsconfig.tsbuildinfo
