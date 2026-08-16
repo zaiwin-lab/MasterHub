@@ -6,9 +6,17 @@ ringgit-denominated problem.
 
 | File | What it is | Read it when |
 |---|---|---|
-| `GTM_STRATEGY.md` | The go-to-market framework — category, positioning, ICP, offer ladder, urgency architecture, channels, funnel model, 90-day plan, metrics, risks | Deciding *what to sell and to whom* |
+| **`SCAN_BUILD_PROMPT.md`** | **Build this first.** Survey-first build prompt — the Scan, the Snapshot, and nothing else. 7-day ship window. | Starting the build |
 | `SURVEY_INSTRUMENT.md` | **Normative.** The 22 questions, nine scoring dimensions and weights, six leak formulas, constants, MVP³ candidate lookup, Snapshot structure | Building or changing the Scan |
-| `PORTAL_BUILD_PROMPT.md` | Copy-paste build prompt for the portal + Scan, with design system and homepage copy | Starting the build |
+| `GTM_STRATEGY.md` | The go-to-market framework — category, positioning, ICP, offer ladder, urgency architecture, channels, funnel model, 90-day plan, metrics, risks | Deciding *what to sell and to whom* |
+| `PORTAL_BUILD_PROMPT.md` | **Phase 2.** The full marketing portal. Deferred until the Scan has produced ~100 real responses. | After the Scan is live and measured |
+
+## Build order
+
+The Scan sells on its own and needs no marketing site around it. Build the instrument,
+send it to the warm network, and let 100 real responses tell you which leaks dominate and
+which language moves people — then the portal writes itself from evidence instead of
+guesswork. Building the portal first means writing its copy from assumptions.
 
 ## The one-sentence version
 
