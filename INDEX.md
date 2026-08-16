@@ -32,19 +32,24 @@ workspace root is the parent directory (`/home/user`), not this repo, so
 script itself resolve the repo from their own location instead, so the sync
 works whether the session opens this repo directly or as one of several.
 
-### impeccable — Frontend design skill
-- **Source:** committed directly in this repo at `.claude/skills/impeccable/`
-- **Status:** ✅ Active
-
 ### gstack — AI Engineering Toolkit
 - **Source:** https://github.com/garrytan/gstack (cloned fresh by the hook)
 - **Key skills:** `/qa` `/review` `/ship` `/browse` `/cso` `/autoplan` `/office-hours`
 - **Status:** ✅ Active
 
-### marketing — Marketing Skills (43 skills)
+### beauty + uxui — Design layer
+- **Source:** `impeccable`, committed in this repo at `.claude/skills/impeccable/`,
+  plus gstack's `design-*` skills
+- **Key skills:** `/impeccable` `/design-review` `/design-consultation`
+  `/design-shotgun` `/design-html` `/plan-design-review`
+- **Status:** ✅ Active — `beauty` and `uxui` are two names for this one layer;
+  no separate pack is installed for either
+
+### marketing — Marketing Skills (48 skills)
 - **Source:** https://github.com/coreyhaines31/marketingskills (cloned fresh by the hook)
 - **Key skills:** `/copywriting` `/cro` `/marketing-psychology` `/seo-audit` `/emails`
-- **Status:** ✅ Active
+- **Status:** ✅ Active — note the repo root has no `SKILL.md`, so there is no
+  `/marketing` router skill; the 48 skills install individually
 
 ### research / efficiency
 - **Status:** ❌ Not yet installed — no source repo identified yet
