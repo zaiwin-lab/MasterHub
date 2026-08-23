@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default token values. TenantTheme overwrites these at runtime from
+   TenantConfig.theme, which is how white-labelling works without a rebuild. */
+:root {
+  --c-canvas: 247 244 236;
+  --c-surface: 255 255 255;
+  --c-line: 230 225 213;
+  --c-navy: 18 35 58;
+  --c-brand: 31 98 72;
+  --c-accent: 168 200 58;
+  --c-gold: 192 154 62;
+  --c-ink: 22 32 43;
+  --c-ink-muted: 90 102 115;
+  --c-ink-soft: 138 148 161;
+  --c-ok: 47 125 91;
+  --c-warn: 192 138 46;
+  --c-risk: 180 70 60;
+  --c-info: 44 92 138;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04';
+  }
+  * {
+    @apply border-line;
+  }
+  h1, h2, h3, h4 {
+    @apply text-navy;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand/60 ring-offset-2 ring-offset-canvas rounded-lg;
+  }
+  ::selection {
+    @apply bg-accent/40;
+  }
+}
+
+@layer components {
+  .card {
+    @apply min-w-0 rounded-2xl border border-line bg-surface shadow-card;
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft;
+  }
+  .hairline {
+    @apply border-t border-line;
+  }
+  /* Wide content scrolls inside its own container; the page never does. */
+  .scroll-x {
+    @apply -mx-4 min-w-0 max-w-[calc(100%+2rem)] overflow-x-auto px-4 sm:mx-0 sm:max-w-full sm:px-0;
+    scrollbar-width: thin;
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  .card { box-shadow: none; border-color: #ddd; }
+}

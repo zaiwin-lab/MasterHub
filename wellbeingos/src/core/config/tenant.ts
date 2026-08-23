@@ -1,0 +1,168 @@
+/**
+ * LAYER B — Tenant configuration.
+ *
+ * Onboarding another organisation should mean writing one of these objects,
+ * not editing application code. Everything the UI, workflow engine, alerting,
+ * analytics and reporting layers vary on is declared here.
+ */
+import type { AlertThreshold, BenefitPolicy, RoleKey } from '@/core/domain/types';
+
+export interface ThemeConfig {
+  canvas: string;
+  surface: string;
+  line: string;
+  navy: string;
+  brand: string;
+  accent: string;
+  gold: string;
+  ink: string;
+  inkMuted: string;
+  inkSoft: string;
+  ok: string;
+  warn: string;
+  risk: string;
+  info: string;
+}
+
+/** Every user-visible noun that differs between organisations. */
+export interface Terminology {
+  benefit: string;
+  benefitShort: string;
+  wallet: string;
+  employee: string;
+  employees: string;
+  unitSingular: string;
+  unitPlural: string;
+  clinic: string;
+  clinics: string;
+  programme: string;
+  programmes: string;
+  journey: string;
+  pulse: string;
+  currency: string;
+  currencyCode: string;
+}
+
+export type ModuleKey =
+  | 'medical-benefit'
+  | 'panel-clinic'
+  | 'employee-wellbeing'
+  | 'health-screening'
+  | 'activity-challenge'
+  | 'mental-wellbeing'
+  | 'ergonomics'
+  | 'preventive-campaigns'
+  | 'absenteeism-insights'
+  | 'wellness-rewards'
+  | 'esg-reporting'
+  | 'annual-wellbeing-report'
+  | 'wellbeing-pulse'
+  | 'intelligence-signals';
+
+export interface JourneyStageConfig {
+  key: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  href: string;
+  icon: 'know' | 'check' | 'prevent' | 'participate' | 'improve' | 'thrive';
+}
+
+export interface PrivacyConfig {
+  /** Minimum group size before any Zone 3 aggregate is displayed. */
+  minimumAggregationGroup: number;
+  /** Purposes an employee may switch off. */
+  optionalConsents: {
+    purpose: string;
+    title: string;
+    description: string;
+    defaultGranted: boolean;
+  }[];
+  retentionMonths: { transactions: number; wellbeing: number; audit: number };
+  /** Plain-language disclosure rendered on the consent centre. */
+  disclosure: { audience: string; canSee: string[]; cannotSee: string[] }[];
+}
+
+export interface KpiConfig {
+  key: string;
+  label: string;
+  hint?: string;
+}
+
+export interface ReportConfig {
+  key: string;
+  name: string;
+  description: string;
+  audience: RoleKey[];
+  zone: 'zone1' | 'zone3';
+}
+
+export interface TenantConfig {
+  id: string;
+  organisationName: string;
+  organisationCode: string;
+  shortName: string;
+  productName: string;
+  tagline: string;
+  logoMark: string; // short mark rendered in the brand block
+  welcomeText: string;
+  locale: string;
+  theme: ThemeConfig;
+  terminology: Terminology;
+  modules: Record<ModuleKey, boolean>;
+  policies: Omit<BenefitPolicy, 'tenantId'>[];
+  defaultPolicyId: string;
+  organisation: {
+    divisions: { name: string; departments: string[] }[];
+    locations: string[];
+    employeeCategories: string[];
+    grades: string[];
+  };
+  journey: JourneyStageConfig[];
+  programmeCategories: string[];
+  serviceCategories: string[];
+  privacy: PrivacyConfig;
+  managementKpis: KpiConfig[];
+  reports: ReportConfig[];
+  /** Seed shaping — demo dataset only; ignored once a real backend is attached. */
+  seed: { employees: number; clinics: number; months: number; randomSeed: number };
+}
+
+export const defaultThresholds: AlertThreshold[] = [
+  {
+    at: 50,
+    level: 'awareness',
+    label: 'Awareness',
+    employeeMessage:
+      'You have used half of your {benefit} for this period. {available} remains — nothing to action, just so you know.',
+    raisesException: false,
+    notify: ['employee'],
+  },
+  {
+    at: 75,
+    level: 'reminder',
+    label: 'Reminder',
+    employeeMessage:
+      'You have used {pct} of your {benefit}. {available} remains for the rest of the period — plan any non-urgent visits with that in mind.',
+    raisesException: false,
+    notify: ['employee'],
+  },
+  {
+    at: 90,
+    level: 'important',
+    label: 'Important',
+    employeeMessage:
+      '{available} of your {benefit} remains. If you expect further treatment this period, speak to HR early so options can be arranged calmly.',
+    raisesException: true,
+    notify: ['employee', 'hr'],
+  },
+  {
+    at: 100,
+    level: 'policy',
+    label: 'Policy workflow',
+    employeeMessage:
+      'Your {benefit} for this period is fully utilised. HR has been notified so that the next steps can be handled under policy — you do not need to do anything today.',
+    raisesException: true,
+    notify: ['employee', 'hr', 'finance'],
+  },
+];
