@@ -24,6 +24,19 @@ build; everything has a safe default.
 | `SUPABASE_SERVICE_ROLE_KEY` | **Server-side only.** Never expose to the browser | unset |
 | `HRIS_ADAPTER`, `CLINIC_ADAPTER`, `NOTIFY_ADAPTER` | Adapter selection | `mock` |
 
+## Live deployment
+
+| | |
+|---|---|
+| URL | https://sejahtera360.netlify.app |
+| Netlify project | `sejahtera360` (team `zaiwin`) |
+| Source | `MasterHub/wellbeingos` on `claude/wellbeingos-platform-architecture-jo65ah` |
+| Presentation | Light by default; the toggle sits in the top bar |
+
+The site is a demonstration build: the persona picker is enabled and the data
+layer is the seeded in-browser dataset. Before a pilot with real people, work
+through the checklist at the end of this document.
+
 ## Netlify
 
 `netlify.toml` is committed and uses the official Next.js runtime:

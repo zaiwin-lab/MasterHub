@@ -21,6 +21,9 @@ product. A second organisation ships in the repository as proof
 entitlement, branding, structure, thresholds, terminology, modules and privacy
 floor, added with **no code changes**.
 
+**Live:** https://sejahtera360.netlify.app — sign in with any demonstration
+persona; the light/dark toggle is in the top bar.
+
 ## Run it
 
 ```bash
