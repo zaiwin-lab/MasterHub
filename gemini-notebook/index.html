@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini Notebook — Turn Your Sources Into Understanding</title>
+  <meta name="description" content="Gemini Notebook — bring every source into one notebook and let AI connect them. Summaries, briefing docs, audio overviews and grounded answers, in English and Bahasa Melayu." />
+  <meta name="theme-color" content="#F5F5F7" />
+  <link rel="icon" href="assets/gemini-notebook-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+  *,*::before,*::after{box-sizing:border-box}
+  .ticker-bar{position:sticky;top:0;z-index:200;height:32px;overflow:hidden;background:#0F1626;display:flex;align-items:center}
+  .ticker-track{display:flex;align-items:center;gap:48px;padding-left:48px;white-space:nowrap;flex-wrap:nowrap}
+  .ticker-item{font-size:.75rem;font-weight:500;letter-spacing:.05em;color:rgba(255,255,255,.85);padding:0 24px;flex:none;white-space:nowrap}
+  .ticker-icon{width:14px;height:14px;vertical-align:-2px;margin-right:2px;flex:none}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+  <div class="ticker-bar" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#hero" aria-label="Gemini Notebook">
+        <svg class="mark" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="markG1" x1="0" y1="44" x2="64" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#B39DF3"/><stop offset="1" stop-color="#1B6EF3"/>
+            </linearGradient>
+            <linearGradient id="markG2" x1="6" y1="44" x2="58" y2="4" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#C9BCF8"/><stop offset="1" stop-color="#4F9BFF"/>
+            </linearGradient>
+          </defs>
+          <path d="M6 42V26a26 26 0 0 1 52 0v16" stroke="url(#markG1)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M19 42V26a13 13 0 0 1 26 0v16" stroke="url(#markG2)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M32 42v-8" stroke="#1B6EF3" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+        </svg>
+        <span class="nav-logo-text">Gemini <em>Notebook</em></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#how" data-i18n="nav.how">How It Works</a>
+        <a href="#usecases" data-i18n="nav.usecases">Use Cases</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </div>
+      <div class="nav-lang" role="group" aria-label="Language / Bahasa">
+        <button type="button" data-lang="en" class="active" title="Bahasa Inggeris / English">BI</button>
+        <button type="button" data-lang="bm" title="Bahasa Melayu">BM</button>
+      </div>
+      <a class="nav-cta" href="#contact" data-i18n="nav.cta">Try It Free</a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <svg class="hero-lines" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lineBlue" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1B6EF3" stop-opacity="0"/><stop offset=".45" stop-color="#1B6EF3" stop-opacity=".9"/><stop offset="1" stop-color="#1B6EF3" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="lineTeal" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#12A5A0" stop-opacity="0"/><stop offset=".45" stop-color="#12A5A0" stop-opacity=".9"/><stop offset="1" stop-color="#12A5A0" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="lineGreen" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1E9E5A" stop-opacity="0"/><stop offset=".45" stop-color="#1E9E5A" stop-opacity=".9"/><stop offset="1" stop-color="#1E9E5A" stop-opacity=".15"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke-width="2.5" stroke-linecap="round">
+          <path class="flow" d="M-40 60 C 340 90, 560 300, 830 400" stroke="url(#lineBlue)"/>
+          <path class="flow" d="M-40 170 C 340 200, 580 330, 830 400" stroke="url(#lineBlue)"/>
+          <path class="flow" d="M-40 290 C 320 310, 590 370, 830 400" stroke="url(#lineTeal)"/>
+          <path class="flow" d="M-40 430 C 320 440, 590 420, 830 400" stroke="url(#lineTeal)"/>
+          <path class="flow" d="M-40 570 C 340 550, 590 450, 830 400" stroke="url(#lineGreen)"/>
+          <path class="flow" d="M-40 700 C 360 640, 600 470, 830 400" stroke="url(#lineGreen)"/>
+          <path class="flow" d="M830 400 C 1000 400, 1120 400, 1260 400" stroke="url(#lineBlue)"/>
+        </g>
+      </svg>
+      <span class="hero-glow"></span>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="hero-eyebrow reveal">
+          <span class="eyebrow-dot"></span>
+          <span data-i18n="hero.eyebrow">AI research notebook — Bahasa Inggeris &amp; Bahasa Melayu</span>
+        </div>
+        <h1 class="hero-title reveal">
+          <span data-i18n="hero.title1">Every source you have,</span><br />
+          <em data-i18n="hero.title2">one notebook that understands them.</em>
+        </h1>
+        <p class="hero-sub reveal" data-i18n="hero.sub">
+          Drop in your PDFs, notes, slides, links and recordings. Gemini Notebook
+          reads all of them, connects the dots, and answers your questions with
+          citations pointing back to the exact source line.
+        </p>
+        <div class="hero-actions reveal">
+          <a href="#contact" class="btn-primary"><span data-i18n="hero.cta1">Start a Notebook</span> <span aria-hidden="true">→</span></a>
+          <a href="#how" class="btn-ghost"><span data-i18n="hero.cta2">See How It Works</span> <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-stats reveal">
+          <div class="stat">
+            <span class="stat-num">50+</span>
+            <span class="stat-label" data-i18n="hero.stat1">Sources per notebook</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">2</span>
+            <span class="stat-label" data-i18n="hero.stat2">Languages, one click apart</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">100%</span>
+            <span class="stat-label" data-i18n="hero.stat3">Answers grounded in your files</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <figure class="hero-logo-card">
+          <img src="assets/gemini-notebook-logo.png" alt="Gemini Notebook logo — nested arcs with source lines converging into them" width="420" height="420" fetchpriority="high" />
+        </figure>
+        <div class="hero-chip hero-chip-1">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5h5L12.5 5v9.5H4A1.5 1.5 0 0 1 2.5 13V3A1.5 1.5 0 0 1 4 1.5Z"/></svg>
+          <span data-i18n="hero.chip1">12 PDFs added</span>
+        </div>
+        <div class="hero-chip hero-chip-2">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a3 3 0 0 1 3 3v3a3 3 0 1 1-6 0v-3a3 3 0 0 1 3-3Zm-5 6h1.5a3.5 3.5 0 0 0 7 0H13a5 5 0 0 1-4.25 4.94V14.5h-1.5v-2.06A5 5 0 0 1 3 7.5Z"/></svg>
+          <span data-i18n="hero.chip2">Audio overview ready</span>
+        </div>
+        <div class="hero-chip hero-chip-3">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5 9.7 5.6l4.3.3-3.3 2.8 1 4.2L8 10.7 4.3 12.9l1-4.2L2 5.9l4.3-.3L8 1.5Z"/></svg>
+          <span data-i18n="hero.chip3">Cited to page 14</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CAPABILITY MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Summarise</span><span class="mq-dot">◆</span>
+      <span>Ringkaskan</span><span class="mq-dot">◆</span>
+      <span>Ask Anything</span><span class="mq-dot">◆</span>
+      <span>Tanya Apa Sahaja</span><span class="mq-dot">◆</span>
+      <span>Audio Overview</span><span class="mq-dot">◆</span>
+      <span>Nota Kajian</span><span class="mq-dot">◆</span>
+      <span>Study Guide</span><span class="mq-dot">◆</span>
+      <span>Peta Minda</span><span class="mq-dot">◆</span>
+      <span>Summarise</span><span class="mq-dot">◆</span>
+      <span>Ringkaskan</span><span class="mq-dot">◆</span>
+      <span>Ask Anything</span><span class="mq-dot">◆</span>
+      <span>Tanya Apa Sahaja</span><span class="mq-dot">◆</span>
+      <span>Audio Overview</span><span class="mq-dot">◆</span>
+      <span>Nota Kajian</span><span class="mq-dot">◆</span>
+      <span>Study Guide</span><span class="mq-dot">◆</span>
+      <span>Peta Minda</span><span class="mq-dot">◆</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-eyebrow reveal" data-i18n="features.eyebrow">What It Does</div>
+        <h2 class="section-title reveal" data-i18n="features.title">A notebook that has actually read everything inside it.</h2>
+        <p class="section-sub reveal" data-i18n="features.sub">
+          Six things Gemini Notebook does the moment your sources land — no prompt
+          engineering, no copy-pasting between tabs.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6m0 0 3-3m-3 3L9 6"/><path d="M4 13v5a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-5"/><path d="M4 13h16"/></svg>
+          </span>
+          <h3 data-i18n="feature.1.title">Bring Everything In</h3>
+          <p data-i18n="feature.1.desc">PDFs, Docs, slides, web links, YouTube transcripts, pasted text and voice notes — up to 50 sources in a single notebook.</p>
+        </article>
+
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-teal" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5 16 16"/><path d="M8.5 11h5M11 8.5v5"/></svg>
+          </span>
+          <h3 data-i18n="feature.2.title">Grounded Answers</h3>
+          <p data-i18n="feature.2.desc">Every reply is built only from your sources and carries an inline citation — click it and jump straight to the paragraph it came from.</p>
+        </article>
+
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+          </span>
+          <h3 data-i18n="feature.3.title">Instant Briefing Docs</h3>
+          <p data-i18n="feature.3.desc">One tap turns forty pages into a briefing note, a timeline, an FAQ or a study guide you can hand to somebody else.</p>
+        </article>
+
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-violet" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V6a3 3 0 0 1 3-3Z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+          </span>
+          <h3 data-i18n="feature.4.title">Audio Overviews</h3>
+          <p data-i18n="feature.4.desc">Turn a notebook into a two-host conversation you can listen to on the drive home — in English or Bahasa Melayu.</p>
+        </article>
+
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-amber" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M6.7 7.3 10 10.3m4-.1 3.3-3M10 13.7l-3.3 3m7.3-3 3.3 3"/></svg>
+          </span>
+          <h3 data-i18n="feature.5.title">Mind Maps &amp; Links</h3>
+          <p data-i18n="feature.5.desc">See how ideas across separate documents connect — contradictions, repeated themes and gaps become visible at a glance.</p>
+        </article>
+
+        <article class="feature-card reveal" data-tilt>
+          <span class="feature-icon i-rose" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 12h6M12 9v6"/></svg>
+          </span>
+          <h3 data-i18n="feature.6.title">Share The Notebook</h3>
+          <p data-i18n="feature.6.desc">Invite your team or class. Everyone asks their own questions against the same trusted set of sources.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-eyebrow reveal" data-i18n="how.eyebrow">How It Works</div>
+        <h2 class="section-title reveal" data-i18n="how.title">Three steps, about four minutes.</h2>
+      </div>
+
+      <ol class="step-list">
+        <li class="step reveal">
+          <span class="step-num">01</span>
+          <div>
+            <h3 data-i18n="how.1.title">Add your sources</h3>
+            <p data-i18n="how.1.desc">Drag in the files you already have. Nothing needs renaming, tagging or tidying up first.</p>
+          </div>
+        </li>
+        <li class="step reveal">
+          <span class="step-num">02</span>
+          <div>
+            <h3 data-i18n="how.2.title">Ask in your own words</h3>
+            <p data-i18n="how.2.desc">Type in English or Bahasa Melayu. "Apa risiko utama dalam laporan ini?" works exactly as well as the English version.</p>
+          </div>
+        </li>
+        <li class="step reveal">
+          <span class="step-num">03</span>
+          <div>
+            <h3 data-i18n="how.3.title">Turn it into something usable</h3>
+            <p data-i18n="how.3.desc">Save the answer as a note, generate a briefing doc, or render an audio overview — then share the whole notebook.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="mock reveal" aria-hidden="true">
+        <div class="mock-bar"><span></span><span></span><span></span></div>
+        <div class="mock-body">
+          <aside class="mock-side">
+            <div class="mock-side-title" data-i18n="mock.sources">Sources</div>
+            <div class="mock-src"><i class="dot d-blue"></i>Annual-Report-2025.pdf</div>
+            <div class="mock-src"><i class="dot d-teal"></i>Nota-Mesyuarat-Q3.docx</div>
+            <div class="mock-src"><i class="dot d-green"></i>market-scan.link</div>
+            <div class="mock-src"><i class="dot d-violet"></i>interview-audio.m4a</div>
+          </aside>
+          <div class="mock-chat">
+            <div class="mock-q" data-i18n="mock.q">What are the three biggest risks across these sources?</div>
+            <div class="mock-a">
+              <p data-i18n="mock.a">Three risks recur across all four sources: supplier concentration, a widening cash-conversion cycle, and staff turnover in operations.</p>
+              <div class="mock-cites"><span>1</span><span>2</span><span>4</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMP: KOBIS Berhad placeholder credit ticker — replace wording with client's chosen text once payment is received, then remove KOBIS branding ticker -->
+  <div class="ticker-bar ticker-bar-2" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+      <span class="ticker-item"><svg class="ticker-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 1.5h7.5A2.5 2.5 0 0 1 13 4v10.5H5.5A2.5 2.5 0 0 1 3 12V1.5Zm1.5 1.5v9c0 .55.45 1 1 1H11.5V4c0-.55-.45-1-1-1H4.5Zm1.75 2h4v1.25h-4V5Zm0 2.75h4V9h-4V7.75Z"/></svg> This website is built by KOBIS Berhad — Please Make the Activation Payment. Thank You.</span>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <section class="usecases" id="usecases">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-eyebrow reveal" data-i18n="use.eyebrow">Use Cases</div>
+        <h2 class="section-title reveal" data-i18n="use.title">Built for anyone drowning in documents.</h2>
+      </div>
+      <div class="use-grid">
+        <article class="use-card reveal">
+          <h3 data-i18n="use.1.title">Students &amp; Lecturers</h3>
+          <p data-i18n="use.1.desc">Turn a semester of readings into study guides and practice questions — and revise in the language you think in.</p>
+          <span class="use-tag" data-i18n="use.1.tag">Education</span>
+        </article>
+        <article class="use-card reveal">
+          <h3 data-i18n="use.2.title">Researchers &amp; Analysts</h3>
+          <p data-i18n="use.2.desc">Compare twenty papers or reports side by side and get answers that cite the exact table you need.</p>
+          <span class="use-tag" data-i18n="use.2.tag">Research</span>
+        </article>
+        <article class="use-card reveal">
+          <h3 data-i18n="use.3.title">Teams &amp; Agencies</h3>
+          <p data-i18n="use.3.desc">Give a new hire one shared notebook instead of a folder of 300 files and a two-week handover.</p>
+          <span class="use-tag" data-i18n="use.3.tag">Business</span>
+        </article>
+        <article class="use-card reveal">
+          <h3 data-i18n="use.4.title">Writers &amp; Creators</h3>
+          <p data-i18n="use.4.desc">Keep interviews, transcripts and clippings in one place, then draft with every quote a click away.</p>
+          <span class="use-tag" data-i18n="use.4.tag">Content</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-eyebrow reveal" data-i18n="faq.eyebrow">FAQ</div>
+        <h2 class="section-title reveal" data-i18n="faq.title">Questions people ask first.</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.1.q">Does it work fully in Bahasa Melayu?</summary>
+          <p data-i18n="faq.1.a">Yes. The whole interface switches with the BI / BM toggle in the menu, and you can ask questions and receive answers in Bahasa Melayu even when your sources are in English.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.2.q">Can it invent facts that are not in my files?</summary>
+          <p data-i18n="faq.2.a">Answers are generated from your uploaded sources and every claim carries a citation you can open. If something is not in your sources, the notebook says so instead of guessing.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.3.q">What file types can I upload?</summary>
+          <p data-i18n="faq.3.a">PDF, Word, Google Docs and Slides, plain text and Markdown, web pages, YouTube links, and audio recordings such as interviews or meeting notes.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.4.q">Who can see my notebook?</summary>
+          <p data-i18n="faq.4.a">Only you, until you share it. Sharing is per notebook, and you choose whether collaborators can just read or also add sources.</p>
+        </details>
+        <details class="faq-item reveal">
+          <summary data-i18n="faq.5.q">Is there a free tier?</summary>
+          <p data-i18n="faq.5.a">Yes — you can create notebooks and ask questions at no cost, with higher source limits and longer audio overviews on the paid plan.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-inner contact-inner">
+      <div class="section-eyebrow reveal" data-i18n="contact.eyebrow">Get Started</div>
+      <h2 class="section-title reveal" data-i18n="contact.title">Bring us your messiest folder.</h2>
+      <p class="section-sub reveal" data-i18n="contact.sub">
+        Tell us what you are trying to make sense of and we will set up your first
+        notebook with you — walkthrough available in English or Bahasa Melayu.
+      </p>
+
+      <div class="contact-layout">
+        <form class="contact-form reveal" action="#" method="post">
+          <label>
+            <span data-i18n="form.name">Your name</span>
+            <input type="text" name="name" required autocomplete="name" data-i18n-ph="form.name.ph" placeholder="Nama anda" />
+          </label>
+          <label>
+            <span data-i18n="form.contact">Email or WhatsApp</span>
+            <input type="text" name="contact" required autocomplete="email" data-i18n-ph="form.contact.ph" placeholder="you@example.com" />
+          </label>
+          <label>
+            <span data-i18n="form.message">What are you working on?</span>
+            <textarea name="message" rows="4" data-i18n-ph="form.message.ph" placeholder="e.g. 40 research papers for my thesis"></textarea>
+          </label>
+          <button type="submit" class="btn-primary" data-i18n="form.submit">Request a Walkthrough</button>
+          <p class="form-note" data-i18n="form.note">We reply within one working day.</p>
+        </form>
+
+        <div class="contact-side reveal">
+          <div class="contact-row">
+            <span data-i18n="contact.wa.label">WhatsApp</span>
+            <a href="https://wa.me/60122218808" target="_blank" rel="noopener">+60 12-221 8808</a>
+          </div>
+          <div class="contact-row">
+            <span data-i18n="contact.email.label">Email</span>
+            <a href="mailto:hello@kobisberhad.com">hello@kobisberhad.com</a>
+          </div>
+          <div class="contact-row">
+            <span data-i18n="contact.hours.label">Hours</span>
+            <strong data-i18n="contact.hours.value">Mon–Fri, 9am – 6pm (MYT)</strong>
+          </div>
+          <div class="contact-row">
+            <span data-i18n="contact.office.label">Office</span>
+            <strong data-i18n="contact.office.value">Kuching, Sarawak, Malaysia</strong>
+          </div>
+          <div class="map-embed">
+            <iframe src="https://www.google.com/maps?q=Kuching,+Sarawak,+Malaysia&amp;output=embed" width="100%" height="320" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Gemini Notebook — Kuching, Sarawak"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="section-inner footer-inner">
+      <div class="footer-brand">
+        <svg class="mark" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M6 42V26a26 26 0 0 1 52 0v16" stroke="#7FB0FF" stroke-width="7" stroke-linecap="round"/>
+          <path d="M19 42V26a13 13 0 0 1 26 0v16" stroke="#B39DF3" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">Gemini <em>Notebook</em></span>
+      </div>
+      <p class="footer-tagline" data-i18n="footer.tagline">Your sources, understood — in Bahasa Inggeris and Bahasa Melayu.</p>
+
+      <div class="footer-links">
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#how" data-i18n="nav.how">How It Works</a>
+        <a href="#usecases" data-i18n="nav.usecases">Use Cases</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </div>
+
+      <p class="footer-copy" data-i18n="footer.rights">© 2026 Gemini Notebook. All rights reserved.</p>
+      <p class="footer-disclaimer" data-i18n="footer.disclaimer">Concept site produced for demonstration purposes. Not affiliated with or endorsed by Google LLC.</p>
+    </div>
+  </footer>
+
+  <div class="kobis-bar">
+    <div class="kobis-text" data-i18n="footer.credit">This Digital Experience is Part of the <a class="kobis-link" href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a> Innovation Ecosystem</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
