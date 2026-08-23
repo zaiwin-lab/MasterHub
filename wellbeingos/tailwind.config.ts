@@ -1,52 +1,61 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Design tokens resolve to CSS custom properties so a tenant can be re-branded
- * at runtime from TenantConfig.theme (see src/core/config/theme.ts) without a
- * rebuild. Values are stored as "R G B" triplets so Tailwind alpha modifiers
- * (e.g. bg-brand/10) keep working.
+ * Tokens resolve to CSS custom properties so a tenant can be re-skinned at
+ * runtime from TenantConfig.theme without a rebuild. Values are "R G B"
+ * triplets so Tailwind alpha modifiers (bg-brand/10) keep working.
+ *
+ * The palette is semantic rather than literal — `head`, `primary`, `tint` —
+ * so the same components render correctly on a dark or a light canvas.
  */
-const withAlpha = (v: string) => `rgb(var(${v}) / <alpha-value>)`;
+const t = (v: string) => `rgb(var(${v}) / <alpha-value>)`;
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        canvas: withAlpha('--c-canvas'),
-        surface: withAlpha('--c-surface'),
-        line: withAlpha('--c-line'),
-        navy: withAlpha('--c-navy'),
-        brand: withAlpha('--c-brand'),
-        accent: withAlpha('--c-accent'),
-        gold: withAlpha('--c-gold'),
+        canvas: t('--c-canvas'),
+        surface: t('--c-surface'),
+        raised: t('--c-raised'),
+        line: t('--c-line'),
+        head: t('--c-head'),
+        primary: t('--c-primary'),
+        onPrimary: t('--c-on-primary'),
+        /** Neutral wash for hovers and overlays — light on dark, dark on light. */
+        tint: t('--c-tint'),
+        brand: t('--c-brand'),
+        violet: t('--c-violet'),
+        gold: t('--c-gold'),
         ink: {
-          DEFAULT: withAlpha('--c-ink'),
-          muted: withAlpha('--c-ink-muted'),
-          soft: withAlpha('--c-ink-soft'),
+          DEFAULT: t('--c-ink'),
+          muted: t('--c-ink-muted'),
+          soft: t('--c-ink-soft'),
         },
-        ok: withAlpha('--c-ok'),
-        warn: withAlpha('--c-warn'),
-        risk: withAlpha('--c-risk'),
-        info: withAlpha('--c-info'),
+        ok: t('--c-ok'),
+        warn: t('--c-warn'),
+        risk: t('--c-risk'),
+        info: t('--c-info'),
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-display)', 'Georgia', 'serif'],
+        display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: { xl: '0.875rem', '2xl': '1.125rem', '3xl': '1.5rem' },
       boxShadow: {
-        card: '0 1px 2px rgba(18,35,58,0.04), 0 10px 28px -18px rgba(18,35,58,0.28)',
-        lift: '0 2px 6px rgba(18,35,58,0.06), 0 22px 48px -22px rgba(18,35,58,0.34)',
-        ring: '0 0 0 1px rgb(var(--c-line))',
+        card: 'var(--card-shadow)',
+        lift: 'var(--card-lift)',
+        glow: '0 0 0 1px rgb(var(--c-brand) / 0.28), 0 12px 40px -12px rgb(var(--c-brand) / 0.45)',
       },
       keyframes: {
-        'fade-up': { from: { opacity: '0', transform: 'translateY(8px)' }, to: { opacity: '1', transform: 'none' } },
+        'fade-up': { from: { opacity: '0', transform: 'translateY(10px)' }, to: { opacity: '1', transform: 'none' } },
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
+        sweep: { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(200%)' } },
       },
       animation: {
-        'fade-up': 'fade-up .4s cubic-bezier(.2,.8,.2,1) both',
-        'fade-in': 'fade-in .25s ease both',
+        'fade-up': 'fade-up .45s cubic-bezier(.2,.8,.2,1) both',
+        'fade-in': 'fade-in .3s ease both',
+        sweep: 'sweep 2.4s ease-in-out infinite',
       },
     },
   },

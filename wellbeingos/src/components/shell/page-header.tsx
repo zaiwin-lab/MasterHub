@@ -20,7 +20,7 @@ export function PageHeader({
     <header className="mb-5 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="font-display text-[22px] leading-tight text-navy sm:text-[26px]">{title}</h1>
+          <h1 className="font-display text-[22px] leading-tight text-head sm:text-[26px]">{title}</h1>
           {zone ? <PrivacyIndicator zone={zone} note={zoneNote} /> : null}
         </div>
         {description ? (
@@ -35,7 +35,7 @@ export function PageHeader({
 export function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
     <div className="mb-3 mt-8 flex flex-wrap items-baseline justify-between gap-2 first:mt-0">
-      <h2 className="font-display text-[17px] text-navy">{children}</h2>
+      <h2 className="font-display text-[17px] text-head">{children}</h2>
       {hint ? <p className="text-[12.5px] text-ink-muted">{hint}</p> : null}
     </div>
   );

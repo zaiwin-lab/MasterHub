@@ -204,7 +204,7 @@ export default function ClaimsPage() {
                 </li>
                 {approvals.map((a) => (
                   <li key={a.id} className="relative">
-                    <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-navy/30" />
+                    <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-tint/30" />
                     <p className="text-[13.5px] font-medium capitalize text-ink">{a.action}</p>
                     <p className="text-[12.5px] text-ink-muted">
                       {formatDateTime(a.at)} · {db.users.find((u) => u.id === a.actorId)?.name ?? a.actorRole.toUpperCase()}

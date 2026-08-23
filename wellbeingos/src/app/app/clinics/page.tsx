@@ -94,7 +94,7 @@ export default function ClinicsPage() {
           {rows.map((c) => (
             <Card key={c.id} className="flex h-full flex-col p-5">
               <div className="flex items-start justify-between gap-2">
-                <p className="font-display text-[16px] leading-tight text-navy">{c.name}</p>
+                <p className="font-display text-[16px] leading-tight text-head">{c.name}</p>
                 <Badge tone="ok">Panel</Badge>
               </div>
               <ul className="mt-3 space-y-1.5 text-[13px] text-ink-muted">

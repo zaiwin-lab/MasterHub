@@ -168,6 +168,36 @@ export function monthlySeries(db: Dataset, f: OrgFilters = {}): MonthPoint[] {
   return perMonth;
 }
 
+/**
+ * Month-to-date against the *same span* of the previous month.
+ *
+ * Comparing a part-month against a whole one reads as a collapse in spend when
+ * nothing has actually changed, so the prior month is truncated to the same
+ * day of month before the two are compared.
+ */
+export function monthToDate(db: Dataset, f: OrgFilters = {}): { current: number; prior: number; deltaPct: number; dayOfMonth: number } {
+  const ref = new Date(db.referenceDate);
+  const day = ref.getDate();
+  const month = ref.getMonth();
+  const consuming = db.transactions.filter(
+    (t) => matches(db, t.employeeId, f) && (t.status === 'approved' || t.status === 'paid'),
+  );
+  const spanTotal = (m: number) =>
+    round2(sum(consuming.filter((t) => {
+      const d = new Date(t.date);
+      return d.getMonth() === m && d.getDate() <= day;
+    }).map((t) => t.amount)));
+
+  const current = spanTotal(month);
+  const prior = month > 0 ? spanTotal(month - 1) : 0;
+  return {
+    current,
+    prior,
+    deltaPct: prior ? round1(((current - prior) / prior) * 100) : 0,
+    dayOfMonth: day,
+  };
+}
+
 export interface UnitBreakdown {
   unitId: string;
   unit: string;

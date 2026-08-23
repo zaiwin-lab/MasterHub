@@ -114,7 +114,7 @@ export default function WellbeingPage() {
           <Card key={g.id} className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[14.5px] font-medium text-navy">{g.title}</p>
+                <p className="text-[14.5px] font-medium text-head">{g.title}</p>
                 <p className="mt-0.5 text-[12.5px] text-ink-muted">Target: {g.target} {g.metric} · due {formatDate(g.dueDate)}</p>
               </div>
               <Badge tone={g.status === 'achieved' ? 'ok' : 'muted'}>{g.status}</Badge>

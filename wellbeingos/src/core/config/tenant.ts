@@ -7,13 +7,22 @@
  */
 import type { AlertThreshold, BenefitPolicy, RoleKey } from '@/core/domain/types';
 
+/**
+ * Semantic, not literal. `head` is the strongest foreground, `primary` the
+ * action fill, `tint` a neutral wash for hovers and overlays — which is what
+ * lets one component set render correctly on a dark or a light canvas.
+ */
 export interface ThemeConfig {
   canvas: string;
   surface: string;
+  raised: string;
   line: string;
-  navy: string;
+  head: string;
+  primary: string;
+  onPrimary: string;
+  tint: string;
   brand: string;
-  accent: string;
+  violet: string;
   gold: string;
   ink: string;
   inkMuted: string;
@@ -107,7 +116,10 @@ export interface TenantConfig {
   logoMark: string; // short mark rendered in the brand block
   welcomeText: string;
   locale: string;
+  /** Dark palette — the default presentation. */
   theme: ThemeConfig;
+  /** Light palette. Same semantic keys, so no component knows which is active. */
+  themeLight: ThemeConfig;
   terminology: Terminology;
   modules: Record<ModuleKey, boolean>;
   policies: Omit<BenefitPolicy, 'tenantId'>[];

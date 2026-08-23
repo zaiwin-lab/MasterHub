@@ -12,7 +12,7 @@ import { canAny, roleLabels } from '@/core/access/permissions';
 import { groupLabels, navigation, type NavItem } from '@/core/config/navigation';
 import { notificationsFor } from '@/core/data/repository';
 import { BrandMark } from './brand';
-import { TenantTheme } from './theme';
+import { ModeToggle, TenantTheme } from './theme';
 import { Badge, Button, Skeleton } from '@/components/ui/primitives';
 import { cn, initials, relativeTime } from '@/lib/utils';
 
@@ -23,7 +23,7 @@ const icons: Record<string, typeof Home> = {
 };
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { ready, config, session, db, signOut } = useStore();
+  const { ready, config, session, db, signOut, mode, setMode } = useStore();
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,29 +61,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const unread = notifications.filter((n) => !n.read).length;
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <TenantTheme theme={config.theme} productName={config.productName} />
+    <div className="min-h-screen">
+      <TenantTheme config={config} mode={mode} />
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur lg:hidden no-print">
-        <button onClick={() => setMobileOpen(true)} aria-label="Open navigation" className="rounded-lg p-2 text-ink-muted hover:bg-navy/5">
+        <button onClick={() => setMobileOpen(true)} aria-label="Open navigation" className="rounded-lg p-2 text-ink-muted hover:bg-tint/[0.06]">
           <Menu size={20} />
         </button>
         <BrandMark mark={config.logoMark} productName={config.productName} size="sm" />
-        <NotifyButton unread={unread} onClick={() => setNotifyOpen((v) => !v)} />
+        <div className="flex items-center gap-1">
+          <ModeToggle mode={mode} onChange={setMode} />
+          <NotifyButton unread={unread} onClick={() => setNotifyOpen((v) => !v)} />
+        </div>
       </header>
 
       <div className="mx-auto flex w-full max-w-[1500px]">
         {/* Sidebar */}
         <aside
           className={cn(
-            'fixed inset-y-0 left-0 z-50 w-[272px] shrink-0 overflow-y-auto border-r border-line bg-surface transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 no-print',
+            'fixed inset-y-0 left-0 z-50 w-[268px] shrink-0 overflow-y-auto border-r border-line bg-surface/95 backdrop-blur-xl transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 no-print',
             mobileOpen ? 'translate-x-0' : '-translate-x-full',
           )}
         >
           <div className="flex items-center justify-between px-5 py-5">
             <BrandMark mark={config.logoMark} productName={config.productName} organisation={config.shortName} />
-            <button onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 text-ink-muted hover:bg-navy/5 lg:hidden" aria-label="Close navigation">
+            <button onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 text-ink-muted hover:bg-tint/[0.06] lg:hidden" aria-label="Close navigation">
               <X size={18} />
             </button>
           </div>
@@ -105,11 +108,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                             href={item.href}
                             className={cn(
                               'flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] transition-colors',
-                              active ? 'bg-navy text-white' : 'text-ink-muted hover:bg-navy/[0.05] hover:text-ink',
+                              active
+                                ? 'bg-gradient-to-r from-brand/[0.18] via-brand/[0.08] to-transparent font-medium text-head shadow-[inset_0_0_0_1px_rgb(var(--c-brand)/0.3)]'
+                                : 'text-ink-muted hover:bg-tint/[0.05] hover:text-head',
                             )}
                             aria-current={active ? 'page' : undefined}
                           >
-                            <Icon size={17} strokeWidth={active ? 2.2 : 1.9} className="shrink-0" aria-hidden />
+                            {active ? (
+                              <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-brand shadow-[0_0_12px_1px_rgb(var(--c-brand)/0.8)]" aria-hidden />
+                            ) : null}
+                            <Icon size={17} strokeWidth={active ? 2.2 : 1.9} className={active ? 'shrink-0 text-brand' : 'shrink-0'} aria-hidden />
                             <span className="truncate">{item.label}</span>
                           </Link>
                         </li>
@@ -123,14 +131,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="sticky bottom-0 border-t border-line bg-surface px-4 py-4">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/12 text-[12px] font-semibold text-brand">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-brand/30 bg-brand/12 text-[12px] font-semibold text-brand">
                 {initials(session.name)}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-medium text-ink">{session.name}</p>
                 <p className="truncate text-[11.5px] text-ink-muted">{session.roles.map((r) => roleLabels[r]).join(' · ')}</p>
               </div>
-              <button onClick={signOut} className="rounded-lg p-2 text-ink-soft hover:bg-navy/5 hover:text-ink" aria-label="Sign out" title="Sign out">
+              <button onClick={signOut} className="rounded-lg p-2 text-ink-soft hover:bg-tint/[0.06] hover:text-ink" aria-label="Sign out" title="Sign out">
                 <LogOut size={16} />
               </button>
             </div>
@@ -138,18 +146,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         {mobileOpen ? (
-          <div className="fixed inset-0 z-40 bg-navy/40 lg:hidden" onClick={() => setMobileOpen(false)} aria-hidden />
+          <div className="fixed inset-0 z-40 bg-canvas/80 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)} aria-hidden />
         ) : null}
 
         {/* Main column */}
         <div className="min-w-0 flex-1">
-          <div className="sticky top-0 z-30 hidden items-center justify-between gap-4 border-b border-line bg-canvas/90 px-6 py-3 backdrop-blur lg:flex no-print">
+          <div className="sticky top-0 z-30 hidden items-center justify-between gap-4 border-b border-line bg-canvas/70 px-6 py-3 backdrop-blur-xl lg:flex no-print">
             <div className="flex items-center gap-2.5">
+              <span className="flex items-center gap-2 rounded-full border border-brand/25 bg-brand/[0.08] px-3 py-1 text-[11.5px] font-medium text-brand">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand shadow-[0_0_8px_1px_rgb(var(--c-brand)/0.9)]" />
+                Live
+              </span>
               <Badge tone="muted">{config.organisationCode}</Badge>
-              <span className="text-[13px] text-ink-muted">{config.tagline}</span>
+              <span className="hidden text-[13px] text-ink-muted xl:inline">{config.tagline}</span>
             </div>
             <div className="flex items-center gap-2">
               <Badge tone="accent">Benefit period {db.periodYear}</Badge>
+              <ModeToggle mode={mode} onChange={setMode} />
               <NotifyButton unread={unread} onClick={() => setNotifyOpen((v) => !v)} />
             </div>
           </div>
@@ -167,7 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
 function NotifyButton({ unread, onClick }: { unread: number; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="relative rounded-lg p-2 text-ink-muted hover:bg-navy/5 hover:text-ink" aria-label={`Notifications, ${unread} unread`}>
+    <button onClick={onClick} className="relative rounded-lg p-2 text-ink-muted hover:bg-tint/[0.06] hover:text-ink" aria-label={`Notifications, ${unread} unread`}>
       <Bell size={19} />
       {unread > 0 ? (
         <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-risk px-1 text-[10px] font-semibold text-white">
@@ -187,7 +200,7 @@ function NotificationPanel({ onClose }: { onClose: () => void }) {
     <div className="border-b border-line bg-surface px-4 py-4 sm:px-6 no-print">
       <div className="mx-auto max-w-3xl">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-navy">Notifications</h2>
+          <h2 className="text-[14px] font-semibold text-head">Notifications</h2>
           <div className="flex gap-2">
             <Button size="sm" variant="quiet" onClick={actions.markNotificationsRead}>Mark all read</Button>
             <Button size="sm" variant="quiet" onClick={onClose}>Close</Button>

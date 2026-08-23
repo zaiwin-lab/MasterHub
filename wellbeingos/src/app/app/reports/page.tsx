@@ -138,12 +138,12 @@ export default function ReportsPage() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 no-print">
         {available.map((r) => (
           <button key={r.key} onClick={() => setActive(r.key)} className="text-left">
-            <Card className={`h-full p-4 transition-shadow hover:shadow-lift ${active === r.key ? 'border-navy' : ''}`}>
+            <Card className={`h-full p-4 transition-shadow hover:shadow-lift ${active === r.key ? 'border-brand' : ''}`}>
               <div className="flex items-start justify-between gap-2">
                 <FileText size={16} className="mt-0.5 text-brand" />
                 <PrivacyIndicator zone={r.zone} />
               </div>
-              <p className="mt-2 text-[14px] font-medium text-navy">{r.name}</p>
+              <p className="mt-2 text-[14px] font-medium text-head">{r.name}</p>
               <p className="mt-1 text-[12.5px] leading-relaxed text-ink-muted">{r.description}</p>
             </Card>
           </button>

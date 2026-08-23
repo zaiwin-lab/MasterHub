@@ -95,7 +95,7 @@ export default function ProgrammesPage() {
                   <Badge tone="muted">{p.category}</Badge>
                   <Badge tone={p.status === 'running' ? 'ok' : p.status === 'open' ? 'info' : p.status === 'completed' ? 'muted' : 'warn'}>{p.status}</Badge>
                 </div>
-                <p className="mt-3 font-display text-[16.5px] leading-tight text-navy">{p.name}</p>
+                <p className="mt-3 font-display text-[16.5px] leading-tight text-head">{p.name}</p>
                 <p className="mt-1.5 line-clamp-3 text-[13px] leading-relaxed text-ink-muted">{p.description}</p>
 
                 <dl className="mt-3 space-y-1 text-[12.5px] text-ink-muted">

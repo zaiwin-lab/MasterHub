@@ -7,14 +7,15 @@ import { useStore } from '@/core/data/store';
 import { can } from '@/core/access/permissions';
 import { allWallets, listExceptions } from '@/core/data/repository';
 import {
-  categoryBreakdown, monthlySeries, orgOverview, participationBreakdown, pulseTrend,
+  categoryBreakdown, monthlySeries, monthToDate, orgOverview, participationBreakdown, pulseTrend,
   unitBreakdown, utilisationBands, type OrgFilters,
 } from '@/core/analytics/organisation';
 import {
   BandsChart, CategoryPie, ChartContainer, MonthlyBarChart, ParticipationChart,
   PulseLineChart, UnitBarChart, UtilisationTrendChart,
 } from '@/components/charts';
-import { Badge, Button, Card, CardBody, CardHeader, Stat, Table, Td, Th } from '@/components/ui/primitives';
+import { Badge, Button, Card, CardBody, CardHeader, Sparkline, Stat, Table, Td, Th } from '@/components/ui/primitives';
+import { Delta, MeterList, RadialGauge } from '@/components/ui/gauge';
 import { PrivacyIndicator, SuppressedNotice } from '@/components/ui/privacy';
 import { FilterBar } from '@/components/shell/filter-bar';
 import { SectionTitle } from '@/components/shell/page-header';
@@ -43,6 +44,7 @@ export function OrganisationDashboard({ variant }: { variant: 'hr' | 'finance' |
   const bands = useMemo(() => utilisationBands(db, orgFilters), [db, orgFilters]);
   const participation = useMemo(() => participationBreakdown(db, config), [db, config]);
   const pulse = useMemo(() => pulseTrend(db, config), [db, config]);
+  const mtd = useMemo(() => monthToDate(db, orgFilters), [db, orgFilters]);
   const exceptions = session ? listExceptions(db, session) : [];
   const openExceptions = exceptions.filter((e) => e.status === 'open' || e.status === 'in-progress');
 
@@ -67,13 +69,61 @@ export function OrganisationDashboard({ variant }: { variant: 'hr' | 'finance' |
     <div>
       <header className="mb-5">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="font-display text-[22px] leading-tight text-navy sm:text-[26px]">{title}</h1>
+          <h1 className="font-display text-[22px] leading-tight text-head sm:text-[26px]">{title}</h1>
           <PrivacyIndicator zone={variant === 'management' ? 'zone3' : 'zone1'} note={variant === 'management' ? 'Aggregated only' : undefined} />
         </div>
         <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-ink-muted">{intro}</p>
       </header>
 
       <FilterBar filters={filterDefs} value={filters} onChange={(k, v) => setFilters((f) => ({ ...f, [k]: v }))} onReset={() => setFilters({})} />
+
+      {/* Command deck — the three figures a leader needs before anything else:
+          where the budget stands, which way it is moving, and where it lands. */}
+      <Card className="mb-4 overflow-hidden">
+        <div className="grid-field pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+        <div className="relative grid gap-6 p-5 sm:p-6 lg:grid-cols-[auto_1fr_1fr] lg:items-center">
+          <RadialGauge
+            value={overview.approved}
+            max={overview.totalEntitlement || 1}
+            size={196}
+            stroke={17}
+            label="Budget utilised"
+            caption={`${overview.ytdUtilisationPct}%`}
+            sublabel={`${formatMoney(overview.approved, t.currency, { compact: true })} of ${formatMoney(overview.totalEntitlement, t.currency, { compact: true })}`}
+            tone={overview.ytdUtilisationPct >= 90 ? 'risk' : overview.ytdUtilisationPct >= 75 ? 'warn' : 'brand'}
+            className="mx-auto"
+          />
+
+          <div className="min-w-0">
+            <p className="label">Month to date</p>
+            <div className="mt-2 flex flex-wrap items-baseline gap-3">
+              <span className="font-display text-[30px] font-semibold leading-none tabular-nums text-head">
+                {formatMoney(mtd.current, t.currency, { compact: true })}
+              </span>
+              <Delta value={mtd.deltaPct} suffix="%" goodWhenDown />
+            </div>
+            <p className="mt-1 text-[12px] text-ink-soft">
+              First {mtd.dayOfMonth} days, against the same span last month ({formatMoney(mtd.prior, t.currency, { compact: true })})
+            </p>
+            <Sparkline values={months.slice(0, overview.monthsElapsed).map((m) => m.approved)} accent="brand" className="h-12" />
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <MiniFigure label="Committed" value={formatMoney(overview.committed, t.currency, { compact: true })} tone="violet" />
+              <MiniFigure label="Decision time" value={`${overview.avgTurnaroundDays} days`} />
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="label">Where it is going</p>
+              <Badge tone="muted">Top categories</Badge>
+            </div>
+            <MeterList
+              items={categories.slice(0, 5).map((c) => ({ label: c.category, value: c.amount, hint: `${c.count} transactions` }))}
+              formatValue={(v) => formatMoney(v, t.currency, { compact: true })}
+            />
+          </div>
+        </div>
+      </Card>
 
       {/* KPI row */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -274,6 +324,15 @@ export function OrganisationDashboard({ variant }: { variant: 'hr' | 'finance' |
         <Insight icon={<Clock size={16} />} title="Responsiveness" body={`Decisions take ${overview.avgTurnaroundDays} days on average from submission.`} />
         <Insight icon={variant === 'finance' ? <Wallet size={16} /> : <Users2 size={16} />} title={variant === 'finance' ? 'Exposure' : 'Engagement'} body={variant === 'finance' ? `${formatMoney(overview.recoveryExposure, t.currency)} sits beyond entitlement and needs a policy decision.` : `${overview.programmeParticipationPct}% of eligible staff have joined a programme this period.`} />
       </div>
+    </div>
+  );
+}
+
+function MiniFigure({ label, value, tone }: { label: string; value: string; tone?: 'violet' }) {
+  return (
+    <div className="rounded-xl border border-line bg-raised/60 px-3 py-2.5">
+      <p className="label">{label}</p>
+      <p className={`mt-1 text-[15px] font-medium tabular-nums ${tone === 'violet' ? 'text-violet' : 'text-head'}`}>{value}</p>
     </div>
   );
 }

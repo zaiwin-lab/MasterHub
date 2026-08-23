@@ -6,15 +6,15 @@ import {
 } from 'recharts';
 import { Card, CardBody, CardHeader } from '@/components/ui/primitives';
 
-const axis = { stroke: 'rgb(var(--c-ink-soft))', fontSize: 11.5 };
-const grid = 'rgb(var(--c-navy) / 0.07)';
+const axis = { fill: 'rgb(var(--c-ink-soft))', fontSize: 11.5 } as const;
+const grid = 'rgb(var(--c-tint) / 0.08)';
 
 export const seriesColours = [
   'rgb(var(--c-brand))',
   'rgb(var(--c-info))',
   'rgb(var(--c-gold))',
   'rgb(var(--c-accent))',
-  'rgb(var(--c-navy))',
+  'rgb(var(--c-violet))',
   'rgb(var(--c-warn))',
   'rgb(var(--c-risk))',
 ];
@@ -24,12 +24,12 @@ function tooltipStyle() {
     contentStyle: {
       borderRadius: 12,
       border: '1px solid rgb(var(--c-line))',
-      boxShadow: '0 10px 28px -18px rgba(18,35,58,.35)',
+      boxShadow: '0 24px 50px -24px rgb(0 0 0 / 0.85)',
       fontSize: 12.5,
-      background: 'rgb(var(--c-surface))',
+      background: 'rgb(var(--c-raised))',
       color: 'rgb(var(--c-ink))',
     },
-    labelStyle: { color: 'rgb(var(--c-navy))', fontWeight: 600, marginBottom: 4 },
+    labelStyle: { color: 'rgb(var(--c-violet))', fontWeight: 600, marginBottom: 4 },
   };
 }
 
@@ -79,8 +79,8 @@ export function UtilisationTrendChart({
     <ComposedChart {...size} data={data} margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
       <defs>
         <linearGradient id="fillCumulative" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgb(var(--c-brand))" stopOpacity={0.28} />
-          <stop offset="100%" stopColor="rgb(var(--c-brand))" stopOpacity={0.02} />
+          <stop offset="0%" stopColor="rgb(var(--c-brand))" stopOpacity={0.38} />
+          <stop offset="100%" stopColor="rgb(var(--c-brand))" stopOpacity={0.01} />
         </linearGradient>
       </defs>
       <CartesianGrid stroke={grid} vertical={false} />
@@ -107,10 +107,10 @@ export function MonthlyBarChart({
       <CartesianGrid stroke={grid} vertical={false} />
       <XAxis dataKey="month" tickLine={false} axisLine={false} tick={axis} />
       <YAxis tickLine={false} axisLine={false} tick={axis} tickFormatter={(v: number) => `${currency}${Math.round(v / 1000)}k`} width={62} />
-      <Tooltip {...tooltipStyle()} formatter={(v: number, n: string) => [`${currency}${v.toLocaleString('en-MY')}`, n === 'approved' ? 'Approved' : 'Committed (pending)']} cursor={{ fill: 'rgb(var(--c-navy) / 0.04)' }} />
+      <Tooltip {...tooltipStyle()} formatter={(v: number, n: string) => [`${currency}${v.toLocaleString('en-MY')}`, n === 'approved' ? 'Approved' : 'Committed (pending)']} cursor={{ fill: 'rgb(var(--c-tint) / 0.06)' }} />
       <Legend wrapperStyle={{ fontSize: 12 }} formatter={(v) => (v === 'approved' ? 'Approved' : 'Committed (pending)')} />
       <Bar dataKey="approved" stackId="a" fill="rgb(var(--c-brand))" radius={[0, 0, 0, 0]} />
-      <Bar dataKey="committed" stackId="a" fill="rgb(var(--c-accent))" radius={[4, 4, 0, 0]} />
+      <Bar dataKey="committed" stackId="a" fill="rgb(var(--c-violet))" radius={[5, 5, 0, 0]} />
     </BarChart>
   );
 }
@@ -123,8 +123,8 @@ export function BandsChart({ data, ...size }: Sized & { data: { band: string; em
       <CartesianGrid stroke={grid} vertical={false} />
       <XAxis dataKey="band" tickLine={false} axisLine={false} tick={axis} />
       <YAxis tickLine={false} axisLine={false} tick={axis} width={40} allowDecimals={false} />
-      <Tooltip {...tooltipStyle()} formatter={(v: number) => [v, 'People']} cursor={{ fill: 'rgb(var(--c-navy) / 0.04)' }} />
-      <Bar dataKey="employees" radius={[6, 6, 0, 0]}>
+      <Tooltip {...tooltipStyle()} formatter={(v: number) => [v, 'People']} cursor={{ fill: 'rgb(var(--c-tint) / 0.06)' }} />
+      <Bar dataKey="employees" radius={[6, 6, 0, 0]} maxBarSize={54}>
         {data.map((d) => (
           <Cell key={d.band} fill={colour(d.band)} />
         ))}
@@ -138,7 +138,7 @@ export function CategoryPie({ data, currency, ...size }: Sized & { data: { categ
     <PieChart {...size}>
       <Tooltip {...tooltipStyle()} formatter={(v: number, n: string) => [`${currency}${v.toLocaleString('en-MY')}`, n]} />
       <Legend wrapperStyle={{ fontSize: 12 }} />
-      <Pie data={data} dataKey="amount" nameKey="category" innerRadius={52} outerRadius={84} paddingAngle={2} stroke="rgb(var(--c-surface))" strokeWidth={2}>
+      <Pie data={data} dataKey="amount" nameKey="category" innerRadius={52} outerRadius={84} paddingAngle={2} stroke="rgb(var(--c-surface))" strokeWidth={3}>
         {data.map((d, i) => (
           <Cell key={d.category} fill={seriesColours[i % seriesColours.length]} />
         ))}
@@ -150,11 +150,17 @@ export function CategoryPie({ data, currency, ...size }: Sized & { data: { categ
 export function UnitBarChart({ data, ...size }: Sized & { data: { unit: string; utilisationPct: number }[] }) {
   return (
     <BarChart {...size} data={data} layout="vertical" margin={{ top: 4, right: 16, left: 8, bottom: 0 }}>
+      <defs>
+        <linearGradient id="unitFill" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="rgb(var(--c-brand))" stopOpacity={0.55} />
+          <stop offset="100%" stopColor="rgb(var(--c-brand))" />
+        </linearGradient>
+      </defs>
       <CartesianGrid stroke={grid} horizontal={false} />
       <XAxis type="number" tickLine={false} axisLine={false} tick={axis} unit="%" domain={[0, 'dataMax']} />
       <YAxis type="category" dataKey="unit" tickLine={false} axisLine={false} tick={{ ...axis, fontSize: 11 }} width={132} />
-      <Tooltip {...tooltipStyle()} formatter={(v: number) => [`${v}%`, 'Utilisation']} cursor={{ fill: 'rgb(var(--c-navy) / 0.04)' }} />
-      <Bar dataKey="utilisationPct" fill="rgb(var(--c-brand))" radius={[0, 6, 6, 0]} barSize={16} />
+      <Tooltip {...tooltipStyle()} formatter={(v: number) => [`${v}%`, 'Utilisation']} cursor={{ fill: 'rgb(var(--c-tint) / 0.06)' }} />
+      <Bar dataKey="utilisationPct" fill="url(#unitFill)" radius={[0, 6, 6, 0]} barSize={16} />
     </BarChart>
   );
 }
@@ -166,7 +172,7 @@ export function PulseLineChart({ data, ...size }: Sized & { data: { month: strin
       <XAxis dataKey="month" tickLine={false} axisLine={false} tick={axis} />
       <YAxis domain={[0, 100]} tickLine={false} axisLine={false} tick={axis} width={40} />
       <Tooltip {...tooltipStyle()} formatter={(v: number) => [`${v}`, 'Wellbeing index']} />
-      <Line type="monotone" dataKey="index" stroke="rgb(var(--c-brand))" strokeWidth={2.5} dot={{ r: 3, fill: 'rgb(var(--c-brand))' }} />
+      <Line type="monotone" dataKey="index" stroke="rgb(var(--c-brand))" strokeWidth={2.5} dot={{ r: 3, fill: 'rgb(var(--c-brand))', strokeWidth: 0 }} activeDot={{ r: 5 }} />
     </LineChart>
   );
 }
@@ -177,10 +183,10 @@ export function ParticipationChart({ data, ...size }: Sized & { data: { programm
       <CartesianGrid stroke={grid} horizontal={false} />
       <XAxis type="number" tickLine={false} axisLine={false} tick={axis} allowDecimals={false} />
       <YAxis type="category" dataKey="programme" tickLine={false} axisLine={false} tick={{ ...axis, fontSize: 11 }} width={168} />
-      <Tooltip {...tooltipStyle()} cursor={{ fill: 'rgb(var(--c-navy) / 0.04)' }} />
+      <Tooltip {...tooltipStyle()} cursor={{ fill: 'rgb(var(--c-tint) / 0.06)' }} />
       <Legend wrapperStyle={{ fontSize: 12 }} />
       <Bar dataKey="registered" name="Registered" fill="rgb(var(--c-brand))" radius={[0, 4, 4, 0]} barSize={12} />
-      <Bar dataKey="completed" name="Completed" fill="rgb(var(--c-accent))" radius={[0, 4, 4, 0]} barSize={12} />
+      <Bar dataKey="completed" name="Completed" fill="rgb(var(--c-violet))" radius={[0, 4, 4, 0]} barSize={12} />
     </BarChart>
   );
 }

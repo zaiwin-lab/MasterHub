@@ -24,7 +24,7 @@ const tabs: { key: Tab; label: string; icon: typeof Building2 }[] = [
 ];
 
 export default function AdminPage() {
-  const { config, db, session, updateConfig, switchTenant, tenantId, resetDemoData } = useStore();
+  const { config, db, session, updateConfig, switchTenant, tenantId, resetDemoData, mode } = useStore();
   const [tab, setTab] = useState<Tab>('organisation');
 
   if (!session || !can(session, 'tenant.configure')) {
@@ -33,6 +33,7 @@ export default function AdminPage() {
 
   const policy = config.policies[0];
   const t = config.terminology;
+  const palette = mode === 'dark' ? config.theme : config.themeLight;
 
   const setPolicy = (patch: Partial<typeof policy>) => updateConfig({ policies: [{ ...policy, ...patch }] });
   const setThresholds = (thresholds: AlertThreshold[]) => setPolicy({ thresholds });
@@ -54,7 +55,7 @@ export default function AdminPage() {
               onClick={() => setTab(tb.key)}
               className={cn(
                 'inline-flex items-center gap-2 rounded-xl px-3 py-2 text-[13px] transition-colors',
-                tab === tb.key ? 'bg-navy text-white' : 'text-ink-muted hover:bg-navy/[0.05] hover:text-ink',
+                tab === tb.key ? 'bg-primary text-onPrimary' : 'text-ink-muted hover:bg-tint/[0.05] hover:text-ink',
               )}
             >
               <Icon size={15} /> {tb.label}
@@ -110,7 +111,11 @@ export default function AdminPage() {
       {tab === 'branding' ? (
         <div className="grid gap-4 lg:grid-cols-2">
           <Card>
-            <CardHeader title="White-label" subtitle="Colours apply immediately — the design tokens are runtime values, not compiled ones." />
+            <CardHeader
+              title="White-label"
+              subtitle={`Colours apply immediately — the design tokens are runtime values, not compiled ones. Editing the ${mode} palette.`}
+              action={<Badge tone="accent">{mode} mode</Badge>}
+            />
             <CardBody className="space-y-4 pt-2">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Product name"><Input defaultValue={config.productName} onBlur={(e) => updateConfig({ productName: e.target.value })} /></Field>
@@ -118,18 +123,25 @@ export default function AdminPage() {
               </div>
               <Field label="Tagline"><Input defaultValue={config.tagline} onBlur={(e) => updateConfig({ tagline: e.target.value })} /></Field>
               <div className="grid gap-3 sm:grid-cols-3">
-                {(['navy', 'brand', 'accent', 'gold', 'canvas', 'line'] as const).map((key) => (
+                {(['primary', 'brand', 'violet', 'gold', 'canvas', 'surface', 'head', 'line'] as const).map((key) => (
                   <label key={key} className="block">
                     <span className="mb-1.5 block text-[13px] font-medium capitalize text-ink">{key}</span>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
-                        defaultValue={config.theme[key]}
-                        onChange={(e) => updateConfig({ theme: { ...config.theme, [key]: e.target.value } })}
+                        key={`${mode}-${key}-${palette[key]}`}
+                        defaultValue={palette[key]}
+                        onChange={(e) =>
+                          updateConfig(
+                            mode === 'dark'
+                              ? { theme: { ...config.theme, [key]: e.target.value } }
+                              : { themeLight: { ...config.themeLight, [key]: e.target.value } },
+                          )
+                        }
                         className="h-9 w-12 cursor-pointer rounded-lg border border-line bg-surface p-1"
                         aria-label={`${key} colour`}
                       />
-                      <code className="text-[12px] text-ink-muted">{config.theme[key]}</code>
+                      <code className="text-[12px] text-ink-muted">{palette[key]}</code>
                     </div>
                   </label>
                 ))}
@@ -330,10 +342,10 @@ export default function AdminPage() {
             <CardHeader title="Deployed tenants" subtitle="The same engine, configured per organisation. Switching here reloads the platform against that tenant's configuration and its own isolated dataset." />
             <CardBody className="grid gap-3 pt-2 sm:grid-cols-2">
               {tenantList.map((tn) => (
-                <div key={tn.id} className={cn('rounded-2xl border p-4', tn.id === tenantId ? 'border-navy bg-navy/[0.03]' : 'border-line')}>
+                <div key={tn.id} className={cn('rounded-2xl border p-4', tn.id === tenantId ? 'border-brand/40 bg-tint/[0.03]' : 'border-line')}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-display text-[16px] text-navy">{tn.productName}</p>
+                      <p className="font-display text-[16px] text-head">{tn.productName}</p>
                       <p className="text-[12.5px] text-ink-muted">{tn.organisationName}</p>
                     </div>
                     {tn.id === tenantId ? <Badge tone="accent">Active</Badge> : null}

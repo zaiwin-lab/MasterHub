@@ -21,7 +21,7 @@ export function WellbeingDashboard() {
     <div>
       <header className="mb-5">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="font-display text-[22px] leading-tight text-navy sm:text-[26px]">Wellbeing team</h1>
+          <h1 className="font-display text-[22px] leading-tight text-head sm:text-[26px]">Wellbeing team</h1>
           <PrivacyIndicator zone="zone3" note="Aggregated and consented data only" />
         </div>
         <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-ink-muted">
@@ -51,13 +51,13 @@ export function WellbeingDashboard() {
                   <Radar size={15} className="text-brand" />
                   <p className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft">{s.code}</p>
                 </div>
-                <p className="mt-1 font-display text-[16px] leading-tight text-navy">{s.title}</p>
+                <p className="mt-1 font-display text-[16px] leading-tight text-head">{s.title}</p>
               </div>
               <Badge tone={s.severity === 'priority' ? 'risk' : 'warn'}>{s.severity}</Badge>
             </div>
             <p className="mt-3 text-[13px] leading-relaxed text-ink-muted">{s.observation}</p>
-            <p className="mt-2 text-[13px] leading-relaxed text-ink"><span className="font-medium text-navy">Possible insight:</span> {s.organisationalInsight}</p>
-            <p className="mt-2 text-[13px] leading-relaxed text-ink"><span className="font-medium text-navy">Recommended response:</span> {s.recommendedResponse}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-ink"><span className="font-medium text-head">Possible insight:</span> {s.organisationalInsight}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-ink"><span className="font-medium text-head">Recommended response:</span> {s.recommendedResponse}</p>
             <Link href="/app/signals" className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-brand hover:underline">
               Open intelligence view <ArrowRight size={14} />
             </Link>

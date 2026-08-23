@@ -106,7 +106,7 @@ Full detail: [`docs/PRIVACY.md`](docs/PRIVACY.md).
 | [Roles & permissions](docs/ROLES.md) | The capability matrix and how it is enforced |
 | [Privacy model](docs/PRIVACY.md) | The three zones, consent, the aggregation floor |
 | [Tenant configuration](docs/TENANT-CONFIGURATION.md) | Onboarding another organisation |
-| [Theming](docs/THEMING.md) | White-labelling without a rebuild |
+| [Design system](docs/THEMING.md) | Light and dark modes, tokens, white-labelling |
 | [Policy](docs/POLICY.md) | Entitlement, thresholds, approval, eligibility gates |
 | [Feature flags](docs/FEATURE-FLAGS.md) | Modules and how gating works |
 | [Replication check](docs/REPLICATION-CHECK.md) | The second tenant, proved |
@@ -115,10 +115,18 @@ Full detail: [`docs/PRIVACY.md`](docs/PRIVACY.md).
 | [Deployment](docs/DEPLOYMENT.md) | Environments, Netlify, pilot checklist |
 | [Demo script](docs/DEMO-SCRIPT.md) | Five to seven minutes, ten scenes |
 
+## Design
+
+Two presentation modes — **bright by default**, dark as a full alternate,
+toggled from the top bar. Geometric sans, radial gauges, meter bars and a faint
+command-deck grid. Deliberately unlike the sibling deployment in this portfolio
+(warm cream, emerald, serif): two products for one client should not be
+mistaken for each other. See [`docs/THEMING.md`](docs/THEMING.md).
+
 ## Stack
 
 Next.js 15 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS ·
-Recharts · Lucide.
+Recharts · Lucide · Space Grotesk / Inter.
 
 ---
 

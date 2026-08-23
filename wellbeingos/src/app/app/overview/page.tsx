@@ -35,7 +35,7 @@ export default function OverviewPage() {
   return (
     <div>
       <header className="mb-5">
-        <h1 className="font-display text-[22px] leading-tight text-navy sm:text-[26px]">{session.name}</h1>
+        <h1 className="font-display text-[22px] leading-tight text-head sm:text-[26px]">{session.name}</h1>
         <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-ink-muted">
           Verify eligibility, record a visit and track submissions. You see only what this clinic has submitted —
           nothing about a person&apos;s other visits, wellbeing or employment.

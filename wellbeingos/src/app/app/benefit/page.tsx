@@ -182,7 +182,7 @@ function Row({ label, value, strong, muted, tone }: { label: string; value: stri
   return (
     <div className="flex items-baseline justify-between gap-3 border-b border-line/70 pb-2 last:border-0">
       <dt className={`text-[13px] ${muted ? 'text-ink-soft' : 'text-ink-muted'}`}>{label}</dt>
-      <dd className={`tabular-nums ${strong ? 'font-display text-[17px] text-navy' : tone === 'risk' ? 'text-[13.5px] font-medium text-risk' : 'text-[13.5px] text-ink'}`}>{value}</dd>
+      <dd className={`tabular-nums ${strong ? 'font-display text-[17px] text-head' : tone === 'risk' ? 'text-[13.5px] font-medium text-risk' : 'text-[13.5px] text-ink'}`}>{value}</dd>
     </div>
   );
 }

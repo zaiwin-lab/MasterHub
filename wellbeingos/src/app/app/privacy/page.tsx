@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         {(['zone1', 'zone2', 'zone3'] as const).map((zone) => (
           <Card key={zone} className="p-5">
             <PrivacyIndicator zone={zone} />
-            <p className="mt-3 font-display text-[16px] leading-tight text-navy">{zoneLabels[zone]}</p>
+            <p className="mt-3 font-display text-[16px] leading-tight text-head">{zoneLabels[zone]}</p>
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">{zoneDescriptions[zone]}</p>
           </Card>
         ))}
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
           <CardBody className="pt-2">
             <p className="text-[13.5px] leading-relaxed text-ink-muted">
               No organisational figure is displayed for a group smaller than{' '}
-              <span className="font-medium text-navy">{config.privacy.minimumAggregationGroup} people</span>. Where a
+              <span className="font-medium text-head">{config.privacy.minimumAggregationGroup} people</span>. Where a
               division, location or programme falls below that, the platform shows{' '}
               <Badge tone="muted">Suppressed</Badge> rather than a rounded number — because a rounded number can still
               identify a person in a small team.

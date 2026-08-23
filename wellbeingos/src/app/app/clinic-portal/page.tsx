@@ -85,10 +85,10 @@ export default function ClinicPortalPage() {
       <ol className="mb-5 flex flex-wrap items-center gap-2 text-[12.5px]">
         {(['verify', 'record', 'done'] as Step[]).map((s, i) => (
           <li key={s} className="flex items-center gap-2">
-            <span className={`grid h-6 w-6 place-items-center rounded-full text-[11px] font-semibold ${step === s ? 'bg-navy text-white' : i < ['verify', 'record', 'done'].indexOf(step) ? 'bg-brand/15 text-brand' : 'bg-navy/[0.07] text-ink-soft'}`}>
+            <span className={`grid h-6 w-6 place-items-center rounded-full text-[11px] font-semibold ${step === s ? 'bg-primary text-onPrimary' : i < ['verify', 'record', 'done'].indexOf(step) ? 'bg-brand/15 text-brand' : 'bg-tint/[0.07] text-ink-soft'}`}>
               {i + 1}
             </span>
-            <span className={step === s ? 'font-medium text-navy' : 'text-ink-muted'}>
+            <span className={step === s ? 'font-medium text-head' : 'text-ink-muted'}>
               {s === 'verify' ? 'Verify eligibility' : s === 'record' ? 'Record visit' : 'Submitted'}
             </span>
             {i < 2 ? <span className="mx-1 text-ink-soft">→</span> : null}
@@ -118,9 +118,9 @@ export default function ClinicPortalPage() {
             <div className="mt-4 rounded-2xl border border-line bg-canvas/60 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-full bg-navy/[0.06] text-navy"><UserRound size={19} /></span>
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-tint/[0.06] text-head"><UserRound size={19} /></span>
                   <div>
-                    <p className="font-display text-[17px] leading-tight text-navy">{subject.name}</p>
+                    <p className="font-display text-[17px] leading-tight text-head">{subject.name}</p>
                     <p className="text-[12.5px] text-ink-muted">{subject.staffNo} · {subject.policyName}</p>
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export default function ClinicPortalPage() {
 
               {decision && amount > 0 ? (
                 <div className={`rounded-xl border px-4 py-3 text-[13px] leading-relaxed ${decision.allowed && !decision.requiresPolicyRoute ? 'border-ok/25 bg-ok/[0.06] text-ink' : decision.allowed ? 'border-warn/30 bg-warn/[0.07] text-ink' : 'border-risk/30 bg-risk/[0.06] text-ink'}`}>
-                  <span className="font-medium text-navy">{decision.allowed ? (decision.requiresPolicyRoute ? 'Proceeds under the policy exception route' : 'Within available balance') : 'Cannot be submitted'}</span>
+                  <span className="font-medium text-head">{decision.allowed ? (decision.requiresPolicyRoute ? 'Proceeds under the policy exception route' : 'Within available balance') : 'Cannot be submitted'}</span>
                   {' — '}{decision.reason}
                 </div>
               ) : null}
@@ -189,7 +189,7 @@ export default function ClinicPortalPage() {
             <div className="flex items-start gap-3">
               <CheckCircle2 size={22} className="mt-0.5 shrink-0 text-ok" />
               <div>
-                <p className="font-display text-[18px] leading-tight text-navy">Transaction submitted</p>
+                <p className="font-display text-[18px] leading-tight text-head">Transaction submitted</p>
                 <p className="mt-1 text-[13.5px] leading-relaxed text-ink-muted">
                   Reference <span className="font-medium text-ink">{receipt.reference}</span> for {formatMoney(receipt.amount, t.currency)} —
                   currently <span className="font-medium text-ink">{receipt.status}</span>. The employee has been notified and
@@ -211,7 +211,7 @@ function Figure({ label, value, tone }: { label: string; value: string; tone?: '
   return (
     <div>
       <p className="label">{label}</p>
-      <p className={`mt-1 font-display text-[18px] leading-none ${tone === 'risk' ? 'text-risk' : 'text-navy'}`}>{value}</p>
+      <p className={`mt-1 font-display text-[18px] leading-none ${tone === 'risk' ? 'text-risk' : 'text-head'}`}>{value}</p>
     </div>
   );
 }

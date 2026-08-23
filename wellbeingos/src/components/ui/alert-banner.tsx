@@ -4,11 +4,11 @@ import { Info, Bell, AlertTriangle, ShieldAlert } from 'lucide-react';
 import type { AlertThreshold } from '@/core/domain/types';
 import { cn } from '@/lib/utils';
 
-const levelStyle: Record<AlertThreshold['level'], { wrap: string; icon: typeof Info; label: string }> = {
-  awareness: { wrap: 'border-info/25 bg-info/[0.06]', icon: Info, label: 'Awareness' },
-  reminder: { wrap: 'border-gold/30 bg-gold/[0.07]', icon: Bell, label: 'Reminder' },
-  important: { wrap: 'border-warn/30 bg-warn/[0.08]', icon: AlertTriangle, label: 'Important' },
-  policy: { wrap: 'border-risk/30 bg-risk/[0.07]', icon: ShieldAlert, label: 'Policy workflow' },
+const levelStyle: Record<AlertThreshold['level'], { wrap: string; icon: typeof Info; label: string; accent: string }> = {
+  awareness: { wrap: 'border-info/30 bg-info/[0.08]', icon: Info, label: 'Awareness', accent: 'text-info' },
+  reminder: { wrap: 'border-gold/35 bg-gold/[0.09]', icon: Bell, label: 'Reminder', accent: 'text-gold' },
+  important: { wrap: 'border-warn/40 bg-warn/[0.10]', icon: AlertTriangle, label: 'Important', accent: 'text-warn' },
+  policy: { wrap: 'border-risk/40 bg-risk/[0.10]', icon: ShieldAlert, label: 'Policy workflow', accent: 'text-risk' },
 };
 
 /**
@@ -32,9 +32,9 @@ export function AlertBanner({
   const Icon = style.icon;
   return (
     <div className={cn('flex flex-wrap items-start gap-3 rounded-2xl border px-4 py-3.5 sm:px-5', style.wrap, className)} role="status">
-      <Icon size={18} className="mt-0.5 shrink-0 text-navy/70" aria-hidden />
+      <Icon size={18} className={cn('mt-0.5 shrink-0', style.accent)} aria-hidden />
       <div className="min-w-0 flex-1">
-        <p className="text-[13.5px] font-semibold text-navy">{title}</p>
+        <p className="text-[13.5px] font-semibold text-head">{title}</p>
         <p className="mt-1 text-[13.5px] leading-relaxed text-ink-muted">{message}</p>
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

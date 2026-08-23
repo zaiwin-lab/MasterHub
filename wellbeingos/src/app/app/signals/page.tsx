@@ -55,7 +55,7 @@ function SignalsPageContent() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft">{s.code} · {s.category}</p>
-                    <p className="mt-1 font-display text-[16.5px] leading-tight text-navy">{s.title}</p>
+                    <p className="mt-1 font-display text-[16.5px] leading-tight text-head">{s.title}</p>
                   </div>
                   <Badge tone={s.severity === 'priority' ? 'risk' : s.severity === 'attention' ? 'warn' : 'muted'}>{s.severity}</Badge>
                 </div>
@@ -67,7 +67,7 @@ function SignalsPageContent() {
                     <div className="mt-4 flex items-end gap-4">
                       <div>
                         <p className="label">{s.metricLabel}</p>
-                        <p className="mt-1 font-display text-[24px] leading-none text-navy">{s.current}{s.unit === '%' ? '%' : ''}</p>
+                        <p className="mt-1 font-display text-[24px] leading-none text-head">{s.current}{s.unit === '%' ? '%' : ''}</p>
                       </div>
                       <span className={`mb-1 inline-flex items-center gap-1 text-[13px] font-medium ${delta > 0 ? 'text-warn' : delta < 0 ? 'text-ok' : 'text-ink-muted'}`}>
                         {delta > 0 ? <TrendingUp size={14} /> : delta < 0 ? <TrendingDown size={14} /> : null}
@@ -167,7 +167,7 @@ function SignalsPageContent() {
               <li key={s.step} className="flex gap-3">
                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand/10 text-[12px] font-semibold text-brand">{i + 1}</span>
                 <div>
-                  <p className="text-[13.5px] font-medium text-navy">{s.step}</p>
+                  <p className="text-[13.5px] font-medium text-head">{s.step}</p>
                   <p className="mt-0.5 text-[13.5px] leading-relaxed text-ink-muted">{s.body}</p>
                 </div>
               </li>

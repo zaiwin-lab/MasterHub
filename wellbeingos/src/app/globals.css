@@ -2,25 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Default token values. TenantTheme overwrites these at runtime from
-   TenantConfig.theme, which is how white-labelling works without a rebuild. */
+/*
+  "Sihat Sejahtera" — vitality, clarity, calm.
+
+  Light is the default presentation: this platform is shown in lit meeting
+  rooms and on projectors, where a dark interface washes out. Dark is a full
+  alternate, not an afterthought. TenantTheme overwrites these values at
+  runtime from the tenant's palette, so both modes are white-labellable.
+*/
 :root {
-  --c-canvas: 247 244 236;
+  --c-canvas: 242 247 247;
   --c-surface: 255 255 255;
-  --c-line: 230 225 213;
-  --c-navy: 18 35 58;
-  --c-brand: 31 98 72;
-  --c-accent: 168 200 58;
-  --c-gold: 192 154 62;
-  --c-ink: 22 32 43;
-  --c-ink-muted: 90 102 115;
-  --c-ink-soft: 138 148 161;
-  --c-ok: 47 125 91;
-  --c-warn: 192 138 46;
-  --c-risk: 180 70 60;
-  --c-info: 44 92 138;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: Georgia, 'Times New Roman', serif;
+  --c-raised: 234 243 244;
+  --c-line: 211 227 229;
+  --c-head: 7 49 47;
+  --c-primary: 14 159 140;
+  --c-on-primary: 255 255 255;
+  --c-tint: 14 75 71;
+  --c-brand: 14 159 140;
+  --c-violet: 99 85 216;
+  --c-gold: 201 130 27;
+  --c-ink: 40 80 78;
+  --c-ink-muted: 90 123 121;
+  --c-ink-soft: 135 163 161;
+  --c-ok: 18 140 110;
+  --c-warn: 183 119 13;
+  --c-risk: 198 58 71;
+  --c-info: 30 111 184;
+  color-scheme: light;
+
+  /* Mode-dependent surface treatment, overridden below for dark. */
+  --card-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.9), transparent 46%);
+  --card-shadow: 0 1px 2px rgb(var(--c-tint) / 0.05), 0 16px 34px -24px rgb(var(--c-tint) / 0.35);
+  --card-lift: 0 2px 6px rgb(var(--c-tint) / 0.07), 0 28px 56px -28px rgb(var(--c-tint) / 0.42);
+  --glow-strength: 2.5;
+  --field-alpha: 0.05;
+}
+
+[data-mode='dark'] {
+  color-scheme: dark;
+  --card-sheen: linear-gradient(180deg, rgb(var(--c-tint) / 0.05), transparent 42%);
+  --card-shadow: 0 1px 0 0 rgb(var(--c-tint) / 0.06) inset, 0 18px 40px -28px rgb(0 0 0 / 0.75);
+  --card-lift: 0 1px 0 0 rgb(var(--c-tint) / 0.08) inset, 0 30px 60px -30px rgb(0 0 0 / 0.85);
+  --glow-strength: 6;
+  --field-alpha: 0.055;
 }
 
 @layer base {
@@ -29,29 +54,55 @@
   }
   body {
     @apply bg-canvas text-ink font-sans antialiased;
-    font-feature-settings: 'cv02', 'cv03', 'cv04';
+    /* Two soft wells of colour — vitality without decoration. */
+    background-image:
+      radial-gradient(900px 620px at 10% -10%, rgb(var(--c-brand) / 0.10), transparent 62%),
+      radial-gradient(820px 540px at 94% -2%, rgb(var(--c-violet) / 0.09), transparent 64%);
+    background-attachment: fixed;
+  }
+  [data-mode='dark'] body {
+    background-image:
+      radial-gradient(900px 600px at 12% -8%, rgb(var(--c-brand) / 0.12), transparent 60%),
+      radial-gradient(800px 520px at 92% 0%, rgb(var(--c-violet) / 0.14), transparent 62%);
   }
   * {
     @apply border-line;
   }
   h1, h2, h3, h4 {
-    @apply text-navy;
-    letter-spacing: -0.01em;
+    @apply font-display text-head;
+    letter-spacing: -0.02em;
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-brand/60 ring-offset-2 ring-offset-canvas rounded-lg;
+    @apply outline-none ring-2 ring-brand/70 ring-offset-2 ring-offset-canvas rounded-lg;
   }
   ::selection {
-    @apply bg-accent/40;
+    background: rgb(var(--c-brand) / 0.24);
+    color: rgb(var(--c-head));
+  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-tint) / 0.18);
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
   }
 }
 
 @layer components {
+  /* A card catches light along its top edge, the way a physical panel does.
+     That single detail is what stops either mode reading as flat. */
   .card {
-    @apply min-w-0 rounded-2xl border border-line bg-surface shadow-card;
+    @apply relative min-w-0 rounded-2xl border border-line bg-surface;
+    background-image: var(--card-sheen);
+    box-shadow: var(--card-shadow);
+  }
+  .card-glow {
+    @apply border-brand/30;
+    box-shadow: 0 0 0 1px rgb(var(--c-brand) / 0.18), 0 24px 60px -30px rgb(var(--c-brand) / 0.5);
   }
   .label {
-    @apply text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft;
+    @apply text-[10.5px] font-semibold uppercase tracking-[0.13em] text-ink-soft;
   }
   .hairline {
     @apply border-t border-line;
@@ -61,10 +112,17 @@
     @apply -mx-4 min-w-0 max-w-[calc(100%+2rem)] overflow-x-auto px-4 sm:mx-0 sm:max-w-full sm:px-0;
     scrollbar-width: thin;
   }
+  /* Faint engineering grid behind hero panels. */
+  .grid-field {
+    background-image:
+      linear-gradient(rgb(var(--c-tint) / var(--field-alpha)) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-tint) / var(--field-alpha)) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
 }
 
 @media print {
   .no-print { display: none !important; }
-  body { background: #fff; }
-  .card { box-shadow: none; border-color: #ddd; }
+  body { background: #fff; background-image: none; }
+  .card { box-shadow: none; background-image: none; }
 }

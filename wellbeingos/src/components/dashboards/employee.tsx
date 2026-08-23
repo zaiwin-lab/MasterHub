@@ -38,9 +38,14 @@ export function EmployeeDashboard() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <p className="text-[13px] text-ink-muted">Welcome back</p>
-        <h1 className="font-display text-[24px] leading-tight text-navy sm:text-[28px]">{session.name}</h1>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-[13px] text-ink-muted">Welcome back</p>
+          <h1 className="font-display text-[26px] font-semibold leading-tight text-head sm:text-[32px]">{session.name}</h1>
+        </div>
+        <span className="rounded-full border border-line bg-surface/60 px-3 py-1 text-[11.5px] text-ink-muted">
+          Benefit period {db.periodYear}
+        </span>
       </div>
 
       {reached ? (
@@ -59,10 +64,12 @@ export function EmployeeDashboard() {
       ) : null}
 
       {/* Wallet */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="grid-field pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+        <div className="relative">
         <CardHeader
           title={`My ${t.benefit}`}
-          subtitle={`${policy.name} · benefit period ${db.periodYear}`}
+          subtitle={policy.name}
           action={<PrivacyIndicator zone="zone1" note="Visible to you and authorised administrators" />}
         />
         <CardBody className="pt-2">
@@ -94,6 +101,7 @@ export function EmployeeDashboard() {
             </div>
           </div>
         </CardBody>
+        </div>
       </Card>
 
       {/* Shortcuts */}
@@ -183,14 +191,14 @@ export function EmployeeDashboard() {
           const Icon = journeyIcons[stage.icon];
           return (
             <Link key={stage.key} href={stage.href} className="group">
-              <Card className="h-full p-5 transition-shadow hover:shadow-lift">
+              <Card className="h-full p-5 transition-all hover:border-brand/30 hover:shadow-lift">
                 <div className="flex items-start gap-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
-                    <Icon size={17} />
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-brand/25 bg-brand/10 text-brand transition-shadow group-hover:shadow-[0_0_24px_-6px_rgb(var(--c-brand)/0.8)]">
+                    <Icon size={18} />
                   </span>
                   <div className="min-w-0">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft">Step {i + 1}</p>
-                    <p className="font-display text-[17px] leading-tight text-navy">{stage.title}</p>
+                    <p className="font-display text-[17px] leading-tight text-head">{stage.title}</p>
                     <p className="mt-0.5 text-[12.5px] font-medium text-brand">{stage.subtitle}</p>
                     <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">{stage.description}</p>
                   </div>
@@ -206,9 +214,9 @@ export function EmployeeDashboard() {
 
 function Figure({ label, value, hint, tone }: { label: string; value: string; hint?: string; tone?: 'ok' | 'warn' | 'risk' }) {
   return (
-    <div className="rounded-xl border border-line bg-canvas/50 px-4 py-3">
+    <div className="rounded-xl border border-line bg-raised/60 px-4 py-3">
       <p className="label">{label}</p>
-      <p className={`mt-1 font-display text-[19px] leading-none ${tone === 'risk' ? 'text-risk' : tone === 'warn' ? 'text-warn' : tone === 'ok' ? 'text-ok' : 'text-navy'}`}>
+      <p className={`mt-1.5 font-display text-[20px] font-semibold leading-none tabular-nums ${tone === 'risk' ? 'text-risk' : tone === 'warn' ? 'text-warn' : tone === 'ok' ? 'text-ok' : 'text-head'}`}>
         {value}
       </p>
       {hint ? <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">{hint}</p> : null}
@@ -219,9 +227,9 @@ function Figure({ label, value, hint, tone }: { label: string; value: string; hi
 function Shortcut({ href, icon, label, value, hint }: { href: string; icon: React.ReactNode; label: string; value: string; hint: string }) {
   return (
     <Link href={href}>
-      <Card className="h-full p-4 transition-shadow hover:shadow-lift">
-        <div className="flex items-center gap-2 text-ink-soft">{icon}<span className="label">{label}</span></div>
-        <p className="mt-2 truncate text-[14.5px] font-medium text-navy">{value}</p>
+      <Card className="h-full p-4 transition-all hover:border-brand/30 hover:shadow-lift">
+        <div className="flex items-center gap-2 text-brand">{icon}<span className="label">{label}</span></div>
+        <p className="mt-2 truncate text-[14.5px] font-medium text-head">{value}</p>
         <p className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-ink-muted">{hint}</p>
       </Card>
     </Link>

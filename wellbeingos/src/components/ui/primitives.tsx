@@ -50,10 +50,11 @@ export function Button({ variant = 'secondary', size = 'md', className, ...rest 
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-45',
         size === 'sm' ? 'h-8 px-3 text-[13px]' : 'h-10 px-4 text-sm',
-        variant === 'primary' && 'bg-navy text-white hover:bg-navy/90',
-        variant === 'secondary' && 'border border-line bg-surface text-ink hover:border-navy/25 hover:bg-canvas',
-        variant === 'quiet' && 'text-ink-muted hover:bg-navy/5 hover:text-ink',
-        variant === 'danger' && 'border border-risk/30 bg-risk/5 text-risk hover:bg-risk/10',
+        variant === 'primary' &&
+          'bg-primary text-onPrimary shadow-[0_8px_24px_-10px_rgb(var(--c-primary)/0.9)] hover:brightness-110',
+        variant === 'secondary' && 'border border-line bg-raised text-ink hover:border-brand/40 hover:text-head',
+        variant === 'quiet' && 'text-ink-muted hover:bg-tint/[0.07] hover:text-head',
+        variant === 'danger' && 'border border-risk/35 bg-risk/10 text-risk hover:bg-risk/20',
         className,
       )}
       {...rest}
@@ -65,12 +66,12 @@ export function Button({ variant = 'secondary', size = 'md', className, ...rest 
 export type Tone = 'ok' | 'warn' | 'risk' | 'info' | 'muted' | 'accent';
 
 const toneClasses: Record<Tone, string> = {
-  ok: 'bg-ok/10 text-ok border-ok/20',
-  warn: 'bg-warn/10 text-warn border-warn/25',
-  risk: 'bg-risk/10 text-risk border-risk/25',
-  info: 'bg-info/10 text-info border-info/20',
-  muted: 'bg-navy/5 text-ink-muted border-line',
-  accent: 'bg-accent/20 text-navy border-accent/40',
+  ok: 'bg-ok/12 text-ok border-ok/30',
+  warn: 'bg-warn/12 text-warn border-warn/30',
+  risk: 'bg-risk/14 text-risk border-risk/30',
+  info: 'bg-info/12 text-info border-info/30',
+  muted: 'bg-tint/[0.07] text-ink-muted border-line',
+  accent: 'bg-violet/15 text-violet border-violet/35',
 };
 
 export function Badge({ tone = 'muted', children, className }: { tone?: Tone; children: React.ReactNode; className?: string }) {
@@ -88,6 +89,8 @@ export function Stat({
   hint,
   tone,
   trend,
+  spark,
+  accent,
   className,
 }: {
   label: string;
@@ -95,14 +98,18 @@ export function Stat({
   hint?: React.ReactNode;
   tone?: Tone;
   trend?: { value: string; direction: 'up' | 'down' | 'flat'; good?: boolean };
+  /** Optional series drawn as a bare sparkline behind the figure. */
+  spark?: number[];
+  accent?: 'brand' | 'violet' | 'gold';
   className?: string;
 }) {
   return (
-    <div className={cn('card p-4 sm:p-5', className)}>
+    <div className={cn('card overflow-hidden p-4 sm:p-5', className)}>
       <p className="label">{label}</p>
-      <p className={cn('mt-2 font-display text-2xl leading-none sm:text-[28px]', tone === 'risk' && 'text-risk', tone === 'warn' && 'text-warn', tone === 'ok' && 'text-ok', !tone && 'text-navy')}>
+      <p className={cn('mt-2 font-display text-[26px] font-semibold leading-none tabular-nums sm:text-[30px]', tone === 'risk' && 'text-risk', tone === 'warn' && 'text-warn', tone === 'ok' && 'text-ok', !tone && 'text-head')}>
         {value}
       </p>
+      {spark && spark.length > 1 ? <Sparkline values={spark} accent={accent ?? 'brand'} /> : null}
       <div className="mt-2 flex flex-wrap items-center gap-2">
         {trend ? (
           <span
@@ -117,6 +124,20 @@ export function Stat({
         {hint ? <span className="text-[12px] leading-snug text-ink-muted">{hint}</span> : null}
       </div>
     </div>
+  );
+}
+
+/** Bare sparkline — no axes, no grid; it exists to show shape, not values. */
+export function Sparkline({ values, accent = 'brand', className }: { values: number[]; accent?: 'brand' | 'violet' | 'gold'; className?: string }) {
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const span = max - min || 1;
+  const points = values.map((v, i) => `${(i / (values.length - 1)) * 100},${28 - ((v - min) / span) * 24}`).join(' ');
+  const stroke = accent === 'violet' ? 'rgb(var(--c-violet))' : accent === 'gold' ? 'rgb(var(--c-gold))' : 'rgb(var(--c-brand))';
+  return (
+    <svg viewBox="0 0 100 30" preserveAspectRatio="none" className={cn('mt-3 h-8 w-full', className)} aria-hidden>
+      <polyline points={points} fill="none" stroke={stroke} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" opacity={0.9} />
+    </svg>
   );
 }
 
@@ -135,7 +156,7 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line bg-surface/60 px-6 py-12 text-center">
       {icon ? <div className="mb-3 text-ink-soft">{icon}</div> : null}
-      <p className="font-medium text-navy">{title}</p>
+      <p className="font-medium text-head">{title}</p>
       <p className="mt-1.5 max-w-md text-[13.5px] leading-relaxed text-ink-muted">{description}</p>
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
@@ -144,7 +165,7 @@ export function EmptyState({
 
 /* -------------------------------------------------------------- Skeleton */
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('animate-pulse rounded-lg bg-navy/[0.06]', className)} />;
+  return <div className={cn('animate-pulse rounded-lg bg-tint/[0.06]', className)} />;
 }
 
 /* ------------------------------------------------------------ Form field */
@@ -180,7 +201,7 @@ export function Field({
 }
 
 const controlClass =
-  'w-full rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-soft focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25 disabled:bg-canvas disabled:text-ink-soft';
+  'w-full rounded-xl border border-line bg-raised px-3 py-2 text-sm text-head placeholder:text-ink-soft focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 disabled:bg-canvas disabled:text-ink-soft';
 
 export function Input({ className, ...rest }: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(controlClass, className)} {...rest} />;
@@ -226,7 +247,7 @@ export function Toggle({
         onClick={() => onChange(!checked)}
         className={cn(
           'relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-40',
-          checked ? 'bg-brand' : 'bg-navy/15',
+          checked ? 'bg-brand' : 'bg-tint/20',
         )}
       >
         <span
@@ -271,7 +292,7 @@ export function Modal({
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-navy/40 p-0 backdrop-blur-[2px] sm:items-center sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/70 p-0 backdrop-blur-[2px] sm:items-center sm:p-6">
       <div
         className="absolute inset-0"
         onClick={onClose}
@@ -282,13 +303,13 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         className={cn(
-          'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-surface shadow-lift animate-fade-up sm:rounded-2xl',
+          'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl border border-line bg-surface shadow-lift animate-fade-up sm:rounded-2xl',
           wide ? 'sm:max-w-3xl' : 'sm:max-w-lg',
         )}
       >
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-line bg-surface px-5 py-4 sm:px-6">
           <div>
-            <h2 className="text-[15px] font-semibold text-navy">{title}</h2>
+            <h2 className="text-[15px] font-semibold text-head">{title}</h2>
             {description ? <p className="mt-1 text-[13px] text-ink-muted">{description}</p> : null}
           </div>
           <Button variant="quiet" size="sm" onClick={onClose} aria-label="Close">✕</Button>
@@ -331,7 +352,7 @@ export function Td({ children, className, align = 'left' }: { children?: React.R
   return (
     <td
       className={cn(
-        'border-b border-line/70 px-3 py-2.5 align-middle text-[13.5px] text-ink',
+        'border-b border-line/60 px-3 py-2.5 align-middle text-[13.5px] text-ink',
         align === 'right' && 'text-right tabular-nums',
         align === 'center' && 'text-center',
         className,
@@ -346,14 +367,14 @@ export function Td({ children, className, align = 'left' }: { children?: React.R
 export function Progress({ value, tone = 'brand', className }: { value: number; tone?: 'brand' | 'warn' | 'risk' | 'accent'; className?: string }) {
   const pct = Math.max(0, Math.min(100, value));
   return (
-    <div className={cn('h-2 w-full overflow-hidden rounded-full bg-navy/[0.08]', className)}>
+    <div className={cn('h-2 w-full overflow-hidden rounded-full bg-tint/[0.10]', className)}>
       <div
         className={cn(
           'h-full rounded-full transition-[width] duration-500',
-          tone === 'brand' && 'bg-brand',
-          tone === 'warn' && 'bg-warn',
-          tone === 'risk' && 'bg-risk',
-          tone === 'accent' && 'bg-accent',
+          tone === 'brand' && 'bg-gradient-to-r from-brand/70 to-brand',
+          tone === 'warn' && 'bg-gradient-to-r from-warn/70 to-warn',
+          tone === 'risk' && 'bg-gradient-to-r from-risk/70 to-risk',
+          tone === 'accent' && 'bg-gradient-to-r from-violet/70 to-violet',
         )}
         style={{ width: `${pct}%` }}
       />

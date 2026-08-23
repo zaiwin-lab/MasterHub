@@ -17,9 +17,9 @@ export function AdminDashboard() {
   return (
     <div>
       <header className="mb-5">
-        <h1 className="font-display text-[22px] leading-tight text-navy sm:text-[26px]">Platform administration</h1>
+        <h1 className="font-display text-[22px] leading-tight text-head sm:text-[26px]">Platform administration</h1>
         <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-ink-muted">
-          {config.organisationName} runs on WellbeingOS as tenant <span className="font-medium text-navy">{config.id}</span>.
+          {config.organisationName} runs on WellbeingOS as tenant <span className="font-medium text-head">{config.id}</span>.
           Everything on this page is configuration — changing it changes the product for this organisation only.
         </p>
       </header>
@@ -42,7 +42,7 @@ export function AdminDashboard() {
           <Link key={c.title} href={c.href}>
             <Card className="h-full p-4 transition-shadow hover:shadow-lift">
               <div className="flex items-center gap-2 text-brand">{c.icon}</div>
-              <p className="mt-2 text-[14px] font-medium text-navy">{c.title}</p>
+              <p className="mt-2 text-[14px] font-medium text-head">{c.title}</p>
               <p className="mt-1 text-[12.5px] leading-relaxed text-ink-muted">{c.body}</p>
             </Card>
           </Link>

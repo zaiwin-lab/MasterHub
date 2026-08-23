@@ -35,9 +35,13 @@ interface PersistedState {
   overrides: Partial<TenantConfig> | null;
 }
 
+export type Mode = 'light' | 'dark';
+
 interface StoreValue {
   ready: boolean;
   tenantId: string;
+  mode: Mode;
+  setMode: (next: Mode) => void;
   config: TenantConfig;
   db: Dataset;
   session: Session | null;
@@ -104,6 +108,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
+  /** Light is the default: the platform is presented in lit rooms. */
+  const [mode, setModeState] = useState<Mode>('light');
 
   // Load (or generate) the dataset for the active tenant on the client only,
   // which keeps server rendering free of seeded data and hydration-safe.
@@ -111,6 +117,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const activeTenant = localStorage.getItem(`${STORAGE_PREFIX}:tenant`) ?? defaultTenantId;
     setTenantId(activeTenant);
     load(activeTenant);
+    const savedMode = localStorage.getItem(`${STORAGE_PREFIX}:mode`);
+    if (savedMode === 'dark' || savedMode === 'light') setModeState(savedMode);
     const raw = localStorage.getItem(`${STORAGE_PREFIX}:session:${activeTenant}`);
     if (raw) {
       try {
@@ -171,6 +179,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     draft.audit.unshift(event);
   };
+
+  const setMode = useCallback((next: Mode) => {
+    setModeState(next);
+    try {
+      localStorage.setItem(`${STORAGE_PREFIX}:mode`, next);
+    } catch {
+      /* storage unavailable — the choice applies for this session only */
+    }
+  }, []);
 
   const signIn = useCallback(
     (userId: string) => {
@@ -518,6 +535,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const value: StoreValue = {
     ready: ready && !!db,
     tenantId,
+    mode,
+    setMode,
     config,
     db: db as Dataset,
     session,

@@ -30,7 +30,7 @@ export function PrivacyIndicator({ zone, note, className }: { zone: PrivacyZone;
 export function SuppressedNotice({ reason }: { reason?: string }) {
   return (
     <div className="rounded-xl border border-dashed border-gold/40 bg-gold/[0.06] px-4 py-3 text-[13px] leading-relaxed text-ink-muted">
-      <span className="font-medium text-navy">Suppressed to protect privacy.</span>{' '}
+      <span className="font-medium text-head">Suppressed to protect privacy.</span>{' '}
       {reason ?? 'The group is too small to display without risking re-identification.'}
     </div>
   );

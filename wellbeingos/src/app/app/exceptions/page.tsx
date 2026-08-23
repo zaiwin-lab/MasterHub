@@ -153,7 +153,7 @@ function ExceptionsPageContent() {
                 </li>
                 {current.comments.map((c) => (
                   <li key={c.id} className="relative">
-                    <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-navy/30" />
+                    <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-tint/30" />
                     <p className="text-[13.5px] text-ink">{c.body}</p>
                     <p className="text-[12.5px] text-ink-muted">{formatDateTime(c.at)} · {db.users.find((u) => u.id === c.actorId)?.name ?? 'System'}</p>
                   </li>
