@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /pengurusan
+Disallow: /pengurusan.html
+Disallow: /offline.html
+
+Sitemap: https://bamboo-sarawak-stidc.netlify.app/sitemap.xml

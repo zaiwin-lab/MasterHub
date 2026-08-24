@@ -916,8 +916,23 @@ function initWidgets() {
   });
 }
 
+/* ─── Offline support ───────────────────────────────────────── */
+/* Rural applicants frequently work with little or no mobile data.
+   The whole form runs client-side, so a cached shell means the
+   journey completes with no signal at all. */
+function initServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {
+      /* Offline support is an enhancement — never block the portal on it. */
+    });
+  });
+}
+
 /* ─── Boot ──────────────────────────────────────────────────── */
 function boot() {
+  initServiceWorker();
   initSpecies();
   initFaq();
   initOffices();

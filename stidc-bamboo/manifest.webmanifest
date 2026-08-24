@@ -1,0 +1,31 @@
+{
+  "name": "Bamboo Sarawak — Portal Agenda Buluh",
+  "short_name": "Bamboo Sarawak",
+  "description": "Portal permohonan Projek Buluh Komuniti dan Ladang Buluh Komersial — STIDC / PUSAKA.",
+  "lang": "ms",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F0E5",
+  "theme_color": "#102C22",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projek Buluh Komuniti",
+      "short_name": "Komuniti",
+      "url": "/?project=community",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Ladang Buluh Komersial",
+      "short_name": "Komersial",
+      "url": "/?project=commercial",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

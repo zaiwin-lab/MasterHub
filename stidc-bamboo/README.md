@@ -18,6 +18,8 @@ government system until STIDC adopts and publishes it.
 | `index.html` | Main portal — agenda hero, why bamboo, programme routes, process, application portal, FAQ, offices |
 | `bamboo.html` | **Tentang Buluh** — dedicated knowledge page: fundamentals, species, downstream uses, agenda timeline |
 | `pengurusan.html` | Management dashboard (password gated) |
+| `poster.html` | Printable A4 campaign posters with QR codes, for field officers |
+| `offline.html` | Fallback shown when a page is not cached and there is no signal |
 
 ## Scripts
 
@@ -27,6 +29,8 @@ government system until STIDC adopts and publishes it.
 | `portal.js` | Application engine — form schemas, validation, drafts, Document Box, signature pad, submission |
 | `bamboo.js` | Content and copy for the About Bamboo page |
 | `admin.js` | Dashboard — KPIs, filtering, sorting, detail drawer, status workflow, CSV export |
+| `poster.js` | Poster copy in four languages, with the QR codes embedded at build time |
+| `sw.js` | Service worker — makes the whole applicant journey work with no signal |
 
 ---
 
@@ -85,6 +89,51 @@ entire form, the dashboard and the assistant. The choice persists across visits.
 - Officer notes, record deletion, print, and **CSV export** of the current view
 - **Load sample data** button so the dashboard can be demonstrated before any
   real submissions exist (sample rows are labelled *Contoh*)
+
+### Campaign posters
+
+`poster.html` produces two print-ready A4 posters — one per programme track —
+in whichever of the four languages is selected. Each carries a QR code that
+opens the correct application form directly.
+
+The QR codes are generated at build time and embedded as inline SVG, at error
+correction level H (roughly 30% of the code recoverable), so a poster that has
+been rained on, sun-bleached or pinned up in a longhouse still scans. Both
+codes were verified by decoding them back out of the rendered page.
+
+Officers pick a language, choose one or both posters, and print. Every language
+lays out to exactly two A4 pages. Colour printing looks best; the posters stay
+legible in black and white.
+
+### Works with no signal
+
+Rural applicants routinely have patchy or no mobile data, and the whole form
+runs client-side, so the portal is installable and fully offline-capable:
+
+- `sw.js` precaches the shell; navigations are network-first (so review updates
+  land immediately), static assets are stale-while-revalidate, fonts cache-first
+- the campaign deep links (`/?project=…`) resolve from cache too, which is what
+  the QR posters depend on
+- `manifest.webmanifest` makes it installable to a phone home screen, with
+  shortcuts straight into each track
+
+This was verified by installing the service worker, **stopping the web server
+entirely**, and then completing and submitting a full community application —
+reference number and printable receipt included — with nothing to talk to.
+
+The management dashboard is deliberately excluded from all caching: officers
+should always see live records, and it should not linger on a shared device.
+
+### Discoverability
+
+`robots.txt` and `sitemap.xml` cover the public pages and exclude the
+dashboard. `index.html` carries `WebSite` and `FAQPage` structured data,
+generated from the same Bahasa Malaysia FAQ strings the page renders, so the
+two cannot drift apart.
+
+Deliberately **not** included: `GovernmentService` or `Organization` markup
+naming STIDC. That would assert this is an official government service, which
+it is not until STIDC adopts it. Worth adding at that point, not before.
 
 ---
 
@@ -149,6 +198,13 @@ These are deliberate limits of a demonstration build, not oversights:
    retention period all need STIDC's decision.
 8. **Contact numbers** were transcribed from the official PDF forms — worth
    confirming they are current.
+9. **The posters and structured data hard-code the Netlify URL.** If the portal
+   moves to an official STIDC domain, regenerate the QR codes and update
+   `sitemap.xml`, `robots.txt` and the `og:` tags. Printed posters carrying the
+   old address would keep pointing at the old host.
+10. **Bump `VERSION` in `sw.js`** when shipping a change that must reach
+    returning visitors immediately. HTML is network-first so pages update on
+    their own, but a cache-name bump is the clean way to retire old assets.
 
 ---
 

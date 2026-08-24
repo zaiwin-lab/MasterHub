@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tiada sambungan — Bamboo Sarawak</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#102C22" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<section class="gate">
+  <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="gate-card" style="text-align:center">
+    <span class="brand-mark" aria-hidden="true" style="margin-inline:auto">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 2v20M15 2v20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 8h4.8M12.6 14h4.8M6.6 16h4.8M12.6 6h4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".75"/></svg>
+    </span>
+    <h1 id="t">Tiada sambungan internet</h1>
+    <p id="d">Halaman ini belum disimpan pada peranti anda. Buka semula portal setelah anda mendapat sambungan — draf permohonan anda kekal tersimpan dan tidak hilang.</p>
+    <a class="btn btn-ochre" href="/" style="margin-top:24px" id="b">Cuba lagi</a>
+  </div>
+</section>
+<script>
+/* The shell may be cached in a language the visitor chose earlier. */
+(function () {
+  var COPY = {
+    ms: ['Tiada sambungan internet', 'Halaman ini belum disimpan pada peranti anda. Buka semula portal setelah anda mendapat sambungan — draf permohonan anda kekal tersimpan dan tidak hilang.', 'Cuba lagi'],
+    en: ['No internet connection', 'This page has not been saved on your device yet. Reopen the portal once you have a signal — your application draft is still saved and has not been lost.', 'Try again'],
+    zh: ['没有网络连接', '此页面尚未保存在你的设备上。恢复连接后请重新开启入口——你的申请草稿仍然保存着，并未遗失。', '再试一次'],
+    ib: ['Nadai sambung internet', 'Peransang tu apin disimpan ba alat nuan. Buka baru portal lebuh nuan bulih sambung — draf peminta nuan agi disimpan lalu enda lenyau.', 'Uji baru']
+  };
+  var lang = 'ms';
+  try { lang = localStorage.getItem('bamboo-sarawak-lang') || 'ms'; } catch (e) {}
+  var c = COPY[lang] || COPY.ms;
+  document.getElementById('t').textContent = c[0];
+  document.getElementById('d').textContent = c[1];
+  document.getElementById('b').textContent = c[2];
+  document.documentElement.lang = lang === 'ib' ? 'ms' : (lang === 'zh' ? 'zh-Hans' : lang);
+  window.addEventListener('online', function () { location.replace('/'); });
+})();
+</script>
+</body>
+</html>
