@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Bamboo Sarawak — Portal Agenda Buluh STIDC / PUSAKA</title>
+<meta name="description" content="Agenda Buluh Sarawak: memperkasa komuniti dan industri melalui penanaman buluh mampan. Portal permohonan rasmi Projek Buluh Komuniti dan Ladang Buluh Komersial." />
+<meta name="theme-color" content="#102C22" />
+<meta name="format-detection" content="telephone=no" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Bamboo Sarawak — Agenda Buluh STIDC / PUSAKA" />
+<meta property="og:description" content="Menanam hari ini, menuai satu generasi. Sertai agenda buluh Sarawak melalui program komuniti atau ladang komersial." />
+<meta property="og:image" content="assets/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23102C22'/%3E%3Cpath d='M13 5v22M19 5v22' stroke='%238CA84F' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M10.5 12h5M16.5 19h5M10.5 21h5' stroke='%23C6923B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-hero">
+
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Langkau ke kandungan utama</a>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Bamboo Sarawak">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 2v20M15 2v20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 8h4.8M12.6 14h4.8M6.6 16h4.8M12.6 6h4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".75"/></svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">Bamboo Sarawak</span>
+        <span class="brand-sub">STIDC · PUSAKA</span>
+      </span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-feature" href="bamboo.html">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 3v18M15 3v18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.8 9h4.4M12.8 15h4.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span data-i18n="nav.bamboo">Tentang Buluh</span>
+      </a>
+      <a href="#agenda" data-i18n="nav.agenda">Agenda</a>
+      <a href="#program" data-i18n="nav.program">Program</a>
+      <a href="#proses" data-i18n="nav.process">Proses</a>
+      <a href="#soalan" data-i18n="nav.faq">Soalan Lazim</a>
+      <a href="#hubungi" data-i18n="nav.contact">Hubungi</a>
+      <a href="#mohon" class="btn btn-sm btn-ochre" data-i18n="nav.apply" style="margin-left:6px">Mula Permohonan</a>
+    </div>
+
+    <div class="nav-lang" role="group" aria-label="Bahasa / Language">
+      <button type="button" data-lang="ms" class="active">BM</button>
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="zh">中</button>
+      <button type="button" data-lang="ib">IB</button>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ═══ HERO — the agenda, not the forms ══════════════════════ -->
+<header class="hero" id="hero">
+  <div class="hero-grain" aria-hidden="true"></div>
+  <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div class="wrap hero-inner">
+    <div>
+      <span class="hero-badge">
+        <b data-i18n="hero.badge.tag">Agenda Negeri</b>
+        <span data-i18n="hero.badge.text">Perbadanan Kemajuan Perusahaan Kayu Sarawak</span>
+      </span>
+
+      <h1>
+        <span data-i18n="hero.h1.a">Menanam hari ini,</span><br />
+        <span class="accent" data-i18n="hero.h1.b">menuai satu generasi.</span>
+      </h1>
+
+      <p class="hero-lede" data-i18n="hero.lede">
+        Buluh matang dalam tiga hingga lima tahun, menahan tanah di tebing sungai, dan menyediakan bahan mentah untuk industri hiliran Sarawak. STIDC memimpin agenda ini — dan setiap hektar bermula dengan seorang penanam.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-ochre" href="#mohon" data-i18n="hero.cta1">Sertai Agenda Ini</a>
+        <a class="btn btn-ghost on-dark" href="bamboo.html" data-i18n="hero.cta2">Kenali Buluh Sarawak</a>
+      </div>
+
+      <p class="hero-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span data-i18n="hero.note">Borang rasmi PUSAKA · Simpanan draf automatik · Percuma sepenuhnya</span>
+      </p>
+    </div>
+
+    <aside class="hero-panel">
+      <div class="hero-panel-title" data-i18n="hero.panel.title">Agenda Buluh Sarawak</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">30,000 <small>ha</small></div>
+          <div class="hero-stat-label" data-i18n="hero.stat1">Sasaran keluasan tanaman buluh menjelang 2030</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">~4,900 <small>ha</small></div>
+          <div class="hero-stat-label" data-i18n="hero.stat2">Telah ditanam oleh 17 syarikat komersial dan lebih 200 peserta komuniti</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">USD 68<small>bil</small></div>
+          <div class="hero-stat-label" data-i18n="hero.stat3">Nilai eksport produk berasaskan buluh global, berkembang ~4% setahun</div>
+        </div>
+      </div>
+      <p class="hero-panel-foot" data-i18n="hero.panel.foot">
+        Sumber: kenyataan awam STIDC dan laporan media Sarawak, 2023–2025. Angka adalah anggaran rujukan, bukan rekod rasmi terkini.
+      </p>
+    </aside>
+  </div>
+</header>
+
+<!-- ═══ SPECIES STRIP ═════════════════════════════════════════ -->
+<div class="species-strip" aria-hidden="true">
+  <div class="species-track" id="speciesTrack"></div>
+</div>
+
+<!-- ═══ AGENDA — why bamboo ═══════════════════════════════════ -->
+<section class="section" id="agenda">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="why.eyebrow">Mengapa Buluh</span>
+      <h2 data-i18n="why.title">Satu tanaman yang menjawab tiga masalah serentak.</h2>
+      <p data-i18n="why.sub">Sarawak memerlukan bahan mentah mampan untuk industri kayu, pendapatan tambahan untuk komuniti luar bandar, dan penutup tanah yang melindungi tebing sungai. Buluh menjawab ketiga-tiganya.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <article class="card reveal">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V8"/><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M6 21h12"/></svg></div>
+        <h3 data-i18n="why.c1.t">Matang dalam 3–5 tahun</h3>
+        <p data-i18n="why.c1.d">Berbanding pokok balak yang mengambil puluhan tahun, rumpun buluh boleh dituai berulang tanpa perlu ditanam semula — pendapatan yang datang lebih awal dan berterusan.</p>
+      </article>
+
+      <article class="card reveal d1">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 data-i18n="why.c2.t">Pendapatan untuk komuniti</h3>
+        <p data-i18n="why.c2.d">Projek Buluh Komuniti membuka ruang kepada kampung, sekolah dan institusi untuk menanam di tanah sedia ada — anak pokok diperuntukkan mengikut keluasan yang dicadangkan.</p>
+      </article>
+
+      <article class="card reveal d2">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c3-4 6-4 10 0s7 4 10 0"/><path d="M2 18c3-4 6-4 10 0s7 4 10 0"/><path d="M2 6c3-4 6-4 10 0s7 4 10 0"/></svg></div>
+        <h3 data-i18n="why.c3.t">Melindungi tanah dan air</h3>
+        <p data-i18n="why.c3.d">Sistem rizom buluh yang padat mengikat tanah, mengurangkan hakisan di tebing sungai dan cerun, sambil menyerap karbon sepanjang kitaran hidupnya.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <h3 data-i18n="why.c4.t">Bahan mentah industri hiliran</h3>
+        <p data-i18n="why.c4.d">Papan lamina, perabot, arang aktif, biomas dan produk kraf — buluh memberi kilang Sarawak sumber yang boleh diperbaharui dan boleh dirancang.</p>
+      </article>
+
+      <article class="card reveal d1">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3 data-i18n="why.c5.t">Pasaran yang sedang berkembang</h3>
+        <p data-i18n="why.c5.d">Permintaan global terhadap produk berasaskan buluh terus meningkat apabila industri mencari alternatif rendah karbon kepada plastik dan kayu keras.</p>
+      </article>
+
+      <article class="card reveal d2">
+        <div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div>
+        <h3 data-i18n="why.c6.t">Disokong secara rasmi</h3>
+        <p data-i18n="why.c6.d">STIDC dilantik Kerajaan Sarawak untuk memimpin pembangunan industri buluh, dengan tapak semaian, khidmat nasihat teknikal dan pelan industri negeri.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STAT BAND ═════════════════════════════════════════════ -->
+<section class="section band">
+  <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="section-head center reveal">
+      <span class="eyebrow on-dark" data-i18n="band.eyebrow">Kedudukan Semasa</span>
+      <h2 data-i18n="band.title">Agenda ini sudah bergerak. Ruang untuk anda masih terbuka.</h2>
+    </div>
+    <div class="statset reveal d1">
+      <div><div class="n">2016</div><div class="l" data-i18n="band.s1">Tahun STIDC diarah memimpin pembangunan industri buluh negeri</div></div>
+      <div><div class="n">17</div><div class="l" data-i18n="band.s2">Syarikat komersial yang telah menyertai program ladang buluh</div></div>
+      <div><div class="n">200<small>+</small></div><div class="l" data-i18n="band.s3">Peserta komuniti di seluruh Sarawak</div></div>
+      <div><div class="n">5</div><div class="l" data-i18n="band.s4">Pejabat PUSAKA menerima permohonan: Kuching, Mukah, Sibu, Bintulu, Miri</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROGRAM TRACKS ════════════════════════════════════════ -->
+<section class="section" id="program">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="track.eyebrow">Laluan Penyertaan</span>
+      <h2 data-i18n="track.title">Dua laluan masuk. Satu agenda yang sama.</h2>
+      <p data-i18n="track.sub">Pilih laluan yang menepati keadaan anda. Setiap laluan mempunyai borang rasmi PUSAKA yang tersendiri, tetapi kedua-duanya menyumbang kepada sasaran keluasan buluh negeri.</p>
+    </div>
+
+    <div class="tracks">
+      <article class="track track-a reveal">
+        <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="track-head">
+          <span class="track-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
+          <div>
+            <span class="track-tag" data-i18n="track.a.tag">Projek A · Komuniti</span>
+            <h3 data-i18n="track.a.title">Projek Buluh Komuniti</h3>
+          </div>
+        </div>
+        <p class="track-desc" data-i18n="track.a.desc">Untuk kumpulan komuniti, sekolah dan institusi yang mahu menanam buluh secara berkelompok di atas tanah kampung, tanah institusi atau tanah pinjaman.</p>
+        <ul class="track-list">
+          <li data-i18n="track.a.l1">Minimum 10 orang peserta bagi setiap kategori projek</li>
+          <li data-i18n="track.a.l2">Kategori: Komuniti, Sekolah atau Institusi</li>
+          <li data-i18n="track.a.l3">Anak pokok diperuntukkan mengikut keluasan tanah yang dicadangkan</li>
+          <li data-i18n="track.a.l4">Kebenaran guna tanah diperlukan jika tanah bukan milik sendiri</li>
+        </ul>
+        <div class="track-foot">
+          <a class="btn btn-ochre" href="#mohon" data-track-start="community" data-i18n="track.a.cta">Mohon Projek Komuniti</a>
+          <span class="track-meta" data-i18n="track.a.meta">Borang STIDC.01</span>
+        </div>
+      </article>
+
+      <article class="track track-b reveal d1">
+        <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="track-head">
+          <span class="track-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><rect x="4" y="9" width="7" height="12"/><rect x="13" y="4" width="7" height="17"/><path d="M7 13h.01M7 17h.01M16.5 8h.01M16.5 12h.01M16.5 16h.01"/></svg></span>
+          <div>
+            <span class="track-tag" data-i18n="track.b.tag">Projek B · Komersial</span>
+            <h3 data-i18n="track.b.title">Ladang Buluh Komersial</h3>
+          </div>
+        </div>
+        <p class="track-desc" data-i18n="track.b.desc">Untuk syarikat dan koperasi berdaftar yang mahu membangunkan ladang buluh berskala komersial bagi membekalkan industri hiliran Sarawak.</p>
+        <ul class="track-list">
+          <li data-i18n="track.b.l1">Syarikat mesti berdaftar dengan SSM atau sebagai koperasi</li>
+          <li data-i18n="track.b.l2">Tapak ladang mesti berada dalam negeri Sarawak</li>
+          <li data-i18n="track.b.l3">Tanah milik sendiri, pajakan atau sewaan yang sah</li>
+          <li data-i18n="track.b.l4">Laporan EIA dan FMP diperlukan bagi tapak di kawasan LPF</li>
+        </ul>
+        <div class="track-foot">
+          <a class="btn btn-teal" href="#mohon" data-track-start="commercial" data-i18n="track.b.cta">Mohon Ladang Komersial</a>
+          <span class="track-meta" data-i18n="track.b.meta">Borang STIDC.10.SH.01.37</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ═══════════════════════════════════════════════ -->
+<section class="section" id="proses" style="background:var(--bg-alt)">
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="proc.eyebrow">Perjalanan Permohonan</span>
+      <h2 data-i18n="proc.title">Empat langkah, kemudian pihak PUSAKA mengambil alih.</h2>
+      <p data-i18n="proc.sub">Borang hanyalah pintu masuk. Yang penting ialah tanah, peserta dan komitmen anda terhadap rumpun yang akan tumbuh di situ.</p>
+    </div>
+
+    <div class="steps reveal d1">
+      <div class="step-row"><div class="step-num" aria-hidden="true"></div><div>
+        <h3 data-i18n="proc.s1.t">Isi maklumat</h3>
+        <p data-i18n="proc.s1.d">Lengkapkan borang mengikut laluan yang dipilih. Draf disimpan secara automatik dalam pelayar anda — anda boleh berhenti dan sambung kemudian pada peranti yang sama.</p>
+      </div></div>
+      <div class="step-row"><div class="step-num" aria-hidden="true"></div><div>
+        <h3 data-i18n="proc.s2.t">Muat naik dokumen</h3>
+        <p data-i18n="proc.s2.d">Seret dan lepas dokumen sokongan ke dalam Kotak Dokumen. Sistem mencadangkan jenis dokumen berdasarkan nama fail — anda sentiasa boleh membetulkannya sebelum hantar.</p>
+      </div></div>
+      <div class="step-row"><div class="step-num" aria-hidden="true"></div><div>
+        <h3 data-i18n="proc.s3.t">Semak dan tandatangan</h3>
+        <p data-i18n="proc.s3.d">Semak semula ringkasan permohonan, baca perakuan pemohon, dan turunkan tandatangan elektronik anda.</p>
+      </div></div>
+      <div class="step-row"><div class="step-num" aria-hidden="true"></div><div>
+        <h3 data-i18n="proc.s4.t">Terima nombor rujukan</h3>
+        <p data-i18n="proc.s4.d">Anda menerima nombor rujukan unik dan resit boleh cetak. Pegawai PUSAKA akan menyemak, menjalankan naziran tapak jika perlu, dan menghubungi anda.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE PORTAL ════════════════════════════════════════════ -->
+<section class="section portal" id="mohon">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="portal.eyebrow">Portal Permohonan</span>
+      <h2 data-i18n="portal.title">Mulakan permohonan anda.</h2>
+      <p data-i18n="portal.sub">Semua maklumat kekal dalam pelayar anda sehingga anda menekan hantar. Medan bertanda <span style="color:var(--clay)">*</span> adalah wajib.</p>
+    </div>
+    <div id="portalMount"></div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══════════════════════════════════════════════════ -->
+<section class="section" id="soalan">
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="faq.eyebrow">Soalan Lazim</span>
+      <h2 data-i18n="faq.title">Perkara yang paling kerap ditanya.</h2>
+    </div>
+    <div class="faq reveal d1" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══════════════════════════════════════════════ -->
+<section class="section" id="hubungi" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="office.eyebrow">Pejabat PUSAKA</span>
+      <h2 data-i18n="office.title">Bercakap dengan pegawai berhampiran anda.</h2>
+      <p data-i18n="office.sub">Borang yang telah lengkap boleh dikembalikan ke Ibu Pejabat atau mana-mana Pejabat Bahagian di bawah.</p>
+    </div>
+    <div class="office-grid reveal d1" id="officeGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="wrap footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand" style="pointer-events:none">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 2v20M15 2v20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 8h4.8M12.6 14h4.8M6.6 16h4.8M12.6 6h4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".75"/></svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Bamboo Sarawak</span>
+            <span class="brand-sub">STIDC · PUSAKA</span>
+          </span>
+        </span>
+        <p data-i18n="footer.blurb">Portal permohonan untuk agenda buluh Sarawak — menghubungkan penanam komuniti dan pengusaha komersial dengan program tanaman buluh negeri.</p>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.h.program">Program</h5>
+        <ul>
+          <li><a href="#program" data-i18n="footer.l.a">Projek Buluh Komuniti</a></li>
+          <li><a href="#program" data-i18n="footer.l.b">Ladang Buluh Komersial</a></li>
+          <li><a href="bamboo.html" data-i18n="footer.l.about">Tentang Buluh Sarawak</a></li>
+          <li><a href="#proses" data-i18n="footer.l.process">Proses Permohonan</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.h.help">Bantuan</h5>
+        <ul>
+          <li><a href="#soalan" data-i18n="footer.l.faq">Soalan Lazim</a></li>
+          <li><a href="#hubungi" data-i18n="footer.l.offices">Pejabat PUSAKA</a></li>
+          <li><a href="#" data-open-assistant data-i18n="footer.l.assistant">Pembantu Digital 24/7</a></li>
+          <li><a href="pengurusan.html" data-i18n="footer.l.mgmt">Akses Pengurusan</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.h.contact">Hubungi</h5>
+        <ul>
+          <li><a href="tel:082473000">082-473000</a></li>
+          <li><a href="https://wa.me/601128465813" target="_blank" rel="noopener">011-2846 5813</a></li>
+          <li><span data-i18n="footer.hq">Wisma Sumber Alam, Kuching</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer-disclaimer" data-i18n="footer.disclaimer">
+      Portal ini dibangunkan sebagai sumbangan pro bono untuk pertimbangan STIDC / PUSAKA. Ia bukan sistem rasmi kerajaan sehingga diterima pakai dan diterbitkan oleh STIDC. Angka yang dipaparkan diambil daripada kenyataan awam dan laporan media, dan perlu disahkan sebelum penerbitan rasmi.
+    </p>
+
+    <div class="footer-bottom">
+      <span data-i18n="footer.rights">© 2026 Bamboo Sarawak — Portal Agenda Buluh.</span>
+      <span data-i18n="footer.tagline">Dibina dengan hormat untuk komuniti dan industri Sarawak.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ KOBIS SIGNATURE ═══════════════════════════════════════ -->
+<div class="kobis-bar">
+  <div class="kobis-text" data-i18n="footer.credit">
+    Pengalaman digital ini adalah sebahagian daripada ekosistem inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>
+  </div>
+</div>
+
+<!-- ═══ BUBBLES + ASSISTANT ═══════════════════════════════════ -->
+<div id="widgetMount"></div>
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script src="portal.js"></script>
+</body>
+</html>

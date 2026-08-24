@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Akses Pengurusan — Bamboo Sarawak</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#102C22" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23102C22'/%3E%3Cpath d='M13 5v22M19 5v22' stroke='%238CA84F' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M10.5 12h5M16.5 19h5M10.5 21h5' stroke='%23C6923B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══ GATE ══════════════════════════════════════════════════ -->
+<section class="gate" id="gate">
+  <div class="culm-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <form class="gate-card" id="gateForm">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 2v20M15 2v20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 8h4.8M12.6 14h4.8M6.6 16h4.8M12.6 6h4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".75"/></svg>
+    </span>
+    <h1 data-i18n="mg.gate.title">Akses Pengurusan</h1>
+    <p data-i18n="mg.gate.sub">Papan pemuka permohonan Projek Buluh. Untuk kegunaan pegawai STIDC / PUSAKA sahaja.</p>
+
+    <div class="field" style="margin-top:26px">
+      <label for="gatePass" data-i18n="mg.gate.pass">Kata laluan</label>
+      <input class="input" id="gatePass" type="password" autocomplete="current-password" placeholder="••••••" />
+      <div class="err" id="err-gate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>
+        <span data-i18n="mg.gate.wrong">Kata laluan tidak betul.</span>
+      </div>
+    </div>
+
+    <button class="btn btn-ochre" type="submit" style="width:100%;margin-top:18px" data-i18n="mg.gate.enter">Masuk</button>
+
+    <p class="gate-note" data-i18n="mg.gate.note">
+      Demonstrasi sahaja: kata laluan ini disimpan dalam kod hadapan dan tidak melindungi data sebenar. Sebelum kegunaan rasmi, akses perlu dipindahkan ke pengesahan sisi pelayan dengan akaun pegawai berasingan.
+    </p>
+    <a class="gate-back" href="index.html">← <span data-i18n="nav.home">Laman Utama</span></a>
+  </form>
+</section>
+
+<!-- ═══ DASHBOARD ═════════════════════════════════════════════ -->
+<div class="dash" id="dash">
+
+  <header class="dash-top">
+    <div class="wrap dash-top-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 2v20M15 2v20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M6.6 8h4.8M12.6 14h4.8M6.6 16h4.8M12.6 6h4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".75"/></svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name" data-i18n="mg.title">Papan Pemuka Permohonan</span>
+          <span class="brand-sub">STIDC · PUSAKA</span>
+        </span>
+      </a>
+
+      <div class="nav-lang" role="group" aria-label="Bahasa">
+        <button type="button" data-lang="ms" class="active">BM</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="zh">中</button>
+        <button type="button" data-lang="ib">IB</button>
+      </div>
+
+      <div class="dash-actions">
+        <button class="btn btn-sm btn-ghost on-dark" id="btnExport" data-i18n="mg.export">Muat turun CSV</button>
+        <button class="btn btn-sm btn-ghost on-dark" id="btnLogout" data-i18n="mg.logout">Log keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding:32px 0 60px;flex:1">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="dash-panel">
+      <div class="dash-panel-head">
+        <h3 data-i18n="mg.table.title">Senarai permohonan</h3>
+        <div class="filterbar">
+          <input class="input" id="qSearch" type="search" data-i18n-ph="mg.search" placeholder="Cari rujukan, nama, daerah…" />
+          <div class="seg" id="segTrack">
+            <button type="button" class="active" data-track="" data-i18n="mg.all">Semua</button>
+            <button type="button" data-track="community" data-i18n="mg.trackA">Komuniti</button>
+            <button type="button" data-track="commercial" data-i18n="mg.trackB">Komersial</button>
+          </div>
+          <select class="input" id="qStatus">
+            <option value="" data-i18n="mg.status.all">Semua status</option>
+            <option value="new" data-i18n="mg.status.new">Baharu</option>
+            <option value="review" data-i18n="mg.status.review">Dalam semakan</option>
+            <option value="approved" data-i18n="mg.status.approved">Disokong</option>
+            <option value="rejected" data-i18n="mg.status.rejected">Tidak disokong</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="dtable-wrap">
+        <table class="dtable">
+          <thead>
+            <tr>
+              <th data-sort="ref"       data-i18n="mg.c.ref">Rujukan</th>
+              <th data-sort="applicant" data-i18n="mg.c.applicant">Pemohon</th>
+              <th data-sort="track"     data-i18n="mg.c.track">Laluan</th>
+              <th data-sort="location"  data-i18n="mg.c.location">Lokasi</th>
+              <th data-sort="area"      data-i18n="mg.c.area">Keluasan</th>
+              <th data-sort="createdAt" class="desc" data-i18n="mg.c.date">Tarikh</th>
+              <th data-sort="status"    data-i18n="mg.c.status">Status</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div id="emptyState"></div>
+    </div>
+  </main>
+
+  <footer class="kobis-bar">
+    <div class="kobis-text" data-i18n="footer.credit">
+      Pengalaman digital ini adalah sebahagian daripada ekosistem inovasi <a href="https://www.kobisberhad.com" target="_blank" rel="noopener">KOBIS Berhad</a>
+    </div>
+  </footer>
+</div>
+
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" tabindex="-1"></aside>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
