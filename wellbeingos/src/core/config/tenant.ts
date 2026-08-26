@@ -106,6 +106,31 @@ export interface ReportConfig {
   zone: 'zone1' | 'zone3';
 }
 
+/**
+ * Assistance channels rendered as the platform's two persistent floating
+ * controls. They are configuration because every organisation routes support
+ * to a different desk and a different number.
+ */
+export interface SupportConfig {
+  /** E.164 without the plus, as wa.me expects it. */
+  whatsappNumber: string;
+  whatsappLabel: string;
+  whatsappPrefill: string;
+  assistantName: string;
+  assistantTagline: string;
+  /** Canned prompts offered when the assistant opens. */
+  assistantPrompts: { question: string; answer: string }[];
+  helpdeskEmail: string;
+  helpdeskHours: string;
+}
+
+/** Delivery credit shown in the footer. */
+export interface CreditConfig {
+  builder: string;
+  builderUrl: string;
+  since: number;
+}
+
 export interface TenantConfig {
   id: string;
   organisationName: string;
@@ -134,6 +159,8 @@ export interface TenantConfig {
   programmeCategories: string[];
   serviceCategories: string[];
   privacy: PrivacyConfig;
+  support: SupportConfig;
+  credit: CreditConfig;
   managementKpis: KpiConfig[];
   reports: ReportConfig[];
   /** Seed shaping — demo dataset only; ignored once a real backend is attached. */

@@ -109,6 +109,8 @@ Full detail: [`docs/PRIVACY.md`](docs/PRIVACY.md).
 | [Roles & permissions](docs/ROLES.md) | The capability matrix and how it is enforced |
 | [Privacy model](docs/PRIVACY.md) | The three zones, consent, the aggregation floor |
 | [Tenant configuration](docs/TENANT-CONFIGURATION.md) | Onboarding another organisation |
+| [Portal structure](docs/PORTAL-STRUCTURE.md) | Public site, sign-in flow, role panels, floating controls |
+| [Localisation](docs/LOCALISATION.md) | Four languages, the fallback chain, adding a fifth |
 | [Design system](docs/THEMING.md) | Light and dark modes, tokens, white-labelling |
 | [Policy](docs/POLICY.md) | Entitlement, thresholds, approval, eligibility gates |
 | [Feature flags](docs/FEATURE-FLAGS.md) | Modules and how gating works |
@@ -117,6 +119,30 @@ Full detail: [`docs/PRIVACY.md`](docs/PRIVACY.md).
 | [KPI framework](docs/KPI-FRAMEWORK.md) | Six dimensions, each traceable to code |
 | [Deployment](docs/DEPLOYMENT.md) | Environments, Netlify, pilot checklist |
 | [Demo script](docs/DEMO-SCRIPT.md) | Five to seven minutes, ten scenes |
+
+## Two surfaces
+
+**A public corporate site** at `/` — overview, how it works, capabilities,
+dedicated pages for management and for employees, privacy architecture and
+support — with a top navigation bar, a four-language selector and a clean
+sign-in at `/signin`. Demo personas sit behind an **Explore Demo Access**
+control rather than beside the login form, so the portal presents to a board
+the way a live system would.
+
+**Role-based panels** at `/app/*` behind a collapsible sidebar that names its
+destination: Management Panel, Employee Portal, HR, Finance, Clinic, Wellbeing,
+Administration. Navigation is derived from capability and module; the route
+guard refuses direct URLs independently.
+
+Both surfaces carry **AI Help 24/7** bottom-left and **WhatsApp Support**
+bottom-right. See [`docs/PORTAL-STRUCTURE.md`](docs/PORTAL-STRUCTURE.md).
+
+## Languages
+
+English · Bahasa Malaysia · 中文 · Iban. The selector is wired to a real
+dictionary with an English fallback chain, not a decorative control — the whole
+public site and every piece of authenticated chrome switches.
+See [`docs/LOCALISATION.md`](docs/LOCALISATION.md).
 
 ## Design
 

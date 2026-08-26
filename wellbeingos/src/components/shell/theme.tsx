@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import type { TenantConfig, ThemeConfig } from '@/core/config/tenant';
-import type { Mode } from '@/core/data/store';
+import { useStore, type Mode } from '@/core/data/store';
+import { languageMeta } from '@/core/i18n/languages';
 import { hexToRgbTriplet } from '@/lib/utils';
 
 const map: Record<keyof ThemeConfig, string> = {
@@ -29,6 +30,19 @@ export function TenantTheme({ config, mode }: { config: TenantConfig; mode: Mode
     document.title = `${config.productName} — WellbeingOS`;
   }, [config, mode]);
   return null;
+}
+
+/**
+ * Mounted once from the root layout so palette and document language apply to
+ * every route — public site and authenticated panels alike — instead of each
+ * page remembering to theme itself.
+ */
+export function ThemeRoot() {
+  const { config, mode, language } = useStore();
+  useEffect(() => {
+    document.documentElement.lang = languageMeta(language).locale;
+  }, [language]);
+  return <TenantTheme config={config} mode={mode} />;
 }
 
 /** Sun/moon control. Presentation mode is a viewing preference, not a setting. */

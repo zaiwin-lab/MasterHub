@@ -27,6 +27,7 @@ import type {
   WellbeingProgramme,
 } from '@/core/domain/types';
 import { autoApprovable } from '@/core/workflow/engine';
+import { defaultLanguage, isLanguage, type LanguageKey } from '@/core/i18n/languages';
 
 const STORAGE_PREFIX = 'wellbeingos:v1';
 
@@ -42,6 +43,8 @@ interface StoreValue {
   tenantId: string;
   mode: Mode;
   setMode: (next: Mode) => void;
+  language: LanguageKey;
+  setLanguage: (next: LanguageKey) => void;
   config: TenantConfig;
   db: Dataset;
   session: Session | null;
@@ -110,6 +113,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   /** Light is the default: the platform is presented in lit rooms. */
   const [mode, setModeState] = useState<Mode>('light');
+  /**
+   * Language is a viewing preference like mode — it belongs to the person at
+   * the screen, not to the tenant, so two people in the same organisation can
+   * read the same record in different languages.
+   */
+  const [language, setLanguageState] = useState<LanguageKey>(defaultLanguage);
 
   // Load (or generate) the dataset for the active tenant on the client only,
   // which keeps server rendering free of seeded data and hydration-safe.
@@ -119,6 +128,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     load(activeTenant);
     const savedMode = localStorage.getItem(`${STORAGE_PREFIX}:mode`);
     if (savedMode === 'dark' || savedMode === 'light') setModeState(savedMode);
+    const savedLanguage = localStorage.getItem(`${STORAGE_PREFIX}:language`);
+    if (isLanguage(savedLanguage)) setLanguageState(savedLanguage);
     const raw = localStorage.getItem(`${STORAGE_PREFIX}:session:${activeTenant}`);
     if (raw) {
       try {
@@ -184,6 +195,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setModeState(next);
     try {
       localStorage.setItem(`${STORAGE_PREFIX}:mode`, next);
+    } catch {
+      /* storage unavailable — the choice applies for this session only */
+    }
+  }, []);
+
+  const setLanguage = useCallback((next: LanguageKey) => {
+    setLanguageState(next);
+    try {
+      localStorage.setItem(`${STORAGE_PREFIX}:language`, next);
     } catch {
       /* storage unavailable — the choice applies for this session only */
     }
@@ -537,6 +557,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     tenantId,
     mode,
     setMode,
+    language,
+    setLanguage,
     config,
     db: db as Dataset,
     session,

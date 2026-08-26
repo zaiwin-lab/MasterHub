@@ -112,7 +112,7 @@ export function RadialGauge({
 
       <div className={cn('absolute inset-x-0 flex flex-col items-center text-center', arc === 360 ? 'inset-y-0 justify-center' : 'top-[26%]')}>
         <span className="label">{label}</span>
-        <span className="mt-1 font-display text-[30px] font-semibold leading-none tabular-nums text-head">{caption}</span>
+        <span className="mt-1 max-w-[80%] font-display text-[30px] font-semibold leading-none tabular-nums text-head">{caption}</span>
         {sublabel ? <span className="mt-1.5 max-w-[78%] text-[12px] leading-snug text-ink-muted">{sublabel}</span> : null}
       </div>
     </div>

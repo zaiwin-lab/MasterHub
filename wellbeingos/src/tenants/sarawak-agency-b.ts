@@ -110,5 +110,12 @@ export const sarawakAgencyB: TenantConfig = {
     ...stidc.privacy,
     minimumAggregationGroup: 8, // stricter aggregation floor
   },
+  support: {
+    ...stidc.support,
+    whatsappNumber: '60123344556',
+    whatsappPrefill: 'Hello — I need help with my SEJAHTERA WORKS medical benefit.',
+    helpdeskEmail: 'wellbeing@agencyb.demo',
+  },
+  credit: { ...stidc.credit },
   seed: { employees: 74, clinics: 6, months: 12, randomSeed: 90210 },
 };

@@ -191,5 +191,46 @@ export const stidc: TenantConfig = {
     { key: 'management', name: 'Management Summary', description: 'One-page organisational position for the leadership meeting.', audience: ['management', 'admin'], zone: 'zone3' },
     { key: 'annual', name: 'Annual Workforce Wellbeing Report', description: 'Year in review: utilisation, participation, signals, interventions and outcomes.', audience: ['management', 'wellbeing', 'admin'], zone: 'zone3' },
   ],
+  support: {
+    whatsappNumber: '60198765432',
+    whatsappLabel: 'WhatsApp Support',
+    whatsappPrefill: 'Hello SEJAHTERA360 support — I need help with my medical benefit.',
+    assistantName: 'AI Help 24/7',
+    assistantTagline: 'Answers on your benefit, claims and wellbeing — any hour.',
+    assistantPrompts: [
+      {
+        question: 'How much of my benefit is left?',
+        answer:
+          'Open My Benefit. The wallet shows entitlement, approved spend and what remains. Committed visits — submitted or verified but not yet approved — are held separately so the spendable figure never overstates what is genuinely available.',
+      },
+      {
+        question: 'What happens when I reach a threshold?',
+        answer:
+          'Alerts fire at 50%, 75%, 90% and 100%. The first two are informational. From 90% HR is notified so options can be arranged early, and at 100% the policy workflow opens. Nothing is withheld from you and nothing is decided without you.',
+      },
+      {
+        question: 'Who can see my wellbeing check-ins?',
+        answer:
+          'Nobody. Check-ins, goals and consent live in your personal vault — Zone 2 — and no role in the platform holds a capability to read another person\u2019s vault. Only aggregates above the group floor reach the organisation, and only where you have consented.',
+      },
+      {
+        question: 'How do I visit a panel clinic?',
+        answer:
+          'Find a clinic under Panel Clinics, present your staff ID at the counter, and the clinic verifies eligibility through their portal. They see whether you are eligible and the amount available — not your history, your wellbeing or your employment record.',
+      },
+      {
+        question: 'My claim is still pending. What now?',
+        answer:
+          'Claims move Submitted \u2192 Verified \u2192 Approved \u2192 Paid. Track yours under Claims & Transactions; each step is timestamped with who acted. If a claim is sitting longer than usual it will appear as an exception for HR to pick up.',
+      },
+    ],
+    helpdeskEmail: 'sejahtera360@stidc.demo',
+    helpdeskHours: 'Human desk Mon–Fri, 8.00am–5.00pm MYT',
+  },
+  credit: {
+    builder: 'KOBIS Berhad',
+    builderUrl: 'https://www.kobis.com.my',
+    since: 2026,
+  },
   seed: { employees: 128, clinics: 10, months: 12, randomSeed: 20260822 },
 };
