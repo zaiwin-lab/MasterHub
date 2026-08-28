@@ -38,7 +38,7 @@ The sites are portfolio demonstrations with different levels of completeness. A 
 
 The hub provides a practical place to compare reusable patterns across discovery, assessment, content and conversion journeys. Its strongest value is as delivery evidence: it shows structured prototyping across several business contexts and makes gaps easier to identify before a project is separated into a governed product repository.
 
-## Architecture and technology
+## Technology and architecture
 
 The collection primarily uses:
 
