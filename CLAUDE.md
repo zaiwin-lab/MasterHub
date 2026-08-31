@@ -3,7 +3,32 @@
 ## Core Identity
 This is the master hub. Load this alongside every project session.
 
+## Session Bootstrap (run this first)
+
+`gstack` and `marketing` are cloned from upstream, not committed here, so a fresh
+cloud container starts without them. `.claude/settings.json` registers a
+SessionStart hook, but that hook only fires when this repo *is* the project dir —
+in a multi-repo session (MasterHub + a client repo) the project dir is their
+shared parent and the hook never runs.
+
+So: at the start of every session, if `~/.claude/skills/gstack/SKILL.md` is
+missing, run the sync by hand.
+
+```bash
+bash MasterHub/.claude/hooks/session-start.sh   # from the workspace root
+```
+
+It is idempotent (a no-op once synced) and exits non-zero if `gstack` or
+`impeccable` is missing. Use `FORCE_SYNC=1` to pull fresh copies from upstream.
+
 ## Skills Available
+
+### impeccable (Frontend Design)
+Committed in this repo at `.claude/skills/impeccable/` — always available, no clone needed.
+
+| Skill | Purpose |
+|-------|---------|
+| `/impeccable` | Design, audit, polish & harden frontend interfaces |
 
 ### gstack (AI Engineering)
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools directly.

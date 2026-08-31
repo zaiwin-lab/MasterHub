@@ -5,10 +5,16 @@
 **Version:** Check with `/gstack-upgrade`
 
 ## Install / Update
+Handled by the Master Hub skill sync — it clones upstream into
+`~/.claude/skills/` and installs each sub-skill as a top-level skill:
+
 ```bash
-git clone --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
-cd ~/.claude/skills/gstack && ./setup
+bash MasterHub/.claude/hooks/session-start.sh   # idempotent
+FORCE_SYNC=1 bash MasterHub/.claude/hooks/session-start.sh   # pull fresh
 ```
+
+See "Session Bootstrap" in `../CLAUDE.md` for why this sometimes has to be run
+by hand instead of firing as a SessionStart hook.
 
 ## Key Skills
 - `/office-hours` — product strategy
