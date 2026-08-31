@@ -18,39 +18,82 @@
       100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
     }
     .voice-state.live { color: #e5484d; font-weight: 700; }
-    .event-actions { display: flex; gap: 6px; margin-top: 6px; }
-    .event-actions button {
+    .event-actions { display: flex; gap: 10px; margin-top: 6px; }
+    .mini-event .mini-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .event-actions button,
+    .mini-event .mini-actions button {
       font: inherit;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
-      border-radius: 5px;
-      padding: 3px 8px;
-      border: 1px solid rgba(0,0,0,0.18);
-      background: rgba(255,255,255,0.85);
-      color: #1f2937;
+      border: none;
+      background: transparent;
+      padding: 1px 2px;
+      color: #98a2b3;
+      opacity: 0.75;
+      transition: color 0.15s ease, opacity 0.15s ease;
     }
-    .event-actions button.del { color: #b42318; }
-    .event-actions button.del:hover { background: #b42318; color: #fff; }
-    .event-actions button.edit:hover { background: #1769aa; color: #fff; }
-    .mini-event .mini-actions { display: flex; gap: 6px; margin-top: 4px; }
-    .mini-event .mini-actions button {
-      font: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
-      border-radius: 5px; padding: 2px 7px; border: 1px solid rgba(0,0,0,0.18); background: #fff;
+    .event-actions button:hover,
+    .mini-event .mini-actions button:hover {
+      opacity: 1;
+      text-decoration: underline;
     }
-    .mini-event .mini-actions button.del { color: #b42318; }
+    .event-actions button.edit:hover,
+    .mini-event .mini-actions button.edit:hover { color: #1769aa; }
+    .event-actions button.del:hover,
+    .mini-event .mini-actions button.del:hover { color: #b42318; }
   </style>
 </head>
 <body class="calendar-month-app module-calendar">
+<!-- ZK30 passcode gate -->
+<style>
+  .zk-lock{position:fixed;inset:0;z-index:2147483647;background:#0b1220;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;}
+  .zk-lock-box{background:#111a2e;border:1px solid #24314d;border-radius:16px;padding:34px 28px;width:min(92vw,360px);text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .zk-lock-brand{color:#7aa2ff;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .zk-lock-sub{color:#8794ad;font-size:12px;margin-bottom:18px;}
+  .zk-lock-title{color:#fff;font-size:20px;font-weight:700;margin-bottom:18px;}
+  .zk-lock-input{width:100%;box-sizing:border-box;font-size:22px;letter-spacing:.35em;text-align:center;padding:13px;border-radius:10px;border:1px solid #2c3a58;background:#0b1220;color:#fff;outline:none;}
+  .zk-lock-input:focus{border-color:#4f7cff;}
+  .zk-lock-btn{margin-top:14px;width:100%;padding:13px;border:none;border-radius:10px;background:#3b6cff;color:#fff;font-size:16px;font-weight:700;cursor:pointer;}
+  .zk-lock-btn:hover{background:#2f59db;}
+  .zk-lock-error{color:#ff8a8a;font-size:13px;min-height:18px;margin-top:10px;}
+  html.zk-locked,html.zk-locked body{overflow:hidden;}
+</style>
+<div id="zkLock" class="zk-lock" role="dialog" aria-modal="true" aria-label="Passcode required">
+  <div class="zk-lock-box">
+    <div class="zk-lock-brand">ZK30 MFDB Command Centre</div>
+    <div class="zk-lock-sub">Executive Intelligence Operating System</div>
+    <div class="zk-lock-title">Enter Passcode</div>
+    <input id="zkLockInput" class="zk-lock-input" type="password" inputmode="numeric" autocomplete="off" placeholder="------" maxlength="12" aria-label="Passcode">
+    <button id="zkLockBtn" class="zk-lock-btn" type="button">Unlock</button>
+    <div id="zkLockError" class="zk-lock-error"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="zk30-unlocked", PASS="803116";
+  var root=document.documentElement, lock=document.getElementById("zkLock");
+  function unlock(){ try{sessionStorage.setItem(KEY,"yes");}catch(e){} if(lock){lock.parentNode.removeChild(lock);} root.classList.remove("zk-locked"); }
+  var ok=false; try{ ok=sessionStorage.getItem(KEY)==="yes"; }catch(e){}
+  if(ok){ unlock(); return; }
+  root.classList.add("zk-locked");
+  var input=document.getElementById("zkLockInput"), btn=document.getElementById("zkLockBtn"), err=document.getElementById("zkLockError");
+  function tryUnlock(){ if(input.value.trim()===PASS){ unlock(); } else { err.textContent="Incorrect passcode"; input.value=""; input.focus(); } }
+  btn.addEventListener("click",tryUnlock);
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
+  setTimeout(function(){ try{input.focus();}catch(e){} },50);
+})();
+</script>
+<!-- /ZK30 passcode gate -->
+
   <header class="calendar-topbar">
     <div class="calendar-brand">
       <a class='back-link' href='/'>ZK30</a>
       <div>
         <div class="brand-mark">ZK30 MFDB Command Centre</div>
         <div class="product-kicker">Executive Intelligence Operating System</div>
-        <h1 id="monthTitle">July 2026</h1>
+        <h1 id="monthTitle">August 2026</h1>
         <p class="subtitle">Executive Time & Strategic Milestones.</p>
-        <div class="muted" id="syncBadge" style="margin-top:4px;font-weight:700;font-size:12px;">Checking sync...</div>
       </div>
     </div>
     <nav class="nav calendar-module-nav" aria-label="ZK30 MFDB module navigation">
@@ -73,7 +116,7 @@
   <section class="enterprise-hero calendar-hero-compact">
     <div class="enterprise-hero-inner">
       <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Protect executive time, strategic milestones, meetings and follow-up discipline.</strong></div>
-      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">23 and 24 July carry the next conversion points: MFICORD, ANGKASA, SBF and UKAS. Then 27 July DBKU, 4 August MTCP and 16 August ICL Launch.</p></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">STIDC meeting completed (5 streams). Ahead: 27 Aug Astana award, Sept DID Sibu Makbol (six-figure), end September JKN Angkasa AI Programme.</p></div>
       <div class="hero-kpi"><div><strong>8</strong><span>Milestones</span></div></div>
     </div>
   </section>
@@ -96,7 +139,7 @@
       <div class="agenda-head">
         <div>
           <span class="muted">Selected day</span>
-          <h2 id="selectedDayTitle">Tuesday, 21 July</h2>
+          <h2 id="selectedDayTitle">Sunday, 23 August</h2>
         </div>
         <a class="button secondary small" id="selectedGoogleLink" href="https://calendar.google.com/calendar/u/0/r/eventedit" target="_blank" rel="noopener">Add</a>
       </div>
@@ -132,7 +175,7 @@
     const selectedGoogleLink = document.getElementById("selectedGoogleLink");
     const voiceState = document.getElementById("voiceState");
     const storageKey = "zk30-calendar-chat-v4";
-    const todayIso = "2026-07-21";
+    const todayIso = "2026-08-23";
 
     const baseEvents = [
       {
@@ -147,33 +190,169 @@
         id: "mficord",
         date: "2026-07-23",
         time: "09:00",
-        title: "MFICORD",
-        notes: "Amazon USA Project and AgroTech Heroes 2.0. Attending: Wan, Mizi (Rampangi), Syafiq (Army Penrissen), Khairudin (KAHAL). AMCORP unable to attend (travel); RECODA awaiting confirmation.",
-        type: "priority"
+        title: "MFICORD (completed)",
+        notes: "Meeting completed with the Deputy Permanent Secretary (Tuan Syed). Presented Solar Collaboration, Agro Go-To-Market Global and Agro Development Package; ~3-5 SP3Bs now with MFICORD.",
+        type: "focus"
       },
       {
         id: "angkasa",
         date: "2026-07-23",
         time: "16:00",
-        title: "ANGKASA",
-        notes: "Executive relationship and cooperative movement discussion; BA100, School Cooperative and Rice Project.",
-        type: "partner"
+        title: "ANGKASA (completed)",
+        notes: "Meeting completed with Mr. Aiman (Senior Manager). Distribution Centre approved in principle by ANGKASA HQ; prepare BA100 and School Cooperative letters.",
+        type: "focus"
       },
       {
         id: "sbf",
         date: "2026-07-24",
         time: "10:00",
-        title: "SBF pricing negotiation",
-        notes: "Revised quotation using man-hour costing model before final pricing discussion; internal discussion with Azizul completed.",
-        type: "priority"
+        title: "SBF pitch completed",
+        notes: "Executive pitch delivered to the full evaluation committee (Dato' President, Dato' Advisor). Very positive; awaiting decision. Outstanding: AI Personnel Portfolio.",
+        type: "focus"
       },
       {
         id: "ukas-high-tea",
         date: "2026-07-24",
         time: "14:00",
-        title: "UKAS High Tea",
-        notes: "14:00-16:00. Sponsor engagement with Sarawak Energy Berhad, Bintulu Port and Affin Bank; warm-up WhatsApp sent to Awang Putra; send thank-you messages.",
+        title: "UKAS closing completed",
+        notes: "Closing ceremony completed (YB, VIP, sponsors). YB announced an additional RM10,000. Next: submit final report and invoice; close professionally.",
+        type: "focus"
+      },
+      {
+        id: "mara-miri-close",
+        date: "2026-07-27",
+        time: "09:00",
+        title: "MARA Miri report + invoice",
+        notes: "Submit final programme report and invoice; follow up RM10,000 payment.",
+        type: "priority"
+      },
+      {
+        id: "doa-letter",
+        date: "2026-07-27",
+        time: "10:00",
+        title: "DOA Agro Rampangi letter",
+        notes: "Submit official letter to the Department of Agriculture; proceed to implementation via IPI/Intan and Rampangi rejuvenation.",
+        type: "priority"
+      },
+      {
+        id: "kim-invoice",
+        date: "2026-07-28",
+        time: "09:00",
+        title: "KIM RM10,000 invoice",
+        notes: "Push submission of the RM10,000 invoice to Yayasan Inovasi Malaysia.",
+        type: "priority"
+      },
+      {
+        id: "agro-gtm",
+        date: "2026-07-30",
+        time: "09:00",
+        title: "Agro GTM Global submission",
+        notes: "Complete updated proposal and commercial pricing for MFICORD executive submission.",
+        type: "priority"
+      },
+      {
+        id: "followup-calls",
+        date: "2026-07-28",
+        time: "10:00",
+        title: "Executive follow-up calls",
+        notes: "CIDB executive email (Jim Lasang); calls to ANGKASA (Aiman), SEA (David) and Bintulu Port PA (Datuk Roslan); Hartanti and Prof. Halikul.",
         type: "partner"
+      },
+      {
+        id: "azam-proposal",
+        date: "2026-07-31",
+        time: "09:00",
+        title: "AZAM proposal (Intan)",
+        notes: "Prepare AZAM executive proposal (target Thursday/Friday). Datuk Ismawi reminder set for Friday.",
+        type: "priority"
+      },
+      {
+        id: "ro-neighbors",
+        date: "2026-08-01",
+        time: "09:00",
+        title: "RO Neighbors meeting",
+        notes: "Proposal requested; prepare executive proposal before the Saturday 9:00 AM meeting.",
+        type: "priority"
+      },
+      {
+        id: "yb-hazlan",
+        date: "2026-08-03",
+        time: "09:00",
+        title: "YB Hazlan proposals",
+        notes: "Submit three new strategic proposals to reactivate and strengthen the relationship.",
+        type: "priority"
+      },
+      {
+        id: "cidb-registration",
+        date: "2026-08-06",
+        time: "09:00",
+        title: "CIDB registration programme",
+        notes: "Sarawak Entrepreneurs Association - support CIDB registration (100 participants); Premier Sarawak programme; KOBIS to assist mobilisation (via Nizam).",
+        type: "programme"
+      },
+      {
+        id: "amcorp-meeting",
+        date: "2026-08-07",
+        time: "10:00",
+        title: "AMCORP meeting (IR Khairuddin)",
+        notes: "Solar collaboration, Datuk Kasim land, ESG initiatives and project progress updates. Prepare briefing beforehand.",
+        type: "priority"
+      },
+      {
+        id: "mintred-proposals",
+        date: "2026-07-30",
+        time: "09:00",
+        title: "MINTRED proposals due",
+        notes: "Submit two proposals to Zarif: Entrepreneur Digital Readiness Survey and Grant / Application Assessment System.",
+        type: "priority"
+      },
+      {
+        id: "ro-proposals",
+        date: "2026-07-31",
+        time: "09:00",
+        title: "AO proposals #2 & #3",
+        notes: "Complete Koperasi Sekolah (Miri) and Arts & Culture proposals this week. Tourism proposal already submitted.",
+        type: "priority"
+      },
+      {
+        id: "teknik",
+        date: "2026-08-17",
+        time: "09:00",
+        title: "Contact Teknik",
+        notes: "Contact Teknik by Monday (pending engagement).",
+        type: "partner"
+      },
+      {
+        id: "stidc-meeting",
+        date: "2026-08-20",
+        time: "10:00",
+        title: "STIDC meeting (completed)",
+        notes: "Meeting completed (Puan Molly, senior top management). Five streams: Bamboo ESG, Bamboo Town Hall, ICL Leadership, SPM2Diploma, Timber/Wood Museum.",
+        type: "priority"
+      },
+      {
+        id: "did-sibu",
+        date: "2026-09-15",
+        time: "09:00",
+        title: "DID Sibu - Makbol (six-figure)",
+        notes: "HOT: DID funding the Makbol initiative in Sibu (Sept/Oct). Confirm scope, funding, decision maker; develop concept; assign owner.",
+        type: "priority"
+      },
+      {
+        id: "astana-award",
+        date: "2026-08-27",
+        time: "10:00",
+        title: "Astana award / medal",
+        notes: "Official letter received; invitation to receive the award/medal on the 27th.",
+        type: "focus"
+      },
+      {
+        id: "jkn-ai",
+        date: "2026-09-30",
+        time: "09:00",
+        title: "JKN Angkasa AI Programme",
+        notes: "Kick off target end September (Atikah / JKN Angkasa, Queen / KOBIS); explore SDAT and SAIC.",
+        type: "programme"
       },
       {
         id: "dbku",
@@ -188,7 +367,7 @@
         date: "2026-08-04",
         time: "10:00",
         title: "MTCP Permanent Secretary",
-        notes: "Permanent Secretary meeting with Mohd Shidi and Yusfida; Hari Sarawak appreciation.",
+        notes: "Permanent Secretary meeting with Mohd Shidi and Yusfida; prepare ~3 executive proposals; Hari Sarawak appreciation.",
         type: "priority"
       },
       {
@@ -225,7 +404,7 @@
       }
     ];
 
-    let viewDate = new Date(2026, 6, 1);
+    let viewDate = new Date(2026, 7, 1);
     let selectedDate = todayIso;
     let recognition;
 
@@ -237,7 +416,6 @@
 
     function saveStoredEvents(list) {
       localStorage.setItem(storageKey, JSON.stringify(list.slice(0, 100)));
-      if (typeof calSyncPush === "function") calSyncPush();
     }
 
     function hiddenIds() {
@@ -248,7 +426,6 @@
       const list = hiddenIds();
       if (!list.includes(id)) list.push(id);
       localStorage.setItem(hiddenKey, JSON.stringify(list));
-      if (typeof calSyncPush === "function") calSyncPush();
     }
 
     function allEvents() {
@@ -564,7 +741,7 @@
     });
     document.getElementById("todayBtn").addEventListener("click", () => {
       selectedDate = todayIso;
-      viewDate = new Date(2026, 6, 1);
+      viewDate = new Date(2026, 7, 1);
       renderMonth();
       renderDay();
     });
@@ -580,64 +757,6 @@
     setupVoice();
     renderMonth();
     renderDay();
-
-    // ---- Cross-device sync (Netlify Blobs via /api/data) ----
-    // Syncs your added / edited / removed events across all devices.
-    // Built-in milestones live in the code, so only your changes travel.
-    const SYNC_URL = "/api/data?key=calendar";
-    const SYNC_HEADERS = { "content-type": "application/json", "x-zk": "zk30-sync-9f3a2c" };
-    const syncBadge = document.getElementById("syncBadge");
-    let syncMode = false;
-    let pushTimer = null;
-
-    function setSyncBadge(state) {
-      if (!syncBadge) return;
-      if (state === "synced") { syncBadge.textContent = "● Synced across your devices"; syncBadge.style.color = "#177245"; }
-      else if (state === "saving") { syncBadge.textContent = "● Saving to cloud..."; syncBadge.style.color = "#946200"; }
-      else { syncBadge.textContent = "● This device only (cloud sync not connected)"; syncBadge.style.color = "#64707d"; }
-    }
-
-    function currentCalPayload() {
-      return { events: storedEvents(), hidden: hiddenIds() };
-    }
-
-    async function calSyncPushNow() {
-      if (!syncMode) return;
-      setSyncBadge("saving");
-      try {
-        await fetch(SYNC_URL, { method: "POST", headers: SYNC_HEADERS, body: JSON.stringify({ data: currentCalPayload() }) });
-        setSyncBadge("synced");
-      } catch (e) { setSyncBadge("synced"); }
-    }
-
-    function calSyncPush() {
-      if (!syncMode) return;
-      clearTimeout(pushTimer);
-      pushTimer = setTimeout(calSyncPushNow, 700);
-    }
-
-    async function calSyncPull() {
-      try {
-        const res = await fetch(SYNC_URL, { headers: SYNC_HEADERS });
-        if (!res.ok) { setSyncBadge("local"); return; }
-        const json = await res.json();
-        syncMode = true;
-        const data = json.data;
-        if (data && (Array.isArray(data.events) || Array.isArray(data.hidden))) {
-          localStorage.setItem(storageKey, JSON.stringify(data.events || []));
-          localStorage.setItem(hiddenKey, JSON.stringify(data.hidden || []));
-          renderMonth();
-          renderDay();
-          setSyncBadge("synced");
-        } else {
-          await calSyncPushNow();
-        }
-      } catch (e) {
-        setSyncBadge("local");
-      }
-    }
-
-    calSyncPull();
   </script>
 </body>
 </html>

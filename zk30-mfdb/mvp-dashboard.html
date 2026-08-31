@@ -7,6 +7,47 @@
   <link rel="stylesheet" href="acis-modules.css">
 </head>
 <body class="module-mvp">
+<!-- ZK30 passcode gate -->
+<style>
+  .zk-lock{position:fixed;inset:0;z-index:2147483647;background:#0b1220;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;}
+  .zk-lock-box{background:#111a2e;border:1px solid #24314d;border-radius:16px;padding:34px 28px;width:min(92vw,360px);text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .zk-lock-brand{color:#7aa2ff;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .zk-lock-sub{color:#8794ad;font-size:12px;margin-bottom:18px;}
+  .zk-lock-title{color:#fff;font-size:20px;font-weight:700;margin-bottom:18px;}
+  .zk-lock-input{width:100%;box-sizing:border-box;font-size:22px;letter-spacing:.35em;text-align:center;padding:13px;border-radius:10px;border:1px solid #2c3a58;background:#0b1220;color:#fff;outline:none;}
+  .zk-lock-input:focus{border-color:#4f7cff;}
+  .zk-lock-btn{margin-top:14px;width:100%;padding:13px;border:none;border-radius:10px;background:#3b6cff;color:#fff;font-size:16px;font-weight:700;cursor:pointer;}
+  .zk-lock-btn:hover{background:#2f59db;}
+  .zk-lock-error{color:#ff8a8a;font-size:13px;min-height:18px;margin-top:10px;}
+  html.zk-locked,html.zk-locked body{overflow:hidden;}
+</style>
+<div id="zkLock" class="zk-lock" role="dialog" aria-modal="true" aria-label="Passcode required">
+  <div class="zk-lock-box">
+    <div class="zk-lock-brand">ZK30 MFDB Command Centre</div>
+    <div class="zk-lock-sub">Executive Intelligence Operating System</div>
+    <div class="zk-lock-title">Enter Passcode</div>
+    <input id="zkLockInput" class="zk-lock-input" type="password" inputmode="numeric" autocomplete="off" placeholder="------" maxlength="12" aria-label="Passcode">
+    <button id="zkLockBtn" class="zk-lock-btn" type="button">Unlock</button>
+    <div id="zkLockError" class="zk-lock-error"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="zk30-unlocked", PASS="803116";
+  var root=document.documentElement, lock=document.getElementById("zkLock");
+  function unlock(){ try{sessionStorage.setItem(KEY,"yes");}catch(e){} if(lock){lock.parentNode.removeChild(lock);} root.classList.remove("zk-locked"); }
+  var ok=false; try{ ok=sessionStorage.getItem(KEY)==="yes"; }catch(e){}
+  if(ok){ unlock(); return; }
+  root.classList.add("zk-locked");
+  var input=document.getElementById("zkLockInput"), btn=document.getElementById("zkLockBtn"), err=document.getElementById("zkLockError");
+  function tryUnlock(){ if(input.value.trim()===PASS){ unlock(); } else { err.textContent="Incorrect passcode"; input.value=""; input.focus(); } }
+  btn.addEventListener("click",tryUnlock);
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
+  setTimeout(function(){ try{input.focus();}catch(e){} },50);
+})();
+</script>
+<!-- /ZK30 passcode gate -->
+
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-row">
@@ -32,19 +73,19 @@
   <section class="enterprise-hero">
     <div class="enterprise-hero-inner">
       <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Move promising ideas into launch-ready products with visible owners, pilots and revenue paths.</strong></div>
-      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">KBT Attendify is commercially validated, Spinify is completed, and KOHOS is ready for cooperative rollout strategy.</p></div>
-      <div class="hero-kpi"><div><strong>88%</strong><span>Factory</span></div></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">Three KOBIS-owned MVPs now enter commercialisation &mdash; KOHOS, SPM to Diploma and Spinify &mdash; driven directly by KOBIS with revenue from market adoption, no external paymaster.</p></div>
+      <div class="hero-kpi"><div><strong>3</strong><span>Commercialise</span></div></div>
     </div>
   </section>
 
   <main class="page">
     <section class="metric-grid" aria-label="MVP metrics">
-      <div class="metric"><span>Products</span><strong>9</strong></div>
-      <div class="metric"><span>Build active</span><strong>4</strong></div>
-      <div class="metric"><span>Launch ready</span><strong>5</strong></div>
-      <div class="metric"><span>Factory gaps</span><strong>5</strong></div>
-      <div class="metric"><span>Revenue paths</span><strong>10</strong></div>
-      <div class="metric"><span>Partner backed</span><strong>6</strong></div>
+      <div class="metric"><span>Products</span><strong>23</strong></div>
+      <div class="metric"><span>SPM to Diploma</span><strong>Production</strong></div>
+      <div class="metric"><span>New this week</span><strong>3</strong></div>
+      <div class="metric"><span>Factory queue</span><strong>6</strong></div>
+      <div class="metric"><span>Website builds</span><strong>3</strong></div>
+      <div class="metric"><span>KOBIS-owned</span><strong>3</strong></div>
     </section>
 
     <section class="two-col">
@@ -70,18 +111,116 @@
                 <td>Package MARA validation and scale across MARA.</td>
               </tr>
               <tr>
-                <td><strong>KOHOS</strong><br><span class="muted">Signature KOBIS product for cooperatives</span></td>
-                <td><span class="pill teal">Rollout</span></td>
-                <td>82%</td>
-                <td>Expansion target: 10 cooperatives &mdash; KIM, Koperasi Pusaka, Masjid Al-Baid, Baitulmal, KOPAKASA and Koperasi Bau</td>
-                <td>Open LEXA for target cooperatives and package rollout offer.</td>
+                <td><strong>KOHOS</strong><br><span class="muted">Cooperative HQ Operating System &mdash; KOBIS-owned</span></td>
+                <td><span class="pill teal">Commercialise</span></td>
+                <td>85%</td>
+                <td>Commercial rollout; expand the cooperative market (market-driven revenue)</td>
+                <td>Drive commercial rollout across the cooperative market.</td>
               </tr>
               <tr>
-                <td><strong>Spinify RewardOS</strong><br><span class="muted">Cloud version completed and Codex version completed</span></td>
-                <td><span class="pill green">Completed</span></td>
+                <td><strong>SPM to Diploma</strong><br><span class="muted">KOBIS-owned education pathway &mdash; commercial launch</span></td>
+                <td><span class="pill green">Launch</span></td>
+                <td>90%</td>
+                <td>Commercial launch; increase enrolment and strategic partnerships</td>
+                <td>Complete AUTH and Supabase integration for production MVP.</td>
+              </tr>
+              <tr>
+                <td><strong>Spinify</strong><br><span class="muted">RewardOS &mdash; Cloud and Codex completed, KOBIS-owned</span></td>
+                <td><span class="pill teal">Commercialise</span></td>
                 <td>100%</td>
-                <td>Business development, merchant pilots and reward campaign services</td>
-                <td>Move into business development stage and pilot deployment.</td>
+                <td>Commercial launch; acquire paying merchants and organisations</td>
+                <td>Launch commercially and acquire paying merchants.</td>
+              </tr>
+              <tr>
+                <td><strong>Gerak Usahawan Assessment System</strong><br><span class="muted">MINTRED digital assessor platform</span></td>
+                <td><span class="pill blue">Proposal</span></td>
+                <td>40%</td>
+                <td>Reduce assessor man-hours; higher application volume</td>
+                <td>Prepare proposal and concept paper.</td>
+              </tr>
+              <tr>
+                <td><strong>Entrepreneur Digital Readiness Survey</strong><br><span class="muted">MINTRED ministry programme</span></td>
+                <td><span class="pill blue">Proposal</span></td>
+                <td>38%</td>
+                <td>Readiness insights and programme support</td>
+                <td>Build survey framework and questionnaire.</td>
+              </tr>
+              <tr>
+                <td><strong>Heritage Awareness Survey</strong><br><span class="muted">OKSHE / Sarawak heritage houses</span></td>
+                <td><span class="pill blue">Proposal</span></td>
+                <td>35%</td>
+                <td>Heritage KPI and ICOMOS / Rumah Batu</td>
+                <td>Prepare survey and concept proposal.</td>
+              </tr>
+              <tr>
+                <td><strong>Kuching Event Goodies</strong><br><span class="muted">Taufik / Graphic Avenue marketplace</span></td>
+                <td><span class="pill violet">New</span></td>
+                <td>30%</td>
+                <td>Packages, instant quotation, vendor marketplace, event ordering</td>
+                <td>Scope the marketplace and packages.</td>
+              </tr>
+              <tr>
+                <td><strong>NDK Website</strong><br><span class="muted">Website development (via Nizam)</span></td>
+                <td><span class="pill teal">Build</span></td>
+                <td>45%</td>
+                <td>Website development and delivery</td>
+                <td>Deliver the website build.</td>
+              </tr>
+              <tr>
+                <td><strong>Setara Vista Website</strong><br><span class="muted">Corporate website development (via Nizam)</span></td>
+                <td><span class="pill teal">Build</span></td>
+                <td>45%</td>
+                <td>Website development and delivery</td>
+                <td>Deliver the website build.</td>
+              </tr>
+              <tr>
+                <td><strong>Dirgahayu Website</strong><br><span class="muted">Website + company profile, Oil & Gas (via Nizam)</span></td>
+                <td><span class="pill teal">Build</span></td>
+                <td>40%</td>
+                <td>Website and corporate profile delivery</td>
+                <td>Build the website and company profile.</td>
+              </tr>
+              <tr>
+                <td><strong>Graphic Avenue Website</strong><br><span class="muted">Delivered as ~RM2,000 debt offset (Taufik)</span></td>
+                <td><span class="pill gold">Awaiting feedback</span></td>
+                <td>95%</td>
+                <td>Non-cash: ~RM2,000 liability settled via service delivery</td>
+                <td>Await Taufik feedback; implement adjustments if any.</td>
+              </tr>
+              <tr>
+                <td><strong>NREB Green School</strong><br><span class="muted">Green School &times; Koperasi Sekolah concept</span></td>
+                <td><span class="pill violet">Concept</span></td>
+                <td>25%</td>
+                <td>Connect NREB, school cooperatives, green clubs and students</td>
+                <td>Scope the concept after the courtesy visit.</td>
+              </tr>
+              <tr>
+                <td><strong>Salesman Apps</strong><br><span class="muted">Sales enablement app (Coach Aril)</span></td>
+                <td><span class="pill gold">Negotiation</span></td>
+                <td>60%</td>
+                <td>Sales team enablement and tracking</td>
+                <td>Demo completed &mdash; progress negotiation / fine-tuning.</td>
+              </tr>
+              <tr>
+                <td><strong>KO-PUSAKA Systems</strong><br><span class="muted">Staff Wellbeing + Property Asset &amp; Management (Puan Hajjah Suraya)</span></td>
+                <td><span class="pill violet">Opportunity</span></td>
+                <td>25%</td>
+                <td>Cooperative staff wellbeing and property asset management</td>
+                <td>Develop proposals and pricing (third project TBC).</td>
+              </tr>
+              <tr>
+                <td><strong>Hartanti Debt Portal</strong><br><span class="muted">Debt &amp; late-payment management portal</span></td>
+                <td><span class="pill violet">Concept</span></td>
+                <td>20%</td>
+                <td>Outstanding debt and late-payment management</td>
+                <td>Prepare portal / website concept.</td>
+              </tr>
+              <tr>
+                <td><strong>GearWorks Business System</strong><br><span class="muted">Wan Zul &mdash; Business-in-a-Box</span></td>
+                <td><span class="pill violet">Concept</span></td>
+                <td>32%</td>
+                <td>Business-in-a-Box digital solution</td>
+                <td>Define product scope and offer.</td>
               </tr>
               <tr>
                 <td><strong>My Green Kampung Pilot</strong><br><span class="muted">DBKU and ESG sponsor pathway</span></td>
@@ -146,16 +285,16 @@
 
     <section class="three-col section-spacer" aria-label="MVP operating views">
       <div class="queue-card">
-        <h3>Highest Revenue Potential</h3>
-        <p class="muted">KOHOS, KBT Attendify, Spinify RewardOS and Cooperative Land Platform have the strongest path to repeatable revenue.</p>
+        <h3>Commercialisation Focus</h3>
+        <p class="muted">KOHOS, SPM to Diploma and Spinify are the primary commercialisation targets &mdash; all KOBIS-owned and driven directly by KOBIS.</p>
       </div>
       <div class="queue-card">
-        <h3>Fastest Launch</h3>
-        <p class="muted">KBT Attendify is validated, Spinify RewardOS is complete, and KOHOS has a clear cooperative rollout target.</p>
+        <h3>Revenue Model</h3>
+        <p class="muted">Unlike government-funded projects, these MVPs have no external paymaster. Revenue is generated directly from market adoption.</p>
       </div>
       <div class="queue-card">
-        <h3>Factory Bottleneck</h3>
-        <p class="muted">KOHOS needs LEXA records for target cooperatives; Attendify needs MARA scaling package; Spinify needs merchant acquisition.</p>
+        <h3>Next Moves</h3>
+        <p class="muted">KOHOS: expand cooperative market. SPM to Diploma: grow enrolment and partnerships. Spinify: acquire paying merchants and organisations.</p>
       </div>
     </section>
   </main>

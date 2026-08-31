@@ -1,7 +1,4 @@
-# ZK30 MFDB Command Centre - Netlify configuration
-# Static site + one serverless function backed by Netlify Blobs
-# for cross-device data sync.
-
+# ZK30 MFDB - static site + MCP server function
 [build]
   publish = "."
   functions = "netlify/functions"
@@ -9,15 +6,10 @@
 [functions]
   node_bundler = "esbuild"
 
-# API route -> data function (declared first so the SPA fallback below
-# can never shadow it).
+# MCP endpoint (the function also self-registers /mcp via config.path;
+# this redirect is a belt-and-suspenders alias).
 [[redirects]]
-  from = "/api/data"
-  to = "/.netlify/functions/data"
+  from = "/mcp"
+  to = "/.netlify/functions/mcp"
   status = 200
-
-# Friendly clean-URL fallback so unknown routes land on the Overview.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  force = true

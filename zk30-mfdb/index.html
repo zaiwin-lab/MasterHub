@@ -21,6 +21,47 @@
   </style>
 </head>
 <body class="overview-shell module-overview">
+<!-- ZK30 passcode gate -->
+<style>
+  .zk-lock{position:fixed;inset:0;z-index:2147483647;background:#0b1220;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;}
+  .zk-lock-box{background:#111a2e;border:1px solid #24314d;border-radius:16px;padding:34px 28px;width:min(92vw,360px);text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .zk-lock-brand{color:#7aa2ff;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .zk-lock-sub{color:#8794ad;font-size:12px;margin-bottom:18px;}
+  .zk-lock-title{color:#fff;font-size:20px;font-weight:700;margin-bottom:18px;}
+  .zk-lock-input{width:100%;box-sizing:border-box;font-size:22px;letter-spacing:.35em;text-align:center;padding:13px;border-radius:10px;border:1px solid #2c3a58;background:#0b1220;color:#fff;outline:none;}
+  .zk-lock-input:focus{border-color:#4f7cff;}
+  .zk-lock-btn{margin-top:14px;width:100%;padding:13px;border:none;border-radius:10px;background:#3b6cff;color:#fff;font-size:16px;font-weight:700;cursor:pointer;}
+  .zk-lock-btn:hover{background:#2f59db;}
+  .zk-lock-error{color:#ff8a8a;font-size:13px;min-height:18px;margin-top:10px;}
+  html.zk-locked,html.zk-locked body{overflow:hidden;}
+</style>
+<div id="zkLock" class="zk-lock" role="dialog" aria-modal="true" aria-label="Passcode required">
+  <div class="zk-lock-box">
+    <div class="zk-lock-brand">ZK30 MFDB Command Centre</div>
+    <div class="zk-lock-sub">Executive Intelligence Operating System</div>
+    <div class="zk-lock-title">Enter Passcode</div>
+    <input id="zkLockInput" class="zk-lock-input" type="password" inputmode="numeric" autocomplete="off" placeholder="------" maxlength="12" aria-label="Passcode">
+    <button id="zkLockBtn" class="zk-lock-btn" type="button">Unlock</button>
+    <div id="zkLockError" class="zk-lock-error"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="zk30-unlocked", PASS="803116";
+  var root=document.documentElement, lock=document.getElementById("zkLock");
+  function unlock(){ try{sessionStorage.setItem(KEY,"yes");}catch(e){} if(lock){lock.parentNode.removeChild(lock);} root.classList.remove("zk-locked"); }
+  var ok=false; try{ ok=sessionStorage.getItem(KEY)==="yes"; }catch(e){}
+  if(ok){ unlock(); return; }
+  root.classList.add("zk-locked");
+  var input=document.getElementById("zkLockInput"), btn=document.getElementById("zkLockBtn"), err=document.getElementById("zkLockError");
+  function tryUnlock(){ if(input.value.trim()===PASS){ unlock(); } else { err.textContent="Incorrect passcode"; input.value=""; input.focus(); } }
+  btn.addEventListener("click",tryUnlock);
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
+  setTimeout(function(){ try{input.focus();}catch(e){} },50);
+})();
+</script>
+<!-- /ZK30 passcode gate -->
+
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-row">
@@ -51,7 +92,7 @@
       </div>
       <div class="hero-cell">
         <span class="hero-label">Operating flow</span>
-        <p class="muted">LEXA &rarr; SP3B &rarr; MVP &rarr; Strategic Partnership. Every opportunity follows the official execution pipeline.</p>
+        <p class="muted">LEXA &rarr; SP3B &rarr; MVP &rarr; Commercialisation &rarr; Payment &rarr; Strategic Partnership. Every opportunity follows the official execution pipeline.</p>
       </div>
       <div class="hero-kpi" aria-label="Executive score 82 out of 100">
         <div><strong>82</strong><span>Executive Score</span></div>
@@ -64,30 +105,31 @@
       <div class="welcome-panel">
         <div class="welcome-copy">
           <div class="brand-mark">Good Morning Chairman</div>
-          <h2>ZK30 MFDB is operating through the LEXA &rarr; SP3B &rarr; MVP &rarr; Strategic Partnership execution flow.</h2>
-          <p class="subtitle">Consolidated Saturday-to-Tuesday update: strengthen strategic relationships, convert warm opportunities into formal proposals, and prepare multiple digital initiatives. Priority now is execution, follow-up and conversion.</p>
+          <div class="muted" style="font-weight:700;font-size:12px;color:#6941c6;margin-bottom:6px;">Last Updated: 23 August 2026</div>
+          <h2>ZK30 MFDB is operating through the LEXA &rarr; SP3B &rarr; MVP &rarr; Commercialisation &rarr; Payment &rarr; Strategic Partnership execution flow.</h2>
+          <p class="subtitle">23 August master update: STIDC is now a strategic account with five streams; KO-PUSAKA meeting completed; RECODA three proposals submitted; Coach Aril in negotiation; and DID Sibu is a hot six-figure opportunity. Several new strategic accounts opened.</p>
         </div>
         <div class="welcome-grid">
-          <div class="welcome-stat"><span>LEXA Database</span><strong>70 Active</strong></div>
-          <div class="welcome-stat"><span>Pipeline Value</span><strong>High</strong></div>
-          <div class="welcome-stat"><span>Current Focus</span><strong>Execution</strong></div>
+          <div class="welcome-stat"><span>LEXA Database</span><strong>108 Active</strong></div>
+          <div class="welcome-stat"><span>Hot Opportunity</span><strong>DID Sibu</strong></div>
+          <div class="welcome-stat"><span>Current Focus</span><strong>Convert &amp; Close</strong></div>
           <div class="welcome-stat"><span>Momentum</span><strong>Strong</strong></div>
         </div>
         <div class="ai-signal-grid" aria-label="AI operating signals">
           <article>
-            <span>AZUGAI7 Signal</span>
-            <strong>Focus on conversion sequence</strong>
-            <p>Move LEXA relationships into SP3B decisions, then into MVP implementation and long-term strategic partnership.</p>
+            <span>🔥 Hot / Revenue</span>
+            <strong>DID Sibu six-figure Makbol</strong>
+            <p>DID Sibu funding the Makbol initiative (~Sept/Oct, potential six-figure). Plus RECODA 3 proposals (~RM5M), Coach Aril negotiation, SPM2Diploma launch and STIDC five streams.</p>
           </article>
           <article>
-            <span>LEXA Movement</span>
-            <strong>MFICORD, SBF and DBKU lead the week</strong>
-            <p>23 July MFICORD meeting, 24 July SBF pricing negotiation and the DBKU RKR / My Green Kampung pilot are the highest-value conversion points.</p>
+            <span>Action Required</span>
+            <strong>Proposals &amp; courtesy letters</strong>
+            <p>YB Dr Hazlan proposal ASAP; SCOPE/Joseph &amp; MTCP/Yusfida proposals; SMD, HDC &amp; KOPERKASA courtesy letters; SNDB recap; Abang Iskandar, Saadon/TVS, IR Qahar/MCorp follow-ups.</p>
           </article>
           <article>
-            <span>MVP Signal</span>
-            <strong>Attendify validated, KOHOS scaling</strong>
-            <p>KBT Attendify is commercially validated for MARA scale; Spinify RewardOS is complete; KOHOS is a signature KOBIS product for 10-cooperative rollout.</p>
+            <span>New Strategic Accounts</span>
+            <strong>7 new this update</strong>
+            <p>Sarawak Leadership Institute, Sarawak Biotech Nexus, SNS (AI/GPU partner), Sahbina (container house), Klinik Gigi Satok, RJC (Maulana), Sarawak Skills.</p>
           </article>
         </div>
         <div class="overview-chart-card" aria-label="Executive momentum preview">
@@ -112,13 +154,17 @@
       </div>
 
       <aside class="top-five-panel">
-        <div class="brand-mark">Today's Top 5</div>
+        <div class="brand-mark">Top 5 &mdash; Hot / Revenue</div>
         <ol class="rank-list">
-          <li><span class="rank">1</span><div><strong>MFICORD meeting</strong><br><span class="muted">23 July 09:00 &mdash; Amazon USA Project and AgroTech Heroes 2.0; confirm attendance.</span></div></li>
-          <li><span class="rank">2</span><div><strong>SBF pricing negotiation</strong><br><span class="muted">Revised man-hour quotation for 24 July 10:00.</span></div></li>
-          <li><span class="rank">3</span><div><strong>DBKU meeting</strong><br><span class="muted">Monday 27 July 15:00 &mdash; iCATS RKR report and My Green Kampung pilot.</span></div></li>
-          <li><span class="rank">4</span><div><strong>MARA executive report</strong><br><span class="muted">Programme, industry and digital impact report to MARA Sarawak.</span></div></li>
-          <li><span class="rank">5</span><div><strong>CIDB Skill Techpreneur</strong><br><span class="muted">Executive email to Shikin and proposal for reopened opportunity.</span></div></li>
+          <li><span class="rank">1</span><div><strong>DID Sibu (Makbol) 🔥</strong><br><span class="muted">Six-figure potential &mdash; confirm scope, funding, decision maker; Sept/Oct.</span></div></li>
+          <li><span class="rank">2</span><div><strong>STIDC (5 streams)</strong><br><span class="muted">Bamboo ESG, Town Hall, ICL Leadership, SPM2Diploma, Timber Museum.</span></div></li>
+          <li><span class="rank">3</span><div><strong>RECODA decision</strong><br><span class="muted">Three proposals submitted (~RM5M) &mdash; follow up decision.</span></div></li>
+          <li><span class="rank">4</span><div><strong>Coach Aril negotiation</strong><br><span class="muted">Demo completed &mdash; move to close / fine-tuning.</span></div></li>
+          <li><span class="rank">5</span><div><strong>SPM2Diploma launch</strong><br><span class="muted">Coach Rozi meeting this week to finalise and kick off.</span></div></li>
+        </ol>
+        <div class="brand-mark" style="margin-top:14px">Commercialise (KOBIS-owned)</div>
+        <ol class="rank-list">
+          <li><span class="rank">+</span><div><strong>KOHOS &middot; SPM to Diploma &middot; Spinify</strong><br><span class="muted">Market-driven revenue, no external paymaster.</span></div></li>
         </ol>
       </aside>
     </section>
@@ -149,14 +195,14 @@
         </div>
       </div>
       <div class="command-centre-grid">
-        <div class="metric"><span>LEXA Database</span><strong>70</strong></div>
-        <div class="metric"><span>SP3B Queue</span><strong>9</strong></div>
-        <div class="metric"><span>New LEXA</span><strong>15</strong></div>
-        <div class="metric"><span>Top Priorities</span><strong>10</strong></div>
-        <div class="metric"><span>Upcoming Meetings</span><strong>6</strong></div>
-        <div class="metric"><span>Waiting Decisions</span><strong>8</strong></div>
-        <div class="metric"><span>Recent Wins</span><strong>5</strong></div>
-        <div class="metric"><span>Partner Network</span><strong>40</strong></div>
+        <div class="metric"><span>Strategic Accounts</span><strong>108</strong></div>
+        <div class="metric"><span>New This Update</span><strong>10</strong></div>
+        <div class="metric"><span>Proposals Submitted</span><strong>3</strong></div>
+        <div class="metric"><span>Proposals Outstanding</span><strong>6</strong></div>
+        <div class="metric"><span>Courtesy Visits</span><strong>6</strong></div>
+        <div class="metric"><span>Negotiations</span><strong>2</strong></div>
+        <div class="metric"><span>High-Value (RM5M+)</span><strong>2</strong></div>
+        <div class="metric"><span>SME Transformation</span><strong>3</strong></div>
       </div>
     </section>
 
@@ -186,11 +232,11 @@
         </div>
       </div>
       <div class="intelligence-grid">
-        <div class="intel-card"><span class="pill slate">Logs</span><strong>Recent Executive Logs</strong><p class="muted">Consolidated Saturday-to-Tuesday update confirms momentum across LEXA, SP3B and MVP into strategic partnership.</p></div>
-        <div class="intel-card"><span class="pill blue">LEXA</span><strong>Latest LEXA Updates</strong><p class="muted">MFICORD meeting confirmed, SBF pricing set, DBKU RKR meeting booked, UKAS sponsors locked, KAHAL land opened, 15 new LEXA created.</p></div>
-        <div class="intel-card"><span class="pill violet">Milestones</span><strong>Upcoming Milestones</strong><p class="muted">23 July MFICORD and ANGKASA; 24 July SBF and UKAS High Tea; 27 July DBKU; 4 August MTCP Permanent Secretary; 16 August ICL Launch.</p></div>
-        <div class="intel-card"><span class="pill green">AZUGAI7</span><strong>Recommendation</strong><p class="muted">Prioritise MFICORD, SBF quotation, DBKU meeting, MARA report and CIDB proposal.</p></div>
-        <div class="intel-card"><span class="pill red">Risk</span><strong>Today's Risks</strong><p class="muted">KOHOS, Attendify and Spinify can stall without clear owners; new LEXA relationships need timely courtesy visits and follow-ups.</p></div>
+        <div class="intel-card"><span class="pill slate">Recent Wins</span><strong>Completed &amp; Submitted</strong><p class="muted">SEB report submitted; RECODA 3 proposals submitted; Coach Aril demo completed; STIDC meeting completed (5 streams); KO-PUSAKA meeting completed; David/FAME package prepared.</p></div>
+        <div class="intel-card"><span class="pill red">Action Required</span><strong>Needs Chairman attention</strong><p class="muted">YB Dr Hazlan proposal ASAP; SCOPE/Joseph &amp; MTCP/Yusfida proposals; SMD, HDC &amp; KOPERKASA courtesy letters; SNDB recap; Abang Iskandar, Saadon/TVS &amp; IR Qahar/MCorp follow-ups.</p></div>
+        <div class="intel-card"><span class="pill blue">New Accounts</span><strong>Strategic pipeline</strong><p class="muted">Sarawak Leadership Institute, Sarawak Biotech Nexus, SNS (AI/GPU), Sahbina (container house), Klinik Gigi Satok, RJC (Maulana), Sarawak Skills.</p></div>
+        <div class="intel-card"><span class="pill violet">Milestones</span><strong>Upcoming</strong><p class="muted">27 Aug Astana award; DID Sibu Makbol (Sept/Oct, six-figure); end September JKN Angkasa AI Programme; STIDC five streams in development.</p></div>
+        <div class="intel-card"><span class="pill green">AZUGAI7</span><strong>Recommendation</strong><p class="muted">Drive DID Sibu, decide RECODA, close Coach Aril &amp; SPM2Diploma, send outstanding proposals and courtesy letters, and activate the new strategic accounts.</p></div>
       </div>
     </section>
 
@@ -205,7 +251,7 @@
         <div class="factory-card"><span>Proposal Factory</span><strong>84%</strong><div class="progress-line"><i style="width:84%"></i></div><p class="muted">ICL, DBKU, KIM and Green Kampung submitted; MARA report ready next.</p></div>
         <div class="factory-card"><span>MVP Factory</span><strong>88%</strong><div class="progress-line"><i style="width:88%"></i></div><p class="muted">Attendify validated, Spinify completed, KOHOS positioned as signature product.</p></div>
         <div class="factory-card"><span>Relationship Factory</span><strong>96%</strong><div class="progress-line"><i style="width:96%"></i></div><p class="muted">ICL, UKAS sponsors, SBF, SNDB, CIDB and cooperative pipeline are active.</p></div>
-        <div class="factory-card"><span>Marketing Factory</span><strong>62%</strong><div class="progress-line"><i style="width:62%"></i></div><p class="muted">Needs more reusable public-facing proof assets.</p></div>
+        <div class="factory-card"><span>Sales Engine</span><strong>78%</strong><div class="progress-line"><i style="width:78%"></i></div><p class="muted">New capability from NDK/CIDB: AI lead scraping, digital marketing, cold calling and registration conversion.</p></div>
         <div class="factory-card"><span>Operations Factory</span><strong>70%</strong><div class="progress-line"><i style="width:70%"></i></div><p class="muted">Programme delivery base strengthened by MARA Miri.</p></div>
         <div class="factory-card"><span>AI Factory</span><strong>82%</strong><div class="progress-line"><i style="width:82%"></i></div><p class="muted">New intern expands AI Prodigy Team capacity.</p></div>
       </div>
@@ -213,7 +259,7 @@
 
     <section class="executive-summary-panel section-spacer">
       <div class="brand-mark">Chairman's Observation</div>
-      <p class="summary-sentence">Over the past four days the organisation has strengthened multiple strategic relationships while advancing several opportunities into the proposal stage. The strongest momentum remains in government, GLC, cooperative and institutional engagement. The immediate focus is disciplined execution: completing follow-ups, submitting SP3B documents, validating MVP deployments, and converting warm LEXA relationships into long-term strategic partnerships. Mission Flow: LEXA &rarr; SP3B &rarr; MVP &rarr; Strategic Partnership.</p>
+      <p class="summary-sentence">23 August: the pipeline is broadening and deepening &mdash; STIDC has become a five-stream strategic account, KO-PUSAKA and DID Sibu (a hot six-figure Makbol opportunity) opened, RECODA's three proposals are in decision, and several new strategic accounts (Sarawak Leadership Institute, Biotech Nexus, SNS, Sahbina, Klinik Gigi Satok, RJC, Sarawak Skills) have entered. KOBIS is increasingly a strategic implementation and digital-transformation partner. Focus now: convert the hot opportunities into decisions, close the live negotiations (Coach Aril, SPM2Diploma), clear outstanding proposals and courtesy letters, and turn delivery into invoices. Execution Flow: LEXA &rarr; SP3B &rarr; MVP &rarr; Commercialisation &rarr; Payment &rarr; Long-Term Strategic Partnership.</p>
     </section>
   </main>
 

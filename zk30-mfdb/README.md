@@ -1,39 +1,33 @@
 # ZK30 MFDB Command Centre
 
-Executive intelligence dashboard (LEXA / SP3B / MVP / Calendar / KPI) with
-optional cross-device sync via Netlify Blobs.
+Executive intelligence dashboard (Overview / LEXA / SP3B / MVP / Calendar /
+Partnerships / KPI). Static site + one serverless function that exposes the
+data as an **MCP server**.
 
 ## Pages
-- `index.html` — Overview
-- `acis-dashboard.html` — LEXA (relationship database, inline Fix/Delete)
-- `sp3b-dashboard.html` — SP3B proposal queue
-- `mvp-dashboard.html` — MVP product pipeline
-- `executive-calendar.html` — Calendar (add / edit / remove events)
-- `partnership-dashboard.html`, `executive-kpi.html`
-- `acis-modules.css` — shared styles
+Static HTML + `acis-modules.css`. A client-side passcode gate (code on the
+page) covers every page. Data lives in each page (seed arrays) with per-browser
+localStorage for edits.
 
-## Cross-device sync (optional but recommended)
-The data function stores LEXA and Calendar data in **Netlify Blobs**, so every
-device (office PC, home PC, phone) reads and writes the same records.
+## MCP server  — `/mcp`
+`netlify/functions/mcp.mjs` is a zero-dependency MCP server (Streamable HTTP,
+JSON-RPC 2.0). Point any MCP client (Gemini Spark, Claude, etc.) at
+`https://zk30-mfdb.netlify.app/mcp`.
 
-- `netlify/functions/data.mjs` — `GET/POST /api/data?key=lexa|calendar`
-- `package.json` — declares `@netlify/blobs`
-- `netlify.toml` — publish dir, functions dir, `/api/data` route, SPA fallback
+Tools: `get_overview`, `get_top_priorities`, `list_lexa`, `get_lexa`, `search`.
 
-**Progressive enhancement:** if the function is not deployed, the pages fall
-back to per-browser `localStorage` and keep working — a "This device only"
-badge shows in that case; "Synced across your devices" shows when the backend
-is live.
+**Auth (optional):** set Netlify env `MCP_TOKEN`. When set, callers must pass
+`Authorization: Bearer <token>` or `?key=<token>` (handy for URL-only clients:
+`https://zk30-mfdb.netlify.app/mcp?key=<token>`). If unset, the endpoint is open
+(read-only). The MCP data is a snapshot regenerated from the dashboard on each
+build.
 
-## One-time Netlify setup (to turn on sync)
-1. Netlify → the `zk30-mfdb` site → **Site configuration → Build & deploy →
-   Continuous deployment → Link repository** → pick `zaiwin-lab/MasterHub`.
-2. Set **Base directory** = `zk30-mfdb`, **Publish directory** = `zk30-mfdb`,
-   **Functions directory** = `zk30-mfdb/netlify/functions`. Build command: none.
-3. Deploy. Netlify runs `npm install` and bundles the function automatically.
-4. Netlify Blobs needs no setup — it is enabled per-site by default.
+## Deploy (Netlify, git-connected — required for the function)
+1. Netlify → the `zk30-mfdb` site → Build & deploy → link this repo
+   (`zaiwin-lab/MasterHub`), **base directory `zk30-mfdb`**, publish `.`,
+   functions `netlify/functions`, no build command.
+2. (Optional) set env `MCP_TOKEN`.
+3. Deploy. The `/mcp` endpoint goes live automatically.
 
-## Password protection
-Netlify Pro → **Site configuration → Access & security → Visitor access →
-Password protection** → set a site-wide password. This protects every page
-*and* the data function behind one password.
+A plain drag-and-drop zip deploy serves the pages but may not run the function;
+use the git-connected deploy above for `/mcp`.

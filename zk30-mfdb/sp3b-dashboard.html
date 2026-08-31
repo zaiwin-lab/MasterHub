@@ -7,6 +7,47 @@
   <link rel="stylesheet" href="acis-modules.css">
 </head>
 <body class="module-sp3b">
+<!-- ZK30 passcode gate -->
+<style>
+  .zk-lock{position:fixed;inset:0;z-index:2147483647;background:#0b1220;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;}
+  .zk-lock-box{background:#111a2e;border:1px solid #24314d;border-radius:16px;padding:34px 28px;width:min(92vw,360px);text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .zk-lock-brand{color:#7aa2ff;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .zk-lock-sub{color:#8794ad;font-size:12px;margin-bottom:18px;}
+  .zk-lock-title{color:#fff;font-size:20px;font-weight:700;margin-bottom:18px;}
+  .zk-lock-input{width:100%;box-sizing:border-box;font-size:22px;letter-spacing:.35em;text-align:center;padding:13px;border-radius:10px;border:1px solid #2c3a58;background:#0b1220;color:#fff;outline:none;}
+  .zk-lock-input:focus{border-color:#4f7cff;}
+  .zk-lock-btn{margin-top:14px;width:100%;padding:13px;border:none;border-radius:10px;background:#3b6cff;color:#fff;font-size:16px;font-weight:700;cursor:pointer;}
+  .zk-lock-btn:hover{background:#2f59db;}
+  .zk-lock-error{color:#ff8a8a;font-size:13px;min-height:18px;margin-top:10px;}
+  html.zk-locked,html.zk-locked body{overflow:hidden;}
+</style>
+<div id="zkLock" class="zk-lock" role="dialog" aria-modal="true" aria-label="Passcode required">
+  <div class="zk-lock-box">
+    <div class="zk-lock-brand">ZK30 MFDB Command Centre</div>
+    <div class="zk-lock-sub">Executive Intelligence Operating System</div>
+    <div class="zk-lock-title">Enter Passcode</div>
+    <input id="zkLockInput" class="zk-lock-input" type="password" inputmode="numeric" autocomplete="off" placeholder="------" maxlength="12" aria-label="Passcode">
+    <button id="zkLockBtn" class="zk-lock-btn" type="button">Unlock</button>
+    <div id="zkLockError" class="zk-lock-error"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="zk30-unlocked", PASS="803116";
+  var root=document.documentElement, lock=document.getElementById("zkLock");
+  function unlock(){ try{sessionStorage.setItem(KEY,"yes");}catch(e){} if(lock){lock.parentNode.removeChild(lock);} root.classList.remove("zk-locked"); }
+  var ok=false; try{ ok=sessionStorage.getItem(KEY)==="yes"; }catch(e){}
+  if(ok){ unlock(); return; }
+  root.classList.add("zk-locked");
+  var input=document.getElementById("zkLockInput"), btn=document.getElementById("zkLockBtn"), err=document.getElementById("zkLockError");
+  function tryUnlock(){ if(input.value.trim()===PASS){ unlock(); } else { err.textContent="Incorrect passcode"; input.value=""; input.focus(); } }
+  btn.addEventListener("click",tryUnlock);
+  input.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
+  setTimeout(function(){ try{input.focus();}catch(e){} },50);
+})();
+</script>
+<!-- /ZK30 passcode gate -->
+
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-row">
@@ -32,55 +73,55 @@
   <section class="enterprise-hero">
     <div class="enterprise-hero-inner">
       <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Convert warm engagement into formal executive correspondence and proposal movement.</strong></div>
-      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">ICL, DBKU, KIM KOHOS and Green Kampung are completed; MARA report package is ready; CIDB, SNDB, SBF, KAHAL and Pustaka are next.</p></div>
-      <div class="hero-kpi"><div><strong>5</strong><span>Queue</span></div></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">23 August: RECODA 3 proposals in decision; STIDC opened five streams; new proposals/letters queued &mdash; YB Dr Hazlan, SCOPE/Joseph, MTCP/Yusfida, plus SMD, HDC &amp; KOPERKASA courtesy visits.</p></div>
+      <div class="hero-kpi"><div><strong>10+</strong><span>Proposals</span></div></div>
     </div>
   </section>
 
   <main class="page">
     <section class="metric-grid" aria-label="SP3B metrics">
-      <div class="metric"><span>Completed</span><strong>4</strong></div>
-      <div class="metric"><span>Proposal queue</span><strong>5</strong></div>
-      <div class="metric"><span>Reports ready</span><strong>4</strong></div>
-      <div class="metric"><span>Gov letters</span><strong>5</strong></div>
-      <div class="metric"><span>Ready next</span><strong>5</strong></div>
-      <div class="metric"><span>Waiting reply</span><strong>8</strong></div>
+      <div class="metric"><span>Active proposals</span><strong>10+</strong></div>
+      <div class="metric"><span>AO proposals</span><strong>3</strong></div>
+      <div class="metric"><span>KOPUSAKA</span><strong>3</strong></div>
+      <div class="metric"><span>Confirmed meetings</span><strong>2</strong></div>
+      <div class="metric"><span>Delivered</span><strong>3</strong></div>
+      <div class="metric"><span>At risk</span><strong>ESG</strong></div>
     </section>
 
     <section class="kanban" aria-label="SP3B workflow">
       <div class="panel">
-        <div class="panel-head"><h2>Upcoming</h2><span class="pill red">Critical</span></div>
+        <div class="panel-head"><h2>Immediate Proposals</h2><span class="pill red">Critical</span></div>
         <div class="panel-body">
           <ul class="list">
-            <li><strong>CIDB Skill Techpreneur</strong><br><span class="muted">Executive email to Shikin and Skill Techpreneur proposal for reopened opportunity.</span></li>
-            <li><strong>SNDB Executive Proposal</strong><br><span class="muted">Amazon Global Marketplace, Sago, Nipah and Young Entrepreneur Development.</span></li>
-            <li><strong>SBF Revised Quotation</strong><br><span class="muted">Redo quotation using man-hour costing model before 24 July negotiation.</span></li>
-            <li><strong>KAHAL Land Proposal</strong><br><span class="muted">Datuk Kasim Land (RM7.8M); prepare SP3B after Khairudin confirmation.</span></li>
-            <li><strong>Pustaka Courtesy Letter</strong><br><span class="muted">Courtesy visit letter requested by Wan Mazli.</span></li>
+            <li><strong>AO Tourism (3)</strong><br><span class="muted">Tourism, School/Koperasi, Arts &amp; Culture &mdash; complete and submit all three.</span></li>
+            <li><strong>MINTRED</strong><br><span class="muted">Gerak Usahawan + Ustaz programme proposals (Survey continuation).</span></li>
+            <li><strong>KOPUSAKA (3)</strong><br><span class="muted">Asset Management System, Health System Check, Expertise Collaboration + pricing.</span></li>
+            <li><strong>LAKMNS</strong><br><span class="muted">Thank-you email + renewable energy proposal for the mosque.</span></li>
+            <li><strong>David (FAME College) &middot; CENTEXS</strong><br><span class="muted">David 2 proposals; CENTEXS Kitchen Hub + Potong Rumput.</span></li>
           </ul>
         </div>
       </div>
 
       <div class="panel">
-        <div class="panel-head"><h2>Ready</h2><span class="pill gold">Report</span></div>
+        <div class="panel-head"><h2>Meetings / Follow-up</h2><span class="pill blue">Engage</span></div>
         <div class="panel-body">
           <ul class="list">
-            <li><strong>MARA Executive Report</strong><br><span class="muted">Executive report to MARA Sarawak covering the completed Miri programme.</span></li>
-            <li><strong>Programme Report</strong><br><span class="muted">Programme completion report; Aslizal awaiting.</span></li>
-            <li><strong>Industry Report</strong><br><span class="muted">Well received; package for MARA Sarawak.</span></li>
-            <li><strong>Digital Impact Report</strong><br><span class="muted">KBT Attendify validation and digital impact evidence.</span></li>
+            <li><strong>STIDC &mdash; 5 streams (meeting done)</strong><br><span class="muted">Bamboo ESG, Bamboo Town Hall, ICL Leadership, SPM2Diploma, Timber Museum.</span></li>
+            <li><strong>JKN Angkasa AI Programme</strong><br><span class="muted">Kick off (target end September); explore SDAT &amp; SAIC.</span></li>
+            <li><strong>MARA &middot; CIDB</strong><br><span class="muted">MARA phone call (email sent); CIDB confirm meeting date.</span></li>
+            <li><strong>SCOPE &middot; Koop Premier</strong><br><span class="muted">SCOPE CEO-meeting email; contact Koop Premier (proposal ready).</span></li>
           </ul>
         </div>
       </div>
 
       <div class="panel">
-        <div class="panel-head"><h2>Completed / Submitted</h2><span class="pill teal">Done</span></div>
+        <div class="panel-head"><h2>Delivered / Submitted</h2><span class="pill teal">Done</span></div>
         <div class="panel-body">
           <ul class="list">
-            <li><strong>ICL Launch Proposal</strong><br><span class="muted">Executive Launch Gimmick Proposal completed and WhatsApped to Prof. Dayang.</span></li>
-            <li><strong>DBKU Proposal</strong><br><span class="muted">Submitted; executive WhatsApp completed; fine tuning and 27 July meeting pending.</span></li>
-            <li><strong>KIM Berhad KOHOS Proposal</strong><br><span class="muted">KOHOS proposal submitted; RM10,000 payment pending via YIM invoice.</span></li>
-            <li><strong>Green Kampung Challenge Proposal</strong><br><span class="muted">Submitted through KIM Berhad.</span></li>
+            <li><strong>Prodigy</strong><br><span class="muted">Completed - all jobs submitted.</span></li>
+            <li><strong>MINTRED Digital Readiness Survey</strong><br><span class="muted">Demo / proposal submitted.</span></li>
+            <li><strong>Graphic Avenue MVP</strong><br><span class="muted">MVP + showcase report submitted; awaiting feedback (RM2,000 debt offset).</span></li>
+            <li><strong>RECODA 3 Proposals (~RM5M)</strong><br><span class="muted">Sawai, Rampangi, Penrissen - submitted; follow up decision.</span></li>
           </ul>
         </div>
       </div>
@@ -102,46 +143,46 @@
             </thead>
             <tbody>
               <tr>
-                <td>MARA Sarawak</td>
-                <td>Executive Report</td>
-                <td>Programme, industry and digital impact report for completed Miri programme.</td>
-                <td>Approve report package and next collaboration route.</td>
-                <td><span class="pill gold">Ready</span></td>
+                <td>AO (Tourism)</td>
+                <td>3 Proposals</td>
+                <td>Tourism; School / Koperasi-related; Arts & Culture.</td>
+                <td>Complete and submit all three.</td>
+                <td><span class="pill gold">This week</span></td>
               </tr>
               <tr>
-                <td>CIDB</td>
-                <td>Government SP3B</td>
-                <td>Skill Techpreneur discussion reopened via Shikin.</td>
-                <td>Send executive email and secure formal meeting.</td>
+                <td>MINTRED</td>
+                <td>Gerak + Ustaz</td>
+                <td>Gerak Usahawan and Ustaz programme proposals; Survey continuation.</td>
+                <td>Prepare and submit proposals.</td>
                 <td><span class="pill red">Draft</span></td>
               </tr>
               <tr>
-                <td>SNDB</td>
-                <td>Executive SP3B</td>
-                <td>Amazon Global Marketplace, Sago, Nipah and entrepreneur development.</td>
-                <td>Move into formal strategic partnership discussion.</td>
+                <td>KOPUSAKA</td>
+                <td>3 Proposals + Pricing</td>
+                <td>Asset Management System, Health System Check, Expertise Collaboration.</td>
+                <td>Prepare proposals and pricing.</td>
                 <td><span class="pill red">Draft</span></td>
               </tr>
               <tr>
-                <td>SBF</td>
-                <td>Revised Quotation</td>
-                <td>Man-hour costing model for 24 July pricing negotiation.</td>
-                <td>Progress into commercial agreement.</td>
-                <td><span class="pill gold">Urgent</span></td>
-              </tr>
-              <tr>
-                <td>KAHAL</td>
-                <td>Land Proposal</td>
-                <td>Datuk Kasim Land valued at RM7.8 million.</td>
-                <td>Confirm with Khairudin and meet Datuk Kasim.</td>
+                <td>LAKMNS</td>
+                <td>Email + Proposal</td>
+                <td>Thank-you email and mosque renewable energy proposal.</td>
+                <td>Send email and prepare proposal.</td>
                 <td><span class="pill red">Draft</span></td>
               </tr>
               <tr>
-                <td>Pustaka</td>
-                <td>Courtesy Letter</td>
-                <td>Courtesy visit letter requested by Wan Mazli.</td>
-                <td>Prepare and send letter.</td>
-                <td><span class="pill gold">Ready</span></td>
+                <td>David (FAME College)</td>
+                <td>2 Proposals</td>
+                <td>Entrepreneur AI Programme; Arts & Culture Association Mentorship.</td>
+                <td>Develop both proposals.</td>
+                <td><span class="pill red">Draft</span></td>
+              </tr>
+              <tr>
+                <td>CENTEXS</td>
+                <td>2 Proposals</td>
+                <td>Kitchen Hub; Potong Rumput Project.</td>
+                <td>Prepare outstanding proposals.</td>
+                <td><span class="pill red">Draft</span></td>
               </tr>
             </tbody>
           </table>
