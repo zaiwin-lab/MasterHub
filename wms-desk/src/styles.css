@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f7f4ee;
+  --paper2: #efe8dc;
+  --ink: #1a1714;
+  --inksoft: #5a534a;
+  --copper: #b08a4f;
+  --copperhot: #8e6a32;
+  --hold: #c45c26;
+  --confirmed: #2f5a40;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Schibsted Grotesk', Geist, system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Money and counts are the decoration on this desk. They must never jitter. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.display {
+  font-family: Newsreader, 'Source Serif 4', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid rgba(26, 23, 20, 0.14);
+}
+
+.rule-copper {
+  border: 0;
+  border-top: 1px solid var(--copper);
+}
+
+/* One copper accent, used as a line — never as a fill. */
+.underline-copper {
+  box-shadow: inset 0 -1px 0 var(--copper);
+}
+
+.sheet {
+  background: var(--paper);
+  border: 1px solid rgba(26, 23, 20, 0.13);
+  border-radius: 28px;
+}
+
+.ctl {
+  border-radius: 4px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:where(button, a, input, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  height: 28px;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 2px;
+  background: rgba(26, 23, 20, 0.2);
+}
+input[type='range']::-moz-range-track {
+  height: 2px;
+  background: rgba(26, 23, 20, 0.2);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: var(--ink);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--ink);
+  cursor: grab;
+}
+input[type='range']::-moz-range-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 999px;
+  background: var(--ink);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--ink);
+  cursor: grab;
+}
+
+.pulse-hold {
+  animation: pulseHold 1.9s var(--ease) infinite;
+}
+@keyframes pulseHold {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+.rise {
+  animation: rise 220ms var(--ease) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.stitch {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: stitch 900ms var(--ease) forwards;
+}
+@keyframes stitch {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .pulse-hold {
+    animation: none;
+    opacity: 1;
+  }
+  .stitch {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
