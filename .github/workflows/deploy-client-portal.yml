@@ -22,7 +22,7 @@ jobs:
       - name: Create Netlify site or get existing
         id: site
         env:
-          NETLIFY_AUTH_TOKEN: nfp_Yvzgo3nSLWaERiaRpqrFW1ptM3CWGip99239
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           RESPONSE=$(curl -s -X POST "https://api.netlify.com/api/v1/sites" \
             -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
@@ -43,7 +43,7 @@ jobs:
 
       - name: Deploy to Netlify
         env:
-          NETLIFY_AUTH_TOKEN: nfp_Yvzgo3nSLWaERiaRpqrFW1ptM3CWGip99239
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ steps.site.outputs.site_id }}
         run: |
           netlify deploy \
