@@ -92,7 +92,7 @@
       <div>
         <div class="brand-mark">ZK30 MFDB Command Centre</div>
         <div class="product-kicker">Executive Intelligence Operating System</div>
-        <h1 id="monthTitle">August 2026</h1>
+        <h1 id="monthTitle">September 2026</h1>
         <p class="subtitle">Executive Time & Strategic Milestones.</p>
       </div>
     </div>
@@ -116,8 +116,8 @@
   <section class="enterprise-hero calendar-hero-compact">
     <div class="enterprise-hero-inner">
       <div class="hero-cell"><span class="hero-label">Purpose</span><strong>Protect executive time, strategic milestones, meetings and follow-up discipline.</strong></div>
-      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">STIDC meeting completed (5 streams). Ahead: 27 Aug Astana award, Sept DID Sibu Makbol (six-figure), end September JKN Angkasa AI Programme.</p></div>
-      <div class="hero-kpi"><div><strong>8</strong><span>Milestones</span></div></div>
+      <div class="hero-cell"><span class="hero-label">Key insight</span><p class="muted">UKAS paid (10 Sept). Ahead: 18 Sept RO/AO Tourism proposals, 24 Sept ANGKASA/JKN Digital &amp; AI Transformation (confirmed), 28-29 Sept CEO Nita programme (KL).</p></div>
+      <div class="hero-kpi"><div><strong>6</strong><span>Milestones</span></div></div>
     </div>
   </section>
 
@@ -139,7 +139,7 @@
       <div class="agenda-head">
         <div>
           <span class="muted">Selected day</span>
-          <h2 id="selectedDayTitle">Sunday, 23 August</h2>
+          <h2 id="selectedDayTitle">Wednesday, 16 September</h2>
         </div>
         <a class="button secondary small" id="selectedGoogleLink" href="https://calendar.google.com/calendar/u/0/r/eventedit" target="_blank" rel="noopener">Add</a>
       </div>
@@ -175,7 +175,7 @@
     const selectedGoogleLink = document.getElementById("selectedGoogleLink");
     const voiceState = document.getElementById("voiceState");
     const storageKey = "zk30-calendar-chat-v4";
-    const todayIso = "2026-08-23";
+    const todayIso = "2026-09-16";
 
     const baseEvents = [
       {
@@ -334,8 +334,8 @@
         id: "did-sibu",
         date: "2026-09-15",
         time: "09:00",
-        title: "DID Sibu - Makbol (six-figure)",
-        notes: "HOT: DID funding the Makbol initiative in Sibu (Sept/Oct). Confirm scope, funding, decision maker; develop concept; assign owner.",
+        title: "Sungai Loba (SEB x DID Sibu / Makbol)",
+        notes: "HOT: KOBIS called to propose a clean/revive project for Sungai Loba in Sibu (Makbol consolidated into this stream). Develop proposal and follow up.",
         type: "priority"
       },
       {
@@ -350,8 +350,8 @@
         id: "jkn-ai",
         date: "2026-09-30",
         time: "09:00",
-        title: "JKN Angkasa AI Programme",
-        notes: "Kick off target end September (Atikah / JKN Angkasa, Queen / KOBIS); explore SDAT and SAIC.",
+        title: "ANGKASA / JKN - post-programme reporting",
+        notes: "Wrap-up and reporting after the confirmed 24 Sept Digital & AI Transformation execution (Atikah / JKN Angkasa, Queen / KOBIS; SDEC in collaboration).",
         type: "programme"
       },
       {
@@ -401,10 +401,58 @@
         title: "Oil & Gas AI strategy follow-up",
         notes: "Await proposed collaboration package and prepare AI transformation framing.",
         type: "partner"
+      },
+      {
+        id: "ukas-paid",
+        date: "2026-09-10",
+        time: "10:00",
+        title: "UKAS payment received (completed)",
+        notes: "RM27,000 received. Project fully closed and paid. Mark CLOSED / PAYMENT RECEIVED.",
+        type: "focus"
+      },
+      {
+        id: "iktikad-mahadir",
+        date: "2026-09-15",
+        time: "11:00",
+        title: "Iktikad Makmur / Mahadir meeting (completed)",
+        notes: "Met Mahadir; expertise in land/finance documentation, probate, subdivision and survey/approval. Integrate into the KOBIS Property Ecosystem.",
+        type: "partner"
+      },
+      {
+        id: "master-catchup-16sep",
+        date: "2026-09-16",
+        time: "09:00",
+        title: "MFDB Master Voice-Status Catch-up",
+        notes: "Consolidated 16 Sept update across the MFDB checklist plus new commercial and strategic partnerships. Payments, confirmed execution and the new Property Ecosystem cluster captured.",
+        type: "focus"
+      },
+      {
+        id: "ro-tourism-submit",
+        date: "2026-09-18",
+        time: "10:00",
+        title: "RO/AO Tourism - submit 2 proposals",
+        notes: "Submit officially this week (incl. hard copy): Cross-Country Gamelan proposal + Sarawak Art Society proposal/letter. Remind on the first proposal.",
+        type: "priority"
+      },
+      {
+        id: "angkasa-jkn-exec",
+        date: "2026-09-24",
+        time: "09:00",
+        title: "ANGKASA / JKN Digital & AI Transformation (CONFIRMED)",
+        notes: "Execute the confirmed Digital & AI Transformation programme. Team coordination underway; SDEC in collaboration. Final preparation this week.",
+        type: "programme"
+      },
+      {
+        id: "ceo-nita-programme",
+        date: "2026-09-28",
+        time: "09:00",
+        title: "CEO Nita x Coach Rozi programme (KL)",
+        notes: "RM50,000 government-funded programme, 28-29 Sept in Kuala Lumpur. RM25,000 (half) already paid; KOBIS 10% = RM5,000. Recycle ANGKASA/MARA VDP system; light secretariat by Nurul.",
+        type: "programme"
       }
     ];
 
-    let viewDate = new Date(2026, 7, 1);
+    let viewDate = new Date(2026, 8, 1);
     let selectedDate = todayIso;
     let recognition;
 
