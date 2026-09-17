@@ -61,6 +61,9 @@ finish connecting this project.
 See `IMPROVEMENTS.md` for the security, performance and product roadmap
 derived from analysing the live build.
 
+See `proposed/` for the EN · BM · 中文 · Iban language switcher spec and
+drop-in component.
+
 ## What the app does
 
 18 routes and 6 Supabase tables — a full participant platform, not a
