@@ -1,0 +1,27 @@
+# ProgramOS Lite — angkasatda.netlify.app
+# Netlify site ID: 16b936fb-e8dc-44fd-b7b8-4e07b0cd3419
+# Team: zaiwin (zaiwin's team)
+#
+# The live site is a Vite SPA. These settings mirror the deployed
+# configuration ("1 redirect rule processed", publish dir = dist).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback — let React Router handle client-side routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
