@@ -53,6 +53,11 @@ npm run build            # -> dist/
 netlify deploy --prod    # publishes to angkasatda.netlify.app
 ```
 
+## Status & next steps
+
+See `CHECKLIST.md` for live health, the outstanding gaps and the steps to
+finish connecting this project.
+
 ## What the app does
 
 18 routes and 6 Supabase tables — a full participant platform, not a
