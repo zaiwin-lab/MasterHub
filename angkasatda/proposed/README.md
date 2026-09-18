@@ -66,3 +66,50 @@ Read from the live stylesheet, so the component matches without guessing:
 | `navy-50` | `#eef2f9` |
 | `gold-500` | `#c8952c` (focus ring) |
 | `emerald-500` | `#10b981` (alternate active fill) |
+
+---
+
+# Account chip & profile page
+
+`AccountChip.tsx` — persistent signed-in state for the global header.
+
+## Both features already exist in the live build
+
+This is a **visibility** problem, not a missing feature:
+
+- **Login already persists.** The participant id is kept in `localStorage`
+  under `attendify:currentParticipantId` and restored on boot
+  (`useState(() => localStorage.getItem(KEY))`), so it survives closing
+  the tab and restarting the browser.
+- **A profile page already exists** at `/my`.
+- **A "My Profile" label already exists** in all four languages
+  (Profil Saya · 我的资料 · Profil Aku).
+- **Login already works** — mobile number looked up, email checked
+  against the stored record.
+
+What is missing is any signal that a participant is signed in. Counting
+internal links in the bundle:
+
+| Route | Times linked |
+|---|---|
+| `/check-in` | 11 |
+| `/readiness` | 7 |
+| `/program` | 2 |
+| `/my` | **1** |
+| `/login` | **1** |
+
+The profile page is linked once. That is why it reads as absent.
+
+## Three things to get right
+
+1. **Reuse the participant context.** It already exposes the id, the
+   loaded profile, and a setter that writes `localStorage`. Log out calls
+   that setter with `null`. A second source of truth will desync.
+2. **Handle the stale id.** The id persists indefinitely, so a record
+   deleted from the admin panel leaves a browser pointing at nothing. If
+   the lookup returns null, clear the key and fall back to signed-out.
+3. **This login is not authentication.** It matches a mobile number
+   against a stored email — no password, no session token. Anyone who
+   knows both can open that participant's profile. See `../IMPROVEMENTS.md`
+   P0; this should become Supabase Auth email OTP before the profile page
+   shows anything sensitive.
