@@ -1,8 +1,11 @@
 # Netlify site settings: set "Base directory" to `alumni-uthm-borneo`.
-# The Next.js runtime is detected automatically (API routes run as functions).
+# The Next.js plugin turns API routes and dynamic pages into Netlify Functions.
 [build]
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
