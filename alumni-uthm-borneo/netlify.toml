@@ -1,0 +1,8 @@
+# Netlify site settings: set "Base directory" to `alumni-uthm-borneo`.
+# The Next.js runtime is detected automatically (API routes run as functions).
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
