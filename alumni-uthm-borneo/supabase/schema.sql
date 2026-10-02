@@ -7,7 +7,9 @@ create sequence if not exists contribution_seq start 1;
 
 -- AUB-2026-000001
 create or replace function next_contribution_id() returns text
-language sql volatile as $$
+language sql volatile
+set search_path = public, pg_temp
+as $$
   select 'AUB-' || to_char(now() at time zone 'Asia/Kuching', 'YYYY') || '-' ||
          lpad(nextval('contribution_seq')::text, 6, '0');
 $$;
@@ -41,3 +43,10 @@ create index if not exists contributions_status_idx on contributions (payment_st
 -- Row Level Security on, with no policies: the table is reachable only by the
 -- server using the service role key. The browser never talks to Supabase.
 alter table contributions enable row level security;
+
+-- Defence in depth: the public API roles get nothing, even if RLS were turned off.
+revoke all on table contributions from anon, authenticated;
+revoke all on sequence contribution_seq from anon, authenticated;
+revoke execute on function next_contribution_id() from public, anon, authenticated;
+grant execute on function next_contribution_id() to service_role;
+grant usage on sequence contribution_seq to service_role;
