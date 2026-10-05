@@ -15,7 +15,7 @@ export function toyyibpayConfig() {
     baseUrl: (process.env.TOYYIBPAY_BASE_URL || 'https://dev.toyyibpay.com').replace(/\/+$/, ''),
     secretKey: required('TOYYIBPAY_SECRET_KEY'),
     categoryCode: required('TOYYIBPAY_CATEGORY_CODE'),
-    paymentChannel: process.env.TOYYIBPAY_PAYMENT_CHANNEL ?? '2',
+    paymentChannel: process.env.TOYYIBPAY_PAYMENT_CHANNEL ?? '0',
     chargeToCustomer: process.env.TOYYIBPAY_CHARGE_TO_CUSTOMER ?? '',
   };
 }
