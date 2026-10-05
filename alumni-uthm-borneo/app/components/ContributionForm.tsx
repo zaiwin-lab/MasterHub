@@ -435,7 +435,10 @@ export function ContributionForm() {
               Opening secure payment…
             </>
           ) : (
-            <>Proceed to Secure Payment</>
+            <span className="pay-label">
+              Proceed to Secure Payment
+              <span className="pay-methods">Online banking (FPX) or card</span>
+            </span>
           )}
         </button>
         <p className="powered">
