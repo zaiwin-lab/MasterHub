@@ -7,6 +7,10 @@ export interface ToyyibpayConfig {
   categoryCode: string;
   paymentChannel: string;
   chargeToCustomer: string;
+  /** Offer DuitNow QR on the bill page. Needs DuitNow QR activated on the ToyyibPay account. */
+  duitNowQr: boolean;
+  /** '0' = QR fee on bill owner, '1' = QR fee on payer. */
+  duitNowQrCharge: string;
 }
 
 export interface CreateBillParams {
@@ -77,8 +81,13 @@ export function parseCreateBillResponse(text: string): string {
   return code;
 }
 
+/** ToyyibPay rejects the whole bill when DuitNow QR is requested but not activated on the account. */
+export function isDuitNowNotActivated(text: string): boolean {
+  return /duitnow\s*qr\s*is\s*not\s*activated/i.test(text);
+}
+
 export async function createBill(cfg: ToyyibpayConfig, p: CreateBillParams): Promise<{ billCode: string; paymentUrl: string }> {
-  const text = await post(cfg, 'createBill', {
+  const fields: Record<string, string> = {
     userSecretKey: cfg.secretKey,
     categoryCode: cfg.categoryCode,
     billName: toyyibText('Alumni UTHM Borneo', 30),
@@ -97,7 +106,19 @@ export async function createBill(cfg: ToyyibpayConfig, p: CreateBillParams): Pro
     billPaymentChannel: cfg.paymentChannel,
     billChargeToCustomer: cfg.chargeToCustomer,
     billExpiryDays: '3',
-  });
+  };
+
+  let text: string;
+  if (cfg.duitNowQr) {
+    text = await post(cfg, 'createBill', { ...fields, enableDuitNowQR: '1', chargeDuitNowQR: cfg.duitNowQrCharge });
+    if (isDuitNowNotActivated(text)) {
+      // Never block a contribution over QR: fall back to online banking only.
+      console.warn('[toyyibpay] DuitNow QR is not activated on this account; bill created with FPX only');
+      text = await post(cfg, 'createBill', fields);
+    }
+  } else {
+    text = await post(cfg, 'createBill', fields);
+  }
   const billCode = parseCreateBillResponse(text);
   return { billCode, paymentUrl: `${cfg.baseUrl}/${billCode}` };
 }

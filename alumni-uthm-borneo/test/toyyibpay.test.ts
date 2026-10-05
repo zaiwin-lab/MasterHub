@@ -59,3 +59,11 @@ describe('response parsing', () => {
     expect(toyyibText('Programme / Event Payment AUB-2026-000001', 100)).toBe('Programme Event Payment AUB 2026 000001');
   });
 });
+
+describe('DuitNow QR fallback', () => {
+  it('recognises the not-activated response', async () => {
+    const { isDuitNowNotActivated } = await import('@/lib/toyyibpay');
+    expect(isDuitNowNotActivated('[{"status":"error","msg":"DuitNow QR is not activated for your account. Please contact admin to register your POS ID."}]')).toBe(true);
+    expect(isDuitNowNotActivated('[{"BillCode":"abc123"}]')).toBe(false);
+  });
+});

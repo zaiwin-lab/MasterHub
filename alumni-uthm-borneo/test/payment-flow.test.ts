@@ -78,11 +78,20 @@ vi.mock('@supabase/supabase-js', () => ({
 
 // ToyyibPay + email API mocks
 let transactions: unknown[] = [];
+let qrActivated = true;
 const emails: { to: string; subject: string; hasPdf: boolean }[] = [];
 
 const fetchMock = vi.fn(async (url: string | URL, init?: RequestInit) => {
   const u = String(url);
-  if (u.endsWith('/index.php/api/createBill')) return new Response('[{"BillCode":"abc123xy"}]');
+  if (u.endsWith('/index.php/api/createBill')) {
+    const sent = new URLSearchParams(String(init?.body));
+    if (sent.get('enableDuitNowQR') === '1' && !qrActivated) {
+      return new Response(
+        '[{"status":"error","msg":"DuitNow QR is not activated for your account. Please contact admin to register your POS ID."}]',
+      );
+    }
+    return new Response('[{"BillCode":"abc123xy"}]');
+  }
   if (u.endsWith('/index.php/api/getBillTransactions')) return new Response(JSON.stringify(transactions));
   if (u === 'https://api.resend.com/emails') {
     const body = JSON.parse(String(init?.body));
@@ -143,6 +152,8 @@ beforeEach(() => {
   emails.length = 0;
   transactions = [];
   seq = 0;
+  qrActivated = true;
+  delete process.env.TOYYIBPAY_DUITNOW_QR;
   fetchMock.mockClear();
   vi.stubGlobal('fetch', fetchMock);
 });
@@ -234,5 +245,34 @@ describe('payment flow', () => {
   it('unknown bill codes and junk receipt tokens are ignored', async () => {
     expect((await callback('nosuchbill', '1')).status).toBe(200);
     expect((await receipt('short')).status).toBe(404);
+  });
+
+  it('requests DuitNow QR on the bill when enabled and activated', async () => {
+    process.env.TOYYIBPAY_DUITNOW_QR = '1';
+    const res = await startPayment();
+    expect(res.status).toBe(200);
+    const calls = fetchMock.mock.calls.filter(([u]) => String(u).includes('createBill'));
+    expect(calls).toHaveLength(1);
+    const sent = new URLSearchParams(String(calls[0][1]!.body));
+    expect(sent.get('enableDuitNowQR')).toBe('1');
+    expect(sent.get('chargeDuitNowQR')).toBe('0');
+  });
+
+  it('falls back to online banking when DuitNow QR is not activated', async () => {
+    process.env.TOYYIBPAY_DUITNOW_QR = '1';
+    qrActivated = false;
+    const res = await startPayment();
+    expect(res.status).toBe(200);
+    expect((await res.json()).paymentUrl).toBe('https://dev.toyyibpay.com/abc123xy');
+    const calls = fetchMock.mock.calls.filter(([u]) => String(u).includes('createBill'));
+    expect(calls).toHaveLength(2);
+    expect(new URLSearchParams(String(calls[1][1]!.body)).get('enableDuitNowQR')).toBeNull();
+    expect(table[0]).toMatchObject({ payment_status: 'PENDING', toyyibpay_bill_code: 'abc123xy' });
+  });
+
+  it('does not request DuitNow QR when disabled', async () => {
+    await startPayment();
+    const call = fetchMock.mock.calls.find(([u]) => String(u).includes('createBill'))!;
+    expect(new URLSearchParams(String(call[1]!.body)).get('enableDuitNowQR')).toBeNull();
   });
 });

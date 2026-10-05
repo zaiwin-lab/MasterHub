@@ -121,7 +121,11 @@ export default function Home() {
                 soon as the payment is confirmed.
               </p>
             </div>
-            <ContributionForm />
+            <ContributionForm
+              paymentMethods={
+                process.env.TOYYIBPAY_DUITNOW_QR === '1' ? 'Online banking (FPX) or DuitNow QR' : 'Online banking (FPX)'
+              }
+            />
             <div className="option-notes">
               <div className="option-note">
                 <h3>

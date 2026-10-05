@@ -17,6 +17,8 @@ export function toyyibpayConfig() {
     categoryCode: required('TOYYIBPAY_CATEGORY_CODE'),
     paymentChannel: process.env.TOYYIBPAY_PAYMENT_CHANNEL ?? '0',
     chargeToCustomer: process.env.TOYYIBPAY_CHARGE_TO_CUSTOMER ?? '',
+    duitNowQr: process.env.TOYYIBPAY_DUITNOW_QR === '1',
+    duitNowQrCharge: process.env.TOYYIBPAY_DUITNOW_QR_CHARGE === '1' ? '1' : '0',
   };
 }
 

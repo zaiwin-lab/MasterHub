@@ -36,7 +36,7 @@ const FIELD_ORDER: (keyof ContributionInput)[] = [
   'acknowledged',
 ];
 
-export function ContributionForm() {
+export function ContributionForm({ paymentMethods = 'Online banking (FPX)' }: { paymentMethods?: string }) {
   const uid = useId();
   const id = (name: string) => `${uid}-${name}`;
 
@@ -437,7 +437,7 @@ export function ContributionForm() {
           ) : (
             <span className="pay-label">
               Proceed to Secure Payment
-              <span className="pay-methods">Online banking (FPX)</span>
+              <span className="pay-methods">{paymentMethods}</span>
             </span>
           )}
         </button>
