@@ -1,7 +1,15 @@
 # ZAPIA 2.0 — WhatsApp MCP plan
 
-Status: **Phase 1 tooling ready, waiting for ZK to run it on the Windows PC.
-Phase 2 and Phase 3 need ZK's OK before any build or exposure.**
+Status: **Phase 1 complete (2026-10-09), verified on ZK's Windows PC.**
+Phase 2 and Phase 3 need ZK's OK before any build or exposure.
+
+Phase 1 results:
+- bridge v0.5.1 installed, SHA-256 `2b7038cd…58ba` matched; registered in Claude Desktop
+  (Microsoft Store build). Claude Code CLI is not installed on the PC, so that step was skipped.
+- paired; `/api/status` reports `authenticated=True connected=True auth_state=paired`
+- first history sync: 3,964 messages across 309 conversations; many chats arrived with only 1 message
+- Claude Desktop listed recent chats through the MCP: OK
+- "Kenyalang" 5–9 Oct report: 217 chats scanned, 23 recipients, 2 LID-only and unresolved; ZK's spot-check passed
 
 ## 0. Read first: limitations and risks
 
