@@ -130,6 +130,22 @@ def resolve_via_contacts(b: Bridge, name: str, lid_jids: set[str]) -> str | None
     return None
 
 
+def name_via_contacts(b: Bridge, phone: str | None, forms: set[str]) -> str:
+    """Look up the saved/push name for a recipient. Only accepts a contact whose
+    own JID, LID or aliases overlap this recipient's JIDs."""
+    if not phone:
+        return ""
+    resp = b.get("/api/contacts/search", q=phone.lstrip("+"), limit=20)
+    for c in resp.get("contacts") or []:
+        cforms = {bare(c.get("jid", "")), bare(c.get("lid") or "")} | {bare(a) for a in (c.get("aliases") or [])}
+        if cforms & forms:
+            for k in ("full_name", "push_name", "verified_name"):
+                v = (c.get(k) or "").strip()
+                if v and not v.startswith("+"):
+                    return v
+    return ""
+
+
 def parse_day(s: str) -> dt.date:
     return dt.date.fromisoformat(s)
 
@@ -199,6 +215,8 @@ def main(argv=None) -> int:
         if not phone and lids:
             phone = resolve_via_contacts(b, rec["name"], lids)
             how = "contact-alias" if phone else ""
+        if not rec["name"] or rec["name"].startswith("+"):
+            rec["name"] = name_via_contacts(b, phone, forms) or rec["name"]
         if not phone and rec["chat_type"] == "direct":
             unresolved.append(rec)
         t = sorted(rec["times"])

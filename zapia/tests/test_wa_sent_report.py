@@ -19,6 +19,7 @@ CHATS = [
     {"jid": "g1@g.us", "chat_type": "group", "name": "Grp", "last_message_time": ts(6)},
     {"jid": "status@broadcast", "chat_type": "broadcast", "name": "", "last_message_time": ts(6)},
     {"jid": "60666@s.whatsapp.net", "chat_type": "direct", "name": "Old", "last_message_time": ts(1)},
+    {"jid": "60777@s.whatsapp.net", "chat_type": "direct", "name": "", "last_message_time": ts(6)},
 ]
 def m(i, chat, t, text, me=True): return {"id": i, "chat_jid": chat, "timestamp": t, "content_text": text, "is_from_me": me}
 MSGS = [
@@ -33,10 +34,13 @@ MSGS = [
     m("g1", "g1@g.us", ts(6), P),
     m("st", "status@broadcast", ts(6), P),
     m("o1", "60666@s.whatsapp.net", ts(1), P),
+    m("r1", "60777@s.whatsapp.net", ts(6), P),
 ]
 # Siti also has 1200 filler messages in range, newer than s2, to force pagination.
 MSGS += [m(f"f{i}", "60222@s.whatsapp.net", ts(7, 23) + 1 + i, "filler") for i in range(1200)]
-CONTACTS = [{"jid": "60333@s.whatsapp.net", "lid": "333@lid", "push_name": "Chong", "aliases": []}]
+CONTACTS = [{"jid": "60333@s.whatsapp.net", "lid": "333@lid", "push_name": "Chong", "aliases": []},
+            {"jid": "60777@s.whatsapp.net", "full_name": "Mak Cik Ros", "push_name": "Ros", "aliases": []},
+            {"jid": "607770@s.whatsapp.net", "full_name": "Wrong Person", "push_name": "", "aliases": []}]
 
 def group(j):
     s = {j}
@@ -60,7 +64,9 @@ class H(http.server.BaseHTTPRequestHandler):
             chat = next(c for c in CHATS if c["jid"] == q["chat_jid"])
             body = {"messages": ms[:lim], "chat": chat, "merged_jids": sorted(js) if len(js) > 1 else []}
         elif u.path == "/api/contacts/search":
-            body = {"contacts": [c for c in CONTACTS if q["q"].lower() in c["push_name"].lower()]}
+            ql = q["q"].lower()
+            body = {"contacts": [c for c in CONTACTS if ql in c["push_name"].lower() or ql in c.get("full_name", "").lower()
+                                 or (ql.isdigit() and ql in c["jid"].split("@")[0])]}
         else: self.send_response(404); self.end_headers(); return
         b = json.dumps(body).encode(); self.send_response(200)
         self.send_header("Content-Type", "application/json"); self.end_headers(); self.wfile.write(b)
@@ -81,7 +87,8 @@ class T(unittest.TestCase):
 
     def test_recipients(self):
         rows = self.run_report()
-        self.assertEqual(set(rows), {"Ali", "Siti", "Chong", "Unknown LID"})
+        self.assertEqual(set(rows), {"Ali", "Siti", "Chong", "Unknown LID", "Mak Cik Ros"})
+        self.assertEqual(rows["Mak Cik Ros"]["phone"], "+60777")
         self.assertEqual(rows["Ali"]["phone"], "+60111"); self.assertEqual(rows["Ali"]["times_sent"], "2")
         self.assertEqual(rows["Siti"]["phone"], "+60222"); self.assertEqual(rows["Siti"]["times_sent"], "1")
         self.assertEqual(rows["Siti"]["first_sent_myt"], "2026-10-07 23:00:00")
