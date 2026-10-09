@@ -69,7 +69,7 @@ function Show-BridgeStatus {
     # Print only non-sensitive fields.
     $auth = $s.authenticated; $conn = $s.connected
     $state = $null
-    if ($s.PSObject.Properties.Name -contains 'auth_state') { $state = $s.auth_state }
+    if ($null -ne $s.PSObject.Properties['auth_state']) { $state = $s.auth_state }
     Write-Host ("    authenticated={0} connected={1} auth_state={2}" -f $auth, $conn, $state)
     return ($auth -eq $true -and $conn -eq $true)
 }
@@ -206,10 +206,10 @@ if (-not $SkipClaudeDesktop) {
     if (Test-Path $cfgPath) {
         $raw = Get-Content $cfgPath -Raw
         Copy-Item $cfgPath "$cfgPath.bak-$(Get-Date -Format yyyyMMddHHmmss)"
-        if ($raw.Trim()) { $cfg = $raw | ConvertFrom-Json }
+        if ($raw -and $raw.Trim()) { $cfg = $raw | ConvertFrom-Json }
     }
     if ($null -eq $cfg) { $cfg = [pscustomobject]@{} }
-    if (-not ($cfg.PSObject.Properties.Name -contains 'mcpServers')) {
+    if ($null -eq $cfg.PSObject.Properties['mcpServers']) {
         $cfg | Add-Member -NotePropertyName mcpServers -NotePropertyValue ([pscustomobject]@{})
     }
     $entry = [pscustomobject]@{
@@ -221,7 +221,7 @@ if (-not $SkipClaudeDesktop) {
             MYCELIUM_NO_PING     = '1'
         }
     }
-    if ($cfg.mcpServers.PSObject.Properties.Name -contains 'whatsapp') {
+    if ($null -ne $cfg.mcpServers.PSObject.Properties['whatsapp']) {
         $cfg.mcpServers.whatsapp = $entry
     } else {
         $cfg.mcpServers | Add-Member -NotePropertyName whatsapp -NotePropertyValue $entry
