@@ -36,7 +36,7 @@ const FIELD_ORDER: (keyof ContributionInput)[] = [
   'acknowledged',
 ];
 
-export function ContributionForm({ paymentMethods = 'Online banking (FPX)' }: { paymentMethods?: string }) {
+export function ContributionForm() {
   const uid = useId();
   const id = (name: string) => `${uid}-${name}`;
 
@@ -432,18 +432,18 @@ export function ContributionForm({ paymentMethods = 'Online banking (FPX)' }: { 
           {submitting ? (
             <>
               <span className="spinner" aria-hidden="true" />
-              Opening secure payment…
+              Preparing payment details…
             </>
           ) : (
             <span className="pay-label">
-              Proceed to Secure Payment
-              <span className="pay-methods">{paymentMethods}</span>
+              Continue to Payment
+              <span className="pay-methods">DuitNow QR or bank transfer</span>
             </span>
           )}
         </button>
         <p className="powered">
           <Lock />
-          Powered by ToyyibPay
+          Paid directly to {site.payment.accountShortName} · receipt issued after verification
         </p>
       </div>
     </form>

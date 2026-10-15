@@ -45,6 +45,17 @@ export const site = {
     },
   ],
 
+  /** Where payments go. Shown on the payment page; keep in sync with the KOBIS poster. */
+  payment: {
+    accountName: 'Koperasi Pro Belia Inovatif Sarawak Berhad',
+    accountShortName: 'KOBIS Berhad',
+    accountNumber: '21125460005869',
+    bank: 'RHB Islamic Bank Berhad',
+    accountType: 'Current Account-i',
+    qrImage: '/images/kobis-duitnow-qr.png',
+    poster: '/images/kobis-payment-info.webp',
+  },
+
   /** Edit freely once the exact figures are confirmed. */
   commitment: {
     title: 'Our Commitment to Future Graduates',

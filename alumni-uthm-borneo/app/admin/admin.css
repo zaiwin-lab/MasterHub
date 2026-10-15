@@ -159,3 +159,18 @@
 .admin-login-card .btn {
   margin-top: 0.5rem;
 }
+.link-btn.danger {
+  color: var(--danger);
+}
+.badge-awaiting-verification,
+.badge-pending {
+  background: var(--warn-bg);
+  color: oklch(0.45 0.1 70);
+}
+.badge-rejected {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.admin .badge {
+  white-space: nowrap;
+}

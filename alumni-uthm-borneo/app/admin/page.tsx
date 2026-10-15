@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Admin · Alumni UTHM Borneo', robots: { index: false, follow: false } };
 
 const COLUMNS =
-  'id, contribution_id, type, name, organisation_name, email, mobile, purpose, amount, remark, toyyibpay_bill_code, toyyibpay_transaction_id, payment_status, created_at, paid_at, receipt_url, receipt_emailed_at';
+  'id, contribution_id, type, name, organisation_name, email, mobile, purpose, amount, remark, toyyibpay_bill_code, toyyibpay_transaction_id, payment_status, created_at, paid_at, receipt_url, receipt_emailed_at, payment_method, proof_path, proof_uploaded_at, payment_reference, verified_at, rejection_reason';
 
 export default async function AdminPage() {
   if (!process.env.ADMIN_PASSWORD || (process.env.ADMIN_SESSION_SECRET ?? '').length < 32) {

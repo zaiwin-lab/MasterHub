@@ -1337,3 +1337,214 @@ select.input {
     transition-duration: 1ms !important;
   }
 }
+
+/* ─── Payment page (DuitNow QR / bank transfer + proof upload) ─────── */
+.pay-card {
+  max-width: 46rem;
+}
+.pay-card .lede strong {
+  color: var(--ink);
+}
+.pay-steps {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  counter-reset: step;
+  display: grid;
+  gap: 2rem;
+}
+.pay-step {
+  counter-increment: step;
+}
+.pay-step h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: var(--text-lg);
+  color: var(--navy-900);
+}
+.pay-step h2::before {
+  content: counter(step);
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--navy-900);
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+.pay-step-sub {
+  margin: 0.35rem 0 1rem;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+.pay-methods-grid {
+  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 620px) {
+  .pay-methods-grid {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+}
+.qr-box {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  background: #fff;
+}
+.qr-box img {
+  width: 220px;
+  height: 220px;
+}
+.qr-box figcaption {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  font-size: var(--text-xs);
+}
+.qr-label {
+  font-weight: 700;
+  color: var(--ink);
+}
+.qr-box a,
+.pay-footnote a {
+  color: var(--blue-600);
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+  padding-block: 0.25rem;
+}
+.bank-box {
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.bank-intro {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink);
+}
+.bank-details {
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.bank-details dt {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+.bank-details dd {
+  margin: 0.1rem 0 0;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.copy-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+}
+.copy-btn {
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  min-height: 2rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line-strong);
+  background: #fff;
+  color: var(--navy-900);
+  cursor: pointer;
+}
+.copy-btn:hover {
+  border-color: var(--navy-900);
+}
+.pay-notes {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+.pay-notes strong {
+  color: var(--ink);
+}
+.proof-form {
+  display: grid;
+  gap: 0.85rem;
+}
+.dropzone {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 1.6rem 1rem;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 180ms var(--ease-out),
+    background-color 180ms var(--ease-out);
+}
+.dropzone:hover,
+.dropzone:focus-within {
+  border-color: var(--navy-700);
+  background: var(--surface);
+}
+.dropzone.has-file {
+  border-style: solid;
+  border-color: var(--navy-900);
+  background: var(--sky-100);
+}
+.dropzone input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.dropzone-title {
+  font-weight: 700;
+  color: var(--navy-900);
+  overflow-wrap: anywhere;
+}
+.dropzone-sub {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+.replace-proof {
+  margin-top: 1.5rem;
+  font-size: var(--text-sm);
+}
+.replace-proof summary {
+  cursor: pointer;
+  color: var(--blue-600);
+  font-weight: 600;
+  padding-block: 0.4rem;
+}
+.replace-proof .proof-form {
+  margin-top: 0.75rem;
+}
+.pay-footnote {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+

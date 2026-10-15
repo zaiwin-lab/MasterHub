@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { PURPOSES, displayName, formatRM2 } from '@/lib/rules';
+import { PURPOSES, STATUS_LABEL, displayName, formatRM2, type PaymentStatus } from '@/lib/rules';
 
 export interface AdminRow {
   id: string;
@@ -16,11 +16,17 @@ export interface AdminRow {
   remark: string | null;
   toyyibpay_bill_code: string | null;
   toyyibpay_transaction_id: string | null;
-  payment_status: 'PENDING' | 'PAID' | 'FAILED';
+  payment_status: PaymentStatus;
   created_at: string;
   paid_at: string | null;
   receipt_url: string | null;
   receipt_emailed_at: string | null;
+  payment_method: string;
+  proof_path: string | null;
+  proof_uploaded_at: string | null;
+  payment_reference: string | null;
+  verified_at: string | null;
+  rejection_reason: string | null;
 }
 
 const dateFmt = new Intl.DateTimeFormat('en-MY', {
@@ -42,7 +48,7 @@ function csvCell(value: unknown): string {
 export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
   const [rows, setRows] = useState(initialRows);
   const [q, setQ] = useState('');
-  const [status, setStatus] = useState('PAID');
+  const [status, setStatus] = useState('AWAITING_VERIFICATION');
   const [type, setType] = useState('');
   const [purpose, setPurpose] = useState('');
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -55,7 +61,7 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
       if (type && r.type !== type) return false;
       if (purpose && r.purpose !== purpose) return false;
       if (!needle) return true;
-      return [r.contribution_id, r.name, r.organisation_name, r.email, r.mobile, r.remark, r.toyyibpay_transaction_id, r.toyyibpay_bill_code]
+      return [r.contribution_id, r.name, r.organisation_name, r.email, r.mobile, r.remark, r.toyyibpay_transaction_id, r.toyyibpay_bill_code, r.payment_reference]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(needle));
     });
@@ -64,7 +70,7 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
   const paidTotal = filtered.filter((r) => r.payment_status === 'PAID').reduce((sum, r) => sum + r.amount, 0);
 
   function downloadCsv() {
-    const header = ['Date', 'Contribution ID', 'Name / Organisation', 'Contact Person', 'Email', 'Mobile', 'Type', 'Purpose', 'Remark', 'Amount (RM)', 'ToyyibPay Reference', 'ToyyibPay Bill Code', 'Status', 'Paid At', 'Receipt Emailed At'];
+    const header = ['Date', 'Contribution ID', 'Name / Organisation', 'Contact Person', 'Email', 'Mobile', 'Type', 'Purpose', 'Remark', 'Amount (RM)', 'Method', 'Payment Reference', 'Status', 'Proof Uploaded At', 'Verified At', 'Rejection Reason', 'Receipt Emailed At'];
     const lines = filtered.map((r) =>
       [
         dateFmt.format(new Date(r.created_at)),
@@ -77,10 +83,12 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
         r.purpose,
         r.remark ?? '',
         r.amount.toFixed(2),
-        r.toyyibpay_transaction_id ?? '',
-        r.toyyibpay_bill_code ?? '',
+        r.payment_method,
+        r.payment_reference ?? r.toyyibpay_transaction_id ?? '',
         r.payment_status,
-        r.paid_at ? dateFmt.format(new Date(r.paid_at)) : '',
+        r.proof_uploaded_at ? dateFmt.format(new Date(r.proof_uploaded_at)) : '',
+        r.verified_at || r.paid_at ? dateFmt.format(new Date((r.verified_at || r.paid_at)!)) : '',
+        r.rejection_reason ?? '',
         r.receipt_emailed_at ? dateFmt.format(new Date(r.receipt_emailed_at)) : '',
       ]
         .map(csvCell)
@@ -94,29 +102,43 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
     URL.revokeObjectURL(a.href);
   }
 
-  async function action(row: AdminRow, kind: 'resend' | 'recheck') {
+  async function post(row: AdminRow, kind: 'resend' | 'verify' | 'reject', extra: Record<string, string> = {}) {
     setBusyId(row.id);
     setNotice(null);
     try {
       const res = await fetch(`/api/admin/${kind}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: row.id }),
+        body: JSON.stringify({ id: row.id, ...extra }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Request failed');
-      if (kind === 'recheck' && data.row) {
+      if (data.row) {
         const updated = { ...data.row, amount: Number(data.row.amount) } as AdminRow;
         setRows((rs) => rs.map((r) => (r.id === row.id ? { ...r, ...updated } : r)));
-        setNotice({ kind: 'ok', text: `${row.contribution_id}: ToyyibPay status is ${data.status}.` });
-      } else {
+      } else if (kind === 'resend') {
         setRows((rs) => rs.map((r) => (r.id === row.id ? { ...r, receipt_emailed_at: new Date().toISOString() } : r)));
-        setNotice({ kind: 'ok', text: data.message || 'Receipt sent.' });
       }
+      setNotice({ kind: 'ok', text: data.message || 'Done.' });
     } catch (e) {
       setNotice({ kind: 'err', text: `${row.contribution_id}: ${(e as Error).message}` });
     }
     setBusyId(null);
+  }
+
+  function verify(row: AdminRow) {
+    const ref = window.prompt(
+      `Verify ${row.contribution_id}: ${formatRM2(row.amount)} from ${displayName(row)}.\n\nOnly continue if this amount is on the KOBIS bank statement.\nBank reference (optional):`,
+      '',
+    );
+    if (ref === null) return;
+    void post(row, 'verify', { reference: ref });
+  }
+
+  function reject(row: AdminRow) {
+    const reason = window.prompt(`Why can't ${row.contribution_id} be verified? The contributor will see this.`, 'Payment not found in bank records');
+    if (!reason) return;
+    void post(row, 'reject', { reason });
   }
 
   async function logout() {
@@ -140,8 +162,10 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
         <input className="input" type="search" placeholder="Search ID, name, email, remark, reference…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search" />
         <select className="input" value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Status">
           <option value="">All statuses</option>
-          <option value="PAID">Paid</option>
-          <option value="PENDING">Pending</option>
+          <option value="AWAITING_VERIFICATION">Awaiting verification</option>
+          <option value="PAID">Verified</option>
+          <option value="PENDING">Awaiting payment</option>
+          <option value="REJECTED">Not verified</option>
           <option value="FAILED">Failed</option>
         </select>
         <select className="input" value={type} onChange={(e) => setType(e.target.value)} aria-label="Type">
@@ -181,7 +205,7 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
               <th>Purpose</th>
               <th>Remark</th>
               <th className="num">Amount</th>
-              <th>ToyyibPay Ref</th>
+              <th>Proof / Reference</th>
               <th>Status</th>
               <th />
             </tr>
@@ -201,15 +225,27 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
                 <td>{r.purpose}</td>
                 <td className="remark">{r.remark}</td>
                 <td className="num nowrap">{formatRM2(r.amount)}</td>
-                <td className="mono">{r.toyyibpay_transaction_id || <span className="sub">{r.toyyibpay_bill_code}</span>}</td>
+                <td className="nowrap">
+                  {r.proof_path ? (
+                    <a className="link-btn" href={`/api/admin/proof?id=${r.id}`} target="_blank" rel="noopener noreferrer">
+                      View proof
+                    </a>
+                  ) : (
+                    <span className="sub">No proof yet</span>
+                  )}
+                  {(r.payment_reference || r.toyyibpay_transaction_id) && (
+                    <div className="sub mono">{r.payment_reference || r.toyyibpay_transaction_id}</div>
+                  )}
+                </td>
                 <td>
-                  <span className={`badge badge-${r.payment_status.toLowerCase()}`}>{r.payment_status}</span>
+                  <span className={`badge badge-${r.payment_status.toLowerCase().replace('_', '-')}`}>{STATUS_LABEL[r.payment_status]}</span>
+                  {r.payment_status === 'REJECTED' && r.rejection_reason && <div className="sub">{r.rejection_reason}</div>}
                   {r.payment_status === 'PAID' && !r.receipt_emailed_at && <div className="sub warn">Email not sent</div>}
                 </td>
                 <td className="nowrap">
                   {r.payment_status === 'PAID' ? (
                     <>
-                      <button className="link-btn" disabled={busyId === r.id} onClick={() => action(r, 'resend')}>
+                      <button className="link-btn" disabled={busyId === r.id} onClick={() => post(r, 'resend')}>
                         {busyId === r.id ? 'Sending…' : 'Resend receipt'}
                       </button>
                       {r.receipt_url && (
@@ -218,11 +254,18 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
                         </a>
                       )}
                     </>
-                  ) : r.toyyibpay_bill_code ? (
-                    <button className="link-btn" disabled={busyId === r.id} onClick={() => action(r, 'recheck')}>
-                      {busyId === r.id ? 'Checking…' : 'Re-check status'}
-                    </button>
-                  ) : null}
+                  ) : r.payment_status === 'FAILED' ? null : (
+                    <>
+                      <button className="link-btn" disabled={busyId === r.id} onClick={() => verify(r)}>
+                        {busyId === r.id ? 'Saving…' : 'Verify'}
+                      </button>
+                      {r.payment_status !== 'REJECTED' && (
+                        <button className="link-btn danger" disabled={busyId === r.id} onClick={() => reject(r)}>
+                          Reject
+                        </button>
+                      )}
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

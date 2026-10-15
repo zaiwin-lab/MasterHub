@@ -117,15 +117,11 @@ export default function Home() {
                 Support Our Alumni Community
               </h2>
               <p className="contribute-lede">
-                Choose an amount, add a message if you wish, and pay securely online. Your receipt is emailed to you as
-                soon as the payment is confirmed.
+                Choose an amount, pay by DuitNow QR or bank transfer, then upload your proof of payment. Your receipt is
+                emailed to you once the payment is verified.
               </p>
             </div>
-            <ContributionForm
-              paymentMethods={
-                process.env.TOYYIBPAY_DUITNOW_QR === '1' ? 'Online banking (FPX) or DuitNow QR' : 'Online banking (FPX)'
-              }
-            />
+            <ContributionForm />
             <div className="option-notes">
               <div className="option-note">
                 <h3>
