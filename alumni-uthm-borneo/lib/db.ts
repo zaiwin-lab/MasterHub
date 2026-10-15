@@ -22,7 +22,15 @@ export interface ContributionRow {
   paid_at: string | null;
   receipt_url: string | null;
   receipt_emailed_at: string | null;
+  payment_method: string;
+  proof_path: string | null;
+  proof_uploaded_at: string | null;
+  payment_reference: string | null;
+  verified_at: string | null;
+  rejection_reason: string | null;
 }
+
+export const PROOF_BUCKET = 'payment-proofs';
 
 let client: SupabaseClient | null = null;
 

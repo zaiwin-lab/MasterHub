@@ -10,18 +10,6 @@ export function siteUrl(): string {
   return required('NEXT_PUBLIC_SITE_URL').replace(/\/+$/, '');
 }
 
-export function toyyibpayConfig() {
-  return {
-    baseUrl: (process.env.TOYYIBPAY_BASE_URL || 'https://dev.toyyibpay.com').replace(/\/+$/, ''),
-    secretKey: required('TOYYIBPAY_SECRET_KEY'),
-    categoryCode: required('TOYYIBPAY_CATEGORY_CODE'),
-    paymentChannel: process.env.TOYYIBPAY_PAYMENT_CHANNEL ?? '0',
-    chargeToCustomer: process.env.TOYYIBPAY_CHARGE_TO_CUSTOMER ?? '',
-    duitNowQr: process.env.TOYYIBPAY_DUITNOW_QR === '1',
-    duitNowQrCharge: process.env.TOYYIBPAY_DUITNOW_QR_CHARGE === '1' ? '1' : '0',
-  };
-}
-
 export function supabaseConfig() {
   return { url: required('SUPABASE_URL'), serviceKey: required('SUPABASE_SERVICE_ROLE_KEY') };
 }

@@ -54,3 +54,15 @@ describe('parseAmount', () => {
     expect(parseAmount('')).toBeNaN();
   });
 });
+
+describe('sniffProofType', () => {
+  it('recognises allowed proof files by their bytes', async () => {
+    const { sniffProofType } = await import('@/lib/rules');
+    expect(sniffProofType(new Uint8Array([0xff, 0xd8, 0xff, 0xe0]))).toBe('image/jpeg');
+    expect(sniffProofType(new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0, 0, 0, 0]))).toBe('image/png');
+    expect(sniffProofType(new TextEncoder().encode('RIFF\0\0\0\0WEBPVP8 '))).toBe('image/webp');
+    expect(sniffProofType(new TextEncoder().encode('%PDF-1.4'))).toBe('application/pdf');
+    expect(sniffProofType(new TextEncoder().encode('<svg onload=alert(1)>'))).toBeNull();
+    expect(sniffProofType(new Uint8Array([]))).toBeNull();
+  });
+});

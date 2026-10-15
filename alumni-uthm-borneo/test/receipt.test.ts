@@ -15,7 +15,8 @@ describe('receipt PDF', () => {
       purpose: 'Corporate Contribution',
       remark: 'On behalf of ABC Sdn Bhd 🎓 — for the Anak Sarawak Award. '.repeat(6),
       amount: 3000,
-      transactionRef: 'TP2026100112345',
+      paymentMethod: 'DuitNow QR / bank transfer',
+      transactionRef: 'RHB 2026100112345',
       status: 'PAID',
     });
     expect(Buffer.from(bytes.slice(0, 5)).toString()).toBe('%PDF-');

@@ -1,11 +1,13 @@
 /**
- * Full payment flow against an in-memory database and mocked ToyyibPay / email APIs.
- * Proves: receipts and emails only follow a ToyyibPay-verified success, exactly once.
+ * Manual payment flow (DuitNow QR / bank transfer + proof upload + admin verification)
+ * against an in-memory database, in-memory storage and a mocked email API.
+ * Proves: no receipt or email until an admin verifies, exactly once.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Row = Record<string, unknown>;
 const table: Row[] = [];
+const stored = new Map<string, { bytes: Uint8Array; contentType: string }>();
 let seq = 0;
 
 // Minimal stand-in for the Supabase query builder calls used by lib/payments.ts and the routes.
@@ -27,6 +29,11 @@ class Query {
       paid_at: null,
       receipt_url: null,
       receipt_emailed_at: null,
+      proof_path: null,
+      proof_uploaded_at: null,
+      payment_reference: null,
+      verified_at: null,
+      rejection_reason: null,
       ...row,
       amount: String(row.amount), // Supabase returns numeric as string
     };
@@ -44,8 +51,8 @@ class Query {
     this.filters.push((r) => r[col] === val);
     return this;
   }
-  neq(col: string, val: unknown) {
-    this.filters.push((r) => r[col] !== val);
+  in(col: string, vals: unknown[]) {
+    this.filters.push((r) => vals.includes(r[col]));
     return this;
   }
   single() {
@@ -72,27 +79,23 @@ class Query {
   }
 }
 
+const storage = {
+  from: (bucket: string) => ({
+    upload: async (path: string, bytes: Uint8Array, opts: { contentType: string }) => {
+      stored.set(`${bucket}/${path}`, { bytes, contentType: opts.contentType });
+      return { data: { path }, error: null };
+    },
+    createSignedUrl: async (path: string) => ({ data: { signedUrl: `https://signed.test/${bucket}/${path}` }, error: null }),
+  }),
+};
+
 vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({ from: () => new Query() }),
+  createClient: () => ({ from: () => new Query(), storage }),
 }));
 
-// ToyyibPay + email API mocks
-let transactions: unknown[] = [];
-let qrActivated = true;
 const emails: { to: string; subject: string; hasPdf: boolean }[] = [];
-
 const fetchMock = vi.fn(async (url: string | URL, init?: RequestInit) => {
   const u = String(url);
-  if (u.endsWith('/index.php/api/createBill')) {
-    const sent = new URLSearchParams(String(init?.body));
-    if (sent.get('enableDuitNowQR') === '1' && !qrActivated) {
-      return new Response(
-        '[{"status":"error","msg":"DuitNow QR is not activated for your account. Please contact admin to register your POS ID."}]',
-      );
-    }
-    return new Response('[{"BillCode":"abc123xy"}]');
-  }
-  if (u.endsWith('/index.php/api/getBillTransactions')) return new Response(JSON.stringify(transactions));
   if (u === 'https://api.resend.com/emails') {
     const body = JSON.parse(String(init?.body));
     emails.push({ to: body.to[0], subject: body.subject, hasPdf: body.attachments?.[0]?.content?.length > 100 });
@@ -105,9 +108,6 @@ Object.assign(process.env, {
   NEXT_PUBLIC_SITE_URL: 'https://portal.test',
   SUPABASE_URL: 'https://x.supabase.co',
   SUPABASE_SERVICE_ROLE_KEY: 'service',
-  TOYYIBPAY_BASE_URL: 'https://dev.toyyibpay.com',
-  TOYYIBPAY_SECRET_KEY: 'secret',
-  TOYYIBPAY_CATEGORY_CODE: 'cat',
   EMAIL_PROVIDER: 'resend',
   RESEND_API_KEY: 're_test',
   EMAIL_FROM_ADDRESS: 'receipts@portal.test',
@@ -125,21 +125,21 @@ const validBody = {
   acknowledged: true,
 };
 
+const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4]);
+const PDF = new TextEncoder().encode('%PDF-1.7 test');
+
 async function startPayment(body: Record<string, unknown> = validBody) {
   const { POST } = await import('@/app/api/contributions/route');
   return POST(new Request('https://portal.test/api/contributions', { method: 'POST', body: JSON.stringify(body) }));
 }
 
-async function callback(billcode: string, status: string) {
-  const { POST } = await import('@/app/api/toyyibpay/callback/route');
-  const form = new URLSearchParams({ billcode, status, refno: 'TP999', order_id: 'AUB-2026-000001', amount: '30000' });
-  return POST(
-    new Request('https://portal.test/api/toyyibpay/callback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: form,
-    }),
-  );
+async function uploadProof(token: string, bytes: Uint8Array, type = 'image/png', name = 'proof.png') {
+  const { POST } = await import('@/app/api/proof/[token]/route');
+  const form = new FormData();
+  form.append('proof', new File([bytes as BlobPart], name, { type }));
+  return POST(new Request(`https://portal.test/api/proof/${token}`, { method: 'POST', body: form }), {
+    params: Promise.resolve({ token }),
+  });
 }
 
 async function receipt(token: string) {
@@ -147,132 +147,144 @@ async function receipt(token: string) {
   return GET(new Request(`https://portal.test/api/receipt/${token}`), { params: Promise.resolve({ token }) });
 }
 
+async function rowNow() {
+  const { normalise } = await import('@/lib/db');
+  return normalise(table[0]);
+}
+
 beforeEach(() => {
   table.length = 0;
+  stored.clear();
   emails.length = 0;
-  transactions = [];
   seq = 0;
-  qrActivated = true;
-  delete process.env.TOYYIBPAY_DUITNOW_QR;
+  delete process.env.ADMIN_NOTIFY_EMAIL;
   fetchMock.mockClear();
   vi.stubGlobal('fetch', fetchMock);
 });
 
-describe('payment flow', () => {
-  it('creates a PENDING contribution and returns the ToyyibPay URL', async () => {
+describe('manual payment flow', () => {
+  it('creates a PENDING contribution and sends the payer to the payment page', async () => {
     const res = await startPayment();
     expect(res.status).toBe(200);
     const json = await res.json();
-    expect(json).toEqual({ contributionId: 'AUB-2026-000001', paymentUrl: 'https://dev.toyyibpay.com/abc123xy' });
+    expect(json).toEqual({ contributionId: 'AUB-2026-000001', paymentUrl: `/pay/${table[0].access_token}` });
     expect(table[0]).toMatchObject({
       payment_status: 'PENDING',
-      toyyibpay_bill_code: 'abc123xy',
+      payment_method: 'duitnow_qr',
       email: 'aminah@example.com',
       remark: 'Payment for Alumni programme – 3 pax',
     });
-
-    const createCall = fetchMock.mock.calls.find(([u]) => String(u).includes('createBill'))!;
-    const sent = new URLSearchParams(String(createCall[1]!.body));
-    expect(sent.get('billAmount')).toBe('30000');
-    expect(sent.get('billExternalReferenceNo')).toBe('AUB-2026-000001');
-    expect(sent.get('billReturnUrl')).toBe(`https://portal.test/payment/return/${table[0].access_token}`);
-    expect(sent.get('billCallbackUrl')).toBe('https://portal.test/api/toyyibpay/callback');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('rejects requests without email or acknowledgement, and never calls ToyyibPay', async () => {
+  it('rejects requests without email or acknowledgement', async () => {
     const res = await startPayment({ ...validBody, email: '', acknowledged: false });
     expect(res.status).toBe(422);
     const json = await res.json();
     expect(json.fields.email).toBeDefined();
     expect(json.fields.acknowledged).toBeDefined();
     expect(table).toHaveLength(0);
-    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('a forged "success" callback does not mark PAID when ToyyibPay has no successful transaction', async () => {
+  it('stores an uploaded proof privately and moves the row to AWAITING_VERIFICATION', async () => {
     await startPayment();
-    transactions = [{ billpaymentStatus: '3', billpaymentAmount: '300.00' }];
-    const res = await callback('abc123xy', '1'); // attacker claims success
+    const token = String(table[0].access_token);
+    const res = await uploadProof(token, PNG);
     expect(res.status).toBe(200);
-    expect(table[0].payment_status).toBe('FAILED');
+    expect(table[0].payment_status).toBe('AWAITING_VERIFICATION');
+    expect(String(table[0].proof_path)).toMatch(/^AUB-2026-000001\/\d+\.png$/);
+    expect(stored.get(`payment-proofs/${table[0].proof_path}`)?.contentType).toBe('image/png');
+    // Uploading proof is not payment: still no receipt and no email to the payer.
+    expect((await receipt(token)).status).toBe(404);
     expect(emails).toHaveLength(0);
-    expect((await receipt(String(table[0].access_token))).status).toBe(404);
   });
 
-  it('a cancelled payment stays unpaid with no receipt', async () => {
+  it('accepts PDFs and identifies files by content, not by the declared type', async () => {
     await startPayment();
-    transactions = [];
-    await callback('abc123xy', '3');
+    const token = String(table[0].access_token);
+    expect((await uploadProof(token, PDF, 'image/png', 'trick.png')).status).toBe(200);
+    expect(String(table[0].proof_path)).toMatch(/\.pdf$/);
+    const fake = new TextEncoder().encode('<html>not an image</html>');
+    expect((await uploadProof(token, fake, 'image/png')).status).toBe(415);
+  });
+
+  it('refuses files over 4MB', async () => {
+    await startPayment();
+    const big = new Uint8Array(4 * 1024 * 1024 + 10);
+    big.set(PNG);
+    expect((await uploadProof(String(table[0].access_token), big)).status).toBe(413);
     expect(table[0].payment_status).toBe('PENDING');
-    expect(emails).toHaveLength(0);
-    expect((await receipt(String(table[0].access_token))).status).toBe(404);
   });
 
-  it('a verified success marks PAID, emails one PDF receipt, and is idempotent', async () => {
+  it('notifies the admin inbox when proof arrives, if configured', async () => {
+    process.env.ADMIN_NOTIFY_EMAIL = 'admin@kobis.test';
     await startPayment();
-    transactions = [
-      {
-        billpaymentStatus: '1',
-        billpaymentAmount: '300.00',
-        billpaymentInvoiceNo: 'TP2026100100001',
-        billExternalReferenceNo: 'AUB-2026-000001',
-      },
-    ];
-    await callback('abc123xy', '1');
-    await callback('abc123xy', '1'); // ToyyibPay may retry callbacks
+    await uploadProof(String(table[0].access_token), PNG);
+    expect(emails).toEqual([
+      { to: 'admin@kobis.test', subject: 'Proof of payment received – AUB-2026-000001', hasPdf: false },
+    ]);
+  });
 
-    expect(table[0]).toMatchObject({ payment_status: 'PAID', toyyibpay_transaction_id: 'TP2026100100001' });
+  it('admin verification marks PAID and emails one PDF receipt; a second verify is refused', async () => {
+    const { verifyPayment } = await import('@/lib/payments');
+    await startPayment();
+    const token = String(table[0].access_token);
+    await uploadProof(token, PNG);
+
+    const result = await verifyPayment(await rowNow(), 'RHB 123456');
+    expect(result.emailed).toBe(true);
+    expect(table[0]).toMatchObject({ payment_status: 'PAID', payment_reference: 'RHB 123456' });
     expect(table[0].paid_at).toBeTruthy();
     expect(table[0].receipt_emailed_at).toBeTruthy();
     expect(emails).toEqual([
       { to: 'aminah@example.com', subject: 'Thank You for Supporting Alumni UTHM Borneo – AUB-2026-000001', hasPdf: true },
     ]);
 
-    const pdf = await receipt(String(table[0].access_token));
+    await expect(verifyPayment(await rowNow(), 'again')).rejects.toThrow(/already verified/);
+    expect(emails).toHaveLength(1);
+
+    const pdf = await receipt(token);
     expect(pdf.status).toBe(200);
-    expect(pdf.headers.get('content-type')).toBe('application/pdf');
     expect(Buffer.from(await pdf.arrayBuffer()).subarray(0, 5).toString()).toBe('%PDF-');
+
+    // Verified contributions no longer accept uploads.
+    expect((await uploadProof(token, PNG)).status).toBe(409);
   });
 
-  it('an underpaid success is not accepted', async () => {
+  it('rejection keeps the receipt locked, tells the payer why, and allows a new upload', async () => {
+    const { rejectPayment } = await import('@/lib/payments');
     await startPayment();
-    transactions = [{ billpaymentStatus: '1', billpaymentAmount: '3.00', billpaymentInvoiceNo: 'TPX' }];
-    await callback('abc123xy', '1');
-    expect(table[0].payment_status).toBe('PENDING');
-    expect(emails).toHaveLength(0);
+    const token = String(table[0].access_token);
+    await uploadProof(token, PNG);
+
+    await rejectPayment(await rowNow(), 'Amount not found in bank statement');
+    expect(table[0]).toMatchObject({ payment_status: 'REJECTED', rejection_reason: 'Amount not found in bank statement' });
+    expect((await receipt(token)).status).toBe(404);
+    expect(emails).toHaveLength(1);
+    expect(emails[0].subject).toBe('We could not verify your payment – AUB-2026-000001');
+    expect(emails[0].hasPdf).toBe(false);
+
+    expect((await uploadProof(token, PNG)).status).toBe(200);
+    expect(table[0]).toMatchObject({ payment_status: 'AWAITING_VERIFICATION', rejection_reason: null });
   });
 
-  it('unknown bill codes and junk receipt tokens are ignored', async () => {
-    expect((await callback('nosuchbill', '1')).status).toBe(200);
+  it('verification still succeeds when email is not configured', async () => {
+    const { verifyPayment } = await import('@/lib/payments');
+    const saved = process.env.RESEND_API_KEY;
+    delete process.env.RESEND_API_KEY;
+    try {
+      await startPayment();
+      const result = await verifyPayment(await rowNow(), '');
+      expect(result).toMatchObject({ emailed: false, emailError: 'Email is not configured' });
+      expect(table[0].payment_status).toBe('PAID');
+      expect(table[0].receipt_emailed_at).toBeNull();
+    } finally {
+      process.env.RESEND_API_KEY = saved;
+    }
+  });
+
+  it('unknown or malformed tokens are refused', async () => {
+    expect((await uploadProof('x'.repeat(32), PNG)).status).toBe(404);
     expect((await receipt('short')).status).toBe(404);
-  });
-
-  it('requests DuitNow QR on the bill when enabled and activated', async () => {
-    process.env.TOYYIBPAY_DUITNOW_QR = '1';
-    const res = await startPayment();
-    expect(res.status).toBe(200);
-    const calls = fetchMock.mock.calls.filter(([u]) => String(u).includes('createBill'));
-    expect(calls).toHaveLength(1);
-    const sent = new URLSearchParams(String(calls[0][1]!.body));
-    expect(sent.get('enableDuitNowQR')).toBe('1');
-    expect(sent.get('chargeDuitNowQR')).toBe('0');
-  });
-
-  it('falls back to online banking when DuitNow QR is not activated', async () => {
-    process.env.TOYYIBPAY_DUITNOW_QR = '1';
-    qrActivated = false;
-    const res = await startPayment();
-    expect(res.status).toBe(200);
-    expect((await res.json()).paymentUrl).toBe('https://dev.toyyibpay.com/abc123xy');
-    const calls = fetchMock.mock.calls.filter(([u]) => String(u).includes('createBill'));
-    expect(calls).toHaveLength(2);
-    expect(new URLSearchParams(String(calls[1][1]!.body)).get('enableDuitNowQR')).toBeNull();
-    expect(table[0]).toMatchObject({ payment_status: 'PENDING', toyyibpay_bill_code: 'abc123xy' });
-  });
-
-  it('does not request DuitNow QR when disabled', async () => {
-    await startPayment();
-    const call = fetchMock.mock.calls.find(([u]) => String(u).includes('createBill'))!;
-    expect(new URLSearchParams(String(call[1]!.body)).get('enableDuitNowQR')).toBeNull();
   });
 });

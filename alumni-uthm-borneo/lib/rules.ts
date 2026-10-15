@@ -1,7 +1,7 @@
 // Shared by the browser form and the server API. Pure functions only.
 
 export type ContributionType = 'individual' | 'corporate';
-export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED';
+export type PaymentStatus = 'PENDING' | 'AWAITING_VERIFICATION' | 'PAID' | 'REJECTED' | 'FAILED';
 
 export const AMOUNTS: Record<ContributionType, { presets: number[]; min: number }> = {
   individual: { presets: [50, 100, 300, 500], min: 10 },
@@ -117,3 +117,33 @@ export function validateContribution(input: ContributionInput): FieldErrors {
 export function displayName(row: { type: string; name: string; organisation_name: string | null }): string {
   return row.type === 'corporate' && row.organisation_name ? row.organisation_name : row.name;
 }
+
+// ─── Proof of payment ─────────────────────────────────────────────────────
+/** Netlify functions accept ~6MB request bodies; keep uploads comfortably under that. */
+export const MAX_PROOF_BYTES = 4 * 1024 * 1024;
+export const PROOF_TYPES = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'application/pdf': 'pdf',
+} as const;
+export type ProofMime = keyof typeof PROOF_TYPES;
+
+/** Identify the file by its first bytes; the browser-supplied type is not trusted. */
+export function sniffProofType(bytes: Uint8Array): ProofMime | null {
+  const b = bytes;
+  if (b.length >= 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (b.length >= 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return 'image/png';
+  if (b.length >= 12 && String.fromCharCode(...b.slice(0, 4)) === 'RIFF' && String.fromCharCode(...b.slice(8, 12)) === 'WEBP')
+    return 'image/webp';
+  if (b.length >= 5 && String.fromCharCode(...b.slice(0, 5)) === '%PDF-') return 'application/pdf';
+  return null;
+}
+
+export const STATUS_LABEL: Record<PaymentStatus, string> = {
+  PENDING: 'Awaiting payment',
+  AWAITING_VERIFICATION: 'Awaiting verification',
+  PAID: 'Verified',
+  REJECTED: 'Not verified',
+  FAILED: 'Failed',
+};
